@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CampusAberto · Área de Estudo</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -446,10 +445,10 @@
 <div class="modal-overlay" id="modal-dl">
   <div class="modal">
     <h3>📥 Descarregar documento</h3>
-    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+    <p>Este download ficará registado na base de dados. O código abaixo identifica o teu acesso:</p>
     <div class="modal-codigo" id="modal-codigo-txt">—</div>
     <p style="font-size:0.78rem; color:#9ca3af; margin-bottom:20px;">
-      O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
+      O documento abrirá no Google Drive. Não contém o teu nome nem contactos — apenas um identificador rastreável.
     </p>
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
@@ -466,9 +465,6 @@
     getFirestore, doc, getDoc, collection, getDocs,
     addDoc, serverTimestamp, query, orderBy
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  import { getStorage, ref, getDownloadURL }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-
   // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
@@ -482,7 +478,7 @@
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db   = getFirestore(app);
-  const storage = getStorage(app);
+  const docMap = {}; // guarda driveUrl por docId
 
   // Cores para os ícones de UC
   const paleta = [
@@ -570,17 +566,18 @@
       }
 
       lista.innerHTML = '';
-      snap.forEach(d => {
+      snap.docs.forEach(d => {
         const doc_  = { id: d.id, ...d.data() };
+        docMap[d.id] = doc_; // guarda para acesso no iniciarDownload
         const el    = document.createElement('div');
         el.className = 'doc-item';
         el.innerHTML = `
           <div class="doc-icone">📄</div>
           <div class="doc-info">
             <div class="doc-nome">${doc_.nome}</div>
-            <div class="doc-meta">${doc_.descricao || ''} ${doc_.tamanho ? '· ' + doc_.tamanho : ''}</div>
+            <div class="doc-meta">${doc_.descricao || ''}</div>
           </div>
-          <button class="btn-download" onclick="window.iniciarDownload('${uc.id}','${d.id}','${doc_.nome}','${doc_.storageRef}')">
+          <button class="btn-download" onclick="window.iniciarDownload('${uc.id}','${d.id}','${doc_.nome.replace(/'/g,"\\'")}')">
             <span>↓</span><span>Descarregar</span>
           </button>`;
         lista.appendChild(el);
@@ -596,13 +593,13 @@
   };
 
   // --- DOWNLOAD COM CÓDIGO ---
-  window.iniciarDownload = function(ucId, docId, docNome, storageRef) {
-    // Gera código único para este download
-    const chars   = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let codigoDl  = 'DL-';
+  window.iniciarDownload = function(ucId, docId, docNome) {
+    const chars  = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let codigoDl = 'DL-';
     for (let i = 0; i < 8; i++) codigoDl += chars[Math.floor(Math.random() * chars.length)];
 
-    docPendente = { ucId, docId, docNome, storageRef, codigoDl };
+    const driveUrl = docMap[docId]?.driveUrl || '';
+    docPendente = { ucId, docId, docNome, driveUrl, codigoDl };
     document.getElementById('modal-codigo-txt').textContent =
       `${codigoDl}  ·  ${utilizadorAtual.codigo}  ·  ${new Date().toLocaleDateString('pt-PT')}`;
     document.getElementById('modal-dl').classList.add('visivel');
@@ -617,10 +614,9 @@
     if (!docPendente) return;
     const btn = document.getElementById('btn-confirmar-dl');
     btn.disabled = true;
-    btn.textContent = 'A preparar...';
+    btn.textContent = 'A registar...';
 
     try {
-      // 1. Regista o download no Firestore
       await addDoc(collection(db, 'downloads'), {
         uid:        utilizadorAtual.uid,
         nome:       utilizadorAtual.nome,
@@ -633,67 +629,16 @@
         data:       serverTimestamp()
       });
 
-      // 2. Obtém URL do PDF original no Storage
-      const url = await getDownloadURL(ref(storage, docPendente.storageRef));
-
-      // 3. Descarrega o PDF e adiciona marca d'água com código
-      await descarregarComMarcaDagua(url, docPendente.docNome, docPendente.codigoDl);
-
+      window.open(docPendente.driveUrl, '_blank');
       fecharModal();
     } catch(e) {
       console.error(e);
-      alert('Erro ao descarregar. Tenta novamente.');
+      alert('Erro ao registar download. Tenta novamente.');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Descarregar';
     }
   };
-
-  async function descarregarComMarcaDagua(url, nome, codigoDl) {
-    // Carrega o PDF-lib para manipular o PDF
-    const { PDFDocument, rgb, StandardFonts } = await import(
-      'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.esm.min.js'
-    );
-
-    const resposta   = await fetch(url);
-    const pdfBytes   = await resposta.arrayBuffer();
-    const pdfDoc     = await PDFDocument.load(pdfBytes);
-    const helvetica  = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const paginas    = pdfDoc.getPages();
-    const data       = new Date().toLocaleDateString('pt-PT');
-    const texto      = `CampusAberto · Uso pessoal · ${codigoDl} · ${data}`;
-
-    paginas.forEach(pag => {
-      const { width, height } = pag.getSize();
-      // Rodapé discreto
-      pag.drawText(texto, {
-        x:        30,
-        y:        14,
-        size:     7.5,
-        font:     helvetica,
-        color:    rgb(0.55, 0.55, 0.55),
-        opacity:  0.7,
-      });
-      // Marca d'água diagonal subtil no centro
-      pag.drawText(codigoDl, {
-        x:        width / 2 - 40,
-        y:        height / 2,
-        size:     32,
-        font:     helvetica,
-        color:    rgb(0.85, 0.85, 0.85),
-        opacity:  0.12,
-        rotate:   { type: 'degrees', angle: 45 },
-      });
-    });
-
-    const pdfFinal  = await pdfDoc.save();
-    const blob      = new Blob([pdfFinal], { type: 'application/pdf' });
-    const link      = document.createElement('a');
-    link.href       = URL.createObjectURL(blob);
-    link.download   = nome.replace(/\.pdf$/i,'') + '.pdf';
-    link.click();
-    URL.revokeObjectURL(link.href);
-  }
 
   window.sair = async function() {
     await signOut(auth);

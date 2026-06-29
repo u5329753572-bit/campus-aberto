@@ -411,20 +411,11 @@
         <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
       </div>
       <div class="campo" style="margin-bottom:18px">
-        <label>Ficheiro PDF</label>
-        <label class="upload-area" id="upload-area" for="file-input">
-          <input type="file" id="file-input" accept=".pdf" onchange="selecionarFicheiro(this)"/>
-          <div class="upload-icon">📎</div>
-          <div class="upload-label">
-            <strong>Clica para selecionar</strong> ou arrasta o PDF aqui
-          </div>
-          <div class="upload-file-nome" id="upload-nome"></div>
-          <div class="progress-bar" id="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-        </label>
+        <label>URL do Google Drive</label>
+        <input type="url" id="doc-url" placeholder="https://drive.google.com/file/d/…/view?usp=sharing" style="width:100%"/>
+        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">Carrega o PDF no Google Drive → Partilhar → "Qualquer pessoa com o link" → copia e cola aqui.</p>
       </div>
-      <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Carregar documento</button>
+      <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <div class="msg-form" id="msg-doc"></div>
     </div>
 
@@ -459,10 +450,6 @@
     getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
     collection, getDocs, addDoc, query, orderBy, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  import {
-    getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-
   // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
@@ -473,12 +460,10 @@
     appId: "1:26751084379:web:08763059128d30ea36dc7e"
   };
 
-  const app     = initializeApp(firebaseConfig);
-  const auth    = getAuth(app);
-  const db      = getFirestore(app);
-  const storage = getStorage(app);
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
 
-  let ficheiroSelecionado = null;
   let ucsList = [];
 
   // --- AUTH CHECK (admin) ---
@@ -627,70 +612,40 @@
   };
 
   // --- DOCUMENTOS ---
-  window.selecionarFicheiro = function(input) {
-    ficheiroSelecionado = input.files[0] || null;
-    document.getElementById('upload-nome').textContent = ficheiroSelecionado ? ficheiroSelecionado.name : '';
-  };
-
   window.fazerUpload = async function() {
     const ucId  = document.getElementById('doc-uc').value;
     const nome  = document.getElementById('doc-nome').value.trim();
     const desc  = document.getElementById('doc-desc').value.trim();
+    const url   = document.getElementById('doc-url').value.trim();
     const msgEl = document.getElementById('msg-doc');
     const btn   = document.getElementById('btn-upload');
 
-    if (!ucId || !nome || !ficheiroSelecionado) {
-      msgEl.textContent = 'Preenche todos os campos e seleciona um PDF.';
+    if (!ucId || !nome || !url) {
+      msgEl.textContent = 'Preenche a UC, o nome e o URL do Google Drive.';
       msgEl.className = 'msg-form err'; return;
     }
 
-    btn.disabled = true; btn.textContent = 'A carregar...';
-    const progressBar  = document.getElementById('progress-bar');
-    const progressFill = document.getElementById('progress-fill');
-    progressBar.style.display = 'block';
-
+    btn.disabled = true; btn.textContent = 'A guardar...';
     try {
-      const storageRef  = ref(storage, `documentos/${ucId}/${Date.now()}_${ficheiroSelecionado.name}`);
-      const uploadTask  = uploadBytesResumable(storageRef, ficheiroSelecionado);
-
-      await new Promise((resolve, reject) => {
-        uploadTask.on('state_changed',
-          snap => {
-            const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-            progressFill.style.width = pct + '%';
-          },
-          reject,
-          resolve
-        );
-      });
-
-      const tamanho = (ficheiroSelecionado.size / 1024).toFixed(0) + ' KB';
-      const q       = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
-      const ordem   = q.size + 1;
-
+      const q     = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
+      const ordem = q.size + 1;
       await addDoc(collection(db, 'ucs', ucId, 'documentos'), {
-        nome, descricao: desc,
-        storageRef: storageRef.fullPath,
-        tamanho, ordem,
+        nome, descricao: desc, driveUrl: url, ordem,
         criadoEm: serverTimestamp()
       });
-
-      msgEl.textContent = `"${nome}" carregado com sucesso.`;
+      msgEl.textContent = `"${nome}" adicionado com sucesso.`;
       msgEl.className = 'msg-form ok';
       document.getElementById('doc-nome').value = '';
       document.getElementById('doc-desc').value = '';
       document.getElementById('doc-uc').value   = '';
-      document.getElementById('upload-nome').textContent = '';
-      ficheiroSelecionado = null;
-      progressFill.style.width = '0%';
-      progressBar.style.display = 'none';
+      document.getElementById('doc-url').value  = '';
       carregarDocs(); carregarUCs();
       setTimeout(() => msgEl.className = 'msg-form', 3000);
     } catch(e) {
-      msgEl.textContent = 'Erro ao carregar: ' + e.message;
+      msgEl.textContent = 'Erro: ' + e.message;
       msgEl.className = 'msg-form err';
     } finally {
-      btn.disabled = false; btn.textContent = 'Carregar documento';
+      btn.disabled = false; btn.textContent = 'Adicionar documento';
     }
   };
 
@@ -709,13 +664,12 @@
             <td>${r.ucNome}</td>
             <td>${r.nome}</td>
             <td>${r.descricao || '—'}</td>
-            <td><button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}','${r.storageRef}')">Remover</button></td>
+            <td><button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button></td>
           </tr>`).join('');
   }
 
-  window.removerDoc = async function(ucId, docId, storageRef_) {
+  window.removerDoc = async function(ucId, docId) {
     if (!confirm('Remover este documento?')) return;
-    try { await deleteObject(ref(storage, storageRef_)); } catch(e) {}
     await deleteDoc(doc(db, 'ucs', ucId, 'documentos', docId));
     carregarDocs(); carregarUCs();
   };
