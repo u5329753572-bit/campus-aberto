@@ -540,7 +540,7 @@
         contarDocs(uc.id);
       });
     } catch(e) {
-      grid.innerHTML = `<p style="color:red;font-size:.85rem">Erro ao carregar UCs.</p>`;
+      grid.innerHTML = `<p style="color:red;font-size:.85rem">Erro ao carregar UCs: ${e.code || e.message}</p>`;
     }
   }
 
