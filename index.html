@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comunidade UAb · Ciências Sociais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:     #1a3a2a;
+      --verde-med: #2d5a3d;
+      --verde-leve:#4a8c5c;
+      --ouro:      #c9a84c;
+      --ouro-leve: #e8cc7a;
+      --creme:     #f5f0e8;
+      --branco:    #ffffff;
+      --cinza:     #6b7280;
+      --erro:      #c0392b;
+      --sucesso:   #27ae60;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--verde);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(74,140,92,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .card {
+      background: var(--branco);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 48px 40px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-med) 100%);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon svg { width: 32px; height: 32px; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--verde);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--cinza);
+      font-weight: 400;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 28px;
+      gap: 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--cinza);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .tab.active {
+      color: var(--verde);
+      border-bottom-color: var(--ouro);
+      font-weight: 600;
+    }
+
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .field { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--verde);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.925rem;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      background: #fafafa;
+    }
+
+    input:focus {
+      border-color: var(--verde-leve);
+      box-shadow: 0 0 0 3px rgba(74,140,92,0.12);
+      background: var(--branco);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-med) 100%);
+      color: var(--branco);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.925rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .msg {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .msg.erro { background: #fef2f2; color: var(--erro); border: 1px solid #fecaca; display: block; }
+    .msg.sucesso { background: #f0fdf4; color: var(--sucesso); border: 1px solid #bbf7d0; display: block; }
+    .msg.info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; display: block; }
+
+    .aviso-pendente {
+      background: #fffbeb;
+      border: 1px solid var(--ouro-leve);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #78350f;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .aviso-pendente strong { display: block; margin-bottom: 4px; }
+
+    .divider {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .nota {
+      font-size: 0.78rem;
+      color: var(--cinza);
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+        <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <h1>Comunidade<br/>Ciências Sociais</h1>
+    <p class="subtitle">Universidade Aberta · Área reservada</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="mudarTab('login')">Entrar</button>
+    <button class="tab" onclick="mudarTab('registo')">Registar</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="form-section active" id="sec-login">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="o.teu@email.com" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="msg" id="msg-login"></div>
+    <div class="aviso-pendente" id="aviso-pendente">
+      <strong>⏳ Conta pendente de aprovação</strong>
+      A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.
+    </div>
+  </div>
+
+  <!-- REGISTO -->
+  <div class="form-section" id="sec-registo">
+    <div class="field">
+      <label>Nome completo</label>
+      <input type="text" id="reg-nome" placeholder="O teu nome" autocomplete="name"/>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="reg-email" placeholder="xxxx@estudante.uab.pt" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Telemóvel</label>
+      <input type="tel" id="reg-tel" placeholder="+351 9XX XXX XXX" autocomplete="tel"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/>
+    </div>
+    <button class="btn" id="btn-registo" onclick="fazerRegisto()">Pedir acesso</button>
+    <div class="msg" id="msg-registo"></div>
+    <div class="nota">
+      Apenas emails <strong>@estudante.uab.pt</strong> são aceites.<br/>
+      Após o registo, a tua conta será ativada manualmente.<br/>
+      Receberás confirmação por email.
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ⚠️ SUBSTITUI AQUI pelas tuas credenciais Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
+    authDomain: "uab-comunidade.firebaseapp.com",
+    projectId: "uab-comunidade",
+    storageBucket: "uab-comunidade.firebasestorage.app",
+    messagingSenderId: "26751084379",
+    appId: "1:26751084379:web:08763059128d30ea36dc7e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.mudarTab = function(tab) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'registo'));
+    });
+    document.getElementById('sec-login').classList.toggle('active', tab === 'login');
+    document.getElementById('sec-registo').classList.toggle('active', tab === 'registo');
+    document.getElementById('msg-login').className = 'msg';
+    document.getElementById('msg-registo').className = 'msg';
+    document.getElementById('aviso-pendente').style.display = 'none';
+  };
+
+  function mostrarMsg(id, texto, tipo) {
+    const el = document.getElementById(id);
+    el.textContent = texto;
+    el.className = 'msg ' + tipo;
+  }
+
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.innerHTML = loading ? '<span class="spinner"></span>A processar...' : btn.dataset.label;
+  }
+
+  document.getElementById('btn-login').dataset.label = 'Entrar';
+  document.getElementById('btn-registo').dataset.label = 'Pedir acesso';
+
+  window.fazerLogin = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const avisoEl = document.getElementById('aviso-pendente');
+    avisoEl.style.display = 'none';
+
+    if (!email || !pass) { mostrarMsg('msg-login', 'Preenche email e password.', 'erro'); return; }
+
+    setLoading('btn-login', true);
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      const snap = await getDoc(doc(db, 'utilizadores', cred.user.uid));
+      const dados = snap.data();
+
+      if (!dados || dados.estado !== 'ativo') {
+        await auth.signOut();
+        avisoEl.style.display = 'block';
+        mostrarMsg('msg-login', '', '');
+      } else {
+        window.location.href = 'app.html';
+      }
+    } catch(e) {
+      const msgs = {
+        'auth/user-not-found': 'Email não encontrado.',
+        'auth/wrong-password': 'Password incorreta.',
+        'auth/invalid-credential': 'Email ou password incorretos.',
+        'auth/too-many-requests': 'Demasiadas tentativas. Aguarda uns minutos.'
+      };
+      mostrarMsg('msg-login', msgs[e.code] || 'Erro ao entrar. Tenta novamente.', 'erro');
+    } finally { setLoading('btn-login', false); }
+  };
+
+  window.fazerRegisto = async function() {
+    const nome  = document.getElementById('reg-nome').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const tel   = document.getElementById('reg-tel').value.trim();
+    const pass  = document.getElementById('reg-pass').value;
+
+    if (!nome || !email || !tel || !pass) {
+      mostrarMsg('msg-registo', 'Preenche todos os campos.', 'erro'); return;
+    }
+    if (!email.toLowerCase().endsWith('@estudante.uab.pt')) {
+      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt são aceites.', 'erro'); return;
+    }
+    if (pass.length < 8) {
+      mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return;
+    }
+
+    setLoading('btn-registo', true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(cred.user, { displayName: nome });
+
+      // Gera código único rastreável
+      const codigo = gerarCodigo(cred.user.uid);
+
+      await setDoc(doc(db, 'utilizadores', cred.user.uid), {
+        uid: cred.user.uid,
+        nome,
+        email,
+        telefone: tel,
+        codigo,
+        estado: 'pendente',   // 'pendente' | 'ativo' | 'suspenso'
+        admin: false,
+        criadoEm: serverTimestamp()
+      });
+
+      await auth.signOut();
+      mostrarMsg('msg-registo', '✓ Pedido enviado! Receberás um email quando a conta for ativada.', 'sucesso');
+      document.getElementById('reg-nome').value = '';
+      document.getElementById('reg-email').value = '';
+      document.getElementById('reg-tel').value = '';
+      document.getElementById('reg-pass').value = '';
+    } catch(e) {
+      const msgs = {
+        'auth/email-already-in-use': 'Este email já está registado.',
+        'auth/invalid-email': 'Email inválido.',
+        'auth/weak-password': 'Password demasiado fraca.'
+      };
+      mostrarMsg('msg-registo', msgs[e.code] || 'Erro no registo. Tenta novamente.', 'erro');
+    } finally { setLoading('btn-registo', false); }
+  };
+
+  function gerarCodigo(uid) {
+    // Código curto legível, único por utilizador
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let cod = '#';
+    for (let i = 0; i < 6; i++) {
+      cod += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return cod; // ex: #A7F3K2
+  }
+
+  // Enter para submeter
+  document.getElementById('login-pass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.fazerLogin();
+  });
+  document.getElementById('reg-pass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.fazerRegisto();
+  });
+</script>
+
+</body>
+</html>

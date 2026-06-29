@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin · Comunidade UAb</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:     #1a3a2a;
+      --verde-med: #2d5a3d;
+      --verde-leve:#4a8c5c;
+      --ouro:      #c9a84c;
+      --creme:     #f5f0e8;
+      --branco:    #ffffff;
+      --cinza:     #6b7280;
+      --cinza-leve:#f3f4f6;
+      --texto:     #111827;
+      --erro:      #dc2626;
+      --sucesso:   #16a34a;
+      --aviso:     #d97706;
+    }
+
+    body { font-family:'Inter',sans-serif; background:var(--creme); color:var(--texto); min-height:100vh; }
+
+    header {
+      background:var(--verde);
+      padding:0 32px;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow:0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-logo { display:flex; align-items:center; gap:12px; }
+    .header-logo svg { width:24px; height:24px; }
+    .header-logo span { font-family:'Playfair Display',serif; font-size:1rem; color:var(--branco); }
+    .header-logo em { font-style:normal; color:var(--ouro); }
+
+    .badge-admin {
+      background:var(--ouro);
+      color:var(--verde);
+      font-size:0.7rem;
+      font-weight:700;
+      padding:3px 8px;
+      border-radius:20px;
+      letter-spacing:0.05em;
+    }
+
+    .btn-sair {
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.2);
+      color:var(--branco);
+      padding:7px 14px;
+      border-radius:7px;
+      font-size:0.8rem;
+      font-family:'Inter',sans-serif;
+      cursor:pointer;
+    }
+
+    main { max-width:1100px; margin:0 auto; padding:36px 24px; }
+
+    /* TABS */
+    .tabs-nav {
+      display:flex;
+      gap:4px;
+      background:var(--branco);
+      padding:6px;
+      border-radius:12px;
+      margin-bottom:28px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      width:fit-content;
+    }
+
+    .tab-nav {
+      padding:9px 20px;
+      border:none;
+      background:none;
+      border-radius:8px;
+      font-family:'Inter',sans-serif;
+      font-size:0.875rem;
+      font-weight:500;
+      color:var(--cinza);
+      cursor:pointer;
+      transition:all 0.2s;
+    }
+
+    .tab-nav.ativa { background:var(--verde); color:var(--branco); font-weight:600; }
+
+    .tab-content { display:none; }
+    .tab-content.ativa { display:block; }
+
+    /* SECÇÃO */
+    .secao-titulo {
+      font-family:'Playfair Display',serif;
+      font-size:1.4rem;
+      color:var(--verde);
+      margin-bottom:20px;
+    }
+
+    /* CARDS STATS */
+    .stats-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:16px;
+      margin-bottom:32px;
+    }
+
+    .stat-card {
+      background:var(--branco);
+      border-radius:10px;
+      padding:20px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .stat-num { font-size:2rem; font-weight:700; color:var(--verde); }
+    .stat-label { font-size:0.8rem; color:var(--cinza); margin-top:4px; }
+
+    /* TABELAS */
+    .tabela-wrap {
+      background:var(--branco);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom:28px;
+    }
+
+    .tabela-header {
+      padding:16px 20px;
+      background:var(--verde);
+      color:var(--branco);
+      font-size:0.875rem;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    table { width:100%; border-collapse:collapse; }
+    th { padding:10px 16px; text-align:left; font-size:0.75rem; font-weight:600; color:var(--cinza); text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #e5e7eb; }
+    td { padding:12px 16px; font-size:0.875rem; border-bottom:1px solid #f3f4f6; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#fafafa; }
+
+    .badge {
+      display:inline-block;
+      padding:3px 10px;
+      border-radius:20px;
+      font-size:0.72rem;
+      font-weight:600;
+    }
+
+    .badge-pendente { background:#fef3c7; color:#92400e; }
+    .badge-ativo    { background:#dcfce7; color:#14532d; }
+    .badge-suspenso { background:#fee2e2; color:#991b1b; }
+
+    .acoes { display:flex; gap:6px; flex-wrap:wrap; }
+
+    .btn-acao {
+      padding:5px 12px;
+      border:none;
+      border-radius:6px;
+      font-size:0.75rem;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      transition:opacity 0.2s;
+    }
+
+    .btn-acao:hover { opacity:0.8; }
+    .btn-ativar   { background:#dcfce7; color:#14532d; }
+    .btn-suspender{ background:#fee2e2; color:#991b1b; }
+    .btn-remover  { background:#f1f5f9; color:#475569; }
+
+    /* FORMULÁRIOS */
+    .form-card {
+      background:var(--branco);
+      border-radius:12px;
+      padding:28px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom:20px;
+    }
+
+    .form-card h3 {
+      font-size:1rem;
+      font-weight:600;
+      color:var(--verde);
+      margin-bottom:18px;
+    }
+
+    .form-row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+
+    .campo { flex:1; min-width:180px; }
+
+    label {
+      display:block;
+      font-size:0.75rem;
+      font-weight:600;
+      color:var(--verde);
+      margin-bottom:5px;
+      text-transform:uppercase;
+      letter-spacing:0.04em;
+    }
+
+    input[type=text], input[type=number], select, textarea {
+      width:100%;
+      padding:9px 12px;
+      border:1.5px solid #d1d5db;
+      border-radius:7px;
+      font-size:0.875rem;
+      font-family:'Inter',sans-serif;
+      color:var(--texto);
+      outline:none;
+      background:#fafafa;
+      transition:border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color:var(--verde-leve);
+      background:var(--branco);
+    }
+
+    textarea { resize:vertical; min-height:70px; }
+
+    .btn-primario {
+      background:var(--verde);
+      color:var(--branco);
+      border:none;
+      border-radius:8px;
+      padding:10px 24px;
+      font-size:0.875rem;
+      font-weight:600;
+      font-family:'Inter',sans-serif;
+      cursor:pointer;
+      transition:background 0.2s;
+    }
+
+    .btn-primario:hover { background:var(--verde-med); }
+    .btn-primario:disabled { opacity:0.5; cursor:not-allowed; }
+
+    .msg-form {
+      margin-top:10px;
+      padding:8px 12px;
+      border-radius:7px;
+      font-size:0.82rem;
+      display:none;
+    }
+
+    .msg-form.ok  { background:#f0fdf4; color:var(--sucesso); border:1px solid #bbf7d0; display:block; }
+    .msg-form.err { background:#fef2f2; color:var(--erro); border:1px solid #fecaca; display:block; }
+
+    /* UPLOAD */
+    .upload-area {
+      border:2px dashed #d1d5db;
+      border-radius:10px;
+      padding:24px;
+      text-align:center;
+      cursor:pointer;
+      transition:border-color 0.2s, background 0.2s;
+    }
+
+    .upload-area:hover, .upload-area.drag { border-color:var(--verde-leve); background:#f0fdf4; }
+    .upload-area input { display:none; }
+    .upload-icon { font-size:2rem; margin-bottom:8px; }
+    .upload-label { font-size:0.85rem; color:var(--cinza); }
+    .upload-label strong { color:var(--verde); }
+    .upload-file-nome { margin-top:8px; font-size:0.82rem; color:var(--verde); font-weight:600; }
+
+    .progress-bar {
+      height:6px;
+      background:#e5e7eb;
+      border-radius:3px;
+      margin-top:12px;
+      overflow:hidden;
+      display:none;
+    }
+
+    .progress-fill {
+      height:100%;
+      background:var(--verde-leve);
+      border-radius:3px;
+      transition:width 0.3s;
+      width:0%;
+    }
+
+    /* LOG */
+    .log-item {
+      padding:12px 16px;
+      border-bottom:1px solid #f3f4f6;
+      font-size:0.82rem;
+    }
+
+    .log-item:last-child { border-bottom:none; }
+    .log-data { color:var(--cinza); font-size:0.75rem; }
+    .log-codigo { font-family:monospace; font-weight:600; color:var(--verde); }
+
+    .empty-msg { text-align:center; padding:40px; color:var(--cinza); font-size:0.875rem; }
+
+    .spinner { display:inline-block; width:16px; height:16px; border:2px solid #d1d5db; border-top-color:var(--verde); border-radius:50%; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5"/>
+      <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
+    </svg>
+    <span>Ciências Sociais <em>UAb</em></span>
+    <span class="badge-admin">ADMIN</span>
+  </div>
+  <button class="btn-sair" onclick="sair()">Sair</button>
+</header>
+
+<main>
+  <div class="tabs-nav">
+    <button class="tab-nav ativa" onclick="mudarTab('utilizadores')">👥 Utilizadores</button>
+    <button class="tab-nav" onclick="mudarTab('ucs')">📚 UCs</button>
+    <button class="tab-nav" onclick="mudarTab('documentos')">📄 Documentos</button>
+    <button class="tab-nav" onclick="mudarTab('downloads')">📥 Histórico</button>
+  </div>
+
+  <!-- TAB: UTILIZADORES -->
+  <div class="tab-content ativa" id="tab-utilizadores">
+    <h2 class="secao-titulo">Gestão de Utilizadores</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="s-total">–</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-ativos">–</div><div class="stat-label">Ativos</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-pendentes">–</div><div class="stat-label">Pendentes</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-suspensos">–</div><div class="stat-label">Suspensos</div></div>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header">
+        <span>Utilizadores pendentes de ativação</span>
+      </div>
+      <table>
+        <thead><tr><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Código</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-pendentes"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header">
+        <span>Todos os utilizadores</span>
+      </div>
+      <table>
+        <thead><tr><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Código</th><th>Estado</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-todos"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: UCs -->
+  <div class="tab-content" id="tab-ucs">
+    <h2 class="secao-titulo">Unidades Curriculares</h2>
+
+    <div class="form-card">
+      <h3>➕ Adicionar UC</h3>
+      <div class="form-row">
+        <div class="campo">
+          <label>Nome da UC</label>
+          <input type="text" id="uc-nome" placeholder="ex: Psicologia Geral"/>
+        </div>
+        <div class="campo" style="max-width:120px">
+          <label>Ordem</label>
+          <input type="number" id="uc-ordem" placeholder="1" min="1"/>
+        </div>
+      </div>
+      <button class="btn-primario" onclick="criarUC()">Criar UC</button>
+      <div class="msg-form" id="msg-uc"></div>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header"><span>UCs existentes</span></div>
+      <table>
+        <thead><tr><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-ucs"><tr><td colspan="4" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: DOCUMENTOS -->
+  <div class="tab-content" id="tab-documentos">
+    <h2 class="secao-titulo">Adicionar Documento</h2>
+
+    <div class="form-card">
+      <div class="form-row">
+        <div class="campo">
+          <label>UC de destino</label>
+          <select id="doc-uc">
+            <option value="">— Seleciona a UC —</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Nome do documento</label>
+          <input type="text" id="doc-nome" placeholder="ex: Guia de Estudo Tema 1"/>
+        </div>
+      </div>
+      <div class="campo" style="margin-bottom:14px">
+        <label>Descrição (opcional)</label>
+        <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
+      </div>
+      <div class="campo" style="margin-bottom:18px">
+        <label>Ficheiro PDF</label>
+        <label class="upload-area" id="upload-area" for="file-input">
+          <input type="file" id="file-input" accept=".pdf" onchange="selecionarFicheiro(this)"/>
+          <div class="upload-icon">📎</div>
+          <div class="upload-label">
+            <strong>Clica para selecionar</strong> ou arrasta o PDF aqui
+          </div>
+          <div class="upload-file-nome" id="upload-nome"></div>
+          <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </label>
+      </div>
+      <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Carregar documento</button>
+      <div class="msg-form" id="msg-doc"></div>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header"><span>Documentos carregados</span></div>
+      <table>
+        <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-docs"><tr><td colspan="4" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: DOWNLOADS -->
+  <div class="tab-content" id="tab-downloads">
+    <h2 class="secao-titulo">Histórico de Downloads</h2>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header"><span>Todos os downloads registados</span></div>
+      <table>
+        <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>Código User</th><th>Código DL</th><th>Documento</th></tr></thead>
+        <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
+    collection, getDocs, addDoc, query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+  // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
+    authDomain: "uab-comunidade.firebaseapp.com",
+    projectId: "uab-comunidade",
+    storageBucket: "uab-comunidade.firebasestorage.app",
+    messagingSenderId: "26751084379",
+    appId: "1:26751084379:web:08763059128d30ea36dc7e"
+  };
+
+  const app     = initializeApp(firebaseConfig);
+  const auth    = getAuth(app);
+  const db      = getFirestore(app);
+  const storage = getStorage(app);
+
+  let ficheiroSelecionado = null;
+  let ucsList = [];
+
+  // --- AUTH CHECK (admin) ---
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'index.html'; return; }
+    const snap = await getDoc(doc(db, 'utilizadores', user.uid));
+    if (!snap.exists() || !snap.data().admin) {
+      window.location.href = 'app.html'; return;
+    }
+    carregarTudo();
+  });
+
+  // --- TABS ---
+  window.mudarTab = function(id) {
+    document.querySelectorAll('.tab-nav').forEach((t,i) => {
+      const ids = ['utilizadores','ucs','documentos','downloads'];
+      t.classList.toggle('ativa', ids[i] === id);
+    });
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativa'));
+    document.getElementById('tab-' + id).classList.add('ativa');
+  };
+
+  function carregarTudo() {
+    carregarUtilizadores();
+    carregarUCs();
+    carregarDocs();
+    carregarDownloads();
+  }
+
+  // --- UTILIZADORES ---
+  async function carregarUtilizadores() {
+    const snap = await getDocs(collection(db, 'utilizadores'));
+    const todos = [];
+    snap.forEach(d => todos.push({ id: d.id, ...d.data() }));
+
+    const pendentes  = todos.filter(u => u.estado === 'pendente');
+    const ativos     = todos.filter(u => u.estado === 'ativo');
+    const suspensos  = todos.filter(u => u.estado === 'suspenso');
+
+    document.getElementById('s-total').textContent    = todos.length;
+    document.getElementById('s-ativos').textContent   = ativos.length;
+    document.getElementById('s-pendentes').textContent = pendentes.length;
+    document.getElementById('s-suspensos').textContent = suspensos.length;
+
+    // Tabela pendentes
+    const tbP = document.getElementById('tbody-pendentes');
+    tbP.innerHTML = pendentes.length === 0
+      ? '<tr><td colspan="5" class="empty-msg">Nenhum pedido pendente ✓</td></tr>'
+      : pendentes.map(u => `
+          <tr>
+            <td>${u.nome}</td>
+            <td>${u.email}</td>
+            <td>${u.telefone || '—'}</td>
+            <td><span class="log-codigo">${u.codigo}</span></td>
+            <td class="acoes">
+              <button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">✓ Ativar</button>
+              <button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">✗ Recusar</button>
+            </td>
+          </tr>`).join('');
+
+    // Tabela todos
+    const tbT = document.getElementById('tbody-todos');
+    tbT.innerHTML = todos.length === 0
+      ? '<tr><td colspan="6" class="empty-msg">Sem utilizadores</td></tr>'
+      : todos.map(u => `
+          <tr>
+            <td>${u.nome}</td>
+            <td>${u.email}</td>
+            <td>${u.telefone || '—'}</td>
+            <td><span class="log-codigo">${u.codigo}</span></td>
+            <td><span class="badge badge-${u.estado}">${u.estado}</span></td>
+            <td class="acoes">
+              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
+              ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
+              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
+            </td>
+          </tr>`).join('');
+  }
+
+  window.alterarEstado = async function(uid, estado) {
+    await updateDoc(doc(db, 'utilizadores', uid), { estado });
+    carregarUtilizadores();
+  };
+
+  window.removerUser = async function(uid) {
+    if (!confirm('Remover este utilizador da base de dados?')) return;
+    await deleteDoc(doc(db, 'utilizadores', uid));
+    carregarUtilizadores();
+  };
+
+  // --- UCs ---
+  async function carregarUCs() {
+    const q    = query(collection(db, 'ucs'), orderBy('ordem'));
+    const snap = await getDocs(q);
+    ucsList    = [];
+    snap.forEach(d => ucsList.push({ id: d.id, ...d.data() }));
+
+    // Tabela UCs
+    const tb = document.getElementById('tbody-ucs');
+    tb.innerHTML = ucsList.length === 0
+      ? '<tr><td colspan="4" class="empty-msg">Nenhuma UC criada</td></tr>'
+      : ucsList.map(u => `
+          <tr>
+            <td>${u.ordem}</td>
+            <td>${u.nome}</td>
+            <td id="uc-docs-${u.id}">—</td>
+            <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
+          </tr>`).join('');
+
+    // Contar docs por UC
+    ucsList.forEach(async u => {
+      const sn = await getDocs(collection(db, 'ucs', u.id, 'documentos'));
+      const el = document.getElementById('uc-docs-' + u.id);
+      if (el) el.textContent = sn.size;
+    });
+
+    // Atualiza select de docs
+    const sel = document.getElementById('doc-uc');
+    sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
+      ucsList.map(u => `<option value="${u.id}">${u.nome}</option>`).join('');
+  }
+
+  window.criarUC = async function() {
+    const nome   = document.getElementById('uc-nome').value.trim();
+    const ordem  = parseInt(document.getElementById('uc-ordem').value) || 99;
+    const msgEl  = document.getElementById('msg-uc');
+
+    if (!nome) { msgEl.textContent = 'Introduz o nome da UC.'; msgEl.className = 'msg-form err'; return; }
+
+    await addDoc(collection(db, 'ucs'), { nome, ordem, criadoEm: serverTimestamp() });
+    document.getElementById('uc-nome').value = '';
+    document.getElementById('uc-ordem').value = '';
+    msgEl.textContent = `UC "${nome}" criada com sucesso.`;
+    msgEl.className = 'msg-form ok';
+    carregarUCs();
+    setTimeout(() => msgEl.className = 'msg-form', 3000);
+  };
+
+  window.removerUC = async function(id) {
+    if (!confirm('Remover esta UC e todos os seus documentos?')) return;
+    // Remove subdocumentos
+    const snap = await getDocs(collection(db, 'ucs', id, 'documentos'));
+    for (const d of snap.docs) await deleteDoc(d.ref);
+    await deleteDoc(doc(db, 'ucs', id));
+    carregarUCs(); carregarDocs();
+  };
+
+  // --- DOCUMENTOS ---
+  window.selecionarFicheiro = function(input) {
+    ficheiroSelecionado = input.files[0] || null;
+    document.getElementById('upload-nome').textContent = ficheiroSelecionado ? ficheiroSelecionado.name : '';
+  };
+
+  window.fazerUpload = async function() {
+    const ucId  = document.getElementById('doc-uc').value;
+    const nome  = document.getElementById('doc-nome').value.trim();
+    const desc  = document.getElementById('doc-desc').value.trim();
+    const msgEl = document.getElementById('msg-doc');
+    const btn   = document.getElementById('btn-upload');
+
+    if (!ucId || !nome || !ficheiroSelecionado) {
+      msgEl.textContent = 'Preenche todos os campos e seleciona um PDF.';
+      msgEl.className = 'msg-form err'; return;
+    }
+
+    btn.disabled = true; btn.textContent = 'A carregar...';
+    const progressBar  = document.getElementById('progress-bar');
+    const progressFill = document.getElementById('progress-fill');
+    progressBar.style.display = 'block';
+
+    try {
+      const storageRef  = ref(storage, `documentos/${ucId}/${Date.now()}_${ficheiroSelecionado.name}`);
+      const uploadTask  = uploadBytesResumable(storageRef, ficheiroSelecionado);
+
+      await new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+          snap => {
+            const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+            progressFill.style.width = pct + '%';
+          },
+          reject,
+          resolve
+        );
+      });
+
+      const tamanho = (ficheiroSelecionado.size / 1024).toFixed(0) + ' KB';
+      const q       = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
+      const ordem   = q.size + 1;
+
+      await addDoc(collection(db, 'ucs', ucId, 'documentos'), {
+        nome, descricao: desc,
+        storageRef: storageRef.fullPath,
+        tamanho, ordem,
+        criadoEm: serverTimestamp()
+      });
+
+      msgEl.textContent = `"${nome}" carregado com sucesso.`;
+      msgEl.className = 'msg-form ok';
+      document.getElementById('doc-nome').value = '';
+      document.getElementById('doc-desc').value = '';
+      document.getElementById('doc-uc').value   = '';
+      document.getElementById('upload-nome').textContent = '';
+      ficheiroSelecionado = null;
+      progressFill.style.width = '0%';
+      progressBar.style.display = 'none';
+      carregarDocs(); carregarUCs();
+      setTimeout(() => msgEl.className = 'msg-form', 3000);
+    } catch(e) {
+      msgEl.textContent = 'Erro ao carregar: ' + e.message;
+      msgEl.className = 'msg-form err';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Carregar documento';
+    }
+  };
+
+  async function carregarDocs() {
+    const tb   = document.getElementById('tbody-docs');
+    const rows = [];
+    for (const uc of ucsList) {
+      const snap = await getDocs(collection(db, 'ucs', uc.id, 'documentos'));
+      snap.forEach(d => rows.push({ ucNome: uc.nome, ucId: uc.id, id: d.id, ...d.data() }));
+    }
+
+    tb.innerHTML = rows.length === 0
+      ? '<tr><td colspan="4" class="empty-msg">Nenhum documento carregado</td></tr>'
+      : rows.map(r => `
+          <tr>
+            <td>${r.ucNome}</td>
+            <td>${r.nome}</td>
+            <td>${r.descricao || '—'}</td>
+            <td><button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}','${r.storageRef}')">Remover</button></td>
+          </tr>`).join('');
+  }
+
+  window.removerDoc = async function(ucId, docId, storageRef_) {
+    if (!confirm('Remover este documento?')) return;
+    try { await deleteObject(ref(storage, storageRef_)); } catch(e) {}
+    await deleteDoc(doc(db, 'ucs', ucId, 'documentos', docId));
+    carregarDocs(); carregarUCs();
+  };
+
+  // --- DOWNLOADS ---
+  async function carregarDownloads() {
+    const tb   = document.getElementById('tbody-dl');
+    const q    = query(collection(db, 'downloads'), orderBy('data', 'desc'));
+    const snap = await getDocs(q);
+
+    if (snap.empty) { tb.innerHTML = '<tr><td colspan="6" class="empty-msg">Sem downloads registados</td></tr>'; return; }
+
+    tb.innerHTML = '';
+    snap.forEach(d => {
+      const dl = d.data();
+      const data = dl.data?.toDate ? dl.data.toDate().toLocaleString('pt-PT') : '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="log-data">${data}</td>
+        <td>${dl.nome}</td>
+        <td>${dl.email}</td>
+        <td><span class="log-codigo">${dl.codigoUser}</span></td>
+        <td><span class="log-codigo">${dl.codigoDl}</span></td>
+        <td>${dl.docNome}</td>`;
+      tb.appendChild(tr);
+    });
+  }
+
+  window.sair = async function() {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  };
+</script>
+</body>
+</html>

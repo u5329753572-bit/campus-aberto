@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comunidade UAb · Área de Estudo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:     #1a3a2a;
+      --verde-med: #2d5a3d;
+      --verde-leve:#4a8c5c;
+      --ouro:      #c9a84c;
+      --ouro-leve: #e8cc7a;
+      --creme:     #f5f0e8;
+      --branco:    #ffffff;
+      --cinza:     #6b7280;
+      --cinza-leve:#f3f4f6;
+      --texto:     #111827;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--creme);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--verde);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo svg { width: 28px; height: 28px; flex-shrink: 0; }
+
+    .header-logo span {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--branco);
+    }
+
+    .header-logo span em {
+      font-style: normal;
+      color: var(--ouro);
+    }
+
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-nome {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--branco);
+    }
+
+    .user-codigo {
+      font-size: 0.72rem;
+      color: var(--ouro-leve);
+      font-family: monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-sair {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--branco);
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-sair:hover { background: rgba(255,255,255,0.2); }
+
+    /* MAIN */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--verde);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--cinza);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    /* GRID UCs */
+    .ucs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .uc-card {
+      background: var(--branco);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .uc-card:hover {
+      border-color: var(--verde-leve);
+      box-shadow: 0 8px 24px rgba(26,58,42,0.12);
+      transform: translateY(-2px);
+    }
+
+    .uc-card.ativa {
+      border-color: var(--verde);
+      box-shadow: 0 8px 24px rgba(26,58,42,0.18);
+    }
+
+    .uc-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .uc-nome {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--verde);
+      margin-bottom: 4px;
+    }
+
+    .uc-count {
+      font-size: 0.8rem;
+      color: var(--cinza);
+    }
+
+    /* SECÇÃO DOCUMENTOS */
+    .docs-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .docs-section.visivel { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .docs-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn-voltar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--cinza);
+      font-size: 1.2rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-voltar:hover { background: var(--cinza-leve); color: var(--verde); }
+
+    .docs-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--verde);
+    }
+
+    .docs-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .doc-item {
+      background: var(--branco);
+      border-radius: 10px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s;
+    }
+
+    .doc-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+    .doc-icone {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .doc-info { flex: 1; }
+
+    .doc-nome {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--texto);
+      margin-bottom: 3px;
+    }
+
+    .doc-meta {
+      font-size: 0.78rem;
+      color: var(--cinza);
+    }
+
+    .btn-download {
+      background: var(--verde);
+      color: var(--branco);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, transform 0.1s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-download:hover { background: var(--verde-med); }
+    .btn-download:active { transform: scale(0.97); }
+
+    /* MODAL CONFIRMAÇÃO DOWNLOAD */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.visivel { display: flex; }
+
+    .modal {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 32px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+    }
+
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--verde);
+      margin-bottom: 12px;
+    }
+
+    .modal p {
+      font-size: 0.875rem;
+      color: var(--cinza);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .modal-codigo {
+      background: var(--cinza-leve);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: var(--verde);
+      font-weight: 600;
+      margin-bottom: 20px;
+      border-left: 3px solid var(--ouro);
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-cancelar {
+      flex: 1;
+      padding: 10px;
+      background: var(--cinza-leve);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--cinza);
+      transition: background 0.2s;
+    }
+
+    .btn-cancelar:hover { background: #e5e7eb; }
+
+    .btn-confirmar {
+      flex: 2;
+      padding: 10px;
+      background: var(--verde);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--branco);
+      transition: background 0.2s;
+    }
+
+    .btn-confirmar:hover { background: var(--verde-med); }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--cinza);
+    }
+
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty p { font-size: 0.9rem; }
+
+    /* LOADING */
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: var(--cinza);
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 2px solid #d1d5db;
+      border-top-color: var(--verde);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      header { padding: 0 16px; }
+      main { padding: 24px 16px; }
+      .header-logo span { font-size: 0.9rem; }
+      .btn-download span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5"/>
+      <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
+    </svg>
+    <span>Ciências Sociais <em>UAb</em></span>
+  </div>
+  <div class="header-user">
+    <div class="user-info">
+      <div class="user-nome" id="hdr-nome">—</div>
+      <div class="user-codigo" id="hdr-codigo">—</div>
+    </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<main>
+  <div id="loading-inicial" class="loading">
+    <div class="spinner"></div><br/>A carregar...
+  </div>
+
+  <!-- ECRÃ PRINCIPAL: UCs -->
+  <div id="ecrã-ucs" style="display:none">
+    <h2 class="page-title">Guias de Estudo</h2>
+    <p class="page-subtitle">Seleciona uma Unidade Curricular para aceder aos documentos.</p>
+    <div class="ucs-grid" id="ucs-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ECRÃ DOCUMENTOS -->
+  <div id="ecrã-docs" style="display:none">
+    <div class="docs-header">
+      <button class="btn-voltar" onclick="voltarUCs()" title="Voltar">←</button>
+      <h2 class="docs-titulo" id="docs-titulo">—</h2>
+    </div>
+    <div class="docs-lista" id="docs-lista">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL DOWNLOAD -->
+<div class="modal-overlay" id="modal-dl">
+  <div class="modal">
+    <h3>📥 Descarregar documento</h3>
+    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+    <div class="modal-codigo" id="modal-codigo-txt">—</div>
+    <p style="font-size:0.78rem; color:#9ca3af; margin-bottom:20px;">
+      O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
+    </p>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">Descarregar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, collection, getDocs,
+    addDoc, serverTimestamp, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getStorage, ref, getDownloadURL }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+  // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
+    authDomain: "uab-comunidade.firebaseapp.com",
+    projectId: "uab-comunidade",
+    storageBucket: "uab-comunidade.firebasestorage.app",
+    messagingSenderId: "26751084379",
+    appId: "1:26751084379:web:08763059128d30ea36dc7e"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  const storage = getStorage(app);
+
+  // Cores para os ícones de UC
+  const paleta = [
+    {bg:'#dbeafe',emoji:'📘'}, {bg:'#dcfce7',emoji:'📗'},
+    {bg:'#fef9c3',emoji:'📙'}, {bg:'#fce7f3',emoji:'📕'},
+    {bg:'#ede9fe',emoji:'📔'}, {bg:'#ffedd5',emoji:'📒'},
+    {bg:'#e0f2fe',emoji:'📓'}, {bg:'#f0fdf4',emoji:'📚'},
+  ];
+
+  let utilizadorAtual = null;
+  let docPendente     = null;
+  let ucAtualId       = null;
+
+  // --- AUTH CHECK ---
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'index.html'; return; }
+
+    const snap = await getDoc(doc(db, 'utilizadores', user.uid));
+    if (!snap.exists() || snap.data().estado !== 'ativo') {
+      await signOut(auth);
+      window.location.href = 'index.html';
+      return;
+    }
+
+    utilizadorAtual = { uid: user.uid, ...snap.data() };
+    document.getElementById('hdr-nome').textContent    = utilizadorAtual.nome;
+    document.getElementById('hdr-codigo').textContent  = utilizadorAtual.codigo;
+    document.getElementById('loading-inicial').style.display = 'none';
+    document.getElementById('ecrã-ucs').style.display  = 'block';
+    carregarUCs();
+  });
+
+  // --- UCs ---
+  async function carregarUCs() {
+    const grid = document.getElementById('ucs-grid');
+    try {
+      const q    = query(collection(db, 'ucs'), orderBy('ordem'));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        grid.innerHTML = `<div class="empty"><div class="empty-icon">📂</div><p>Ainda não há Unidades Curriculares criadas.</p></div>`;
+        return;
+      }
+      grid.innerHTML = '';
+      snap.forEach((d, i) => {
+        const uc  = { id: d.id, ...d.data() };
+        const cor = paleta[i % paleta.length];
+        const el  = document.createElement('div');
+        el.className = 'uc-card';
+        el.innerHTML = `
+          <div class="uc-icon" style="background:${cor.bg}">${cor.emoji}</div>
+          <div class="uc-nome">${uc.nome}</div>
+          <div class="uc-count" id="count-${uc.id}">A carregar...</div>`;
+        el.onclick = () => abrirUC(uc, cor.emoji);
+        grid.appendChild(el);
+        contarDocs(uc.id);
+      });
+    } catch(e) {
+      grid.innerHTML = `<p style="color:red;font-size:.85rem">Erro ao carregar UCs.</p>`;
+    }
+  }
+
+  async function contarDocs(ucId) {
+    const snap = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
+    const el   = document.getElementById('count-' + ucId);
+    if (el) el.textContent = snap.size === 1 ? '1 documento' : `${snap.size} documentos`;
+  }
+
+  // --- DOCUMENTOS ---
+  async function abrirUC(uc, emoji) {
+    ucAtualId = uc.id;
+    document.getElementById('ecrã-ucs').style.display  = 'none';
+    document.getElementById('ecrã-docs').style.display = 'block';
+    document.getElementById('docs-titulo').textContent  = emoji + ' ' + uc.nome;
+
+    const lista = document.getElementById('docs-lista');
+    lista.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+    try {
+      const q    = query(collection(db, 'ucs', uc.id, 'documentos'), orderBy('ordem'));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        lista.innerHTML = `<div class="empty"><div class="empty-icon">📄</div><p>Ainda não há documentos nesta UC.</p></div>`;
+        return;
+      }
+
+      lista.innerHTML = '';
+      snap.forEach(d => {
+        const doc_  = { id: d.id, ...d.data() };
+        const el    = document.createElement('div');
+        el.className = 'doc-item';
+        el.innerHTML = `
+          <div class="doc-icone">📄</div>
+          <div class="doc-info">
+            <div class="doc-nome">${doc_.nome}</div>
+            <div class="doc-meta">${doc_.descricao || ''} ${doc_.tamanho ? '· ' + doc_.tamanho : ''}</div>
+          </div>
+          <button class="btn-download" onclick="window.iniciarDownload('${uc.id}','${d.id}','${doc_.nome}','${doc_.storageRef}')">
+            <span>↓</span><span>Descarregar</span>
+          </button>`;
+        lista.appendChild(el);
+      });
+    } catch(e) {
+      lista.innerHTML = `<p style="color:red;font-size:.85rem;padding:20px">Erro ao carregar documentos.</p>`;
+    }
+  }
+
+  window.voltarUCs = function() {
+    document.getElementById('ecrã-docs').style.display = 'none';
+    document.getElementById('ecrã-ucs').style.display  = 'block';
+  };
+
+  // --- DOWNLOAD COM CÓDIGO ---
+  window.iniciarDownload = function(ucId, docId, docNome, storageRef) {
+    // Gera código único para este download
+    const chars   = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let codigoDl  = 'DL-';
+    for (let i = 0; i < 8; i++) codigoDl += chars[Math.floor(Math.random() * chars.length)];
+
+    docPendente = { ucId, docId, docNome, storageRef, codigoDl };
+    document.getElementById('modal-codigo-txt').textContent =
+      `${codigoDl}  ·  ${utilizadorAtual.codigo}  ·  ${new Date().toLocaleDateString('pt-PT')}`;
+    document.getElementById('modal-dl').classList.add('visivel');
+  };
+
+  window.fecharModal = function() {
+    document.getElementById('modal-dl').classList.remove('visivel');
+    docPendente = null;
+  };
+
+  window.confirmarDownload = async function() {
+    if (!docPendente) return;
+    const btn = document.getElementById('btn-confirmar-dl');
+    btn.disabled = true;
+    btn.textContent = 'A preparar...';
+
+    try {
+      // 1. Regista o download no Firestore
+      await addDoc(collection(db, 'downloads'), {
+        uid:        utilizadorAtual.uid,
+        nome:       utilizadorAtual.nome,
+        email:      utilizadorAtual.email,
+        codigoUser: utilizadorAtual.codigo,
+        codigoDl:   docPendente.codigoDl,
+        ucId:       docPendente.ucId,
+        docId:      docPendente.docId,
+        docNome:    docPendente.docNome,
+        data:       serverTimestamp()
+      });
+
+      // 2. Obtém URL do PDF original no Storage
+      const url = await getDownloadURL(ref(storage, docPendente.storageRef));
+
+      // 3. Descarrega o PDF e adiciona marca d'água com código
+      await descarregarComMarcaDagua(url, docPendente.docNome, docPendente.codigoDl);
+
+      fecharModal();
+    } catch(e) {
+      console.error(e);
+      alert('Erro ao descarregar. Tenta novamente.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Descarregar';
+    }
+  };
+
+  async function descarregarComMarcaDagua(url, nome, codigoDl) {
+    // Carrega o PDF-lib para manipular o PDF
+    const { PDFDocument, rgb, StandardFonts } = await import(
+      'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.esm.min.js'
+    );
+
+    const resposta   = await fetch(url);
+    const pdfBytes   = await resposta.arrayBuffer();
+    const pdfDoc     = await PDFDocument.load(pdfBytes);
+    const helvetica  = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const paginas    = pdfDoc.getPages();
+    const data       = new Date().toLocaleDateString('pt-PT');
+    const texto      = `Comunidade UAb · Uso pessoal · ${codigoDl} · ${data}`;
+
+    paginas.forEach(pag => {
+      const { width, height } = pag.getSize();
+      // Rodapé discreto
+      pag.drawText(texto, {
+        x:        30,
+        y:        14,
+        size:     7.5,
+        font:     helvetica,
+        color:    rgb(0.55, 0.55, 0.55),
+        opacity:  0.7,
+      });
+      // Marca d'água diagonal subtil no centro
+      pag.drawText(codigoDl, {
+        x:        width / 2 - 40,
+        y:        height / 2,
+        size:     32,
+        font:     helvetica,
+        color:    rgb(0.85, 0.85, 0.85),
+        opacity:  0.12,
+        rotate:   { type: 'degrees', angle: 45 },
+      });
+    });
+
+    const pdfFinal  = await pdfDoc.save();
+    const blob      = new Blob([pdfFinal], { type: 'application/pdf' });
+    const link      = document.createElement('a');
+    link.href       = URL.createObjectURL(blob);
+    link.download   = nome.replace(/\.pdf$/i,'') + '.pdf';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  window.sair = async function() {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  };
+</script>
+</body>
+</html>
