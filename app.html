@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Comunidade UAb · Área de Estudo</title>
+  <title>CampusAberto · Área de Estudo</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -661,7 +661,7 @@
     const helvetica  = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const paginas    = pdfDoc.getPages();
     const data       = new Date().toLocaleDateString('pt-PT');
-    const texto      = `Comunidade UAb · Uso pessoal · ${codigoDl} · ${data}`;
+    const texto      = `CampusAberto · Uso pessoal · ${codigoDl} · ${data}`;
 
     paginas.forEach(pag => {
       const { width, height } = pag.getSize();
