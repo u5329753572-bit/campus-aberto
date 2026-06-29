@@ -526,7 +526,7 @@
         return;
       }
       grid.innerHTML = '';
-      snap.forEach((d, i) => {
+      snap.docs.forEach((d, i) => {
         const uc  = { id: d.id, ...d.data() };
         const cor = paleta[i % paleta.length];
         const el  = document.createElement('div');
