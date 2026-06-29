@@ -629,7 +629,17 @@
         data:       serverTimestamp()
       });
 
-      window.open(docPendente.driveUrl, '_blank');
+      // Converte link de partilha do Drive em URL de download directo
+      const m = (docPendente.driveUrl || '').match(/\/d\/([a-zA-Z0-9_-]+)/);
+      const downloadUrl = m
+        ? `https://drive.google.com/uc?export=download&id=${m[1]}`
+        : docPendente.driveUrl;
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.setAttribute('download', '');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
       fecharModal();
     } catch(e) {
       console.error(e);
