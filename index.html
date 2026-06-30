@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CampusAberto Â· CiÃªncias Sociais</title>
+  <title>CampusAberto · Ciências Sociais</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -303,8 +303,8 @@
           <circle cx="16" cy="16" r="2" fill="#c9a84c" opacity="0.5"/>
         </svg>
       </div>
-      <h1>Comunidade<br/>CiÃªncias Sociais</h1>
-      <p class="subtitle">Universidade Aberta Â· <strong>Ãrea reservada</strong></p>
+      <h1>Comunidade<br/>Ciências Sociais</h1>
+      <p class="subtitle">Universidade Aberta · <strong>Área reservada</strong></p>
     </div>
 
     <div class="tabs">
@@ -320,13 +320,13 @@
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" id="login-pass" placeholder="â¢â¢â¢â¢â¢â¢â¢â¢" autocomplete="current-password"/>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
       </div>
       <button class="btn" id="btn-login" onclick="fazerLogin()">Entrar</button>
       <div class="msg" id="msg-login"></div>
       <div class="aviso-pendente" id="aviso-pendente">
-        <strong>â³ Conta pendente de aprovaÃ§Ã£o</strong>
-        A tua conta estÃ¡ a aguardar ativaÃ§Ã£o. ReceberÃ¡s um email assim que for aprovada.
+        <strong>⏳ Conta pendente de aprovação</strong>
+        A tua conta estˡ a aguardar ativação. Receberás um email assim que for aprovada.
       </div>
     </div>
 
@@ -341,19 +341,19 @@
         <input type="email" id="reg-email" placeholder="xxxx@estudante.uab.pt" autocomplete="email"/>
       </div>
       <div class="field">
-        <label>TelemÃ³vel</label>
+        <label>Telemóvel</label>
         <input type="tel" id="reg-tel" placeholder="+351 9XX XXX XXX" autocomplete="tel"/>
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" id="reg-pass" placeholder="MÃ­nimo 8 caracteres" autocomplete="new-password"/>
+        <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/>
       </div>
       <button class="btn" id="btn-registo" onclick="fazerRegisto()">Pedir acesso</button>
       <div class="msg" id="msg-registo"></div>
       <div class="nota">
-        Apenas emails <strong>@estudante.uab.pt</strong> sÃ£o aceites.<br/>
-        ApÃ³s o registo, a tua conta serÃ¡ ativada manualmente.<br/>
-        ReceberÃ¡s confirmaÃ§Ã£o por email.
+        Apenas emails <strong>@estudante.uab.pt</strong> são aceites.<br/>
+        Após o registo, a tua conta será ativada manualmente.<br/>
+        Receberás confirmação por email.
       </div>
     </div>
   </div>
@@ -428,7 +428,7 @@
       }
     } catch(e) {
       const msgs = {
-        'auth/user-not-found':   'Email nÃ£o encontrado.',
+        'auth/user-not-found':   'Email não encontrado.',
         'auth/wrong-password':   'Password incorreta.',
         'auth/invalid-credential': 'Email ou password incorretos.',
         'auth/too-many-requests':'Demasiadas tentativas. Aguarda uns minutos.'
@@ -442,9 +442,9 @@
     const email = document.getElementById('reg-email').value.trim();
     const tel   = document.getElementById('reg-tel').value.trim();
     const senha = document.getElementById('reg-pass').value;
-    if (!nome || !email || !senha) { mostrarMsg('msg-registo', 'Preenche todos os campos obrigatÃ³rios.', 'erro'); return; }
+    if (!nome || !email || !senha) { mostrarMsg('msg-registo', 'Preenche todos os campos obrigatórios.', 'erro'); return; }
     if (!email.endsWith('@estudante.uab.pt') && !email.endsWith('@uab.pt')) {
-      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt ou @uab.pt sÃ£o aceites.', 'erro'); return;
+      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt ou @uab.pt são aceites.', 'erro'); return;
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
     setLoading('btn-registo', true);
@@ -456,10 +456,10 @@
         estado: 'pendente',
         criadoEm: serverTimestamp()
       });
-      mostrarMsg('msg-registo', 'Registo efetuado! Aguarda ativaÃ§Ã£o por parte da administraÃ§Ã£o.', 'sucesso');
+      mostrarMsg('msg-registo', 'Registo efetuado! Aguarda ativação por parte da administração.', 'sucesso');
       await auth.signOut();
     } catch (e) {
-      if (e.code === 'auth/email-already-in-use') mostrarMsg('msg-registo', 'Este email jÃ¡ estÃ¡ registado.', 'erro');
+      if (e.code === 'auth/email-already-in-use') mostrarMsg('msg-registo', 'Este email já está registado.', 'erro');
       else if (e.code === 'auth/weak-password') mostrarMsg('msg-registo', 'Password fraca.', 'erro');
       else mostrarMsg('msg-registo', 'Erro: ' + e.message, 'erro');
     } finally { setLoading('btn-registo', false); }
