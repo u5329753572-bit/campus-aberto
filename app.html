@@ -4,491 +4,603 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CampusAberto · Área de Estudo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --verde:     #1a3a2a;
-      --verde-med: #2d5a3d;
-      --verde-leve:#4a8c5c;
-      --ouro:      #c9a84c;
-      --ouro-leve: #e8cc7a;
-      --creme:     #f5f0e8;
-      --branco:    #ffffff;
-      --cinza:     #6b7280;
-      --cinza-leve:#f3f4f6;
-      --texto:     #111827;
+      --verde:      #1a3a2a;
+      --verde-med:  #2d5a3d;
+      --verde-leve: #4a8c5c;
+      --ouro:       #c9a84c;
+      --ouro-leve:  #e8cc7a;
+      --ouro-pale:  #f5e9c8;
+      --creme:      #ece6d9;
+      --branco:     #ffffff;
+      --cinza:      #6b7280;
+      --cinza-leve: #f3f4f6;
+      --texto:      #111827;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', sans-serif;
       background: var(--creme);
+      background-image:
+        radial-gradient(ellipse 70% 50% at 10% 0%,  rgba(201,168,76,0.07) 0%, transparent 100%),
+        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(26,58,42,0.05)  0%, transparent 100%);
       color: var(--texto);
       min-height: 100vh;
     }
 
-    /* HEADER */
+    /* ── HEADER ─────────────────────────────────────── */
     header {
-      background: var(--verde);
-      padding: 0 32px;
-      height: 64px;
+      background: linear-gradient(135deg, #0c1e12 0%, #1a3a2a 55%, #1e4430 100%);
+      padding: 0 40px;
+      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 28px rgba(0,0,0,0.28);
+      border-bottom: 1px solid rgba(201,168,76,0.22);
     }
 
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .header-logo { display: flex; align-items: center; gap: 14px; }
+    .header-logo svg { width: 30px; height: 30px; flex-shrink: 0; }
 
-    .header-logo svg { width: 28px; height: 28px; flex-shrink: 0; }
+    .header-logo-txt { display: flex; flex-direction: column; }
 
-    .header-logo span {
+    .header-logo-nome {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--branco);
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+    .header-logo-nome em { font-style: normal; color: var(--ouro); }
+
+    .header-logo-sub {
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 1px;
     }
 
-    .header-logo span em {
-      font-style: normal;
-      color: var(--ouro);
-    }
+    .header-user { display: flex; align-items: center; gap: 14px; }
 
-    .header-user {
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-leve));
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--verde);
+      flex-shrink: 0;
+      font-family: 'Playfair Display', serif;
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.3);
     }
 
-    .user-info {
-      text-align: right;
-    }
+    .user-info { text-align: right; }
 
     .user-nome {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--branco);
+      line-height: 1.2;
     }
 
     .user-codigo {
-      font-size: 0.72rem;
+      font-size: 0.66rem;
       color: var(--ouro-leve);
       font-family: monospace;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.07em;
+      opacity: 0.8;
     }
 
     .btn-sair {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--branco);
-      padding: 7px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.65);
+      padding: 6px 14px;
       border-radius: 7px;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-family: 'Inter', sans-serif;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.02em;
     }
+    .btn-sair:hover { background: rgba(255,255,255,0.15); color: var(--branco); }
 
-    .btn-sair:hover { background: rgba(255,255,255,0.2); }
-
-    /* MAIN */
+    /* ── MAIN ───────────────────────────────────────── */
     main {
-      max-width: 1100px;
+      max-width: 1160px;
       margin: 0 auto;
-      padding: 40px 24px;
+      padding: 48px 32px 88px;
     }
 
-    .page-title {
+    /* ── WELCOME ────────────────────────────────────── */
+    .welcome-bar {
+      display: none;
+      margin-bottom: 44px;
+      animation: fadeUp 0.45s ease;
+    }
+    .welcome-bar.visivel { display: block; }
+
+    .welcome-saudacao {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--verde);
-      margin-bottom: 8px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.15;
     }
 
-    .page-subtitle {
+    .welcome-sub {
+      font-size: 0.875rem;
       color: var(--cinza);
-      font-size: 0.9rem;
-      margin-bottom: 36px;
+      font-weight: 300;
     }
 
-    /* GRID UCs */
-    .ucs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
-    }
+    /* ── ANO / SEMESTRE ─────────────────────────────── */
+    .ano-secao { margin-bottom: 56px; }
 
-    /* AGRUPAMENTO ANO / SEMESTRE */
-    .ano-secao {
-      margin-bottom: 40px;
-    }
     .ano-titulo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .ano-titulo-badge {
       font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      color: var(--verde);
+      font-size: 1.2rem;
       font-weight: 700;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--verde);
-      margin-bottom: 20px;
+      color: var(--verde);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .ano-titulo-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--verde);
+      background: var(--ouro-pale);
+      border: 1px solid rgba(201,168,76,0.38);
+      padding: 3px 11px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .ano-titulo-linha {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(201,168,76,0.4), transparent);
+      min-width: 32px;
+    }
+
+    .semestre-secao { margin-bottom: 26px; }
+
+    .semestre-titulo {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-    .semestre-secao {
-      margin-bottom: 24px;
-    }
-    .semestre-titulo {
-      font-size: 0.72rem;
+      font-size: 0.67rem;
       font-weight: 700;
-      color: var(--cinza);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-      padding: 2px 0 2px 2px;
-      border-left: 3px solid var(--ouro);
-      padding-left: 10px;
+      letter-spacing: 0.1em;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+    .semestre-titulo::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 2px;
+      background: var(--ouro);
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ── UC CARDS ───────────────────────────────────── */
+    .ucs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 18px;
     }
 
     .uc-card {
       background: var(--branco);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(26,58,42,0.07);
+      box-shadow: 0 2px 14px rgba(26,58,42,0.06);
       cursor: pointer;
-      border: 2px solid transparent;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
-
     .uc-card:hover {
-      border-color: var(--verde-leve);
-      box-shadow: 0 8px 24px rgba(26,58,42,0.12);
-      transform: translateY(-2px);
+      transform: translateY(-6px);
+      box-shadow: 0 18px 52px rgba(26,58,42,0.15);
+      border-color: rgba(201,168,76,0.45);
     }
+    .uc-card:active { transform: translateY(-3px); }
 
-    .uc-card.ativa {
-      border-color: var(--verde);
-      box-shadow: 0 8px 24px rgba(26,58,42,0.18);
-    }
-
-    .uc-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+    .uc-card-banda {
+      height: 92px;
+      position: relative;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 14px;
+      align-items: flex-end;
+      padding: 0 20px 14px;
+      overflow: hidden;
     }
+    .uc-card-banda::before {
+      content: '';
+      position: absolute;
+      right: -14px; top: -14px;
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.09);
+    }
+    .uc-card-banda::after {
+      content: '';
+      position: absolute;
+      right: 24px; bottom: -22px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .uc-card-emoji {
+      font-size: 2.1rem;
+      line-height: 1;
+      z-index: 1;
+      position: relative;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+    }
+
+    .uc-card-corpo { padding: 16px 20px 22px; }
 
     .uc-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.92rem;
       font-weight: 600;
-      font-size: 1rem;
       color: var(--verde);
-      margin-bottom: 4px;
+      margin-bottom: 9px;
+      line-height: 1.35;
     }
 
     .uc-count {
-      font-size: 0.8rem;
-      color: var(--cinza);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .uc-count::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--ouro);
+      flex-shrink: 0;
     }
 
-    /* SECÇÃO DOCUMENTOS */
-    .docs-section {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
+    /* ── DOCS SECTION ───────────────────────────────── */
+    .docs-section { display: none; animation: fadeUp 0.3s ease; }
     .docs-section.visivel { display: block; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
     .docs-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 14px;
+      margin-bottom: 30px;
     }
 
     .btn-voltar {
-      background: none;
-      border: none;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--branco);
+      border: 1px solid rgba(26,58,42,0.12);
       cursor: pointer;
-      color: var(--cinza);
-      font-size: 1.2rem;
-      padding: 4px 8px;
-      border-radius: 6px;
-      transition: background 0.2s, color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      color: var(--verde);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      flex-shrink: 0;
     }
-
-    .btn-voltar:hover { background: var(--cinza-leve); color: var(--verde); }
+    .btn-voltar:hover { background: var(--ouro-pale); transform: translateX(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
 
     .docs-titulo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       color: var(--verde);
+      font-weight: 600;
     }
 
-    .docs-lista {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .docs-lista { display: flex; flex-direction: column; gap: 10px; }
 
     .doc-item {
       background: var(--branco);
-      border-radius: 10px;
+      border-radius: 14px;
       padding: 18px 22px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: box-shadow 0.2s;
+      gap: 18px;
+      box-shadow: 0 2px 10px rgba(26,58,42,0.055);
+      border: 1px solid rgba(26,58,42,0.06);
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
     }
-
-    .doc-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .doc-item:hover {
+      box-shadow: 0 8px 32px rgba(26,58,42,0.11);
+      border-color: rgba(201,168,76,0.28);
+      transform: translateX(3px);
+    }
 
     .doc-icone {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 46px; height: 46px;
+      background: linear-gradient(135deg, var(--verde), var(--verde-med));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
       font-size: 1.2rem;
       flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(26,58,42,0.22);
     }
 
-    .doc-info { flex: 1; }
+    .doc-info { flex: 1; min-width: 0; }
 
     .doc-nome {
+      font-family: 'Playfair Display', serif;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--texto);
       margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .doc-meta {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--cinza);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .btn-download {
+    .btn-ver {
       background: var(--verde);
       color: var(--branco);
       border: none;
-      border-radius: 8px;
+      border-radius: 9px;
       padding: 9px 18px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 600;
       font-family: 'Inter', sans-serif;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: background 0.2s, transform 0.1s;
+      gap: 7px;
+      transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
       flex-shrink: 0;
       white-space: nowrap;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(26,58,42,0.2);
     }
+    .btn-ver:hover { background: var(--verde-med); box-shadow: 0 4px 16px rgba(26,58,42,0.28); }
+    .btn-ver:active { transform: scale(0.96); }
 
-    .btn-download:hover { background: var(--verde-med); }
-    .btn-download:active { transform: scale(0.97); }
-
-    /* MODAL CONFIRMAÇÃO DOWNLOAD */
+    /* ── MODAL ──────────────────────────────────────── */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(12,30,18,0.65);
+      backdrop-filter: blur(6px);
       z-index: 200;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-
     .modal-overlay.visivel { display: flex; }
 
     .modal {
       background: var(--branco);
-      border-radius: 14px;
-      padding: 32px;
+      border-radius: 20px;
+      padding: 36px;
       max-width: 420px;
       width: 100%;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.28);
+      border: 1px solid rgba(201,168,76,0.18);
+      animation: fadeUp 0.25s ease;
+    }
+
+    .modal-icon {
+      width: 50px; height: 50px;
+      background: var(--ouro-pale);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 18px;
     }
 
     .modal h3 {
       font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       color: var(--verde);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .modal p {
-      font-size: 0.875rem;
+      font-size: 0.84rem;
       color: var(--cinza);
-      line-height: 1.6;
-      margin-bottom: 16px;
+      line-height: 1.65;
+      margin-bottom: 14px;
     }
 
     .modal-codigo {
-      background: var(--cinza-leve);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: monospace;
-      font-size: 0.9rem;
+      background: #f8f5ef;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.87rem;
       color: var(--verde);
-      font-weight: 600;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      border: 1px solid rgba(201,168,76,0.28);
       border-left: 3px solid var(--ouro);
+      letter-spacing: 0.04em;
     }
 
-    .modal-btns {
-      display: flex;
-      gap: 10px;
-    }
+    .modal-btns { display: flex; gap: 10px; margin-top: 22px; }
 
     .btn-cancelar {
       flex: 1;
-      padding: 10px;
+      padding: 11px;
       background: var(--cinza-leve);
-      border: none;
-      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 9px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
       color: var(--cinza);
       transition: background 0.2s;
     }
-
     .btn-cancelar:hover { background: #e5e7eb; }
 
     .btn-confirmar {
       flex: 2;
-      padding: 10px;
+      padding: 11px;
       background: var(--verde);
       border: none;
-      border-radius: 8px;
+      border-radius: 9px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       color: var(--branco);
       transition: background 0.2s;
+      letter-spacing: 0.02em;
     }
-
     .btn-confirmar:hover { background: var(--verde-med); }
+    .btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* EMPTY STATE */
+    /* ── EMPTY & LOADING ────────────────────────────── */
     .empty {
       text-align: center;
-      padding: 60px 24px;
+      padding: 72px 24px;
       color: var(--cinza);
     }
+    .empty-icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.4; }
+    .empty p { font-size: 0.88rem; }
 
-    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
-    .empty p { font-size: 0.9rem; }
-
-    /* LOADING */
     .loading {
       text-align: center;
-      padding: 60px;
+      padding: 72px;
       color: var(--cinza);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     .spinner {
       display: inline-block;
-      width: 24px; height: 24px;
-      border: 2px solid #d1d5db;
+      width: 26px; height: 26px;
+      border: 2px solid rgba(26,58,42,0.1);
       border-top-color: var(--verde);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin  { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
 
-    @media (max-width: 600px) {
-      header { padding: 0 16px; }
-      main { padding: 24px 16px; }
-      .header-logo span { font-size: 0.9rem; }
-      .btn-download span { display: none; }
-    }
-
-    /* ── PDF VIEWER ─────────────────────────────── */
+    /* ── PDF VIEWER ─────────────────────────────────── */
     .viewer-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: #3a3a3a;
+      background: #282828;
       z-index: 300;
       flex-direction: column;
     }
     .viewer-overlay.visivel { display: flex; }
 
     .viewer-toolbar {
-      background: var(--verde);
-      padding: 10px 16px;
+      background: linear-gradient(135deg, #0c1e12, #1a3a2a);
+      padding: 0 20px;
+      height: 58px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 3px 16px rgba(0,0,0,0.45);
+      border-bottom: 1px solid rgba(201,168,76,0.18);
     }
+
     .viewer-titulo {
       flex: 1;
-      font-size: 0.88rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
       font-weight: 500;
-      color: var(--branco);
+      color: rgba(255,255,255,0.9);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .btn-viewer-voltar {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--branco);
-      padding: 7px 14px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.78);
+      padding: 7px 15px;
       border-radius: 7px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-family: 'Inter', sans-serif;
       cursor: pointer;
       white-space: nowrap;
       flex-shrink: 0;
       transition: background 0.2s;
+      letter-spacing: 0.02em;
     }
-    .btn-viewer-voltar:hover { background: rgba(255,255,255,0.22); }
+    .btn-viewer-voltar:hover { background: rgba(255,255,255,0.17); color: #fff; }
+
     .btn-viewer-dl {
-      background: var(--ouro);
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-leve));
       color: var(--verde);
       border: none;
-      padding: 7px 18px;
+      padding: 8px 20px;
       border-radius: 7px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
       flex-shrink: 0;
-      transition: background 0.2s;
+      transition: opacity 0.2s, transform 0.12s;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(201,168,76,0.35);
     }
-    .btn-viewer-dl:hover { background: var(--ouro-leve); }
+    .btn-viewer-dl:hover { opacity: 0.9; }
+    .btn-viewer-dl:active { transform: scale(0.97); }
 
     .viewer-conteudo {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 16px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -496,14 +608,24 @@
     }
     .viewer-conteudo canvas {
       max-width: 100%;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 28px rgba(0,0,0,0.55);
       border-radius: 2px;
     }
     .viewer-pagina-sep {
-      color: rgba(255,255,255,0.3);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.22);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
       user-select: none;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 640px) {
+      header { padding: 0 16px; height: 60px; }
+      main { padding: 28px 16px 60px; }
+      .header-logo-sub, .user-info { display: none; }
+      .welcome-saudacao { font-size: 1.5rem; }
+      .btn-ver span:first-child { display: none; }
+      .viewer-toolbar { height: 52px; padding: 0 14px; gap: 10px; }
     }
   </style>
 </head>
@@ -512,14 +634,19 @@
 <header>
   <div class="header-logo">
     <svg viewBox="0 0 32 32" fill="none">
-      <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5"/>
+      <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
       <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="1.8" fill="#c9a84c" opacity="0.55"/>
     </svg>
-    <span>CampusAberto</span>
+    <div class="header-logo-txt">
+      <div class="header-logo-nome">Campus<em>Aberto</em></div>
+      <div class="header-logo-sub">Área de Estudo</div>
+    </div>
   </div>
   <div class="header-user">
+    <div class="user-avatar" id="hdr-avatar">—</div>
     <div class="user-info">
-      <div class="user-nome" id="hdr-nome">—</div>
+      <div class="user-nome"  id="hdr-nome">—</div>
       <div class="user-codigo" id="hdr-codigo">—</div>
     </div>
     <button class="btn-sair" onclick="sair()">Sair</button>
@@ -533,8 +660,10 @@
 
   <!-- ECRÃ PRINCIPAL: UCs -->
   <div id="ecrã-ucs" style="display:none">
-    <h2 class="page-title">Guias de Estudo</h2>
-    <p class="page-subtitle">Seleciona uma Unidade Curricular para aceder aos documentos.</p>
+    <div class="welcome-bar" id="welcome-bar">
+      <div class="welcome-saudacao">Bem-vinda, <span id="bv-nome">—</span> 👋</div>
+      <div class="welcome-sub">Seleciona uma Unidade Curricular para aceder aos materiais de estudo.</div>
+    </div>
     <div id="ucs-grid">
       <div class="loading"><div class="spinner"></div></div>
     </div>
@@ -561,7 +690,7 @@
   </div>
   <div class="viewer-conteudo" id="viewer-conteudo">
     <div class="loading">
-      <div class="spinner" style="border-color:#555;border-top-color:#c9a84c"></div>
+      <div class="spinner" style="border-color:#3a3a3a;border-top-color:#c9a84c"></div>
     </div>
   </div>
 </div>
@@ -569,15 +698,16 @@
 <!-- MODAL DOWNLOAD -->
 <div class="modal-overlay" id="modal-dl">
   <div class="modal">
-    <h3>📥 Descarregar documento</h3>
+    <div class="modal-icon">📥</div>
+    <h3>Descarregar documento</h3>
     <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
     <div class="modal-codigo" id="modal-codigo-txt">—</div>
-    <p style="font-size:0.78rem; color:#9ca3af; margin-bottom:20px;">
+    <p style="font-size:0.76rem;color:#9ca3af">
       O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
     </p>
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">Descarregar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
     </div>
   </div>
 </div>
@@ -590,7 +720,7 @@
     getFirestore, doc, getDoc, collection, getDocs,
     addDoc, serverTimestamp, query, orderBy
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
+
   const firebaseConfig = {
     apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
     authDomain: "uab-comunidade.firebaseapp.com",
@@ -603,22 +733,27 @@
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db   = getFirestore(app);
-  const docMap = {}; // guarda driveUrl por docId
 
-  // Cores para os ícones de UC
+  const docMap = {};
+
+  // Paleta de gradientes ricos para as bandas dos cards
   const paleta = [
-    {bg:'#dbeafe',emoji:'📘'}, {bg:'#dcfce7',emoji:'📗'},
-    {bg:'#fef9c3',emoji:'📙'}, {bg:'#fce7f3',emoji:'📕'},
-    {bg:'#ede9fe',emoji:'📔'}, {bg:'#ffedd5',emoji:'📒'},
-    {bg:'#e0f2fe',emoji:'📓'}, {bg:'#f0fdf4',emoji:'📚'},
+    { banda: 'linear-gradient(135deg,#1a3a2a,#2d6040)', emoji: '📘' },
+    { banda: 'linear-gradient(135deg,#1e2d5c,#2d4a8a)', emoji: '📗' },
+    { banda: 'linear-gradient(135deg,#5c1e1e,#8a3030)', emoji: '📙' },
+    { banda: 'linear-gradient(135deg,#3d1a5c,#5e3090)', emoji: '📕' },
+    { banda: 'linear-gradient(135deg,#1a3d4a,#2d6070)', emoji: '📔' },
+    { banda: 'linear-gradient(135deg,#4a380e,#7a6020)', emoji: '📒' },
+    { banda: 'linear-gradient(135deg,#4a1a30,#7a2d50)', emoji: '📓' },
+    { banda: 'linear-gradient(135deg,#1a4a3a,#2d7060)', emoji: '📚' },
   ];
 
-  let utilizadorAtual  = null;
-  let docPendente      = null;
-  let ucAtualId        = null;
-  let viewerDocAtual   = null;
+  let utilizadorAtual = null;
+  let docPendente     = null;
+  let ucAtualId       = null;
+  let viewerDocAtual  = null;
 
-  // --- AUTH CHECK ---
+  // --- AUTH ---
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = 'index.html'; return; }
 
@@ -630,10 +765,22 @@
     }
 
     utilizadorAtual = { uid: user.uid, ...snap.data() };
-    document.getElementById('hdr-nome').textContent    = utilizadorAtual.nome;
-    document.getElementById('hdr-codigo').textContent  = utilizadorAtual.codigo;
+
+    // Header
+    document.getElementById('hdr-nome').textContent   = utilizadorAtual.nome;
+    document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
+
+    // Avatar com iniciais
+    const partes   = utilizadorAtual.nome.trim().split(' ');
+    const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
+    document.getElementById('hdr-avatar').textContent = iniciais;
+
+    // Welcome bar
+    document.getElementById('bv-nome').textContent = partes[0];
+    document.getElementById('welcome-bar').classList.add('visivel');
+
     document.getElementById('loading-inicial').style.display = 'none';
-    document.getElementById('ecrã-ucs').style.display  = 'block';
+    document.getElementById('ecrã-ucs').style.display        = 'block';
     carregarUCs();
   });
 
@@ -670,27 +817,26 @@
       container.innerHTML = '';
       let colorIdx = 0;
 
-      const anoNome = a => a === 0 ? 'Sem classificação' : `${a}º Ano`;
-      const semNome = s => s === 0 ? null : `${s}º Semestre`;
-
       Object.keys(grupos).sort((a,b) => Number(a)-Number(b)).forEach(ano => {
         const anoDiv = document.createElement('div');
         anoDiv.className = 'ano-secao';
 
+        // Cabeçalho de ano
         const anoH = document.createElement('div');
         anoH.className = 'ano-titulo';
-        anoH.innerHTML = `<span>📅</span><span>${anoNome(Number(ano))}</span>`;
+        anoH.innerHTML = Number(ano) > 0
+          ? `<span class="ano-titulo-badge">${ano}º Ano</span><span class="ano-titulo-linha"></span>`
+          : `<span class="ano-titulo-badge">Sem classificação</span><span class="ano-titulo-linha"></span>`;
         anoDiv.appendChild(anoH);
 
         Object.keys(grupos[ano]).sort((a,b) => Number(a)-Number(b)).forEach(sem => {
           const semDiv = document.createElement('div');
           semDiv.className = 'semestre-secao';
 
-          const semLabel = semNome(Number(sem));
-          if (semLabel) {
+          if (Number(sem) > 0) {
             const semH = document.createElement('div');
-            semH.className = 'semestre-titulo';
-            semH.textContent = semLabel;
+            semH.className   = 'semestre-titulo';
+            semH.textContent = `${sem}º Semestre`;
             semDiv.appendChild(semH);
           }
 
@@ -703,9 +849,13 @@
             const el = document.createElement('div');
             el.className = 'uc-card';
             el.innerHTML = `
-              <div class="uc-icon" style="background:${cor.bg}">${cor.emoji}</div>
-              <div class="uc-nome">${uc.nome}</div>
-              <div class="uc-count" id="count-${uc.id}">A carregar...</div>`;
+              <div class="uc-card-banda" style="background:${cor.banda}">
+                <span class="uc-card-emoji">${cor.emoji}</span>
+              </div>
+              <div class="uc-card-corpo">
+                <div class="uc-nome">${uc.nome}</div>
+                <div class="uc-count" id="count-${uc.id}">A carregar...</div>
+              </div>`;
             el.onclick = () => abrirUC(uc, cor.emoji);
             grid.appendChild(el);
             contarDocs(uc.id);
@@ -719,7 +869,7 @@
       });
 
     } catch(e) {
-      container.innerHTML = `<p style="color:red;font-size:.85rem">Erro ao carregar UCs: ${e.code || e.message}</p>`;
+      container.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar UCs: ${e.code || e.message}</p>`;
     }
   }
 
@@ -751,7 +901,7 @@
       lista.innerHTML = '';
       snap.docs.forEach(d => {
         const doc_  = { id: d.id, ...d.data() };
-        docMap[d.id] = doc_; // guarda para acesso no iniciarDownload
+        docMap[d.id] = doc_;
         const el    = document.createElement('div');
         el.className = 'doc-item';
         el.innerHTML = `
@@ -760,13 +910,13 @@
             <div class="doc-nome">${doc_.nome}</div>
             <div class="doc-meta">${doc_.descricao || ''}</div>
           </div>
-          <button class="btn-download" onclick="window.abrirViewer('${uc.id}','${d.id}','${doc_.nome.replace(/'/g,"\\'")}')">
+          <button class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}','${doc_.nome.replace(/'/g,"\\'")}')">
             <span>👁</span><span>Ver</span>
           </button>`;
         lista.appendChild(el);
       });
     } catch(e) {
-      lista.innerHTML = `<p style="color:red;font-size:.85rem;padding:20px">Erro ao carregar documentos.</p>`;
+      lista.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar documentos.</p>`;
     }
   }
 
@@ -783,8 +933,8 @@
 
     document.getElementById('viewer-titulo').textContent = docNome;
     conteudo.innerHTML = `<div class="loading">
-      <div class="spinner" style="border-color:#555;border-top-color:#c9a84c"></div>
-      <br/><span style="color:#aaa;font-size:.85rem">A carregar PDF...</span>
+      <div class="spinner" style="border-color:#3a3a3a;border-top-color:#c9a84c"></div>
+      <br/><span style="color:#888;font-size:.83rem">A carregar PDF...</span>
     </div>`;
     overlay.classList.add('visivel');
     viewerDocAtual = { ucId, docId, docNome };
@@ -803,7 +953,7 @@
       for (let i = 1; i <= pdf.numPages; i++) {
         const page  = await pdf.getPage(i);
         const vp0   = page.getViewport({ scale: 1 });
-        const maxW  = Math.min(conteudo.clientWidth - 32, 900);
+        const maxW  = Math.min(conteudo.clientWidth - 40, 900);
         const scale = maxW / vp0.width;
         const vp    = page.getViewport({ scale });
 
@@ -823,7 +973,7 @@
     } catch(e) {
       conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">
         Não foi possível carregar o PDF.<br/>
-        <small style="color:#888;font-size:.75rem">${e.message}</small>
+        <small style="color:#666;font-size:.74rem">${e.message}</small>
       </p>`;
     }
   };
@@ -876,7 +1026,6 @@
         data:       serverTimestamp()
       });
 
-      // Tenta descarregar com marca d'água; se CORS bloquear, faz download directo
       try {
         const resposta = await fetch(docPendente.driveUrl);
         if (!resposta.ok) throw new Error('fetch falhou');
@@ -896,7 +1045,7 @@
       alert('Erro ao registar download. Tenta novamente.');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Descarregar';
+      btn.textContent = '↓ Descarregar';
     }
   };
 
