@@ -371,7 +371,22 @@
           <label>Nome da UC</label>
           <input type="text" id="uc-nome" placeholder="ex: Psicologia Geral"/>
         </div>
-        <div class="campo" style="max-width:120px">
+        <div class="campo" style="max-width:130px">
+          <label>Ano</label>
+          <select id="uc-ano">
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
+          </select>
+        </div>
+        <div class="campo" style="max-width:150px">
+          <label>Semestre</label>
+          <select id="uc-semestre">
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
+          </select>
+        </div>
+        <div class="campo" style="max-width:110px">
           <label>Ordem</label>
           <input type="number" id="uc-ordem" placeholder="1" min="1"/>
         </div>
@@ -383,8 +398,8 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>UCs existentes</span></div>
       <table>
-        <thead><tr><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
-        <tbody id="tbody-ucs"><tr><td colspan="4" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+        <thead><tr><th>Ano</th><th>Semestre</th><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-ucs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
@@ -558,18 +573,27 @@
 
   // --- UCs ---
   async function carregarUCs() {
-    const q    = query(collection(db, 'ucs'), orderBy('ordem'));
-    const snap = await getDocs(q);
-    ucsList    = [];
+    const snap = await getDocs(collection(db, 'ucs'));
+    ucsList = [];
     snap.forEach(d => ucsList.push({ id: d.id, ...d.data() }));
+
+    // Ordena: ano → semestre → ordem
+    ucsList.sort((a, b) => {
+      const dA = (a.ano||99)*100 + (a.semestre||99);
+      const dB = (b.ano||99)*100 + (b.semestre||99);
+      if (dA !== dB) return dA - dB;
+      return (a.ordem||99) - (b.ordem||99);
+    });
 
     // Tabela UCs
     const tb = document.getElementById('tbody-ucs');
     tb.innerHTML = ucsList.length === 0
-      ? '<tr><td colspan="4" class="empty-msg">Nenhuma UC criada</td></tr>'
+      ? '<tr><td colspan="6" class="empty-msg">Nenhuma UC criada</td></tr>'
       : ucsList.map(u => `
           <tr>
-            <td>${u.ordem}</td>
+            <td>${u.ano ? u.ano + 'º' : '—'}</td>
+            <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
+            <td>${u.ordem || '—'}</td>
             <td>${u.nome}</td>
             <td id="uc-docs-${u.id}">—</td>
             <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
@@ -582,23 +606,28 @@
       if (el) el.textContent = sn.size;
     });
 
-    // Atualiza select de docs
+    // Atualiza select de docs (com info de ano/semestre)
     const sel = document.getElementById('doc-uc');
     sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
-      ucsList.map(u => `<option value="${u.id}">${u.nome}</option>`).join('');
+      ucsList.map(u => {
+        const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
+        return `<option value="${u.id}">${label}</option>`;
+      }).join('');
   }
 
   window.criarUC = async function() {
-    const nome   = document.getElementById('uc-nome').value.trim();
-    const ordem  = parseInt(document.getElementById('uc-ordem').value) || 99;
-    const msgEl  = document.getElementById('msg-uc');
+    const nome     = document.getElementById('uc-nome').value.trim();
+    const ano      = parseInt(document.getElementById('uc-ano').value);
+    const semestre = parseInt(document.getElementById('uc-semestre').value);
+    const ordem    = parseInt(document.getElementById('uc-ordem').value) || 99;
+    const msgEl    = document.getElementById('msg-uc');
 
     if (!nome) { msgEl.textContent = 'Introduz o nome da UC.'; msgEl.className = 'msg-form err'; return; }
 
-    await addDoc(collection(db, 'ucs'), { nome, ordem, criadoEm: serverTimestamp() });
-    document.getElementById('uc-nome').value = '';
+    await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, criadoEm: serverTimestamp() });
+    document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
-    msgEl.textContent = `UC "${nome}" criada com sucesso.`;
+    msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
     msgEl.className = 'msg-form ok';
     carregarUCs();
     setTimeout(() => msgEl.className = 'msg-form', 3000);
