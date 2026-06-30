@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CampusAberto Â· Ãrea de Estudo</title>
+  <title>CampusAberto · Área de Estudo</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
@@ -35,7 +35,7 @@
       min-height: 100vh;
     }
 
-    /* ââ HEADER âââââââââââââââââââââââââââââââââââââââ */
+    /* ── HEADER ─────────────────────────────────────── */
     header {
       background: linear-gradient(135deg, #0a1c10 0%, #1a3a2a 55%, #1c3e2c 100%);
       padding: 0 48px;
@@ -106,10 +106,10 @@
     }
     .btn-sair:hover { background: rgba(255,255,255,0.14); color: var(--branco); }
 
-    /* ââ MAIN âââââââââââââââââââââââââââââââââââââââââ */
+    /* ── MAIN ───────────────────────────────────────── */
     main { max-width: 1200px; margin: 0 auto; padding: 52px 40px 96px; }
 
-    /* ââ WELCOME ââââââââââââââââââââââââââââââââââââââ */
+    /* ── WELCOME ────────────────────────────────────── */
     .welcome-area { display: none; margin-bottom: 52px; animation: fadeUp 0.5s ease; }
     .welcome-area.visivel { display: block; }
 
@@ -147,7 +147,7 @@
       text-transform: uppercase; letter-spacing: 0.11em; font-weight: 500;
     }
 
-    /* ââ ANO / SEMESTRE âââââââââââââââââââââââââââââââ */
+    /* ── ANO / SEMESTRE ─────────────────────────────── */
     .ano-secao { margin-bottom: 60px; }
 
     .ano-titulo {
@@ -186,7 +186,7 @@
       border-radius: 1px;
     }
 
-    /* ââ UC CARDS âââââââââââââââââââââââââââââââââââââ */
+    /* ── UC CARDS ───────────────────────────────────── */
     .ucs-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
@@ -280,7 +280,7 @@
     }
     .uc-card:hover .uc-card-cta { letter-spacing: 0.09em; }
 
-    /* ââ DOCS SECTION âââââââââââââââââââââââââââââââââ */
+    /* ── DOCS SECTION ───────────────────────────────── */
     .docs-section { display: none; animation: fadeUp 0.3s ease; }
     .docs-section.visivel { display: block; }
 
@@ -364,7 +364,7 @@
     .btn-ver:hover { background: var(--verde-med); box-shadow: 0 6px 22px rgba(26,58,42,0.34); transform: translateY(-1px); }
     .btn-ver:active { transform: scale(0.96); }
 
-    /* ââ MODAL ââââââââââââââââââââââââââââââââââââââââ */
+    /* ── MODAL ──────────────────────────────────────── */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(8,22,14,0.72);
@@ -431,7 +431,7 @@
     .btn-confirmar:hover { opacity: 0.9; box-shadow: 0 6px 22px rgba(26,58,42,0.38); }
     .btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ââ EMPTY & LOADING ââââââââââââââââââââââââââââââ */
+    /* ── EMPTY & LOADING ────────────────────────────── */
     .empty { text-align: center; padding: 80px 24px; color: var(--cinza); }
     .empty-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.3; }
     .empty h4 {
@@ -452,7 +452,7 @@
     @keyframes spin   { to { transform: rotate(360deg); } }
     @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
 
-    /* ââ PDF VIEWER âââââââââââââââââââââââââââââââââââ */
+    /* ── PDF VIEWER ─────────────────────────────────── */
     .viewer-overlay {
       display: none; position: fixed; inset: 0;
       background: #1a1a1a; z-index: 300; flex-direction: column;
@@ -483,7 +483,7 @@
     .btn-viewer-voltar:hover { background: rgba(255,255,255,0.16); color: #fff; }
 
     .btn-viewer-dl {
-      background: linear-gradient(135deg, var(--ouro),ydir=#d4b35a);
+      background: linear-gradient(135deg, var(--ouro), #d4b35a);
       color: #1a2a0c; border: none;
       padding: 9px 22px; border-radius: 8px;
       font-size: 0.8rem; font-family: 'Inter', sans-serif;
@@ -509,7 +509,7 @@
       letter-spacing: 0.14em; user-select: none;
     }
 
-    /* ââ RESPONSIVE âââââââââââââââââââââââââââââââââââ */
+    /* ── RESPONSIVE ─────────────────────────────────── */
     @media (max-width: 640px) {
       header { padding: 0 18px; height: 64px; }
       main { padding: 32px 18px 68px; }
@@ -528,6 +528,7 @@
   </style>
 </head>
 <body>
+
 <header>
   <div class="header-logo">
     <div class="header-logo-icon">
@@ -539,15 +540,15 @@
     </div>
     <div class="header-logo-txt">
       <div class="header-logo-nome">Campus<em>Aberto</em></div>
-      <div class="header-logo-sub">Uliversidade Aberta Â· UAb</div>
+      <div class="header-logo-sub">Universidade Aberta · UAb</div>
     </div>
   </div>
   <div class="header-right">
     <div class="user-chip">
-      <div class="user-avatar" id="hdr-avatar">â</div>
+      <div class="user-avatar" id="hdr-avatar">—</div>
       <div class="user-info">
-        <div class="user-nome"   id="hdr-nome">â</div>
-        <div class="user-codigo" id="hdr-codigo">â</div>
+        <div class="user-nome"   id="hdr-nome">—</div>
+        <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
       </div>
     </div>
     <button class="btn-sair" onclick="sair()">Sair</button>
@@ -559,22 +560,22 @@
     <div class="spinner"></div><br/>A carregar...
   </div>
 
-  <!-- ECRÃ PRINCIPAL: UCs -->
-  <div id="ecrÃ£-ucs" style="display:none">
+  <!-- ECRÃ PRINCIPAL: UCs -->
+  <div id="ecra-ucs" style="display:none">
     <div class="welcome-area" id="welcome-bar">
-      <div class="welcome-saudacao">Bem-vinda, <span id="bv-nome">â</span> ð</div>
+      <div class="welcome-saudacao">Bem-vinda, <span id="bv-nome">—</span> 👋</div>
       <div class="welcome-sub">Seleciona uma Unidade Curricular para aceder aos materiais de estudo.</div>
       <div class="stats-bar">
         <div class="stat-item">
-          <div class="stat-val" id="stat-ucs">â</div>
+          <div class="stat-val" id="stat-ucs">—</div>
           <div class="stat-label">Unidades Curriculares</div>
         </div>
         <div class="stat-item">
-          <div class="stat-val" id="stat-docs">â</div>
-          <div class="stat-label">Documentos disponÃ­veis</div>
+          <div class="stat-val" id="stat-docs">—</div>
+          <div class="stat-label">Documentos disponíveis</div>
         </div>
         <div class="stat-item">
-          <div class="stat-val" id="stat-ano">â</div>
+          <div class="stat-val" id="stat-ano">—</div>
           <div class="stat-label">Ano letivo</div>
         </div>
       </div>
@@ -584,12 +585,12 @@
     </div>
   </div>
 
-  <!-- ECRÃ DOCUMENTOS -->
-  <div id="ecrÃ£-docs" style="display:none">
+  <!-- ECRÃ DOCUMENTOS -->
+  <div id="ecra-docs" style="display:none">
     <div class="docs-header">
-      <button class="btn-voltar" onclick="voltarUCs()" title="Voltar">â</button>
+      <button class="btn-voltar" onclick="voltarUCs()" title="Voltar">←</button>
       <div class="docs-titulo-area">
-        <h2 class="docs-titulo" id="docs-titulo">â</h2>
+        <h2 class="docs-titulo" id="docs-titulo">—</h2>
         <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
       </div>
     </div>
@@ -602,9 +603,9 @@
 <!-- VIEWER PDF -->
 <div class="viewer-overlay" id="viewer-overlay">
   <div class="viewer-toolbar">
-    <button class="btn-viewer-voltar" onclick="window.fecharViewer()">â Lista</button>
-    <span class="viewer-titulo" id="viewer-titulo">â</span>
-    <button class="btn-viewer-dl" onclick="window.iniciarDownloadDoViewer()">â Descarregar</button>
+    <button class="btn-viewer-voltar" onclick="window.fecharViewer()">← Lista</button>
+    <span class="viewer-titulo" id="viewer-titulo">—</span>
+    <button class="btn-viewer-dl" onclick="window.iniciarDownloadDoViewer()">↓ Descarregar</button>
   </div>
   <div class="viewer-conteudo" id="viewer-conteudo">
     <div class="loading">
@@ -616,16 +617,16 @@
 <!-- MODAL DOWNLOAD -->
 <div class="modal-overlay" id="modal-dl">
   <div class="modal">
-    <div class="modal-icon">ð¥</div>
+    <div class="modal-icon">📥</div>
     <h3>Descarregar documento</h3>
-    <p>Este documento ficarÃ¡ associado ao teu registo. O cÃ³digo abaixo identifica este download:</p>
-    <div class="modal-codigo" id="modal-codigo-txt">â</div>
+    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+    <div class="modal-codigo" id="modal-codigo-txt">—</div>
     <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
-      O cÃ³digo Ã© inserido discretamente no documento. NÃ£o contÃ©m o teu nome nem contactos â apenas um identificador rastreÃ¡vel.
+      O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
     </p>
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">â Descarregar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
     </div>
   </div>
 </div>
@@ -655,14 +656,14 @@
   const docMap = {};
 
   const paleta = [
-    { banda: 'linear-gradient(135deg,#1a3a2a,#2d6040)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#1e2d5c,#2d4a8a)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#5c1e1e,#8a3030)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#3d1a5c,#5e3090)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#1a3d4a,#2d6070)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#4a380e,#7a6020)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#4a1a30,#7a2d50)', emoji: 'ð' },
-    { banda: 'linear-gradient(135deg,#1a4a3a,#2d7060)', emoji: 'ð' },
+    { banda: 'linear-gradient(135deg,#1a3a2a,#2d6040)', emoji: '📘' },
+    { banda: 'linear-gradient(135deg,#1e2d5c,#2d4a8a)', emoji: '📗' },
+    { banda: 'linear-gradient(135deg,#5c1e1e,#8a3030)', emoji: '📙' },
+    { banda: 'linear-gradient(135deg,#3d1a5c,#5e3090)', emoji: '📕' },
+    { banda: 'linear-gradient(135deg,#1a3d4a,#2d6070)', emoji: '📔' },
+    { banda: 'linear-gradient(135deg,#4a380e,#7a6020)', emoji: '📒' },
+    { banda: 'linear-gradient(135deg,#4a1a30,#7a2d50)', emoji: '📓' },
+    { banda: 'linear-gradient(135deg,#1a4a3a,#2d7060)', emoji: '📚' },
   ];
 
   let utilizadorAtual = null;
@@ -673,36 +674,41 @@
 
   // --- AUTH ---
   onAuthStateChanged(auth, async (user) => {
-    if (!user) { window.location.href = 'index.html'; return; }
+    try {
+      if (!user) { window.location.href = 'index.html'; return; }
 
-    const snap = await getDoc(doc(db, 'utilizadores', user.uid));
-    if (!snap.exists() || snap.data().estado !== 'ativo') {
-      await signOut(auth);
-      window.location.href = 'index.html';
-      return;
+      const snap = await getDoc(doc(db, 'utilizadores', user.uid));
+      if (!snap.exists() || snap.data().estado !== 'ativo') {
+        await signOut(auth);
+        window.location.href = 'index.html';
+        return;
+      }
+
+      utilizadorAtual = { uid: user.uid, ...snap.data() };
+
+      document.getElementById('hdr-nome').textContent = utilizadorAtual.nome || '';
+
+      const partes   = (utilizadorAtual.nome || 'U').trim().split(' ');
+      const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
+      document.getElementById('hdr-avatar').textContent = iniciais;
+
+      document.getElementById('bv-nome').textContent = partes[0];
+      document.getElementById('welcome-bar').classList.add('visivel');
+
+      // Ano letivo
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      document.getElementById('stat-ano').textContent =
+        hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
+
+      document.getElementById('loading-inicial').style.display = 'none';
+      document.getElementById('ecra-ucs').style.display        = 'block';
+      carregarUCs();
+    } catch(err) {
+      console.error('Erro de autenticação:', err);
+      document.getElementById('loading-inicial').innerHTML =
+        `<p style="color:#dc2626;font-size:.85rem">Erro ao carregar (${err.code || err.message}).<br/><a href="index.html" style="color:#1a3a2a">Voltar ao login</a></p>`;
     }
-
-    utilizadorAtual = { uid: user.uid, ...snap.data() };
-
-    document.getElementById('hdr-nome').textContent   = utilizadorAtual.nome;
-    document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
-
-    const partes   = utilizadorAtual.nome.trim().split(' ');
-    const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
-    document.getElementById('hdr-avatar').textContent = iniciais;
-
-    document.getElementById('bv-nome').textContent = partes[0];
-    document.getElementById('welcome-bar').classList.add('visivel');
-
-    // Ano letivo
-    const hoje = new Date();
-    const ano  = hoje.getFullYear();
-    document.getElementById('stat-ano').textContent =
-      hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
-
-    document.getElementById('loading-inicial').style.display = 'none';
-    document.getElementById('ecrÃ£-ucs').style.display        = 'block';
-    carregarUCs();
   });
 
   // --- UCs ---
@@ -713,9 +719,9 @@
       const snap = await getDocs(collection(db, 'ucs'));
       if (snap.empty) {
         container.innerHTML = `<div class="empty">
-          <div class="empty-icon">ð</div>
-          <h4>Nenhuma UC disponÃ­vel</h4>
-          <p>Ainda nÃ£o hÃ¡ Unidades Curriculares criadas.</p>
+          <div class="empty-icon">📂</div>
+          <h4>Nenhuma UC disponível</h4>
+          <p>Ainda não há Unidades Curriculares criadas.</p>
         </div>`;
         document.getElementById('stat-ucs').textContent  = '0';
         document.getElementById('stat-docs').textContent = '0';
@@ -732,7 +738,7 @@
       });
 
       document.getElementById('stat-ucs').textContent  = ucs.length;
-      document.getElementById('stat-docs').textContent = 'â¦';
+      document.getElementById('stat-docs').textContent = '…';
 
       const grupos = {};
       ucs.forEach(uc => {
@@ -753,8 +759,8 @@
         const anoH = document.createElement('div');
         anoH.className = 'ano-titulo';
         anoH.innerHTML = Number(ano) > 0
-          ? `<span class="ano-titulo-badge">${ano}Âº Ano</span><span class="ano-titulo-label">CiÃªncias Sociais</span><span class="ano-titulo-linha"></span>`
-          : `<span class="ano-titulo-badge">Sem classificaÃ§Ã£o</span><span class="ano-titulo-linha"></span>`;
+          ? `<span class="ano-titulo-badge">${ano}º Ano</span><span class="ano-titulo-label">Ciências Sociais</span><span class="ano-titulo-linha"></span>`
+          : `<span class="ano-titulo-badge">Sem classificação</span><span class="ano-titulo-linha"></span>`;
         anoDiv.appendChild(anoH);
 
         Object.keys(grupos[ano]).sort((a,b) => Number(a)-Number(b)).forEach(sem => {
@@ -764,7 +770,7 @@
           if (Number(sem) > 0) {
             const semH = document.createElement('div');
             semH.className   = 'semestre-titulo';
-            semH.textContent = `${sem}Âº Semestre`;
+            semH.textContent = `${sem}º Semestre`;
             semDiv.appendChild(semH);
           }
 
@@ -793,7 +799,7 @@
                 <div class="uc-nome">${uc.nome}</div>
                 <div class="uc-card-footer">
                   <div class="uc-count" id="count-${uc.id}">A carregar...</div>
-                  <span class="uc-card-cta">Ver â</span>
+                  <span class="uc-card-cta">Ver →</span>
                 </div>
               </div>`;
             el.onclick = () => abrirUC(uc, cor.emoji);
@@ -825,10 +831,10 @@
   // --- DOCUMENTOS ---
   async function abrirUC(uc, emoji) {
     ucAtualId = uc.id;
-    document.getElementById('ecrÃ£-ucs').style.display  = 'none';
-    document.getElementById('ecrÃ£-docs').style.display = 'block';
+    document.getElementById('ecra-ucs').style.display  = 'none';
+    document.getElementById('ecra-docs').style.display = 'block';
     document.getElementById('docs-titulo').textContent  = emoji + ' ' + uc.nome;
-    document.getElementById('docs-sub').textContent     = 'Materiais de estudo disponÃ­veis';
+    document.getElementById('docs-sub').textContent     = 'Materiais de estudo disponíveis';
 
     const lista = document.getElementById('docs-lista');
     lista.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -839,9 +845,9 @@
 
       if (snap.empty) {
         lista.innerHTML = `<div class="empty">
-          <div class="empty-icon">ð</div>
+          <div class="empty-icon">📄</div>
           <h4>Sem documentos</h4>
-          <p>Ainda nÃ£o hÃ¡ documentos nesta UC.</p>
+          <p>Ainda não há documentos nesta UC.</p>
         </div>`;
         return;
       }
@@ -861,7 +867,7 @@
             <div class="doc-meta">${doc_.descricao || 'Documento de estudo'}</div>
           </div>
           <button class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}','${doc_.nome.replace(/'/g,"\\'")}')">
-            <span>ð</span><span>Ver</span>
+            <span>👁</span><span>Ver</span>
           </button>`;
         lista.appendChild(el);
       });
@@ -871,8 +877,8 @@
   }
 
   window.voltarUCs = function() {
-    document.getElementById('ecrÃ£-docs').style.display = 'none';
-    document.getElementById('ecrÃ£-ucs').style.display  = 'block';
+    document.getElementById('ecra-docs').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display  = 'block';
   };
 
   // --- VIEWER PDF ---
@@ -890,7 +896,7 @@
     viewerDocAtual = { ucId, docId, docNome };
 
     if (!doc_?.driveUrl) {
-      conteudo.innerHTML = '<p style="color:#f87171;padding:40px;text-align:center">URL do documento nÃ£o configurado.</p>';
+      conteudo.innerHTML = '<p style="color:#f87171;padding:40px;text-align:center">URL do documento não configurado.</p>';
       return;
     }
 
@@ -905,13 +911,4 @@
         const vp0   = page.getViewport({ scale: 1 });
         const maxW  = Math.min(conteudo.clientWidth - 40, 900);
         const scale = maxW / vp0.width;
-        const vp    = page.getViewport({ scale });
-
-        const canvas  = document.createElement('canvas');
-        canvas.width  = vp.width;
-        canvas.height = vp.height;
-        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-        conteudo.appendChild(canvas);
-
-        if (pdf.numPages > 1) {
-     
+        const vp    = page.getViewport({
