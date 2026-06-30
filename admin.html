@@ -411,9 +411,11 @@
         <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
       </div>
       <div class="campo" style="margin-bottom:18px">
-        <label>URL do Google Drive</label>
-        <input type="url" id="doc-url" placeholder="https://drive.google.com/file/d/…/view?usp=sharing" style="width:100%"/>
-        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">Carrega o PDF no Google Drive → Partilhar → "Qualquer pessoa com o link" → copia e cola aqui.</p>
+        <label>URL do ficheiro PDF</label>
+        <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%"/>
+        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">
+          No GitHub → repositório <strong>campus-aberto</strong> → pasta <strong>docs/</strong> → faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL da barra de endereços.
+        </p>
       </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <div class="msg-form" id="msg-doc"></div>
