@@ -428,9 +428,18 @@
       <div class="campo" style="margin-bottom:18px">
         <label>URL do ficheiro PDF</label>
         <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%"/>
-        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">
-          No GitHub → repositório <strong>campus-aberto</strong> → pasta <strong>docs/</strong> → faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL da barra de endereços.
-        </p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <a href="https://github.com/u5329753572-bit/campus-aberto/upload/main/docs"
+             target="_blank"
+             style="display:inline-flex;align-items:center;gap:6px;background:#1a3a2a;color:#c9a84c;
+                    border:1.5px solid #c9a84c;border-radius:8px;padding:7px 14px;font-size:0.8rem;
+                    font-weight:600;text-decoration:none;white-space:nowrap">
+            ↑ Abrir pasta docs/ no GitHub
+          </a>
+          <span style="font-size:0.73rem;color:#6b7280">
+            Faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL.
+          </span>
+        </div>
       </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <div class="msg-form" id="msg-doc"></div>
