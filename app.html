@@ -696,10 +696,20 @@
     document.getElementById('ecra-ucs').style.display        = 'block';
     carregarUCs();
 
-    // Carregar perfil em segundo plano
+    // Carregar perfil em segundo plano e verificar estado
     getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
-      if (!snap.exists()) return;
-      utilizadorAtual = { uid: user.uid, ...snap.data() };
+      if (!snap.exists()) {
+        // Conta sem registo — desligar e redirigir
+        signOut(auth).then(() => { window.location.href = 'index.html'; });
+        return;
+      }
+      const dados = snap.data();
+      if (dados.estado !== 'ativo') {
+        // Conta pendente ou inativa — desligar e redirigir
+        signOut(auth).then(() => { window.location.href = 'index.html?pendente=1'; });
+        return;
+      }
+      utilizadorAtual = { uid: user.uid, ...dados };
       const nome   = utilizadorAtual.nome || user.email || '';
       const partes = nome.trim().split(' ');
       const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();

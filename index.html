@@ -405,6 +405,11 @@
   document.getElementById('btn-login').dataset.label   = 'Entrar';
   document.getElementById('btn-registo').dataset.label = 'Pedir acesso';
 
+  // Mostrar aviso se redirecionado de app.html por conta inativa
+  if (new URLSearchParams(location.search).get('pendente') === '1') {
+    document.getElementById('aviso-pendente').style.display = 'block';
+  }
+
   window.fazerLogin = async function() {
     const email    = document.getElementById('login-email').value.trim();
     const pass     = document.getElementById('login-pass').value;
@@ -415,17 +420,8 @@
 
     setLoading('btn-login', true);
     try {
-      const cred  = await signInWithEmailAndPassword(auth, email, pass);
-      const snap  = await getDoc(doc(db, 'utilizadores', cred.user.uid));
-      const dados = snap.data();
-
-      if (!dados || dados.estado !== 'ativo') {
-        await auth.signOut();
-        avisoEl.style.display = 'block';
-        mostrarMsg('msg-login', '', '');
-      } else {
-        window.location.href = 'app.html';
-      }
+      await signInWithEmailAndPassword(auth, email, pass);
+      window.location.href = 'app.html';
     } catch(e) {
       const msgs = {
         'auth/user-not-found':   'Email não encontrado.',
