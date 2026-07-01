@@ -631,6 +631,15 @@
   </div>
 </div>
 
+<script>
+  // Fallback: se o Firebase não carregar em 8s, redirecionar para o login
+  window._fbTimeout = setTimeout(function() {
+    var el = document.getElementById('loading-inicial');
+    if (el && el.style.display !== 'none') {
+      window.location.href = 'index.html';
+    }
+  }, 8000);
+</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
@@ -674,6 +683,7 @@
 
   // --- AUTH ---
   onAuthStateChanged(auth, (user) => {
+    clearTimeout(window._fbTimeout);
     if (!user) { window.location.href = 'index.html'; return; }
 
     // Mostrar a app imediatamente — não bloquear na chamada ao Firestore
@@ -705,7 +715,10 @@
     totalDocs = 0;
     const container = document.getElementById('ucs-grid');
     try {
-      const snap = await getDocs(collection(db, 'ucs'));
+      const snap = await Promise.race([
+        getDocs(collection(db, 'ucs')),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('Tempo limite — Firestore não respondeu')), 12000))
+      ]);
       if (snap.empty) {
         container.innerHTML = `<div class="empty">
           <div class="empty-icon">📂</div>
