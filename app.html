@@ -696,16 +696,12 @@
     document.getElementById('ecra-ucs').style.display        = 'block';
     carregarUCs();
 
-    // Carregar perfil em segundo plano e verificar estado
+    // Carregar perfil em segundo plano (sem bloquear UI)
     getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
-      if (!snap.exists()) {
-        // Conta sem registo — desligar e redirigir
-        signOut(auth).then(() => { window.location.href = 'index.html'; });
-        return;
-      }
+      if (!snap.exists()) return;
       const dados = snap.data();
-      if (dados.estado !== 'ativo') {
-        // Conta pendente ou inativa — desligar e redirigir
+      // Só redirigir se estado estiver explicitamente bloqueado/pendente
+      if (dados.estado === 'pendente' || dados.estado === 'bloqueado') {
         signOut(auth).then(() => { window.location.href = 'index.html?pendente=1'; });
         return;
       }
