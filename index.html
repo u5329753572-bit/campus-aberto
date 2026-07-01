@@ -420,8 +420,20 @@
 
     setLoading('btn-login', true);
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      window.location.href = 'app.html';
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      // Verificar estado com timeout — não bloquear se Firestore demorar
+      const snap = await Promise.race([
+        getDoc(doc(db, 'utilizadores', cred.user.uid)),
+        new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), {code:'timeout'})), 10000))
+      ]);
+      const dados = snap.data?.() || {};
+      if (dados.estado && dados.estado !== 'ativo') {
+        await auth.signOut();
+        avisoEl.style.display = 'block';
+        mostrarMsg('msg-login', '', '');
+      } else {
+        window.location.href = 'app.html';
+      }
     } catch(e) {
       const msgs = {
         'auth/user-not-found':   'Email não encontrado.',

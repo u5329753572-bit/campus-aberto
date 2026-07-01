@@ -686,22 +686,16 @@
     document.getElementById('ecra-ucs').style.display        = 'block';
     carregarUCs();
 
-    // Carregar perfil em segundo plano (sem bloquear UI)
+    // Carregar perfil em segundo plano (sem bloquear UI, sem checks de segurança)
     getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
       if (!snap.exists()) return;
-      const dados = snap.data();
-      // Só redirigir se estado estiver explicitamente bloqueado/pendente
-      if (dados.estado === 'pendente' || dados.estado === 'bloqueado') {
-        signOut(auth).then(() => { window.location.href = 'index.html?pendente=1'; });
-        return;
-      }
-      utilizadorAtual = { uid: user.uid, ...dados };
+      utilizadorAtual = { uid: user.uid, ...snap.data() };
       const nome   = utilizadorAtual.nome || user.email || '';
       const partes = nome.trim().split(' ');
       const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
-      document.getElementById('hdr-nome').textContent  = nome;
+      document.getElementById('hdr-nome').textContent   = nome;
       document.getElementById('hdr-avatar').textContent = iniciais;
-      document.getElementById('bv-nome').textContent   = partes[0];
+      document.getElementById('bv-nome').textContent    = partes[0];
       document.getElementById('welcome-bar').classList.add('visivel');
     }).catch(err => console.warn('Perfil não carregado:', err));
   });
