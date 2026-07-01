@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin · CampusAberto</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      emailjs.init({ publicKey: '9zZRl829yiekZE3m5' });
+    });
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -428,18 +434,9 @@
       <div class="campo" style="margin-bottom:18px">
         <label>URL do ficheiro PDF</label>
         <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%"/>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
-          <a href="https://github.com/u5329753572-bit/campus-aberto/upload/main/docs"
-             target="_blank"
-             style="display:inline-flex;align-items:center;gap:6px;background:#1a3a2a;color:#c9a84c;
-                    border:1.5px solid #c9a84c;border-radius:8px;padding:7px 14px;font-size:0.8rem;
-                    font-weight:600;text-decoration:none;white-space:nowrap">
-            ↑ Abrir pasta docs/ no GitHub
-          </a>
-          <span style="font-size:0.73rem;color:#6b7280">
-            Faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL.
-          </span>
-        </div>
+        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">
+          No GitHub → repositório <strong>campus-aberto</strong> → pasta <strong>docs/</strong> → faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL da barra de endereços.
+        </p>
       </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <div class="msg-form" id="msg-doc"></div>
@@ -571,6 +568,22 @@
 
   window.alterarEstado = async function(uid, estado) {
     await updateDoc(doc(db, 'utilizadores', uid), { estado });
+
+    if (estado === 'ativo') {
+      try {
+        const userSnap = await getDoc(doc(db, 'utilizadores', uid));
+        if (userSnap.exists()) {
+          const u = userSnap.data();
+          await emailjs.send('service_nxmlu8q', 'template_9k3j0vi', {
+            nome:     u.nome  || 'Utilizador',
+            to_email: u.email || '',
+          });
+        }
+      } catch(e) {
+        console.warn('Email de ativação não enviado:', e.message);
+      }
+    }
+
     carregarUtilizadores();
   };
 
@@ -745,4 +758,3 @@
 </script>
 </body>
 </html>
-
