@@ -369,7 +369,7 @@
       position: fixed; inset: 0;
       background: rgba(8,22,14,0.72);
       backdrop-filter: blur(10px);
-      z-index: 200; display: none;
+      z-index: 400; display: none;
       align-items: center; justify-content: center; padding: 24px;
     }
     .modal-overlay.visivel { display: flex; }
@@ -938,7 +938,14 @@
         timestamp: serverTimestamp()
       });
       const doc_ = docMap[docPendente.docId];
-      if (doc_?.driveUrl) window.open(doc_.driveUrl, '_blank');
+      if (doc_?.driveUrl) {
+        const a = document.createElement('a');
+        a.href = doc_.driveUrl;
+        a.download = (docPendente.docNome || 'documento') + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
       window.fecharModal();
     } catch(e) {
       console.error('Erro no download:', e);
