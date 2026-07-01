@@ -673,42 +673,31 @@
   let totalDocs       = 0;
 
   // --- AUTH ---
-  onAuthStateChanged(auth, async (user) => {
-    try {
-      if (!user) { window.location.href = 'index.html'; return; }
+  onAuthStateChanged(auth, (user) => {
+    if (!user) { window.location.href = 'index.html'; return; }
 
-      const snap = await getDoc(doc(db, 'utilizadores', user.uid));
-      if (!snap.exists() || snap.data().estado !== 'ativo') {
-        await signOut(auth);
-        window.location.href = 'index.html';
-        return;
-      }
+    // Mostrar a app imediatamente — não bloquear na chamada ao Firestore
+    utilizadorAtual = { uid: user.uid };
+    const hoje = new Date();
+    const ano  = hoje.getFullYear();
+    document.getElementById('stat-ano').textContent =
+      hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
+    document.getElementById('loading-inicial').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display        = 'block';
+    carregarUCs();
 
+    // Carregar perfil em segundo plano
+    getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
+      if (!snap.exists()) return;
       utilizadorAtual = { uid: user.uid, ...snap.data() };
-
-      document.getElementById('hdr-nome').textContent = utilizadorAtual.nome || '';
-
-      const partes   = (utilizadorAtual.nome || 'U').trim().split(' ');
+      const nome   = utilizadorAtual.nome || user.email || '';
+      const partes = nome.trim().split(' ');
       const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
+      document.getElementById('hdr-nome').textContent  = nome;
       document.getElementById('hdr-avatar').textContent = iniciais;
-
-      document.getElementById('bv-nome').textContent = partes[0];
+      document.getElementById('bv-nome').textContent   = partes[0];
       document.getElementById('welcome-bar').classList.add('visivel');
-
-      // Ano letivo
-      const hoje = new Date();
-      const ano  = hoje.getFullYear();
-      document.getElementById('stat-ano').textContent =
-        hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
-
-      document.getElementById('loading-inicial').style.display = 'none';
-      document.getElementById('ecra-ucs').style.display        = 'block';
-      carregarUCs();
-    } catch(err) {
-      console.error('Erro de autenticação:', err);
-      document.getElementById('loading-inicial').innerHTML =
-        `<p style="color:#dc2626;font-size:.85rem">Erro ao carregar (${err.code || err.message}).<br/><a href="index.html" style="color:#1a3a2a">Voltar ao login</a></p>`;
-    }
+    }).catch(err => console.warn('Perfil não carregado:', err));
   });
 
   // --- UCs ---
@@ -911,4 +900,10 @@
         const vp0   = page.getViewport({ scale: 1 });
         const maxW  = Math.min(conteudo.clientWidth - 40, 900);
         const scale = maxW / vp0.width;
-        const vp    = page.getViewport({
+        const vp    = page.getViewport({ scale });
+
+        const canvas  = document.createElement('canvas');
+        canvas.width  = vp.width;
+        canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        conteudo.appendChil
