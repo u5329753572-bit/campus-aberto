@@ -609,24 +609,24 @@
       <div class="spinner" style="border-color:#333;border-top-color:#c9a84c"></div>
     </div>
   </div>
-</div>
-
-<!-- MODAL DOWNLOAD -->
-<div class="modal-overlay" id="modal-dl">
-  <div class="modal">
-    <div class="modal-icon">📥</div>
-    <h3>Descarregar documento</h3>
-    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
-    <div class="modal-codigo" id="modal-codigo-txt">—</div>
-    <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
-      O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
-    </p>
-    <div class="modal-btns">
-      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
+  <!-- MODAL DOWNLOAD — inside viewer so z-index is guaranteed -->
+  <div class="modal-overlay" id="modal-dl" style="position:absolute;z-index:10">
+    <div class="modal">
+      <div class="modal-icon">📥</div>
+      <h3>Descarregar documento</h3>
+      <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+      <div class="modal-codigo" id="modal-codigo-txt">—</div>
+      <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
+        O código é inserido discretamente no documento. Não contém o teu nome nem contactos — apenas um identificador rastreável.
+      </p>
+      <div class="modal-btns">
+        <button class="btn-cancelar" onclick="window.fecharModal()">Cancelar</button>
+        <button class="btn-confirmar" id="btn-confirmar-dl" onclick="window.confirmarDownload()">↓ Descarregar</button>
+      </div>
     </div>
   </div>
 </div>
+
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -953,7 +953,7 @@
         const pdfDoc = await PDFDocument.load(pdfBytes);
         const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const nome   = utilizadorAtual.nome || utilizadorAtual.uid.slice(0, 8);
-        const stamp  = `Código: ${docPendente.codigo}  |  ${nome}  |  CampusAberto UAb`;
+        const stamp  = `Código: ${docPendente.codigo}  |  ${nome}  |  CampusAberto`;
 
         pdfDoc.getPages().forEach(page => {
           const { width } = page.getSize();
