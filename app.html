@@ -928,7 +928,9 @@
     if (!docPendente || !utilizadorAtual) return;
     const btn = document.getElementById('btn-confirmar-dl');
     btn.disabled = true;
+    btn.textContent = 'A preparar PDF...';
     try {
+      // 1. Registar download no Firestore
       await addDoc(collection(db, 'downloads'), {
         uid:       utilizadorAtual.uid,
         ucId:      docPendente.ucId,
@@ -937,20 +939,56 @@
         codigo:    docPendente.codigo,
         timestamp: serverTimestamp()
       });
+
       const doc_ = docMap[docPendente.docId];
       if (doc_?.driveUrl) {
-        const a = document.createElement('a');
-        a.href = doc_.driveUrl;
+        // 2. Carregar pdf-lib dinamicamente
+        const { PDFDocument, rgb, StandardFonts } =
+          await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.esm.min.js');
+
+        // 3. Obter o PDF original
+        const pdfBytes = await fetch(doc_.driveUrl).then(r => r.arrayBuffer());
+
+        // 4. Modificar o PDF — adicionar código em rodapé de cada página
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const nome   = utilizadorAtual.nome || utilizadorAtual.uid.slice(0, 8);
+        const stamp  = `Código: ${docPendente.codigo}  |  ${nome}  |  CampusAberto UAb`;
+
+        pdfDoc.getPages().forEach(page => {
+          const { width } = page.getSize();
+          const textWidth  = font.widthOfTextAtSize(stamp, 7);
+          page.drawText(stamp, {
+            x: (width - textWidth) / 2,
+            y: 10,
+            size: 7,
+            font,
+            color: rgb(0.45, 0.45, 0.45),
+            opacity: 0.7
+          });
+        });
+
+        // 5. Guardar e descarregar o PDF modificado
+        const modified = await pdfDoc.save();
+        const blob = new Blob([modified], { type: 'application/pdf' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
         a.download = (docPendente.docNome || 'documento') + '.pdf';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
       window.fecharModal();
     } catch(e) {
       console.error('Erro no download:', e);
+      btn.textContent = 'Erro — tenta novamente';
+      btn.disabled = false;
+      return;
     } finally {
       btn.disabled = false;
+      btn.textContent = '↓ Descarregar';
     }
   };
 
