@@ -631,15 +631,6 @@
   </div>
 </div>
 
-<script>
-  // Fallback: se o Firebase não carregar em 8s, redirecionar para o login
-  window._fbTimeout = setTimeout(function() {
-    var el = document.getElementById('loading-inicial');
-    if (el && el.style.display !== 'none') {
-      window.location.href = 'index.html';
-    }
-  }, 8000);
-</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
@@ -683,7 +674,6 @@
 
   // --- AUTH ---
   onAuthStateChanged(auth, (user) => {
-    clearTimeout(window._fbTimeout);
     if (!user) { window.location.href = 'index.html'; return; }
 
     // Mostrar a app imediatamente — não bloquear na chamada ao Firestore
