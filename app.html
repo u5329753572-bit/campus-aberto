@@ -574,7 +574,10 @@
           <div class="stat-val" id="stat-docs">—</div>
           <div class="stat-label">Documentos disponíveis</div>
         </div>
-
+        <div class="stat-item">
+          <div class="stat-val" id="stat-ano">—</div>
+          <div class="stat-label">Ano letivo</div>
+        </div>
       </div>
     </div>
     <div id="ucs-grid">
@@ -675,20 +678,24 @@
 
     // Mostrar a app imediatamente — não bloquear na chamada ao Firestore
     utilizadorAtual = { uid: user.uid };
+    const hoje = new Date();
+    const ano  = hoje.getFullYear();
+    document.getElementById('stat-ano').textContent =
+      hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
     document.getElementById('loading-inicial').style.display = 'none';
     document.getElementById('ecra-ucs').style.display        = 'block';
     carregarUCs();
 
-    // Carregar perfil em segundo plano (sem bloquear UI, sem checks de segurança)
+    // Carregar perfil em segundo plano
     getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
       if (!snap.exists()) return;
       utilizadorAtual = { uid: user.uid, ...snap.data() };
       const nome   = utilizadorAtual.nome || user.email || '';
       const partes = nome.trim().split(' ');
       const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
-      document.getElementById('hdr-nome').textContent   = nome;
+      document.getElementById('hdr-nome').textContent  = nome;
       document.getElementById('hdr-avatar').textContent = iniciais;
-      document.getElementById('bv-nome').textContent    = partes[0];
+      document.getElementById('bv-nome').textContent   = partes[0];
       document.getElementById('welcome-bar').classList.add('visivel');
     }).catch(err => console.warn('Perfil não carregado:', err));
   });
@@ -698,10 +705,7 @@
     totalDocs = 0;
     const container = document.getElementById('ucs-grid');
     try {
-      const snap = await Promise.race([
-        getDocs(collection(db, 'ucs')),
-        new Promise((_, rej) => setTimeout(() => rej(new Error('Tempo limite — Firestore não respondeu')), 12000))
-      ]);
+      const snap = await getDocs(collection(db, 'ucs'));
       if (snap.empty) {
         container.innerHTML = `<div class="empty">
           <div class="empty-icon">📂</div>
@@ -902,60 +906,4 @@
         canvas.width  = vp.width;
         canvas.height = vp.height;
         await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-        conteudo.appendChild(canvas);
-      }
-    } catch(e) {
-      conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">Erro ao carregar PDF: ${e.message}</p>`;
-    }
-  };
-
-  window.fecharViewer = function() {
-    document.getElementById('viewer-overlay').classList.remove('visivel');
-    viewerDocAtual = null;
-  };
-
-  window.iniciarDownloadDoViewer = function() {
-    if (!viewerDocAtual) return;
-    const codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
-    document.getElementById('modal-codigo-txt').textContent = codigo;
-    docPendente = { ...viewerDocAtual, codigo };
-    document.getElementById('modal-dl').classList.add('visivel');
-  };
-
-  window.fecharModal = function() {
-    document.getElementById('modal-dl').classList.remove('visivel');
-    docPendente = null;
-  };
-
-  window.confirmarDownload = async function() {
-    if (!docPendente || !utilizadorAtual) return;
-    const btn = document.getElementById('btn-confirmar-dl');
-    btn.disabled = true;
-    try {
-      await addDoc(collection(db, 'downloads'), {
-        uid:       utilizadorAtual.uid,
-        ucId:      docPendente.ucId,
-        docId:     docPendente.docId,
-        docNome:   docPendente.docNome,
-        codigo:    docPendente.codigo,
-        timestamp: serverTimestamp()
-      });
-      const doc_ = docMap[docPendente.docId];
-      if (doc_?.driveUrl) window.open(doc_.driveUrl, '_blank');
-      window.fecharModal();
-    } catch(e) {
-      console.error('Erro no download:', e);
-    } finally {
-      btn.disabled = false;
-    }
-  };
-
-  window.sair = async function() {
-    await signOut(auth);
-    window.location.href = 'index.html';
-  };
-
-</script>
-
-</body>
-</html>
+        conteudo.appendChil
