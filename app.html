@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CampusAberto · Área de Estudo</title>
+  <title>CampusAberto · Arquivo de Estudo</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
@@ -144,7 +144,7 @@
     }
     .stat-label {
       font-size: 0.67rem; color: var(--cinza);
-      text-transform: uppercase; letter-spacing: 0.11em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.11em; font-weight: 500;
     }
 
     /* ── ANO / SEMESTRE ─────────────────────────────── */
@@ -308,7 +308,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.65rem; color: var(--verde); font-weight: 600;
     }
-    .docs-sub { font-size: 0.88rem; color: var(--cinza); margin-top: 5px; }
+    .docs-sub { font-size: 0.78rem; color: var(--cinza); margin-top: 5px; }
 
     .docs-lista { display: flex; flex-direction: column; gap: 12px; }
 
@@ -369,7 +369,7 @@
       position: fixed; inset: 0;
       background: rgba(8,22,14,0.72);
       backdrop-filter: blur(10px);
-      z-index: 400; display: none;
+      z-index: 200; display: none;
       align-items: center; justify-content: center; padding: 24px;
     }
     .modal-overlay.visivel { display: flex; }
@@ -525,70 +525,65 @@
       .uc-card-banda { height: 110px; }
       .uc-card-deco { font-size: 5.5rem; }
     }
-  
-  .rodape {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(90deg,#1a3a2a,#2d5a3d,#1a3a2a);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    border-top: 2px solid #c9a84c;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 28px;
-    z-index: 999;
-  }
-  .rodape a {
-    color: #e8cc7a;
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.2s;
-  }
-  .rodape a:hover { color: #fff; }
-  .rodape-sep { color: #c9a84c; font-size: 1rem; }
-  
-  /* ── RECURSOS ───────────────────────────── */
-  .recursos-menu {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-  }
-  .recursos-btn {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 11px 22px;
-    background: var(--branco);
-    color: var(--verde);
-    text-decoration: none;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1.5px solid rgba(26,58,42,0.14);
-    transition: all 0.2s;
-    box-shadow: 0 2px 10px rgba(26,58,42,0.08);
-  }
-  .recursos-btn:hover {
-    background: var(--verde);
-    color: var(--ouro-leve);
-    border-color: var(--verde);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(26,58,42,0.22);
-  }
-  .recursos-btn svg { flex-shrink: 0; }
+
+    /* Redesign editorial 2026 */
+    :root { --verde:#0b2a4a; --verde-med:#123d67; --verde-leve:#2d648f; --ouro:#d89b2c; --ouro-leve:#efc66f; --ouro-pale:#fbf1dc; --creme:#f3f0e9; --texto:#182230; }
+    body { background-color:#f1eee7; background-image:linear-gradient(rgba(11,42,74,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(11,42,74,.028) 1px,transparent 1px); background-size:32px 32px; }
+    header { height:76px; padding-inline:clamp(20px,5vw,68px); background:#071d34; border-bottom:3px solid var(--ouro); box-shadow:0 12px 36px rgba(7,29,52,.18); }
+    .header-logo-icon { border-radius:50% 50% 7px 7px; }
+    .header-logo-sub { color:rgba(255,255,255,.52); }
+    .user-chip { border-radius:4px; }
+    .user-avatar { color:#071d34; }
+    .btn-sair,.btn-viewer-voltar,.btn-viewer-dl { border-radius:3px; }
+    main { max-width:1280px; padding-top:clamp(38px,6vw,72px); }
+    .welcome-area { margin-bottom:58px; }
+    .welcome-saudacao { font-size:clamp(2.2rem,4vw,4rem); letter-spacing:-.04em; }
+    .welcome-sub { max-width:620px; line-height:1.65; }
+    .stats-bar { border-radius:4px 22px 4px 4px; box-shadow:0 14px 40px rgba(11,42,74,.08); }
+    .stat-item { text-align:left; }
+    .ano-titulo-badge { font-size:1.55rem; }
+    .ano-titulo-label { border-radius:3px; }
+    .uc-card { border-radius:3px 20px 3px 3px; box-shadow:0 8px 24px rgba(11,42,74,.07); }
+    .uc-card:hover { transform:translateY(-6px); box-shadow:0 22px 50px rgba(11,42,74,.18); }
+    .uc-card-banda { height:112px; align-items:center; padding:22px; }
+    .uc-card-deco { top:-28px; right:8px; font-size:7rem; color:rgba(255,255,255,.09); }
+    .uc-card-emoji { font-size:0; filter:none; }
+    .uc-card-emoji::after { content:'UNIDADE CURRICULAR'; font-size:.6rem; letter-spacing:.16em; font-weight:700; color:rgba(255,255,255,.7V); }
+    .uc-card-corpo { padding:22px 24px 24px; }
+    .uc-nome { font-size:1.08rem; }
+    .doc-item { border-radius:4px 18px 4px 4px; }
+    .doc-item:hover { transform:translateX(3px); }
+    .doc-icone { border-radius:3px 12px 3px 3px; background:#a52f35; }
+    .btn-ver,.btn-voltar,.modal,.modal-codigo,.btn-cancelar,.btn-confirmar { border-radius:4px; }
+    .modal { border-top:5px solid var(--ouro); }
+    .viewer-toolbar { background:#071d34; border-bottom:2px solid var(--ouro); }
+    :focus-visible { outline:3px solid rgba(216,155,44,.5); outline-offset:3px; }
+    @media (max-width:640px) {
+      header { height:66px; }
+      .header-logo-icon { width:36px; height:36px; }
+      .header-right { gap:7px; }
+      .btn-sair { padding:7px 10px; }
+      main { padding-inline:16px; }
+      .stats-bar { display:grid; grid-template-columns:repeat(3,1fr); }
+      .stat-item { padding:15px 10px; text-align:center; }
+      .stat-val { font-size:1.65rem; }
+      .stat-label { font-size:.54rem; letter-spacing:.05em; }
+      .ucs-grid { grid-template-columns:1fr; }
+      .uc-card { display:grid; grid-template-columns:96px 1fr; }
+      .uc-card-banda { height:auto; min-height:124px; padding:14px; }
+      .uc-card-emoji::after { writing-mode:vertical-rl; font-size:.52rem; }
+      .doc-item { align-items:flex-start; gap:12px; padding:16px; flex-wrap:wrap; }
+      .doc-info { min-width:calc(100% - 64px); }
+      .btn-ver { margin-left:64px; width:calc(100% - 64px); justify-content:center; }
+      .viewer-titulo { display:none; }
+      .modal { padding:28px 22px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="header-logo" onclick="window.voltarUCs()" style="cursor:pointer" title="Voltar às UCs">
+  <div class="header-logo">
     <div class="header-logo-icon">
       <svg viewBox="0 0 32 32" fill="none">
         <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
@@ -598,6 +593,7 @@
     </div>
     <div class="header-logo-txt">
       <div class="header-logo-nome">Campus<em>Aberto</em></div>
+      <div class="header-logo-sub">República das Ciências Sociais</div>
     </div>
   </div>
   <div class="header-right">
@@ -608,7 +604,7 @@
         <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
       </div>
     </div>
-    <button class="btn-sair" onclick="sair()">Sair</button>
+    <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
 
@@ -620,8 +616,8 @@
   <!-- ECRÃ PRINCIPAL: UCs -->
   <div id="ecra-ucs" style="display:none">
     <div class="welcome-area" id="welcome-bar">
-      <div class="welcome-saudacao">Bem-vinda, <span id="bv-nome">—</span> 👋</div>
-      <div class="welcome-sub">Seleciona uma Unidade Curricular para aceder aos materiais de estudo.</div>
+      <div class="welcome-saudacao">Olá, <span id="bv-nome">—</span>.</div>
+      <div class="welcome-sub">O teu arquivo académico, organizado por ano e semestre. Seleciona uma Unidade Curricular para consultar os materiais.</div>
       <div class="stats-bar">
         <div class="stat-item">
           <div class="stat-val" id="stat-ucs">—</div>
@@ -631,23 +627,11 @@
           <div class="stat-val" id="stat-docs">—</div>
           <div class="stat-label">Documentos disponíveis</div>
         </div>
-
+        <div class="stat-item">
+          <div class="stat-val" id="stat-ano">—</div>
+          <div class="stat-label">Ano letivo</div>
+        </div>
       </div>
-    </div>
-
-    <div class="recursos-menu">
-      <a class="recursos-btn" href="https://www.youtube.com/@Campus_aberto" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-        Podcast
-      </a>
-      <a class="recursos-btn" href="https://frequenciaberta.pt/" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2c1.8 0 3.5.6 4.9 1.5L4.5 16.9A8 8 0 0 1 4 12a8 8 0 0 1 8-8zm0 16a8 8 0 0 1-4.9-1.5l12.4-11.4A8 8 0 0 1 20 12a8 8 0 0 1-8 8z"/></svg>
-        Rádio
-      </a>
-      <a class="recursos-btn" href="https://guiaestudantesparaestudantes.netlify.app/" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        Guia do Estudante
-      </a>
     </div>
     <div id="ucs-grid">
       <div class="loading"><div class="spinner"></div></div>
@@ -657,7 +641,7 @@
   <!-- ECRÃ DOCUMENTOS -->
   <div id="ecra-docs" style="display:none">
     <div class="docs-header">
-      <button class="btn-voltar" onclick="voltarUCs()" title="Voltar">←</button>
+      <button type="button" class="btn-voltar" onclick="voltarUCs()" title="Voltar" aria-label="Voltar às unidades curriculares">←</button>
       <div class="docs-titulo-area">
         <h2 class="docs-titulo" id="docs-titulo">—</h2>
         <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
@@ -670,7 +654,7 @@
 </main>
 
 <!-- VIEWER PDF -->
-<div class="viewer-overlay" id="viewer-overlay">
+<div class="viewer-overlay" id="viewer-overlay" role="dialog" aria-modal="true" aria-label="Leitor de PDF">
   <div class="viewer-toolbar">
     <button class="btn-viewer-voltar" onclick="window.fecharViewer()">← Lista</button>
     <span class="viewer-titulo" id="viewer-titulo">—</span>
@@ -681,24 +665,24 @@
       <div class="spinner" style="border-color:#333;border-top-color:#c9a84c"></div>
     </div>
   </div>
-  <!-- MODAL DOWNLOAD — inside viewer so z-index is guaranteed -->
-  <div class="modal-overlay" id="modal-dl" style="position:absolute;z-index:10">
-    <div class="modal">
-      <div class="modal-icon">📥</div>
-      <h3>Descarregar documento</h3>
-      <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
-      <div class="modal-codigo" id="modal-codigo-txt">—</div>
-      <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
-        O código é inserido discretamente no documento. Contém o teu nome e um identificador rastreável associado ao teu registo.
-      </p>
-      <div class="modal-btns">
-        <button class="btn-cancelar" onclick="window.fecharModal()">Cancelar</button>
-        <button class="btn-confirmar" id="btn-confirmar-dl" onclick="window.confirmarDownload()">↓ Descarregar</button>
-      </div>
+</div>
+
+<!-- MODAL DOWNLOAD -->
+<div class="modal-overlay" id="modal-dl" role="dialog" aria-modal="true" aria-labelledby="titulo-download">
+  <div class="modal">
+    <div class="modal-icon">📥</div>
+    <h3 id="titulo-download">Descarregar documento</h3>
+    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+    <div class="modal-codigo" id="modal-codigo-txt">—</div>
+    <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
+      O código é inserido discretamente no documento. Contém o teu nome e um identificador rastreável associado ao teu registo.
+    </p>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
     </div>
   </div>
 </div>
-
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -725,14 +709,12 @@
   const docMap = {};
 
   const paleta = [
-    { banda: 'linear-gradient(135deg,#1a3a2a,#2d6040)', emoji: '📘' },
-    { banda: 'linear-gradient(135deg,#1e2d5c,#2d4a8a)', emoji: '📗' },
-    { banda: 'linear-gradient(135deg,#5c1e1e,#8a3030)', emoji: '📙' },
-    { banda: 'linear-gradient(135deg,#3d1a5c,#5e3090)', emoji: '📕' },
-    { banda: 'linear-gradient(135deg,#1a3d4a,#2d6070)', emoji: '📔' },
-    { banda: 'linear-gradient(135deg,#4a380e,#7a6020)', emoji: '📒' },
-    { banda: 'linear-gradient(135deg,#4a1a30,#7a2d50)', emoji: '📓' },
-    { banda: 'linear-gradient(135deg,#1a4a3a,#2d7060)', emoji: '📚' },
+    { banda: 'linear-gradient(135deg,#071d34,#0b2a4a)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#0b2a4a,#174d78)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#163954,#2d648f)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#2c3449,#465575)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#553c1c,#8a6329)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#263d45,#3f626b)', emoji: 'UC' },
   ];
 
   let utilizadorAtual = null;
@@ -741,28 +723,42 @@
   let viewerDocAtual  = null;
   let totalDocs       = 0;
 
+  function esc(valor) {
+    return String(valor ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
   // --- AUTH ---
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = 'index.html'; return; }
-
-    // Mostrar a app imediatamente — não bloquear na chamada ao Firestore
-    utilizadorAtual = { uid: user.uid };
-    document.getElementById('loading-inicial').style.display = 'none';
-    document.getElementById('ecra-ucs').style.display        = 'block';
-    carregarUCs();
-
-    // Carregar perfil em segundo plano
-    getDoc(doc(db, 'utilizadores', user.uid)).then(snap => {
-      if (!snap.exists()) return;
+    try {
+      const snap = await getDoc(doc(db, 'utilizadores', user.uid));
+      if (!snap.exists() || snap.data().estado !== 'ativo') {
+        await signOut(auth);
+        window.location.href = 'index.html';
+        return;
+      }
       utilizadorAtual = { uid: user.uid, ...snap.data() };
+      utilizadorAtual.codigo ||= 'CS-' + user.uid.slice(0, 7).toUpperCase();
       const nome   = utilizadorAtual.nome || user.email || '';
       const partes = nome.trim().split(' ');
       const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
       document.getElementById('hdr-nome').textContent  = nome;
       document.getElementById('hdr-avatar').textContent = iniciais;
+      document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
+      document.getElementById('hdr-codigo').style.display = 'block';
       document.getElementById('bv-nome').textContent   = partes[0];
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      document.getElementById('stat-ano').textContent = hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
+      document.getElementById('loading-inicial').style.display = 'none';
+      document.getElementById('ecra-ucs').style.display = 'block';
       document.getElementById('welcome-bar').classList.add('visivel');
-    }).catch(err => console.warn('Perfil não carregado:', err));
+      carregarUCs();
+    } catch (err) {
+      console.warn('Perfil não carregado:', err);
+      await signOut(auth);
+      window.location.href = 'index.html';
+    }
   });
 
   // --- UCs ---
@@ -846,17 +842,26 @@
             el.innerHTML = `
               <div class="uc-card-banda" style="background:${cor.banda}">
                 <div class="uc-card-circles"></div>
-                <div class="uc-card-deco">${deco}</div>
+                <div class="uc-card-deco">${esc(deco)}</div>
                 <span class="uc-card-emoji">${cor.emoji}</span>
               </div>
               <div class="uc-card-corpo">
-                <div class="uc-nome">${uc.nome}</div>
+                <div class="uc-nome">${esc(uc.nome)}</div>
                 <div class="uc-card-footer">
                   <div class="uc-count" id="count-${uc.id}">A carregar...</div>
                   <span class="uc-card-cta">Ver →</span>
                 </div>
               </div>`;
             el.onclick = () => abrirUC(uc, cor.emoji);
+            el.tabIndex = 0;
+            el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', `Abrir ${uc.nome}`);
+            el.onkeydown = (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                abrirUC(uc, cor.emoji);
+              }
+            };
             grid.appendChild(el);
             contarDocs(uc.id);
           });
@@ -887,7 +892,7 @@
     ucAtualId = uc.id;
     document.getElementById('ecra-ucs').style.display  = 'none';
     document.getElementById('ecra-docs').style.display = 'block';
-    document.getElementById('docs-titulo').textContent  = emoji + ' ' + uc.nome;
+    document.getElementById('docs-titulo').textContent  = uc.nome;
     document.getElementById('docs-sub').textContent     = 'Materiais de estudo disponíveis';
 
     const lista = document.getElementById('docs-lista');
@@ -909,7 +914,7 @@
       lista.innerHTML = '';
       snap.docs.forEach(d => {
         const doc_   = { id: d.id, ...d.data() };
-        docMap[d.id] = doc_;
+        docMap[`${uc.id}:${d.id}`] = doc_;
         const el     = document.createElement('div');
         el.className = 'doc-item';
         el.innerHTML = `
@@ -917,10 +922,10 @@
             <span class="doc-icone-txt">PDF</span>
           </div>
           <div class="doc-info">
-            <div class="doc-nome">${doc_.nome}</div>
-            <div class="doc-meta">${doc_.descricao || 'Documento de estudo'}</div>
+            <div class="doc-nome">${esc(doc_.nome)}</div>
+            <div class="doc-meta">${esc(doc_.descricao || 'Documento de estudo')}</div>
           </div>
-          <button class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}','${doc_.nome.replace(/'/g,"\\'")}')">
+          <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')">
             <span>👁</span><span>Ver</span>
           </button>`;
         lista.appendChild(el);
@@ -936,8 +941,9 @@
   };
 
   // --- VIEWER PDF ---
-  window.abrirViewer = async function(ucId, docId, docNome) {
-    const doc_     = docMap[docId];
+  window.abrirViewer = async function(ucId, docId) {
+    const doc_     = docMap[`${ucId}:${docId}`];
+    const docNome  = doc_?.nome || 'Documento';
     const overlay  = document.getElementById('viewer-overlay');
     const conteudo = document.getElementById('viewer-conteudo');
 
@@ -972,22 +978,44 @@
         canvas.height = vp.height;
         await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
         conteudo.appendChild(canvas);
+
+        if (pdf.numPages > 1) {
+          const sep = document.createElement('div');
+          sep.className   = 'viewer-pagina-sep';
+          sep.textContent = `· · · ${i} / ${pdf.numPages} · · ·`;
+          conteudo.appendChild(sep);
+        }
       }
     } catch(e) {
-      conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">Erro ao carregar PDF: ${e.message}</p>`;
+      conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">
+        Não foi possível carregar o PDF.<br/>
+        <small style="color:#555;font-size:.74rem">${e.message}</small>
+      </p>`;
     }
   };
 
   window.fecharViewer = function() {
     document.getElementById('viewer-overlay').classList.remove('visivel');
+    document.getElementById('viewer-conteudo').innerHTML = '';
     viewerDocAtual = null;
   };
 
   window.iniciarDownloadDoViewer = function() {
     if (!viewerDocAtual) return;
-    const codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
-    document.getElementById('modal-codigo-txt').textContent = codigo;
-    docPendente = { ...viewerDocAtual, codigo };
+    window.iniciarDownload(viewerDocAtual.ucId, viewerDocAtual.docId, viewerDocAtual.docNome);
+  };
+
+  // --- DOWNLOAD COM CÓDIGO ---
+  window.iniciarDownload = function(ucId, docId, docNome) {
+    const chars  = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let codigoDl = 'DL-';
+    for (let i = 0; i < 8; i++) codigoDl += chars[Math.floor(Math.random() * chars.length)];
+
+    const driveUrl = docMap[`${ucId}:${docId}`]?.driveUrl || '';
+    docPendente = { ucId, docId, docNome, driveUrl, codigoDl };
+
+    document.getElementById('modal-codigo-txt').textContent =
+      `${codigoDl}  ·  ${utilizadorAtual.codigo}  ·  ${new Date().toLocaleDateString('pt-PT')}`;
     document.getElementById('modal-dl').classList.add('visivel');
   };
 
@@ -997,91 +1025,77 @@
   };
 
   window.confirmarDownload = async function() {
-    if (!docPendente || !utilizadorAtual) return;
+    if (!docPendente) return;
     const btn = document.getElementById('btn-confirmar-dl');
     btn.disabled = true;
-    btn.textContent = 'A preparar PDF...';
+    btn.textContent = 'A registar...';
+
     try {
-      // 1. Registar download no Firestore
       await addDoc(collection(db, 'downloads'), {
-        uid:       utilizadorAtual.uid,
-        ucId:      docPendente.ucId,
-        docId:     docPendente.docId,
-        docNome:   docPendente.docNome,
-        codigo:    docPendente.codigo,
-        timestamp: serverTimestamp()
+        uid:        utilizadorAtual.uid,
+        nome:       utilizadorAtual.nome,
+        email:      utilizadorAtual.email,
+        codigoUser: utilizadorAtual.codigo,
+        codigoDl:   docPendente.codigoDl,
+        ucId:       docPendente.ucId,
+        docId:      docPendente.docId,
+        docNome:    docPendente.docNome,
+        data:       serverTimestamp()
       });
 
-      const doc_ = docMap[docPendente.docId];
-      if (doc_?.driveUrl) {
-        // 2. Carregar pdf-lib dinamicamente
-        const { PDFDocument, rgb, StandardFonts } =
-          await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.esm.min.js');
-
-        // 3. Obter o PDF original
-        const pdfBytes = await fetch(doc_.driveUrl).then(r => r.arrayBuffer());
-
-        // 4. Modificar o PDF — adicionar código em rodapé de cada página
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-        const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const nome   = utilizadorAtual.nome || utilizadorAtual.uid.slice(0, 8);
-        const stamp  = `Código: ${docPendente.codigo}  |  ${nome}  |  CampusAberto`;
-
-        pdfDoc.getPages().forEach(page => {
-          const { width } = page.getSize();
-          const textWidth  = font.widthOfTextAtSize(stamp, 7);
-          page.drawText(stamp, {
-            x: (width - textWidth) / 2,
-            y: 10,
-            size: 7,
-            font,
-            color: rgb(0.45, 0.45, 0.45),
-            opacity: 0.7
-          });
-        });
-
-        // 5. Guardar e descarregar o PDF modificado
-        const modified = await pdfDoc.save();
-        const blob = new Blob([modified], { type: 'application/pdf' });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement('a');
-        a.href     = url;
-        a.download = (docPendente.docNome || 'documento') + '.pdf';
+      try {
+        const resposta = await fetch(docPendente.driveUrl);
+        if (!resposta.ok) throw new Error('fetch falhou');
+        const pdfBytes = await resposta.arrayBuffer();
+        await descarregarComMarcaDagua(pdfBytes, docPendente.docNome, docPendente.codigoDl, utilizadorAtual.nome);
+      } catch(_) {
+        const a = document.createElement('a');
+        a.href = docPendente.driveUrl;
+        a.setAttribute('download', '');
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
       }
-      window.fecharModal();
+      fecharModal();
     } catch(e) {
-      console.error('Erro no download:', e);
-      btn.textContent = 'Erro — tenta novamente';
-      btn.disabled = false;
-      return;
+      console.error(e);
+      alert('Erro ao registar download. Tenta novamente.');
     } finally {
       btn.disabled = false;
       btn.textContent = '↓ Descarregar';
     }
   };
 
+  async function descarregarComMarcaDagua(pdfBytes, nome, codigoDl, nomeUtilizador) {
+    const { PDFDocument, rgb, StandardFonts } = await import(
+      'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.esm.min.js'
+    );
+    const pdfDoc    = await PDFDocument.load(pdfBytes);
+    const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const paginas   = pdfDoc.getPages();
+    const data      = new Date().toLocaleDateString('pt-PT');
+    const rodape    = `CampusAberto · ${nomeUtilizador} · ${codigoDl} · ${data}`;
+    const diagonal  = nomeUtilizador;
+
+    paginas.forEach(pag => {
+      const { width, height } = pag.getSize();
+      pag.drawText(rodape, { x: 30, y: 14, size: 7.5, font: helvetica, color: rgb(0.55,0.55,0.55), opacity: 0.7 });
+      pag.drawText(diagonal, { x: width/2 - (diagonal.length * 9), y: height/2, size: 36, font: helvetica, color: rgb(0.75,0.75,0.75), opacity: 0.10, rotate: { type:'degrees', angle:45 } });
+    });
+
+    const pdfFinal = await pdfDoc.save();
+    const blob     = new Blob([pdfFinal], { type: 'application/pdf' });
+    const link     = document.createElement('a');
+    link.href      = URL.createObjectURL(blob);
+    link.download  = nome.replace(/\.pdf$/i,'') + '.pdf';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
   window.sair = async function() {
     await signOut(auth);
     window.location.href = 'index.html';
   };
-
 </script>
-
-
-<footer class="rodape">
-  <a href="https://www.youtube.com/@Campus_aberto" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-    Podcast
-  </a>
-  <span class="rodape-sep">·</span>
-  <a href="https://frequenciaberta.pt/" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 0 1 7.4 5H4.6A8 8 0 0 1 12 4zm-8 6h16a8 8 0 0 1 0 4H4a8 8 0 0 1 0-4zm.6 6h14.8A8 8 0 0 1 12 20a8 8 0 0 1-7.4-2z"/></svg>
-    Rádio
-  </a>
-</footer>
 </body>
 </html>
