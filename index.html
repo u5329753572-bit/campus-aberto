@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CampusAberto · Ciências Sociais</title>
+  <title>CampusAberto · República das Ciências Sociais</title>
+  <meta name="description" content="Arquivo académico reservado da República das Ciências Sociais, organizado por unidade curricular."/>
+  <meta property="og:title" content="CampusAberto · Ciências Sociais"/>
+  <meta property="og:description" content="Conhecimento que se partilha. Documentos e materiais organizados por unidade curricular."/>
+  <meta property="og:image" content="https://guia-estudantes-2026-27.psjustme.chatgpt.site/og.png"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -145,7 +151,7 @@
       padding: 9px 0;
       text-align: center;
       font-size: 0.875rem;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--cinza);
       cursor: pointer;
       border-radius: 7px;
@@ -169,7 +175,7 @@
 
     label {
       display: block;
-      font-size: 0.88rem;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--verde);
       margin-bottom: 7px;
@@ -282,33 +288,92 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
-  
-  .rodape {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(90deg,#1a3a2a,#2d5a3d,#1a3a2a);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    border-top: 2px solid #c9a84c;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 28px;
-    z-index: 999;
-  }
-  .rodape a {
-    color: #e8cc7a;
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.2s;
-  }
-  .rodape a:hover { color: #fff; }
-  .rodape-sep { color: #c9a84c; font-size: 1rem; }
+
+    /* Redesign editorial 2026 */
+    :root {
+      --verde: #0b2a4a;
+      --verde-med: #123d67;
+      --verde-leve: #2d648f;
+      --ouro: #d89b2c;
+      --ouro-leve: #efc66f;
+      --ouro-pale: #fbf1dc;
+      --creme: #f4f0e8;
+      --cinza: #667085;
+    }
+
+    body {
+      gap: clamp(42px, 7vw, 96px);
+      padding: clamp(22px, 5vw, 64px);
+      background: #071d34;
+      overflow-y: auto;
+    }
+    body::before {
+      background:
+        linear-gradient(115deg, rgba(7,29,52,.98), rgba(11,42,74,.9)),
+        radial-gradient(circle at 83% 12%, rgba(216,155,44,.23), transparent 28%),
+        radial-gradient(circle at 8% 88%, rgba(45,100,143,.25), transparent 32%);
+    }
+    .deco-ring-1, .deco-ring-2, .deco-ring-3 { border-color: rgba(239,198,111,.12); }
+    .deco-dots { opacity: .6; background-size: 32px 32px; }
+
+    .manifesto {
+      position: relative; z-index: 1; color: white;
+      width: min(520px, 46vw);
+    }
+    .manifesto-kicker, .logo-kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--ouro-leve); font-size: .68rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+    }
+    .manifesto-kicker::before { content: ''; width: 30px; height: 1px; background: currentColor; }
+    .manifesto h2 {
+      margin: 26px 0 20px; max-width: 500px;
+      font: 600 clamp(2.8rem, 5.7vw, 5.1rem)/.94 'Playfair Display', serif;
+      letter-spacing: -.045em;
+    }
+    .manifesto h2 em { color: var(--ouro-leve); font-style: italic; font-weight: 500; }
+    .manifesto-copy { max-width: 440px; color: rgba(255,255,255,.7); font-size: .96rem; line-height: 1.75; }
+    .manifesto-points { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+    .manifesto-points span {
+      padding: 9px 13px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px;
+      color: rgba(255,255,255,.76); font-size: .7rem; background: rgba(255,255,255,.045);
+    }
+
+    .card { max-width: 450px; border-radius: 6px 28px 6px 6px; box-shadow: 0 42px 100px rgba(0,0,0,.45); }
+    .card-stripe { height: 6px; background: linear-gradient(90deg, var(--ouro), var(--ouro-leve) 30%, var(--verde-med)); }
+    .card-inner { padding: 38px 42px 42px; }
+    .logo-area { text-align: left; margin-bottom: 30px; }
+    .logo-lockup { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+    .logo-icon {
+      width: 58px; height: 58px; margin: 0; border-radius: 50% 50% 8px 8px;
+      box-shadow: 0 10px 24px rgba(11,42,74,.24), inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+    .logo-kicker { color: var(--verde-leve); font-size: .57rem; line-height: 1.5; }
+    h1 { font-size: 1.85rem; letter-spacing: -.025em; }
+    .tabs { border-radius: 4px; padding: 3px; background: #eef1f4; }
+    .tab { border-radius: 3px; min-height: 42px; }
+    input { border-radius: 4px; min-height: 48px; background: #f8f9fa; }
+    .btn { border-radius: 4px; min-height: 49px; box-shadow: none; }
+    .btn:hover { box-shadow: 0 10px 24px rgba(11,42,74,.22); }
+    .nota { text-align: left; border-top: 1px solid #e8e9eb; padding-top: 17px; }
+    :focus-visible { outline: 3px solid rgba(216,155,44,.45); outline-offset: 3px; }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; align-items: stretch; }
+      .manifesto { width: 100%; max-width: 620px; margin: 0 auto; }
+      .manifesto h2 { font-size: clamp(2.5rem, 11vw, 4.2rem); }
+      .card { margin: 0 auto; }
+    }
+    @media (max-width: 520px) {
+      body { padding: 18px; gap: 28px; }
+      .manifesto-copy, .manifesto-points { display: none; }
+      .manifesto h2 { margin: 14px 0 0; font-size: 2.25rem; max-width: 330px; }
+      .card { border-radius: 4px 22px 4px 4px; }
+      .card-inner { padding: 30px 24px 28px; }
+      .logo-lockup { margin-bottom: 18px; }
+      .logo-icon { width: 50px; height: 50px; }
+      h1 { font-size: 1.55rem; }
+    }
   </style>
 </head>
 <body>
@@ -319,65 +384,78 @@
 <div class="deco-ring-3"></div>
 <div class="deco-dots"></div>
 
+<aside class="manifesto" aria-label="Apresentação">
+  <span class="manifesto-kicker">Arquivo académico da comunidade</span>
+  <h2>Conhecimento que se <em>partilha.</em></h2>
+  <p class="manifesto-copy">Um espaço reservado para organizar, consultar e preservar materiais de estudo da Licenciatura em Ciências Sociais.</p>
+  <div class="manifesto-points" aria-label="Características">
+    <span>Acesso reservado</span><span>Documentos por UC</span><span>Partilha responsável</span>
+  </div>
+</aside>
+
 <div class="card">
   <div class="card-stripe"></div>
   <div class="card-inner">
     <div class="logo-area">
-      <div class="logo-icon">
+      <div class="logo-lockup">
+      <div class="logo-icon" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
           <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
           <circle cx="16" cy="16" r="2" fill="#c9a84c" opacity="0.5"/>
         </svg>
       </div>
-      <h1>Comunidade<br/>Ciências Sociais</h1>
+      <div><span class="logo-kicker">República das<br/>Ciências Sociais</span></div>
+      </div>
+      <h1>CampusAberto</h1>
+      <p class="subtitle">Universidade Aberta · <strong>Área reservada</strong></p>
     </div>
 
     <div class="tabs">
-      <button class="tab active" onclick="mudarTab('login')">Entrar</button>
-      <button class="tab" onclick="mudarTab('registo')">Registar</button>
+      <button type="button" class="tab active" onclick="mudarTab('login')">Entrar</button>
+      <button type="button" class="tab" onclick="mudarTab('registo')">Registar</button>
     </div>
 
     <!-- LOGIN -->
     <div class="form-section active" id="sec-login">
       <div class="field">
-        <label>Email</label>
+        <label for="login-email">Email</label>
         <input type="email" id="login-email" placeholder="o.teu@email.com" autocomplete="email" required/>
       </div>
       <div class="field">
-        <label>Password</label>
+        <label for="login-pass">Password</label>
         <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" required/>
       </div>
-      <button class="btn" id="btn-login" onclick="fazerLogin()">Entrar</button>
+      <button type="button" class="btn" id="btn-login" onclick="fazerLogin()">Entrar</button>
       <div class="msg" id="msg-login"></div>
       <div class="aviso-pendente" id="aviso-pendente">
         <strong>⏳ Conta pendente de aprovação</strong>
-        A tua conta estˡ a aguardar ativação. Receberás um email assim que for aprovada.
+        A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.
       </div>
     </div>
 
     <!-- REGISTO -->
     <div class="form-section" id="sec-registo">
       <div class="field">
-        <label>Nome completo</label>
+        <label for="reg-nome">Nome completo</label>
         <input type="text" id="reg-nome" placeholder="O teu nome" autocomplete="name" required/>
       </div>
       <div class="field">
-        <label>Email</label>
+        <label for="reg-email">Email</label>
         <input type="email" id="reg-email" placeholder="xxxx@estudante.uab.pt" autocomplete="email" required/>
       </div>
       <div class="field">
-        <label>Telemóvel</label>
+        <label for="reg-tel">Telemóvel</label>
         <input type="tel" id="reg-tel" placeholder="+351 9XX XXX XXX" autocomplete="tel" required/>
       </div>
       <div class="field">
-        <label>Password</label>
+        <label for="reg-pass">Password</label>
         <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required/>
       </div>
-      <button class="btn" id="btn-registo" onclick="fazerRegisto()">Pedir acesso</button>
+      <button type="button" class="btn" id="btn-registo" onclick="fazerRegisto()">Pedir acesso</button>
       <div class="msg" id="msg-registo"></div>
       <div class="nota">
-        Apenas emails <strong>@estudante.uab.pt</strong> são aceites.<br/>
+        São aceites emails <strong>@estudante.uab.pt</strong> e <strong>@uab.pt</strong>.<br/>
         Após o registo, a tua conta será ativada manualmente.<br/>
         Receberás confirmação por email.
       </div>
@@ -387,7 +465,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile }
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -431,11 +509,6 @@
   document.getElementById('btn-login').dataset.label   = 'Entrar';
   document.getElementById('btn-registo').dataset.label = 'Pedir acesso';
 
-  // Mostrar aviso se redirecionado de app.html por conta inativa
-  if (new URLSearchParams(location.search).get('pendente') === '1') {
-    document.getElementById('aviso-pendente').style.display = 'block';
-  }
-
   window.fazerLogin = async function() {
     const email    = document.getElementById('login-email').value.trim();
     const pass     = document.getElementById('login-pass').value;
@@ -446,24 +519,15 @@
 
     setLoading('btn-login', true);
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
-      // Verificar estado com timeout — não bloquear se Firestore demorar
-      const snap = await Promise.race([
-        getDoc(doc(db, 'utilizadores', cred.user.uid)),
-        new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), {code:'timeout'})), 10000))
-      ]);
-      const dados = snap.data?.() || {};
-      if (dados.estado && dados.estado !== 'ativo') {
+      const cred  = await signInWithEmailAndPassword(auth, email, pass);
+      const snap  = await getDoc(doc(db, 'utilizadores', cred.user.uid));
+      const dados = snap.data();
+
+      if (!dados || dados.estado !== 'ativo') {
         await auth.signOut();
         avisoEl.style.display = 'block';
         mostrarMsg('msg-login', '', '');
       } else {
-        // Aguardar que Firebase confirme o estado persistido antes de navegar
-        await new Promise(resolve => {
-          const unsub = onAuthStateChanged(auth, user => {
-            if (user) { unsub(); resolve(); }
-          });
-        });
         window.location.href = 'app.html';
       }
     } catch(e) {
@@ -491,8 +555,9 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, senha);
       await updateProfile(cred.user, { displayName: nome });
+      const codigo = 'CS-' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase().padStart(7, '0').slice(0, 7);
       await setDoc(doc(db, 'utilizadores', cred.user.uid), {
-        nome, email, tel,
+        nome, email, tel, codigo,
         estado: 'pendente',
         criadoEm: serverTimestamp()
       });
@@ -504,18 +569,12 @@
       else mostrarMsg('msg-registo', 'Erro: ' + e.message, 'erro');
     } finally { setLoading('btn-registo', false); }
   };
-</script>
 
-<footer class="rodape">
-  <a href="https://www.youtube.com/@Campus_aberto" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-    Podcast
-  </a>
-  <span class="rodape-sep">·</span>
-  <a href="https://frequenciaberta.pt/" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 0 1 7.4 5H4.6A8 8 0 0 1 12 4zm-8 6h16a8 8 0 0 1 0 4H4a8 8 0 0 1 0-4zm.6 6h14.8A8 8 0 0 1 12 20a8 8 0 0 1-7.4-2z"/></svg>
-    Rádio
-  </a>
-</footer>
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    if (document.getElementById('sec-login').classList.contains('active')) window.fazerLogin();
+    else window.fazerRegisto();
+  });
+</script>
 </body>
 </html>
