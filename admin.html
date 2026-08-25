@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin · CampusAberto</title>
+  <title>Administração · CampusAberto</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
@@ -310,6 +310,45 @@
 
     .spinner { display:inline-block; width:16px; height:16px; border:2px solid #d1d5db; border-top-color:var(--verde); border-radius:50%; animation:spin 0.7s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Redesign editorial 2026 */
+    :root { --verde:#0b2a4a; --verde-med:#123d67; --verde-leve:#2d648f; --ouro:#d89b2c; --creme:#f3f0e9; --texto:#182230; }
+    body { background-color:#f1eee7; background-image:linear-gradient(rgba(11,42,74,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(11,42,74,.025) 1px,transparent 1px); background-size:32px 32px; }
+    header { height:72px; padding-inline:clamp(20px,5vw,64px); background:#071d34; border-bottom:3px solid var(--ouro); box-shadow:0 12px 34px rgba(7,29,52,.18); }
+    .header-logo svg { width:30px; height:30px; }
+    .badge-admin { border-radius:3px; letter-spacing:.12em; }
+    .btn-sair { border-radius:3px; }
+    main { max-width:1240px; padding:48px 28px 90px; }
+    .admin-intro { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:30px; }
+    .admin-kicker { color:var(--verde-leve); text-transform:uppercase; letter-spacing:.16em; font-size:.63rem; font-weight:700; }
+    .admin-intro h1 { font:600 clamp(2rem,4vw,3.5rem)/1 'Playfair Display',serif; color:var(--verde); margin-top:9px; letter-spacing:-.035em; }
+    .admin-intro p { max-width:420px; color:var(--cinza); font-size:.84rem; line-height:1.6; text-align:right; }
+    .tabs-nav { width:100%; border-radius:4px 18px 4px 4px; padding:5px; margin-bottom:38px; box-shadow:0 10px 30px rgba(11,42,74,.07); }
+    .tab-nav { border-radius:3px; min-height:42px; }
+    .secao-titulo { font-size:1.65rem; letter-spacing:-.02em; }
+    .stats-grid { grid-template-columns:repeat(4,1fr); }
+    .stat-card { border-radius:3px 16px 3px 3px; border:1px solid rgba(11,42,74,.07); box-shadow:0 8px 22px rgba(11,42,74,.06); }
+    .stat-card:first-child { border-top:3px solid var(--ouro); }
+    .stat-num { color:var(--verde); font-family:'Playfair Display',serif; }
+    .tabela-wrap,.form-card { border-radius:4px 18px 4px 4px; box-shadow:0 10px 30px rgba(11,42,74,.07); }
+    .tabela-wrap { overflow-x:auto; }
+    .tabela-header { background:#0b2a4a; min-width:720px; }
+    table { min-width:720px; }
+    .form-card { border-top:3px solid var(--ouro); }
+    input[type=text],input[type=number],input[type=url],select,textarea { border-radius:3px; min-height:43px; }
+    .btn-primario,.btn-acao { border-radius:3px; }
+    :focus-visible { outline:3px solid rgba(216,155,44,.5); outline-offset:3px; }
+    @media (max-width:720px) {
+      header { height:64px; padding-inline:16px; }
+      .header-logo span:first-of-type { font-size:.86rem; }
+      main { padding:32px 16px 70px; }
+      .admin-intro { align-items:flex-start; flex-direction:column; }
+      .admin-intro p { text-align:left; }
+      .tabs-nav { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+      .tab-nav { padding:9px 8px; font-size:.78rem; }
+      .stats-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .form-card { padding:20px 16px; }
+    }
   </style>
 </head>
 <body>
@@ -327,11 +366,15 @@
 </header>
 
 <main>
+  <div class="admin-intro">
+    <div><span class="admin-kicker">Área reservada</span><h1>Painel editorial</h1></div>
+    <p>Gere acessos, unidades curriculares, documentos e o histórico da comunidade num único lugar.</p>
+  </div>
   <div class="tabs-nav">
-    <button class="tab-nav ativa" onclick="mudarTab('utilizadores')">👥 Utilizadores</button>
-    <button class="tab-nav" onclick="mudarTab('ucs')">📚 UCs</button>
-    <button class="tab-nav" onclick="mudarTab('documentos')">📄 Documentos</button>
-    <button class="tab-nav" onclick="mudarTab('downloads')">📥 Histórico</button>
+    <button type="button" class="tab-nav ativa" onclick="mudarTab('utilizadores')">Utilizadores</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('ucs')">Unidades curriculares</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
   </div>
 
   <!-- TAB: UTILIZADORES -->
@@ -489,6 +532,10 @@
 
   let ucsList = [];
 
+  function esc(valor) {
+    return String(valor ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
   // --- AUTH CHECK (admin) ---
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = 'index.html'; return; }
@@ -537,10 +584,10 @@
       ? '<tr><td colspan="5" class="empty-msg">Nenhum pedido pendente ✓</td></tr>'
       : pendentes.map(u => `
           <tr>
-            <td>${u.nome}</td>
-            <td>${u.email}</td>
-            <td>${u.telefone || '—'}</td>
-            <td><span class="log-codigo">${u.codigo}</span></td>
+            <td>${esc(u.nome)}</td>
+            <td>${esc(u.email)}</td>
+            <td>${esc(u.tel || u.telefone || '—')}</td>
+            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td class="acoes">
               <button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">✓ Ativar</button>
               <button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">✗ Recusar</button>
@@ -553,11 +600,11 @@
       ? '<tr><td colspan="6" class="empty-msg">Sem utilizadores</td></tr>'
       : todos.map(u => `
           <tr>
-            <td>${u.nome}</td>
-            <td>${u.email}</td>
-            <td>${u.telefone || '—'}</td>
-            <td><span class="log-codigo">${u.codigo}</span></td>
-            <td><span class="badge badge-${u.estado}">${u.estado}</span></td>
+            <td>${esc(u.nome)}</td>
+            <td>${esc(u.email)}</td>
+            <td>${esc(u.tel || u.telefone || '—')}</td>
+            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
+            <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
             <td class="acoes">
               ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
@@ -616,7 +663,7 @@
             <td>${u.ano ? u.ano + 'º' : '—'}</td>
             <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
             <td>${u.ordem || '—'}</td>
-            <td>${u.nome}</td>
+            <td>${esc(u.nome)}</td>
             <td id="uc-docs-${u.id}">—</td>
             <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
           </tr>`).join('');
@@ -633,7 +680,7 @@
     sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
       ucsList.map(u => {
         const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
-        return `<option value="${u.id}">${label}</option>`;
+        return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
   }
 
@@ -674,7 +721,7 @@
     const btn   = document.getElementById('btn-upload');
 
     if (!ucId || !nome || !url) {
-      msgEl.textContent = 'Preenche a UC, o nome e o URL do Google Drive.';
+      msgEl.textContent = 'Preenche a UC, o nome e o URL do ficheiro PDF.';
       msgEl.className = 'msg-form err'; return;
     }
 
@@ -714,9 +761,9 @@
       ? '<tr><td colspan="4" class="empty-msg">Nenhum documento carregado</td></tr>'
       : rows.map(r => `
           <tr>
-            <td>${r.ucNome}</td>
-            <td>${r.nome}</td>
-            <td>${r.descricao || '—'}</td>
+            <td>${esc(r.ucNome)}</td>
+            <td>${esc(r.nome)}</td>
+            <td>${esc(r.descricao || '—')}</td>
             <td><button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button></td>
           </tr>`).join('');
   }
@@ -742,11 +789,11 @@
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="log-data">${data}</td>
-        <td>${dl.nome}</td>
-        <td>${dl.email}</td>
-        <td><span class="log-codigo">${dl.codigoUser}</span></td>
-        <td><span class="log-codigo">${dl.codigoDl}</span></td>
-        <td>${dl.docNome}</td>`;
+        <td>${esc(dl.nome)}</td>
+        <td>${esc(dl.email)}</td>
+        <td><span class="log-codigo">${esc(dl.codigoUser || '—')}</span></td>
+        <td><span class="log-codigo">${esc(dl.codigoDl)}</span></td>
+        <td>${esc(dl.docNome)}</td>`;
       tb.appendChild(tr);
     });
   }
