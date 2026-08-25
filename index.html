@@ -10,6 +10,7 @@
   <meta property="og:image" content="https://guia-estudantes-2026-27.psjustme.chatgpt.site/og.png"/>
   <meta property="og:type" content="website"/>
   <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="icon" type="image/png" href="logo-cs.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -119,7 +120,7 @@
         0 0 0 1px rgba(201,168,76,0.18),
         inset 0 1px 0 rgba(255,255,255,0.08);
     }
-    .logo-icon svg { width: 34px; height: 34px; }
+    .logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
     h1 {
       font-family: 'Playfair Display', serif;
@@ -345,8 +346,8 @@
     .logo-area { text-align: left; margin-bottom: 30px; }
     .logo-lockup { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
     .logo-icon {
-      width: 58px; height: 58px; margin: 0; border-radius: 50% 50% 8px 8px;
-      box-shadow: 0 10px 24px rgba(11,42,74,.24), inset 0 0 0 1px rgba(255,255,255,.08);
+      width: 88px; height: 88px; margin: 0; padding: 3px; border-radius: 16px;
+      background: #fff; box-shadow: 0 10px 24px rgba(11,42,74,.18), 0 0 0 1px rgba(11,42,74,.08);
     }
     .logo-kicker { color: var(--verde-leve); font-size: .57rem; line-height: 1.5; }
     h1 { font-size: 1.85rem; letter-spacing: -.025em; }
@@ -371,7 +372,7 @@
       .card { border-radius: 4px 22px 4px 4px; }
       .card-inner { padding: 30px 24px 28px; }
       .logo-lockup { margin-bottom: 18px; }
-      .logo-icon { width: 50px; height: 50px; }
+      .logo-icon { width: 68px; height: 68px; }
       h1 { font-size: 1.55rem; }
     }
   </style>
@@ -398,12 +399,8 @@
   <div class="card-inner">
     <div class="logo-area">
       <div class="logo-lockup">
-      <div class="logo-icon" aria-hidden="true">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-          <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
-          <circle cx="16" cy="16" r="2" fill="#c9a84c" opacity="0.5"/>
-        </svg>
+      <div class="logo-icon">
+        <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
       </div>
       <div><span class="logo-kicker">República das<br/>Ciências Sociais</span></div>
       </div>
