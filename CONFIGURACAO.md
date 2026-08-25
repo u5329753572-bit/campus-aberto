@@ -42,27 +42,51 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Utilizadores: leem/escrevem o próprio; admin lê tudo
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
+    }
+
+    function isActive() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.estado == 'ativo';
+    }
+
+    // O utilizador cria apenas o seu perfil pendente; só o admin o pode alterar.
     match /utilizadores/{uid} {
-      allow read, write: if request.auth.uid == uid;
-      allow read, write: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['nome', 'email', 'tel', 'codigo', 'estado', 'criadoEm'])
+        && request.resource.data.keys().hasOnly(['nome', 'email', 'tel', 'codigo', 'estado', 'criadoEm'])
+        && request.resource.data.estado == 'pendente'
+        && request.resource.data.email == request.auth.token.email;
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow update, delete: if isAdmin();
     }
 
     // UCs e documentos: só utilizadores ativos leem; admin escreve
     match /ucs/{ucId} {
-      allow read: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.estado == 'ativo';
-      allow write: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
+      allow read: if isActive();
+      allow write: if isAdmin();
 
       match /documentos/{docId} {
-        allow read: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.estado == 'ativo';
-        allow write: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
+        allow read: if isActive();
+        allow write: if isAdmin();
       }
     }
 
-    // Downloads: utilizador ativo cria o seu; admin lê tudo
+    // Downloads: um utilizador ativo só cria registos associados ao próprio UID.
     match /downloads/{dlId} {
-      allow create: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.estado == 'ativo';
-      allow read: if get(/databases/$(database)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
+      allow create: if isActive()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly([
+          'uid', 'nome', 'email', 'codigoUser', 'codigoDl',
+          'docId', 'docNome', 'ucId', 'data'
+        ]);
+      allow read: if isAdmin();
     }
   }
 }
@@ -70,29 +94,11 @@ service cloud.firestore {
 
 ---
 
-## PASSO 4 — Ativar Storage (para os PDFs)
+## PASSO 4 — Preparar o alojamento dos PDFs
 
-1. No menu lateral, clica **Storage**
-2. Clica **"Começar"**
-3. Aceita as regras por defeito (vamos mudar a seguir)
-4. Escolhe região: `europe-west1`
+Nesta versão, os documentos são lidos através de um URL direto e o Firebase Storage não é utilizado. Coloca os PDFs na pasta `docs/` do repositório e, no painel de administração, usa o endereço do botão **Raw** de cada ficheiro.
 
-### Regras de Storage
-Vai a **Storage → Regras** e substitui por:
-
-```
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /documentos/{allPaths=**} {
-      // Só utilizadores ativos podem descarregar
-      allow read: if firestore.get(/databases/(default)/documents/utilizadores/$(request.auth.uid)).data.estado == 'ativo';
-      // Só admin pode carregar
-      allow write: if firestore.get(/databases/(default)/documents/utilizadores/$(request.auth.uid)).data.admin == true;
-    }
-  }
-}
-```
+> Não publiques documentos que não tenhas autorização para partilhar. Um repositório público torna os ficheiros acessíveis a quem conhecer o URL, mesmo que a interface do CampusAberto exija autenticação.
 
 ---
 
