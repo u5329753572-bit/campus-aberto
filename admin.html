@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Administração · CampusAberto</title>
+  <link rel="icon" type="image/png" href="logo-cs.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
@@ -45,7 +46,7 @@
     }
 
     .header-logo { display:flex; align-items:center; gap:12px; }
-    .header-logo svg { width:24px; height:24px; }
+    .header-logo img { width:42px; height:42px; object-fit:contain; display:block; padding:2px; border-radius:8px; background:#fff; }
     .header-logo span { font-family:'Playfair Display',serif; font-size:1rem; color:var(--branco); }
     .header-logo em { font-style:normal; color:var(--ouro); }
 
@@ -315,7 +316,7 @@
     :root { --verde:#0b2a4a; --verde-med:#123d67; --verde-leve:#2d648f; --ouro:#d89b2c; --creme:#f3f0e9; --texto:#182230; }
     body { background-color:#f1eee7; background-image:linear-gradient(rgba(11,42,74,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(11,42,74,.025) 1px,transparent 1px); background-size:32px 32px; }
     header { height:72px; padding-inline:clamp(20px,5vw,64px); background:#071d34; border-bottom:3px solid var(--ouro); box-shadow:0 12px 34px rgba(7,29,52,.18); }
-    .header-logo svg { width:30px; height:30px; }
+    .header-logo img { width:42px; height:42px; }
     .badge-admin { border-radius:3px; letter-spacing:.12em; }
     .btn-sair { border-radius:3px; }
     main { max-width:1240px; padding:48px 28px 90px; }
@@ -355,10 +356,7 @@
 
 <header>
   <div class="header-logo">
-    <svg viewBox="0 0 32 32" fill="none">
-      <path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#c9a84c" stroke-width="1.5"/>
-      <path d="M16 4v18M4 10l12 6 12-6" stroke="#c9a84c" stroke-width="1.5"/>
-    </svg>
+    <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
     <span>Ciências Sociais <em>UAb</em></span>
     <span class="badge-admin">ADMIN</span>
   </div>
@@ -447,7 +445,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>UCs existentes</span></div>
       <table>
-        <thead><tr><th>Ano</th><th>Semestre</th><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Alo</th><th>Semestre</th><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
         <tbody id="tbody-ucs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -606,80 +604,61 @@
             <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
             <td class="acoes">
-              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
+              ${u.estado !== 'ativo'     ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
-              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUtilizador('${u.id}')">Remover</button>
             </td>
           </tr>`).join('');
   }
 
-  window.alterarEstado = async function(uid, estado) {
-    await updateDoc(doc(db, 'utilizadores', uid), { estado });
-
+  // --- ALTERAR ESTADO ---
+  window.alterarEstado = async function(id, estado) {
+    await updateDoc(doc(db, 'utilizadores', id), { estado, atualizadoEm: serverTimestamp() });
     if (estado === 'ativo') {
+      const snap = await getDoc(doc(db, 'utilizadores', id));
+      const dados = snap.data();
       try {
-        const userSnap = await getDoc(doc(db, 'utilizadores', uid));
-        if (userSnap.exists()) {
-          const u = userSnap.data();
-          await emailjs.send('service_nxmlu8q', 'template_9k3j0vi', {
-            nome:     u.nome  || 'Utilizador',
-            to_email: u.email || '',
-          });
-        }
-      } catch(e) {
-        console.warn('Email de ativação não enviado:', e.message);
-      }
+        await emailjs.send('service_0imq6n7', 'template_8moxsha', {
+          to_name: dados.nome, to_email: dados.email
+        });
+      } catch(_) {}
     }
-
     carregarUtilizadores();
   };
 
-  window.removerUser = async function(uid) {
-    if (!confirm('Remover este utilizador da base de dados?')) return;
-    await deleteDoc(doc(db, 'utilizadores', uid));
+  window.removerUtilizador = async function(id) {
+    if (!confirm('Remover este utilizador? Esta ação é irreversível.')) return;
+    await deleteDoc(doc(db, 'utilizadores', id));
     carregarUtilizadores();
   };
 
   // --- UCs ---
   async function carregarUCs() {
-    const snap = await getDocs(collection(db, 'ucs'));
+    const q = query(collection(db, 'ucs'), orderBy('ano'), orderBy('semestre'), orderBy('ordem'));
+    const snap = await getDocs(q);
     ucsList = [];
     snap.forEach(d => ucsList.push({ id: d.id, ...d.data() }));
 
-    // Ordena: ano → semestre → ordem
-    ucsList.sort((a, b) => {
-      const dA = (a.ano||99)*100 + (a.semestre||99);
-      const dB = (b.ano||99)*100 + (b.semestre||99);
-      if (dA !== dB) return dA - dB;
-      return (a.ordem||99) - (b.ordem||99);
-    });
+    const tbU = document.getElementById('tbody-ucs');
+    tbU.innerHTML = ucsList.length === 0
+      ? '<tr><td colspan="6" class="empty-msg">Sem UCs criadas</td></tr>'
+      : ucsList.map(u => `<tr><td>${u.ano}º Ano</td><td>${u.semestre}º Sem</td><td>${u.ordem}</td><td>${esc(u.nome)}</td><td>${u.numDocs || 0}</td><td class="acoes"><button class="btn-acao btn-suspender" onclick="window.apagarUC('${u.id}')">Apagar</button></td></tr>`).join('');
 
-    // Tabela UCs
-    const tb = document.getElementById('tbody-ucs');
-    tb.innerHTML = ucsList.length === 0
-      ? '<tr><td colspan="6" class="empty-msg">Nenhuma UC criada</td></tr>'
-      : ucsList.map(u => `
-          <tr>
-            <td>${u.ano ? u.ano + 'º' : '—'}</td>
-            <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
-            <td>${u.ordem || '—'}</td>
-            <td>${esc(u.nome)}</td>
-            <td id="uc-docs-${u.id}">—</td>
-            <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
-          </tr>`).join('');
-
-    // Contar docs por UC
-    ucsList.forEach(async u => {
-      const sn = await getDocs(collection(db, 'ucs', u.id, 'documentos'));
-      const el = document.getElementById('uc-docs-' + u.id);
-      if (el) el.textContent = sn.size;
-    });
-
-    // Atualiza select de docs (com info de ano/semestre)
     const sel = document.getElementById('doc-uc');
     sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
-      ucsList.map(u => {
-        const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
+      ucsList.map(u => `<option value="${u.id}">${u.ano}º Ano / ${u.semestre}º Sem - ${esc(u.nome)}</option>`).join('');
+  }
+
+  window.criarUC = async function() {
+    const nome = document.getElementById('uc-nome').value.trim();
+    const ano  = +document.getElementById('uc-ano').value;
+    const sem  = +document.getElementById('uc-semestre').value;
+    const ord  = +document.getElementById('uc-ordem').value || 1;
+    if (!nome) { mostrarMsg('msg-uc', 'Introduz o nome da UC.', 'err'); return; }
+    await addDoc(collection(db, 'ucs'), { nome, ano: ano || 1, semestre: sem || 1, ordem: ord, numDocs: 0, criadoEm: serverTimestamp() });
+    document.getElementById('uc-nome').value = '';
+    document.getElementById('uc-ordem').value = '';
+    mostrarMsg('      const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
         return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
   }
