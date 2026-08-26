@@ -375,6 +375,27 @@
       .logo-icon { width: 68px; height: 68px; }
       h1 { font-size: 1.55rem; }
     }
+
+    .link-recuperar {
+      font-size: 0.75rem; color: var(--cinza); cursor: pointer;
+      background: none; border: none; font-family: 'Inter', sans-serif;
+      padding: 0; transition: color 0.2s; text-decoration: underline;
+    }
+    .link-recuperar:hover { color: var(--verde); }
+    .recuperar-section {
+      margin-top: 14px; padding: 16px 18px;
+      background: #f8f9fb; border-radius: 6px;
+      border: 1px solid #e2e6ea; display: none;
+    }
+    .recuperar-section.visivel { display: block; }
+    .recuperar-section p { font-size: 0.8rem; color: var(--cinza); margin-bottom: 12px; line-height: 1.5; }
+    .btn-recuperar {
+      width: 100%; padding: 10px; background: var(--verde); color: white;
+      border: none; border-radius: 4px; font-size: 0.84rem; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+    }
+    .btn-recuperar:hover { opacity: 0.88; }
+    .btn-recuperar:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -429,6 +450,17 @@
         <strong>⏳ Conta pendente de aprovação</strong>
         A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.
       </div>
+      <div style="text-align:right; margin-top:12px;">
+        <button type="button" class="link-recuperar" onclick="toggleRecuperar()">Esqueceste a password?</button>
+      </div>
+      <div class="recuperar-section" id="sec-recuperar">
+        <p>Indica o teu email e enviaremos um link para redefinires a password.</p>
+        <div class="field" style="margin-bottom:10px;">
+          <input type="email" id="rec-email" placeholder="o.teu@email.com" autocomplete="email"/>
+        </div>
+        <button type="button" class="btn-recuperar" id="btn-recuperar" onclick="recuperarPassword()">Enviar email de recuperação</button>
+        <div class="msg" id="msg-recuperar"></div>
+      </div>
     </div>
 
     <!-- REGISTO -->
@@ -462,7 +494,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile }
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -565,6 +597,36 @@
       else if (e.code === 'auth/weak-password') mostrarMsg('msg-registo', 'Password fraca.', 'erro');
       else mostrarMsg('msg-registo', 'Erro: ' + e.message, 'erro');
     } finally { setLoading('btn-registo', false); }
+  };
+
+  window.toggleRecuperar = function() {
+    const sec = document.getElementById('sec-recuperar');
+    sec.classList.toggle('visivel');
+    if (sec.classList.contains('visivel')) {
+      const email = document.getElementById('login-email').value.trim();
+      if (email) document.getElementById('rec-email').value = email;
+      document.getElementById('rec-email').focus();
+    }
+    document.getElementById('msg-recuperar').className = 'msg';
+  };
+
+  window.recuperarPassword = async function() {
+    const email = document.getElementById('rec-email').value.trim();
+    const btn = document.getElementById('btn-recuperar');
+    if (!email) { mostrarMsg('msg-recuperar', 'Introduz o teu email.', 'erro'); return; }
+    btn.disabled = true; btn.textContent = 'A enviar...';
+    try {
+      await sendPasswordResetEmail(auth, email);
+      mostrarMsg('msg-recuperar', 'Email enviado! Verifica a tua caixa de entrada.', 'sucesso');
+      document.getElementById('rec-email').value = '';
+    } catch(e) {
+      const msgs = {
+        'auth/user-not-found': 'Email não encontrado.',
+        'auth/invalid-email': 'Email inválido.',
+        'auth/too-many-requests': 'Demasiadas tentativas. Aguarda uns minutos.'
+      };
+      mostrarMsg('msg-recuperar', msgs[e.code] || 'Erro ao enviar. Tenta novamente.', 'erro');
+    } finally { btn.disabled = false; btn.textContent = 'Enviar email de recuperação'; }
   };
 
   document.addEventListener('keydown', (event) => {
