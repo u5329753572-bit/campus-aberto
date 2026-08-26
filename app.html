@@ -477,7 +477,7 @@
       background: rgba(255,255,255,0.09);
       border: 1px solid rgba(255,255,255,0.14);
       color: rgba(255,255,255,0.75); padding: 8px 16px; border-radius: 8px;
-  #   font-size: 0.78rem; font-family: 'Inter', sans-serif;
+      font-size: 0.78rem; font-family: 'Inter', sans-serif;
       cursor: pointer; white-space: nowrap; flex-shrink: 0;
       transition: all 0.2s; letter-spacing: 0.02em;
     }
@@ -630,10 +630,6 @@
           <div class="stat-val" id="stat-docs">—</div>
           <div class="stat-label">Documentos disponíveis</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-val" id="stat-ano">—</div>
-          <div class="stat-label">Ano letivo</div>
-        </div>
       </div>
     </div>
     <div id="ucs-grid">
@@ -750,9 +746,6 @@
       document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
       document.getElementById('hdr-codigo').style.display = 'block';
       document.getElementById('bv-nome').textContent   = partes[0];
-      const hoje = new Date();
-      const ano  = hoje.getFullYear();
-      document.getElementById('stat-ano').textContent = hoje.getMonth() >= 8 ? `${ano}/${ano+1}` : `${ano-1}/${ano}`;
       document.getElementById('loading-inicial').style.display = 'none';
       document.getElementById('ecra-ucs').style.display = 'block';
       document.getElementById('welcome-bar').classList.add('visivel');
@@ -774,7 +767,7 @@
         container.innerHTML = `<div class="empty">
           <div class="empty-icon">📂</div>
           <h4>Nenhuma UC disponível</h4>
-          <p>Ainda não há Unidades Curriculares criadas.</p>
+          <p>Ainda não h�! Unidades Curriculares criadas.</p>
         </div>`;
         document.getElementById('stat-ucs').textContent  = '0';
         document.getElementById('stat-docs').textContent = '0';
