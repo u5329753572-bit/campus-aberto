@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
 
     :root {
       --verde:      #1a3a2a;
@@ -126,10 +127,112 @@
     }
     .welcome-sub { font-size: 0.875rem; color: var(--cinza); margin-bottom: 28px; }
 
+    /* ── PAINEL DO ESTUDANTE ────────────────────────── */
+    .welcome-topo { display:grid; grid-template-columns:minmax(0,1fr) 350px; align-items:end; gap:34px; }
+    .pesquisa-global { position:relative; margin-top:24px; z-index:60; }
+    .pesquisa-global-campo {
+      position:relative; display:flex; align-items:center; min-height:58px;
+      background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 20px 3px 3px;
+      box-shadow:0 14px 38px rgba(11,42,74,.09); overflow:hidden;
+    }
+    .pesquisa-global-icone { width:58px; display:grid; place-items:center; color:var(--ouro); flex-shrink:0; }
+    .pesquisa-global-icone svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+    .pesquisa-global input {
+      width:100%; min-height:56px; padding:0 52px 0 0; color:var(--texto); background:transparent;
+      border:0; outline:0; font:500 .9rem/1 'Inter',sans-serif;
+    }
+    .pesquisa-global input::placeholder { color:#8c96a3; font-weight:400; }
+    .pesquisa-atalho {
+      position:absolute; right:15px; padding:5px 7px; color:var(--cinza); background:#f1f3f5;
+      border:1px solid #e3e7eb; border-radius:3px; font-size:.58rem; font-weight:700;
+    }
+    .pesquisa-resultados {
+      display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; max-height:360px;
+      overflow-y:auto; padding:8px; background:#fff; border:1px solid rgba(11,42,74,.1);
+      border-radius:3px 18px 3px 3px; box-shadow:0 24px 60px rgba(7,29,52,.2);
+    }
+    .pesquisa-resultados.visivel { display:block; }
+    .pesquisa-estado { padding:22px; color:var(--cinza); font-size:.8rem; text-align:center; }
+    .pesquisa-item {
+      width:100%; display:grid; grid-template-columns:42px minmax(0,1fr) auto; align-items:center;
+      gap:12px; padding:11px; color:var(--texto); background:transparent; border:0;
+      border-radius:3px 12px 3px 3px; cursor:pointer; text-align:left; font-family:'Inter',sans-serif;
+    }
+    .pesquisa-item:hover,.pesquisa-item:focus-visible { background:#f7f4ed; }
+    .pesquisa-tipo {
+      display:grid; place-items:center; min-height:32px; padding:0 6px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 10px 3px 3px;
+      font-size:.52rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    }
+    .pesquisa-item strong { display:block; margin-bottom:3px; color:var(--verde); font-size:.8rem; }
+    .pesquisa-item small { display:block; color:var(--cinza); font-size:.66rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pesquisa-item-seta { color:var(--ouro); font-size:1rem; }
+
+    .painel-aluno { margin:-20px 0 64px; }
+    .secao-cabecalho-uniforme { display:flex; justify-content:space-between; align-items:end; gap:26px; margin-bottom:18px; }
+    .secao-kicker-uniforme {
+      display:flex; align-items:center; gap:10px; margin-bottom:7px; color:var(--ouro);
+      font-size:.61rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    }
+    .secao-kicker-uniforme::before { content:''; width:25px; height:2px; background:var(--ouro); }
+    .secao-cabecalho-uniforme h2 {
+      color:var(--verde); font-family:'Playfair Display',serif; font-size:clamp(1.65rem,2.7vw,2.25rem);
+      line-height:1.05; letter-spacing:-.025em;
+    }
+    .secao-cabecalho-uniforme p { max-width:390px; color:var(--cinza); font-size:.77rem; line-height:1.6; }
+    .painel-grid { display:grid; grid-template-columns:1.35fr 1fr 1fr; gap:13px; }
+    .painel-card {
+      min-height:222px; display:flex; flex-direction:column; padding:21px; background:#fff;
+      border:1px solid rgba(11,42,74,.08); border-radius:3px 19px 3px 3px;
+      box-shadow:0 11px 30px rgba(11,42,74,.07);
+    }
+    .painel-card.datas { border-top:4px solid var(--ouro); }
+    .painel-card-topo { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+    .painel-card-titulo { display:flex; align-items:center; gap:9px; color:var(--verde); font-size:.76rem; font-weight:700; }
+    .painel-card-icone {
+      display:grid; place-items:center; width:31px; height:31px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 10px 3px 3px; font-size:.8rem;
+    }
+    .painel-card-contador { color:var(--cinza); font-size:.6rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; }
+    .painel-lista { display:flex; flex-direction:column; gap:8px; }
+    .painel-item {
+      width:100%; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:10px;
+      padding:10px; color:var(--texto); background:#f7f8f9; border:0; border-radius:3px 12px 3px 3px;
+      text-align:left; font-family:'Inter',sans-serif; cursor:pointer;
+    }
+    .painel-item:hover { background:#f4efe4; }
+    .painel-item.estatico { cursor:default; }
+    .painel-item.estatico:hover { background:#f7f8f9; }
+    .painel-data-dia { min-width:42px; color:var(--ouro); font:700 1.15rem/1 'Playfair Display',serif; text-align:center; }
+    .painel-data-dia small { display:block; margin-top:3px; color:var(--cinza); font:700 .48rem/1 'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    .painel-item strong { display:block; margin-bottom:3px; color:var(--verde); font-size:.72rem; }
+    .painel-item small { display:block; color:var(--cinza); font-size:.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .painel-item-dias { color:var(--verde-leve); font-size:.57rem; font-weight:700; white-space:nowrap; }
+    .painel-vazio { margin:auto 0; padding:14px 4px; text-align:center; }
+    .painel-vazio strong { display:block; margin-bottom:5px; color:var(--verde); font:600 .85rem/1.2 'Playfair Display',serif; }
+    .painel-vazio p { color:var(--cinza); font-size:.66rem; line-height:1.5; }
+    .retomar-destaque { margin:auto 0 0; }
+    .retomar-destaque .painel-item { min-height:116px; grid-template-columns:44px minmax(0,1fr) auto; background:linear-gradient(135deg,#f7f9fb,#fbf1dc); }
+    .retomar-sigla { display:grid; place-items:center; width:42px; height:48px; color:#fff; background:var(--verde); border-radius:3px 12px 3px 3px; font-size:.56rem; font-weight:800; }
+    .favorito-btn {
+      display:grid; place-items:center; width:32px; height:32px; padding:0; color:#fff;
+      background:rgba(7,29,52,.62); border:1px solid rgba(255,255,255,.28); border-radius:50%;
+      cursor:pointer; font-size:1rem; line-height:1; transition:transform .2s ease,background .2s ease,color .2s ease;
+    }
+    .favorito-btn:hover { transform:scale(1.08); background:var(--ouro); }
+    .favorito-btn.ativo { color:#fff; background:var(--ouro); }
+    .uc-card .favorito-btn { position:absolute; top:11px; left:11px; z-index:4; }
+    .doc-favorito { flex-shrink:0; color:var(--verde); background:#f7f4ed; border-color:rgba(11,42,74,.12); }
+    .doc-favorito.ativo { color:#fff; }
+    .doc-acoes { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .ferramenta-favorito { color:var(--verde); background:#f7f4ed; border-color:rgba(11,42,74,.1); }
+    .ferramenta-favorito.ativo { color:#fff; }
+    .arquivo-cabecalho { margin:0 0 28px; }
+
     /* ── ECOSSISTEMA CAMPUSABERTO ───────────────────── */
     .ecosistema {
       position: relative;
-      margin: -22px 0 64px;
+      margin: 0 0 64px;
       padding: clamp(28px, 4vw, 46px);
       overflow: hidden;
       color: var(--branco);
@@ -196,6 +299,82 @@
       background: var(--verde); border-radius: 50%; transition: transform .2s ease, background .2s ease;
     }
     .recurso-card:hover .recurso-link span:last-child { transform: translate(2px,-2px); background: var(--ouro); }
+
+    /* ── FERRAMENTAS ────────────────────────────────── */
+    .ferramentas-secao {
+      margin: 0 0 68px; padding: clamp(26px,4vw,42px);
+      background: rgba(255,255,255,.9); border: 1px solid rgba(11,42,74,.08);
+      border-radius: 3px 28px 3px 3px; box-shadow: 0 16px 42px rgba(11,42,74,.08);
+    }
+    .ferramentas-cabecalho {
+      display: flex; justify-content: space-between; align-items: end;
+      gap: 28px; margin-bottom: 24px;
+    }
+    .ferramentas-kicker {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+      color: var(--ouro); font-size: .62rem; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .ferramentas-kicker::before { content:''; width:26px; height:2px; background:var(--ouro); }
+    .ferramentas-cabecalho h2 {
+      color: var(--verde); font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem,3vw,2.55rem); line-height:1.05; letter-spacing:-.03em;
+    }
+    .ferramentas-intro { max-width:420px; color:var(--cinza); font-size:.8rem; line-height:1.65; }
+    .ferramentas-tabs {
+      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;
+      padding-bottom:20px; border-bottom:1px solid rgba(11,42,74,.08);
+    }
+    .ferramenta-tab {
+      min-height:38px; padding:8px 13px; color:var(--verde-leve); background:#f3f5f7;
+      border:1px solid rgba(11,42,74,.08); border-radius:3px; cursor:pointer;
+      font:600 .68rem/1 'Inter',sans-serif; letter-spacing:.025em;
+      transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;
+    }
+    .ferramenta-tab:hover { transform:translateY(-1px); border-color:rgba(216,155,44,.45); }
+    .ferramenta-tab[aria-selected="true"] { color:#fff; background:var(--verde); border-color:var(--verde); }
+    .ferramentas-painel[hidden] { display:none; }
+    .ferramentas-painel { animation:fadeUp .28s ease; }
+    .ferramentas-painel-titulo {
+      display:flex; align-items:center; gap:12px; margin-bottom:16px;
+      color:var(--verde); font-family:'Playfair Display',serif; font-size:1.15rem;
+    }
+    .ferramentas-painel-titulo span {
+      display:grid; place-items:center; width:34px; height:34px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 11px 3px 3px; font:700 .6rem/1 'Inter',sans-serif;
+    }
+    .ferramentas-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .ferramenta-link {
+      min-height:164px; display:flex; flex-direction:column; position:relative; padding:19px;
+      color:var(--texto); text-decoration:none; background:#fff;
+      border:1px solid rgba(11,42,74,.09); border-radius:3px 16px 3px 3px;
+      transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+    }
+    .ferramenta-link:hover {
+      transform:translateY(-4px); border-color:rgba(216,155,44,.48);
+      box-shadow:0 14px 30px rgba(11,42,74,.11);
+    }
+    .ferramenta-link-topo { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .ferramenta-marca {
+      display:grid; place-items:center; min-width:36px; height:30px; padding:0 8px;
+      color:var(--ouro); background:var(--ouro-pale); border-radius:3px 10px 3px 3px;
+      font-size:.56rem; font-weight:800; letter-spacing:.08em;
+    }
+    .ferramenta-seta {
+      display:grid; place-items:center; width:27px; height:27px; color:#fff;
+      background:var(--verde); border-radius:50%; text-decoration:none; transition:transform .2s ease,background .2s ease;
+    }
+    .ferramenta-link:hover .ferramenta-seta { transform:translate(2px,-2px); background:var(--ouro); }
+    .ferramenta-conteudo { display:flex; flex:1; flex-direction:column; color:var(--texto); text-decoration:none; }
+    .ferramenta-link h3 {
+      margin-bottom:7px; color:var(--verde); font-family:'Playfair Display',serif;
+      font-size:1.02rem; line-height:1.22;
+    }
+    .ferramenta-link p { color:var(--cinza); font-size:.73rem; line-height:1.55; }
+    .ferramenta-destino {
+      margin-top:auto; padding-top:15px; color:var(--verde-leve); font-size:.56rem;
+      font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+    }
 
     /* Stats bar */
     .stats-bar {
@@ -278,7 +457,11 @@
       cursor: pointer;
       transition: transform 0.28s cubic-bezier(.175,.885,.32,1.275),
                   box-shadow 0.28s ease, border-color 0.28s ease;
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: column; position:relative;
+    }
+    .uc-card-abrir {
+      width:100%; height:100%; display:flex; flex:1; flex-direction:column; padding:0;
+      color:inherit; background:transparent; border:0; cursor:pointer; text-align:left; font:inherit;
     }
     .uc-card:hover {
       transform: translateY(-10px) scale(1.015);
@@ -637,12 +820,21 @@
     :focus-visible { outline:3px solid rgba(216,155,44,.5); outline-offset:3px; }
     @media (max-width:1100px) {
       .ucs-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .welcome-topo { grid-template-columns:minmax(0,1fr) 300px; }
+      .painel-grid { grid-template-columns:1.25fr 1fr; }
+      .painel-card.retomar { grid-column:1 / -1; min-height:auto; }
     }
     @media (max-width:820px) {
       .ucs-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .welcome-topo { grid-template-columns:1fr; gap:18px; }
+      .painel-grid { grid-template-columns:1fr; }
+      .painel-card.retomar { grid-column:auto; }
+      .secao-cabecalho-uniforme { align-items:start; flex-direction:column; gap:8px; }
       .ecosistema-topo { align-items:start; flex-direction:column; gap:12px; }
       .recursos-grid { grid-template-columns:1fr; }
       .recurso-card { min-height:176px; }
+      .ferramentas-cabecalho { align-items:start; flex-direction:column; gap:10px; }
+      .ferramentas-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
     @media (max-width:640px) {
       header { height:66px; }
@@ -650,25 +842,41 @@
       .header-right { gap:7px; }
       .btn-sair { padding:7px 10px; }
       main { padding-inline:16px; }
+      .welcome-area { margin-bottom:48px; }
+      .pesquisa-global-campo { min-height:54px; }
+      .pesquisa-global input { min-height:52px; padding-right:14px; }
+      .pesquisa-atalho { display:none; }
+      .pesquisa-resultados { max-height:330px; }
+      .painel-aluno { margin:0 0 48px; }
+      .painel-grid { gap:10px; }
+      .painel-card { min-height:200px; padding:18px 15px; }
+      .painel-card.retomar { min-height:180px; }
       .stats-bar { display:grid; grid-template-columns:repeat(2,1fr); }
       .stat-item { padding:15px 10px; text-align:center; }
       .stat-val { font-size:1.65rem; }
       .stat-label { font-size:.54rem; letter-spacing:.05em; }
       .ucs-grid { grid-template-columns:1fr; }
-      .uc-card { display:grid; grid-template-columns:96px 1fr; }
+      .uc-card-abrir { display:grid; grid-template-columns:96px 1fr; }
       .uc-card-banda { height:auto; min-height:124px; padding:14px; }
       .uc-card-emoji::after { writing-mode:vertical-rl; font-size:.52rem; }
       .doc-item { align-items:flex-start; gap:12px; padding:16px; flex-wrap:wrap; }
       .doc-info { min-width:calc(100% - 64px); }
-      .btn-ver { margin-left:64px; width:calc(100% - 64px); justify-content:center; }
+      .doc-acoes { margin-left:64px; width:calc(100% - 64px); }
+      .btn-ver { margin-left:0; width:auto; flex:1; justify-content:center; }
       .viewer-titulo { display:none; }
       .modal { padding:28px 22px; }
-      .ecosistema { margin:-18px 0 48px; padding:26px 18px 20px; border-radius:3px 24px 3px 3px; }
+      .ecosistema { margin:0 0 48px; padding:26px 18px 20px; border-radius:3px 24px 3px 3px; }
       .ecosistema h2 { max-width:280px; }
       .ecosistema-intro { font-size:.78rem; }
       .recursos-grid { gap:10px; }
       .recurso-card { min-height:164px; padding:18px; }
       .recurso-icone { margin-bottom:18px; }
+      .ferramentas-secao { margin:0 0 50px; padding:24px 16px 18px; border-radius:3px 22px 3px 3px; }
+      .ferramentas-intro { font-size:.76rem; }
+      .ferramentas-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+      .ferramenta-tab { width:100%; padding-inline:8px; }
+      .ferramentas-grid { grid-template-columns:1fr; }
+      .ferramenta-link { min-height:150px; }
     }
 
     /* ── MODAL PERFIL ───────────────────────────────── */
@@ -760,19 +968,54 @@
   <!-- ECRÃ PRINCIPAL: UCs -->
   <div id="ecra-ucs" style="display:none">
     <div class="welcome-area" id="welcome-bar">
-      <div class="welcome-saudacao">Olá, <span id="bv-nome">—</span>.</div>
-      <div class="welcome-sub">O teu arquivo académico, organizado por ano e semestre. Seleciona uma Unidade Curricular para consultar os materiais.</div>
-      <div class="stats-bar">
-        <div class="stat-item">
-          <div class="stat-val" id="stat-ucs">—</div>
-          <div class="stat-label">Unidades Curriculares</div>
+      <div class="welcome-topo">
+        <div>
+          <div class="welcome-saudacao">Olá, <span id="bv-nome">—</span>.</div>
+          <div class="welcome-sub">Encontra o que precisas, acompanha as próximas datas e retoma o teu estudo.</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-val" id="stat-docs">—</div>
-          <div class="stat-label">Documentos disponíveis</div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-val" id="stat-ucs">—</div>
+            <div class="stat-label">Unidades Curriculares</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" id="stat-docs">—</div>
+            <div class="stat-label">Documentos disponíveis</div>
+          </div>
         </div>
       </div>
+
+      <div class="pesquisa-global" id="pesquisa-global">
+        <div class="pesquisa-global-campo">
+          <span class="pesquisa-global-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>
+          <label class="sr-only" for="pesquisa-input">Pesquisar no CampusAberto</label>
+          <input type="search" id="pesquisa-input" placeholder="Pesquisar UCs, documentos e ferramentas..." autocomplete="off" aria-controls="pesquisa-resultados" aria-expanded="false"/>
+          <span class="pesquisa-atalho" aria-hidden="true">CTRL K</span>
+        </div>
+        <div class="pesquisa-resultados" id="pesquisa-resultados" role="listbox" aria-label="Resultados da pesquisa"></div>
+      </div>
     </div>
+
+    <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
+      <div class="secao-cabecalho-uniforme">
+        <div><div class="secao-kicker-uniforme">Visão pessoal</div><h2 id="painel-titulo">O teu painel</h2></div>
+        <p>O essencial para não perder prazos e voltar rapidamente ao que estavas a consultar.</p>
+      </div>
+      <div class="painel-grid">
+        <article class="painel-card datas">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">◷</span>Próximas datas</div><span class="painel-card-contador" id="datas-contador">A carregar</span></div>
+          <div class="painel-lista" id="datas-lista"><div class="painel-vazio"><p>A consultar o calendário...</p></div></div>
+        </article>
+        <article class="painel-card favoritos">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">★</span>Favoritos</div><span class="painel-card-contador" id="favoritos-contador">0 guardados</span></div>
+          <div class="painel-lista" id="favoritos-lista"></div>
+        </article>
+        <article class="painel-card retomar">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">↻</span>Continuar a estudar</div><span class="painel-card-contador">Último acesso</span></div>
+          <div class="retomar-destaque" id="retomar-conteudo"></div>
+        </article>
+      </div>
+    </section>
 
     <section class="ecosistema" aria-labelledby="ecosistema-titulo">
       <div class="ecosistema-topo">
@@ -814,6 +1057,142 @@
           <span class="recurso-link"><span>Ver episódios</span><span aria-hidden="true">↗</span></span>
         </a>
       </div>
+    </section>
+
+    <section class="ferramentas-secao" aria-labelledby="ferramentas-titulo">
+      <div class="ferramentas-cabecalho">
+        <div>
+          <div class="ferramentas-kicker">Centro de recursos</div>
+          <h2 id="ferramentas-titulo">Ferramentas de apoio</h2>
+        </div>
+        <p class="ferramentas-intro">Links diretos para estudar com mais autonomia: transcrever, resumir, trabalhar PDFs, pesquisar, citar e traduzir.</p>
+      </div>
+
+      <div class="ferramentas-tabs" role="tablist" aria-label="Categorias de ferramentas">
+        <button class="ferramenta-tab" id="tab-transcribe" type="button" role="tab" aria-selected="true" aria-controls="ferramentas-painel" data-categoria="transcribe">Transcrição</button>
+        <button class="ferramenta-tab" id="tab-summary" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="summary" tabindex="-1">Resumos</button>
+        <button class="ferramenta-tab" id="tab-pdf" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="pdf" tabindex="-1">PDFs</button>
+        <button class="ferramenta-tab" id="tab-youtube" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="youtube" tabindex="-1">Vídeos</button>
+        <button class="ferramenta-tab" id="tab-articles" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="articles" tabindex="-1">Artigos</button>
+        <button class="ferramenta-tab" id="tab-references" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="references" tabindex="-1">Bibliografia</button>
+        <button class="ferramenta-tab" id="tab-translation" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="translation" tabindex="-1">Tradução</button>
+      </div>
+
+      <div class="ferramentas-painel" id="ferramentas-painel" role="tabpanel" aria-labelledby="tab-transcribe">
+        <div class="ferramentas-painel-titulo" id="ferramentas-painel-titulo"></div>
+        <div class="ferramentas-grid" id="ferramentas-grid"></div>
+      </div>
+    </section>
+
+    <script>
+      window.ferramentasCampus = {
+        transcribe: {
+          titulo: 'Transcrição de vídeos e áudio', codigo: 'TR',
+          items: [
+            ['TurboScribe','Transcreve ficheiros de vídeo e áudio em dezenas de idiomas.','https://turboscribe.ai/'],
+            ['YouTube Auto-Transcript','Permite consultar e copiar as legendas automáticas disponíveis nos vídeos.','https://youtube.com/'],
+            ['Otter.ai','Transcrição automática de gravações, reuniões e conversas em tempo real.','https://otter.ai/']
+          ]
+        },
+        summary: {
+          titulo: 'Resumos e sínteses', codigo: 'RS',
+          items: [
+            ['NotebookLM (Google)','Cria resumos, guias de estudo, perguntas e sínteses a partir das fontes carregadas.','https://notebooklm.google.com/'],
+            ['Mapify','Transforma textos e ideias em mapas mentais e esquemas visuais.','https://mapify.so/'],
+            ['SciSpace','Ajuda a compreender artigos científicos, conceitos complexos e linguagem técnica.','https://scispace.com/'],
+            ['Notion (com templates)','Organiza notas, resumos, disciplinas e projetos académicos num único espaço.','https://notion.so/']
+          ]
+        },
+        pdf: {
+          titulo: 'Processar e pesquisar PDFs', codigo: 'PDF',
+          items: [
+            ['iLovePDF — OCR','Converte documentos digitalizados em texto pesquisável e editável.','https://www.ilovepdf.com/pt/pdf_para_texto'],
+            ['PDF24 Tools','Reúne OCR, compressão, edição, conversão e outras operações com PDF.','https://tools.pdf24.org/pt/'],
+            ['Smallpdf','Converte, comprime e reorganiza documentos PDF através do navegador.','https://smallpdf.com/pt/pdf-para-word']
+          ]
+        },
+        youtube: {
+          titulo: 'Encontrar vídeos educativos', codigo: 'VD',
+          items: [
+            ['Khan Academy','Vídeos e exercícios educativos organizados por áreas de aprendizagem.','https://pt.khanacademy.org/'],
+            ['YouTube Edu','Pesquisa de aulas, explicações e conteúdos educativos em vídeo.','https://www.youtube.com/'],
+            ['CrashCourse','Cursos em vídeo sobre história, ciências, filosofia e outras áreas.','https://www.youtube.com/@crashcourse'],
+            ['TED-Ed','Lições curtas e vídeos educativos animados sobre temas diversos.','https://ed.ted.com/']
+          ]
+        },
+        articles: {
+          titulo: 'Pesquisar artigos científicos', codigo: 'AC',
+          items: [
+            ['Google Scholar','Motor de pesquisa para artigos, teses, livros e literatura académica.','https://scholar.google.com/'],
+            ['SciELO','Biblioteca de revistas e artigos científicos em acesso aberto.','https://scielo.org/'],
+            ['RCAAP','Portal português de teses, dissertações, artigos e repositórios científicos.','https://www.rcaap.pt/'],
+            ['JSTOR','Base de dados académica especialmente relevante para ciências sociais e humanidades.','https://www.jstor.org/'],
+            ['ResearchGate','Rede académica para descobrir publicações e acompanhar investigadores.','https://www.researchgate.net/']
+          ]
+        },
+        references: {
+          titulo: 'Gerir bibliografia e citações', codigo: 'APA',
+          items: [
+            ['Zotero','Guarda, organiza e cita fontes, gerando bibliografias automaticamente.','https://www.zotero.org/'],
+            ['Mendeley','Organiza PDFs, referências, anotações e bibliografias académicas.','https://www.mendeley.com/'],
+            ['CitationMachine','Gera citações em APA, MLA, Chicago e outros estilos.','https://www.citationmachine.net/'],
+            ['MyBib','Cria e organiza bibliografias online a partir de URLs, livros e artigos.','https://www.mybib.com/']
+          ]
+        },
+        translation: {
+          titulo: 'Tradução e dicionários', codigo: 'PT',
+          items: [
+            ['DeepL','Traduz textos e documentos preservando melhor o contexto das frases.','https://www.deepl.com/translator'],
+            ['Linguee','Mostra traduções acompanhadas por exemplos retirados de textos reais.','https://www.linguee.pt/'],
+            ['WordReference','Dicionários bilingues, definições e fóruns sobre uso da língua.','https://www.wordreference.com/'],
+            ['Reverso Context','Apresenta traduções de palavras e expressões em diferentes contextos.','https://context.reverso.net/']
+          ]
+        }
+      };
+
+      function mostrarCategoriaFerramentas(categoria) {
+        const dados = window.ferramentasCampus[categoria];
+        if (!dados) return;
+        const painel = document.getElementById('ferramentas-painel');
+        const titulo = document.getElementById('ferramentas-painel-titulo');
+        const grid = document.getElementById('ferramentas-grid');
+        const ativo = document.querySelector(`.ferramenta-tab[data-categoria="${categoria}"]`);
+
+        document.querySelectorAll('.ferramenta-tab').forEach(tab => {
+          const selecionado = tab === ativo;
+          tab.setAttribute('aria-selected', selecionado ? 'true' : 'false');
+          tab.tabIndex = selecionado ? 0 : -1;
+        });
+        painel.setAttribute('aria-labelledby', ativo.id);
+        titulo.innerHTML = `<span aria-hidden="true">${dados.codigo}</span>${dados.titulo}`;
+        grid.innerHTML = dados.items.map((item, indice) => {
+          const destino = new URL(item[2]).hostname.replace(/^www\./,'');
+          return `<article class="ferramenta-link">
+            <div class="ferramenta-link-topo"><span class="ferramenta-marca">${dados.codigo}</span><span style="display:flex;gap:7px;align-items:center"><button class="favorito-btn ferramenta-favorito" type="button" data-fav-key="tool:${categoria}:${indice}" onclick="window.toggleFavorito('tool:${categoria}:${indice}')" aria-label="Adicionar ${item[0]} aos favoritos">☆</button><a class="ferramenta-seta" href="${item[2]}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${item[0]} numa nova janela">↗</a></span></div>
+            <a class="ferramenta-conteudo" href="${item[2]}" target="_blank" rel="noopener noreferrer"><h3>${item[0]}</h3><p>${item[1]}</p><span class="ferramenta-destino">${destino}</span></a>
+          </article>`;
+        }).join('');
+        if (window.atualizarBotoesFavoritos) window.atualizarBotoesFavoritos();
+      }
+
+      document.querySelectorAll('.ferramenta-tab').forEach(tab => {
+        tab.addEventListener('click', () => mostrarCategoriaFerramentas(tab.dataset.categoria));
+        tab.addEventListener('keydown', event => {
+          if (!['ArrowLeft','ArrowRight'].includes(event.key)) return;
+          event.preventDefault();
+          const tabs = [...document.querySelectorAll('.ferramenta-tab')];
+          const atual = tabs.indexOf(tab);
+          const proximo = event.key === 'ArrowRight' ? (atual + 1) % tabs.length : (atual - 1 + tabs.length) % tabs.length;
+          tabs[proximo].focus();
+          mostrarCategoriaFerramentas(tabs[proximo].dataset.categoria);
+        });
+      });
+      mostrarCategoriaFerramentas('transcribe');
+    </script>
+
+    <section class="secao-cabecalho-uniforme arquivo-cabecalho" aria-labelledby="arquivo-titulo">
+      <div><div class="secao-kicker-uniforme">Biblioteca académica</div><h2 id="arquivo-titulo">Unidades curriculares</h2></div>
+      <p>Consulta os materiais organizados por ano e semestre ou encontra-os diretamente através da pesquisa.</p>
     </section>
 
     <div id="ucs-grid">
@@ -939,9 +1318,196 @@
   let ucAtualId       = null;
   let viewerDocAtual  = null;
   let totalDocs       = 0;
+  const ucsMap        = {};
+  const catalogo      = new Map();
+  let favoritos       = [];
 
   function esc(valor) {
     return String(valor ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function normalizar(valor) {
+    return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function chaveLocal(nome) {
+    return `campusaberto:${nome}:${utilizadorAtual?.uid || 'anonimo'}`;
+  }
+
+  function indexarFerramentas() {
+    Object.entries(window.ferramentasCampus || {}).forEach(([categoria, dados]) => {
+      dados.items.forEach((item, indice) => {
+        const key = `tool:${categoria}:${indice}`;
+        catalogo.set(key, { key, tipo:'tool', titulo:item[0], subtitulo:dados.titulo, href:item[2] });
+      });
+    });
+  }
+
+  function carregarPreferencias() {
+    try { favoritos = JSON.parse(localStorage.getItem(chaveLocal('favoritos')) || '[]'); }
+    catch (_) { favoritos = []; }
+    renderFavoritos();
+    renderRetomar();
+    window.atualizarBotoesFavoritos();
+  }
+
+  function guardarFavoritos() {
+    localStorage.setItem(chaveLocal('favoritos'), JSON.stringify(favoritos));
+    renderFavoritos();
+    window.atualizarBotoesFavoritos();
+  }
+
+  window.toggleFavorito = function(key) {
+    const existente = favoritos.findIndex(item => item.key === key);
+    if (existente >= 0) favoritos.splice(existente, 1);
+    else {
+      const item = catalogo.get(key);
+      if (!item) return;
+      favoritos.unshift(item);
+    }
+    guardarFavoritos();
+  };
+
+  window.atualizarBotoesFavoritos = function() {
+    const chaves = new Set(favoritos.map(item => item.key));
+    document.querySelectorAll('[data-fav-key]').forEach(btn => {
+      const ativo = chaves.has(btn.dataset.favKey);
+      btn.classList.toggle('ativo', ativo);
+      btn.textContent = ativo ? '★' : '☆';
+      btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+      const nome = catalogo.get(btn.dataset.favKey)?.titulo || 'este item';
+      btn.setAttribute('aria-label', `${ativo ? 'Remover' : 'Adicionar'} ${nome} ${ativo ? 'dos' : 'aos'} favoritos`);
+    });
+  };
+
+  function renderFavoritos() {
+    const lista = document.getElementById('favoritos-lista');
+    const contador = document.getElementById('favoritos-contador');
+    if (!lista || !contador) return;
+    contador.textContent = favoritos.length === 1 ? '1 guardado' : `${favoritos.length} guardados`;
+    if (!favoritos.length) {
+      lista.innerHTML = `<div class="painel-vazio"><strong>A tua seleção começa aqui</strong><p>Usa a estrela nas UCs, documentos e ferramentas que queres encontrar mais depressa.</p></div>`;
+      return;
+    }
+    lista.innerHTML = favoritos.slice(0,3).map(item => `
+      <button class="painel-item" type="button" data-abrir-item="${esc(item.key)}">
+        <span class="painel-data-dia" style="font-size:.64rem">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
+        <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'CampusAberto')}</small></span>
+        <span class="painel-item-dias">Abrir →</span>
+      </button>`).join('');
+    lista.querySelectorAll('[data-abrir-item]').forEach(btn => btn.addEventListener('click', () => abrirItem(btn.dataset.abrirItem)));
+  }
+
+  function guardarRetomar(item) {
+    if (!utilizadorAtual || !item) return;
+    localStorage.setItem(chaveLocal('retomar'), JSON.stringify(item));
+    renderRetomar();
+  }
+
+  function renderRetomar() {
+    const area = document.getElementById('retomar-conteudo');
+    if (!area) return;
+    let item = null;
+    try { item = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null'); } catch (_) {}
+    if (!item) {
+      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não há atividade</strong><p>Quando abrires uma UC ou um documento, poderás retomá-lo aqui.</p></div>`;
+      return;
+    }
+    area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
+      <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
+      <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
+      <span class="painel-item-dias">Continuar →</span>
+    </button>`;
+    document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
+  }
+
+  async function abrirItem(key, fallback = null) {
+    const item = catalogo.get(key) || favoritos.find(f => f.key === key) || fallback;
+    if (!item) return;
+    if (item.tipo === 'tool') { window.open(item.href, '_blank', 'noopener'); return; }
+    if (item.tipo === 'uc') {
+      const uc = ucsMap[item.id];
+      if (uc) await abrirUC(uc, 'UC');
+      return;
+    }
+    if (item.tipo === 'doc') {
+      const uc = ucsMap[item.ucId];
+      if (!docMap[`${item.ucId}:${item.docId}`] && uc) await abrirUC(uc, 'UC');
+      if (docMap[`${item.ucId}:${item.docId}`]) window.abrirViewer(item.ucId, item.docId);
+    }
+  }
+
+  function prepararPesquisa() {
+    const input = document.getElementById('pesquisa-input');
+    const resultados = document.getElementById('pesquisa-resultados');
+    if (!input || !resultados) return;
+    const pesquisar = () => {
+      const termo = normalizar(input.value.trim());
+      if (termo.length < 2) {
+        resultados.classList.remove('visivel');
+        input.setAttribute('aria-expanded','false');
+        return;
+      }
+      const encontrados = [...catalogo.values()].filter(item => normalizar(`${item.titulo} ${item.subtitulo || ''}`).includes(termo)).slice(0,10);
+      resultados.innerHTML = encontrados.length ? encontrados.map(item => `
+        <button class="pesquisa-item" type="button" role="option" data-resultado-key="${esc(item.key)}">
+          <span class="pesquisa-tipo">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
+          <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || '')}</small></span>
+          <span class="pesquisa-item-seta">→</span>
+        </button>`).join('') : `<div class="pesquisa-estado">Não encontrámos resultados para “${esc(input.value.trim())}”.</div>`;
+      resultados.classList.add('visivel');
+      input.setAttribute('aria-expanded','true');
+      resultados.querySelectorAll('[data-resultado-key]').forEach(btn => btn.addEventListener('click', () => {
+        resultados.classList.remove('visivel'); input.value = ''; abrirItem(btn.dataset.resultadoKey);
+      }));
+    };
+    input.addEventListener('input', pesquisar);
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { resultados.classList.remove('visivel'); input.setAttribute('aria-expanded','false'); }
+    });
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); input.focus(); }
+    });
+    document.addEventListener('click', event => {
+      if (!document.getElementById('pesquisa-global').contains(event.target)) resultados.classList.remove('visivel');
+    });
+  }
+
+  async function carregarDatas() {
+    const lista = document.getElementById('datas-lista');
+    const contador = document.getElementById('datas-contador');
+    try {
+      const snap = await getDocs(collection(db, 'datas'));
+      const agora = new Date();
+      const datas = [];
+      snap.forEach(d => {
+        const item = { id:d.id, ...d.data() };
+        const data = new Date(item.dataIso);
+        if (!Number.isNaN(data.getTime()) && data >= agora) datas.push({ ...item, data });
+      });
+      datas.sort((a,b) => a.data - b.data);
+      contador.textContent = datas.length === 1 ? '1 data' : `${datas.length} datas`;
+      if (!datas.length) {
+        lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As próximas entregas e provas aparecerão aqui quando forem adicionadas.</p></div>`;
+        return;
+      }
+      lista.innerHTML = datas.slice(0,3).map(item => {
+        const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
+        const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
+        const tag = item.link ? 'button' : 'div';
+        const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
+        return `<${tag} class="painel-item${item.link ? '' : ' estatico'}" ${attrs}>
+          <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small></span>
+          <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
+          <span class="painel-item-dias">${dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`}</span>
+        </${tag}>`;
+      }).join('');
+      lista.querySelectorAll('[data-data-link]').forEach(btn => btn.addEventListener('click', () => window.open(btn.dataset.dataLink,'_blank','noopener')));
+    } catch(e) {
+      console.warn('Datas não carregadas:', e.message);
+      contador.textContent = 'Indisponível';
+      lista.innerHTML = `<div class="painel-vazio"><strong>Calendário indisponível</strong><p>Não foi possível consultar as próximas datas neste momento.</p></div>`;
+    }
   }
 
   // --- AUTH ---
@@ -967,6 +1533,10 @@
       document.getElementById('loading-inicial').style.display = 'none';
       document.getElementById('ecra-ucs').style.display = 'block';
       document.getElementById('welcome-bar').classList.add('visivel');
+      indexarFerramentas();
+      carregarPreferencias();
+      prepararPesquisa();
+      carregarDatas();
       carregarUCs();
     } catch (err) {
       console.warn('Perfil não carregado:', err);
@@ -999,6 +1569,14 @@
         const dB = (b.ano||99)*100 + (b.semestre||99);
         if (dA !== dB) return dA - dB;
         return (a.ordem||99) - (b.ordem||99);
+      });
+
+      ucs.forEach(uc => {
+        ucsMap[uc.id] = uc;
+        catalogo.set(`uc:${uc.id}`, {
+          key:`uc:${uc.id}`, tipo:'uc', id:uc.id, titulo:uc.nome,
+          subtitulo:`${uc.ano || '—'}º Ano · ${uc.semestre || '—'}º Semestre`
+        });
       });
 
       document.getElementById('stat-ucs').textContent  = ucs.length;
@@ -1051,33 +1629,28 @@
               ? (palavras[0][0] + palavras[1][0]).toUpperCase()
               : uc.nome.slice(0, 2).toUpperCase();
 
-            const el = document.createElement('div');
+            const el = document.createElement('article');
             el.className = 'uc-card';
             el.innerHTML = `
-              <div class="uc-card-banda" style="background:${cor.banda}">
-                <div class="uc-card-circles"></div>
-                <div class="uc-card-deco">${esc(deco)}</div>
-                <span class="uc-card-emoji">${cor.emoji}</span>
-              </div>
-              <div class="uc-card-corpo">
-                <div class="uc-nome">${esc(uc.nome)}</div>
-                <div class="uc-card-footer">
-                  <div class="uc-count" id="count-${uc.id}">A carregar...</div>
-                  <span class="uc-card-cta">Ver →</span>
-                </div>
-              </div>`;
-            el.onclick = () => abrirUC(uc, cor.emoji);
-            el.tabIndex = 0;
-            el.setAttribute('role', 'button');
-            el.setAttribute('aria-label', `Abrir ${uc.nome}`);
-            el.onkeydown = (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                abrirUC(uc, cor.emoji);
-              }
-            };
+              <button class="favorito-btn" type="button" data-fav-key="uc:${uc.id}" aria-label="Adicionar ${esc(uc.nome)} aos favoritos">☆</button>
+              <button class="uc-card-abrir" type="button" aria-label="Abrir ${esc(uc.nome)}">
+                <span class="uc-card-banda" style="background:${cor.banda}">
+                  <span class="uc-card-circles"></span>
+                  <span class="uc-card-deco">${esc(deco)}</span>
+                  <span class="uc-card-emoji">${cor.emoji}</span>
+                </span>
+                <span class="uc-card-corpo">
+                  <span class="uc-nome">${esc(uc.nome)}</span>
+                  <span class="uc-card-footer">
+                    <span class="uc-count" id="count-${uc.id}">A carregar...</span>
+                    <span class="uc-card-cta">Ver →</span>
+                  </span>
+                </span>
+              </button>`;
+            el.querySelector('.uc-card-abrir').addEventListener('click', () => abrirUC(uc, cor.emoji));
+            el.querySelector('.favorito-btn').addEventListener('click', () => window.toggleFavorito(`uc:${uc.id}`));
             grid.appendChild(el);
-            contarDocs(uc.id);
+            contarDocs(uc);
           });
 
           semDiv.appendChild(grid);
@@ -1087,23 +1660,37 @@
         container.appendChild(anoDiv);
       });
 
+      renderFavoritos();
+      renderRetomar();
+      window.atualizarBotoesFavoritos();
+
     } catch(e) {
       container.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar UCs: ${e.code || e.message}</p>`;
     }
   }
 
-  async function contarDocs(ucId) {
-    const snap = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
-    const el   = document.getElementById('count-' + ucId);
+  async function contarDocs(uc) {
+    const snap = await getDocs(collection(db, 'ucs', uc.id, 'documentos'));
+    snap.forEach(d => {
+      const doc_ = { id:d.id, ucId:uc.id, ucNome:uc.nome, ...d.data() };
+      docMap[`${uc.id}:${d.id}`] = doc_;
+      catalogo.set(`doc:${uc.id}:${d.id}`, {
+        key:`doc:${uc.id}:${d.id}`, tipo:'doc', ucId:uc.id, docId:d.id,
+        titulo:doc_.nome, subtitulo:uc.nome
+      });
+    });
+    const el   = document.getElementById('count-' + uc.id);
     if (el) el.textContent = snap.size === 1 ? '1 documento' : `${snap.size} documentos`;
     totalDocs += snap.size;
     const statEl = document.getElementById('stat-docs');
     if (statEl) statEl.textContent = totalDocs;
+    window.atualizarBotoesFavoritos();
   }
 
   // --- DOCUMENTOS ---
   async function abrirUC(uc, emoji) {
     ucAtualId = uc.id;
+    guardarRetomar(catalogo.get(`uc:${uc.id}`));
     document.getElementById('ecra-ucs').style.display  = 'none';
     document.getElementById('ecra-docs').style.display = 'block';
     document.getElementById('docs-titulo').textContent  = uc.nome;
@@ -1139,11 +1726,14 @@
             <div class="doc-nome">${esc(doc_.nome)}</div>
             <div class="doc-meta">${esc(doc_.descricao || 'Documento de estudo')}</div>
           </div>
-          <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')">
-            <span>👁</span><span>Ver</span>
-          </button>`;
+          <div class="doc-acoes">
+            <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
+            <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>
+          </div>`;
+        el.querySelector('.doc-favorito').addEventListener('click', () => window.toggleFavorito(`doc:${uc.id}:${d.id}`));
         lista.appendChild(el);
       });
+      window.atualizarBotoesFavoritos();
     } catch(e) {
       lista.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar documentos.</p>`;
     }
@@ -1168,6 +1758,10 @@
     </div>`;
     overlay.classList.add('visivel');
     viewerDocAtual = { ucId, docId, docNome };
+    guardarRetomar(catalogo.get(`doc:${ucId}:${docId}`) || {
+      key:`doc:${ucId}:${docId}`, tipo:'doc', ucId, docId, titulo:docNome,
+      subtitulo:ucsMap[ucId]?.nome || 'Documento'
+    });
 
     if (!doc_?.driveUrl) {
       conteudo.innerHTML = '<p style="color:#f87171;padding:40px;text-align:center">URL do documento não configurado.</p>';

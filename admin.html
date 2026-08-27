@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -215,7 +215,7 @@
       letter-spacing:0.04em;
     }
 
-    input[type=text], input[type=number], select, textarea {
+    input[type=text], input[type=number], input[type=url], input[type=datetime-local], select, textarea {
       width:100%;
       padding:9px 12px;
       border:1.5px solid #d1d5db;
@@ -336,7 +336,7 @@
     .tabela-header { background:#0b2a4a; min-width:720px; }
     table { min-width:720px; }
     .form-card { border-top:3px solid var(--ouro); }
-    input[type=text],input[type=number],input[type=url],select,textarea { border-radius:3px; min-height:43px; }
+    input[type=text],input[type=number],input[type=url],input[type=datetime-local],select,textarea { border-radius:3px; min-height:43px; }
     .btn-primario,.btn-acao { border-radius:3px; }
     :focus-visible { outline:3px solid rgba(216,155,44,.5); outline-offset:3px; }
     @media (max-width:720px) {
@@ -366,12 +366,13 @@
 <main>
   <div class="admin-intro">
     <div><span class="admin-kicker">Área reservada</span><h1>Painel editorial</h1></div>
-    <p>Gere acessos, unidades curriculares, documentos e o histórico da comunidade num único lugar.</p>
+    <p>Gere acessos, unidades curriculares, documentos, datas académicas e o histórico da comunidade num único lugar.</p>
   </div>
   <div class="tabs-nav">
     <button type="button" class="tab-nav ativa" onclick="mudarTab('utilizadores')">Utilizadores</button>
     <button type="button" class="tab-nav" onclick="mudarTab('ucs')">Unidades curriculares</button>
     <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
   </div>
 
@@ -492,6 +493,59 @@
     </div>
   </div>
 
+  <!-- TAB: DATAS -->
+  <div class="tab-content" id="tab-datas">
+    <h2 class="secao-titulo">Datas Académicas</h2>
+
+    <div class="form-card">
+      <h3>Adicionar uma data ao painel dos estudantes</h3>
+      <div class="form-row">
+        <div class="campo">
+          <label for="data-titulo">Título</label>
+          <input type="text" id="data-titulo" placeholder="ex: Entrega do e-fólio A"/>
+        </div>
+        <div class="campo" style="max-width:210px">
+          <label for="data-tipo">Tipo</label>
+          <select id="data-tipo">
+            <option value="E-fólio">E-fólio</option>
+            <option value="Exame">Exame</option>
+            <option value="Recurso">Recurso</option>
+            <option value="Prazo académico">Prazo académico</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        <div class="campo" style="max-width:230px">
+          <label for="data-quando">Data e hora</label>
+          <input type="datetime-local" id="data-quando"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="campo">
+          <label for="data-uc">Unidade Curricular (opcional)</label>
+          <select id="data-uc"><option value="">— Data geral —</option></select>
+        </div>
+        <div class="campo">
+          <label for="data-link">Ligação de apoio (opcional)</label>
+          <input type="url" id="data-link" placeholder="https://..."/>
+        </div>
+      </div>
+      <div class="campo" style="margin-bottom:18px">
+        <label for="data-desc">Nota breve (opcional)</label>
+        <textarea id="data-desc" placeholder="Informação adicional para os estudantes..."></textarea>
+      </div>
+      <button class="btn-primario" id="btn-criar-data" onclick="criarData()">Publicar data</button>
+      <div class="msg-form" id="msg-data"></div>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header"><span>Datas publicadas</span></div>
+      <table>
+        <thead><tr><th>Data</th><th>Tipo</th><th>UC</th><th>Título</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-datas"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- TAB: DOWNLOADS -->
   <div class="tab-content" id="tab-downloads">
     <h2 class="secao-titulo">Histórico de Downloads</h2>
@@ -547,18 +601,16 @@
   // --- TABS ---
   window.mudarTab = function(id) {
     document.querySelectorAll('.tab-nav').forEach((t,i) => {
-      const ids = ['utilizadores','ucs','documentos','downloads'];
+      const ids = ['utilizadores','ucs','documentos','datas','downloads'];
       t.classList.toggle('ativa', ids[i] === id);
     });
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativa'));
     document.getElementById('tab-' + id).classList.add('ativa');
   };
 
-  function carregarTudo() {
-    carregarUtilizadores();
-    carregarUCs();
-    carregarDocs();
-    carregarDownloads();
+  async function carregarTudo() {
+    await carregarUCs();
+    await Promise.all([carregarUtilizadores(), carregarDocs(), carregarDatasAdmin(), carregarDownloads()]);
   }
 
   // --- UTILIZADORES ---
@@ -680,6 +732,10 @@
         const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
         return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
+
+    const selData = document.getElementById('data-uc');
+    selData.innerHTML = '<option value="">— Data geral —</option>' +
+      ucsList.map(u => `<option value="${u.id}">${esc(u.nome)}</option>`).join('');
   }
 
   window.criarUC = async function() {
@@ -770,6 +826,72 @@
     if (!confirm('Remover este documento?')) return;
     await deleteDoc(doc(db, 'ucs', ucId, 'documentos', docId));
     carregarDocs(); carregarUCs();
+  };
+
+  // --- DATAS ACADÉMICAS ---
+  async function carregarDatasAdmin() {
+    const tb = document.getElementById('tbody-datas');
+    try {
+      const snap = await getDocs(collection(db, 'datas'));
+      const datas = [];
+      snap.forEach(d => datas.push({ id:d.id, ...d.data() }));
+      datas.sort((a,b) => new Date(a.dataIso) - new Date(b.dataIso));
+      tb.innerHTML = datas.length ? datas.map(item => {
+        const data = new Date(item.dataIso);
+        const textoData = Number.isNaN(data.getTime()) ? '—' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
+        return `<tr>
+          <td>${esc(textoData)}</td><td>${esc(item.tipo || '—')}</td><td>${esc(item.ucNome || 'Geral')}</td>
+          <td>${esc(item.titulo || '—')}</td>
+          <td><button class="btn-acao btn-remover" onclick="window.removerData('${item.id}')">Remover</button></td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="5" class="empty-msg">Nenhuma data publicada</td></tr>';
+    } catch(e) {
+      tb.innerHTML = `<tr><td colspan="5" class="empty-msg">Não foi possível carregar as datas: ${esc(e.message)}</td></tr>`;
+    }
+  }
+
+  window.criarData = async function() {
+    const titulo = document.getElementById('data-titulo').value.trim();
+    const tipo = document.getElementById('data-tipo').value;
+    const quando = document.getElementById('data-quando').value;
+    const ucId = document.getElementById('data-uc').value;
+    const link = document.getElementById('data-link').value.trim();
+    const descricao = document.getElementById('data-desc').value.trim();
+    const msg = document.getElementById('msg-data');
+    const btn = document.getElementById('btn-criar-data');
+    if (!titulo || !quando) {
+      msg.textContent = 'Preenche o título e a data.'; msg.className = 'msg-form err'; return;
+    }
+    const data = new Date(quando);
+    if (Number.isNaN(data.getTime())) {
+      msg.textContent = 'A data introduzida não é válida.'; msg.className = 'msg-form err'; return;
+    }
+    const uc = ucsList.find(item => item.id === ucId);
+    btn.disabled = true; btn.textContent = 'A publicar...';
+    try {
+      await addDoc(collection(db, 'datas'), {
+        titulo, tipo, dataIso:data.toISOString(), ucId:ucId || '', ucNome:uc?.nome || '',
+        link, descricao, criadoEm:serverTimestamp()
+      });
+      document.getElementById('data-titulo').value = '';
+      document.getElementById('data-quando').value = '';
+      document.getElementById('data-uc').value = '';
+      document.getElementById('data-link').value = '';
+      document.getElementById('data-desc').value = '';
+      msg.textContent = 'Data publicada no painel dos estudantes.'; msg.className = 'msg-form ok';
+      await carregarDatasAdmin();
+      setTimeout(() => msg.className = 'msg-form', 3000);
+    } catch(e) {
+      msg.textContent = 'Erro: ' + e.message; msg.className = 'msg-form err';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Publicar data';
+    }
+  };
+
+  window.removerData = async function(id) {
+    if (!confirm('Remover esta data do painel dos estudantes?')) return;
+    await deleteDoc(doc(db, 'datas', id));
+    carregarDatasAdmin();
   };
 
   // --- DOWNLOADS ---
