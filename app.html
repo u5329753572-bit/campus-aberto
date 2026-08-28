@@ -1463,6 +1463,7 @@
     lista.innerHTML = htmlFav;
     lista.querySelectorAll('[data-abrir-item]').forEach(btn => btn.addEventListener('click', () => abrirItem(btn.dataset.abrirItem)));
   }
+  window.renderFavoritos = renderFavoritos;
 
   function guardarRetomar(item) {
     if (!utilizadorAtual || !item) return;
