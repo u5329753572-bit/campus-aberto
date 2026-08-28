@@ -512,9 +512,8 @@
         <div class="campo" style="max-width:210px">
           <label for="data-tipo">Tipo</label>
           <select id="data-tipo">
-            <option value="Global">Global</option>
+            <option value="Global/Exame">Global/Exame</option>
             <option value="E-fólio">E-fólio</option>
-            <option value="Exame">Exame</option>
             <option value="Recurso">Recurso</option>
             <option value="Prazo académico">Prazo académico</option>
             <option value="Outro">Outro</option>
@@ -1007,7 +1006,7 @@
     const pad = n => String(n).padStart(2,'0');
     const dt = item.dataIso ? new Date(item.dataIso) : null;
     document.getElementById('data-titulo').value = item.titulo || '';
-    document.getElementById('data-tipo').value = item.tipo || 'Global';
+    document.getElementById('data-tipo').value = item.tipo || 'Global/Exame';
     if (dt && !isNaN(dt)) {
       document.getElementById('data-quando').value =
         `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
@@ -1113,8 +1112,8 @@
       const minor = (UCS.find(u=>u[0]===codigo)||[])[3]||'';
       if (!ucId) { out(`✗ UC ${codigo} não encontrada`, '#f87171'); continue; }
       try {
-        await addDoc(collection(db,'datas'), { titulo, tipo:'Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
-        out(`✓ Exame   ${codigo} ${isoNormal}`, '#4ade80');
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
+        out(`✓ Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
       } catch(e) { out(`✗ ERRO exame ${codigo}: ${e.message}`, '#f87171'); }
       const flag = ['41116','41114'].includes(codigo) ? ' ⚠️ hora estimada' : '';
       try {
