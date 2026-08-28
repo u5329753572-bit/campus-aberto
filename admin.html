@@ -865,7 +865,8 @@
     try {
       const snap = await getDocs(collection(db, 'datas'));
       const datas = [];
-      snap.forEach(d => datas.push({ id:d.id, ...d.data() }));
+      window._datasCache = {};
+      snap.forEach(d => { const o={id:d.id,...d.data()}; datas.push(o); window._datasCache[d.id]=o; });
       datas.sort((a,b) => new Date(a.dataIso) - new Date(b.dataIso));
       tb.innerHTML = datas.length ? datas.map(item => {
         const data = new Date(item.dataIso);
@@ -876,7 +877,10 @@
           <td>${esc(anoSem)}</td><td>${esc(item.minor || '—')}</td>
           <td>${esc(item.ucNome || 'Geral')}</td>
           <td>${esc(item.titulo || '—')}</td>
-          <td><button class="btn-acao btn-remover" onclick="window.removerData('${item.id}')">Remover</button></td>
+          <td class="acoes">
+            <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarData('${item.id}')">Editar</button>
+            <button class="btn-acao btn-remover" onclick="window.removerData('${item.id}')">Remover</button>
+          </td>
         </tr>`;
       }).join('') : '<tr><td colspan="7" class="empty-msg">Nenhuma data publicada</td></tr>';
     } catch(e) {
@@ -911,22 +915,33 @@
       msg.textContent = 'A data introduzida não é válida.'; msg.className = 'msg-form err'; return;
     }
     const uc = ucsList.find(item => item.id === ucId);
-    btn.disabled = true; btn.textContent = 'A publicar...';
+    const editId = window._editandoDataId || null;
+    btn.disabled = true; btn.textContent = editId ? 'A guardar...' : 'A publicar...';
     try {
       const payload = {
         titulo, tipo, dataIso:data.toISOString(), ucId:ucId || '', ucNome:uc?.nome || '',
-        link, descricao, criadoEm:serverTimestamp()
+        link, descricao
       };
       if (anoVal) payload.ano = parseInt(anoVal);
       if (semestreVal) payload.semestre = parseInt(semestreVal);
       if (minorVal) payload.minor = minorVal;
-      await addDoc(collection(db, 'datas'), payload);
+      if (editId) {
+        const old = (window._datasCache || {})[editId] || {};
+        if (old.criadoEm) payload.criadoEm = old.criadoEm;
+        await setDoc(doc(db, 'datas', editId), payload);
+        window._editandoDataId = null;
+        msg.textContent = 'Data atualizada com sucesso.';
+      } else {
+        payload.criadoEm = serverTimestamp();
+        await addDoc(collection(db, 'datas'), payload);
+        msg.textContent = 'Data publicada no painel dos estudantes.';
+      }
       ['data-titulo','data-quando','data-uc','data-link','data-desc','data-ano','data-semestre','data-minor'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
       document.getElementById('campo-minor-data').style.display = 'none';
-      msg.textContent = 'Data publicada no painel dos estudantes.'; msg.className = 'msg-form ok';
+      msg.className = 'msg-form ok';
       await carregarDatasAdmin();
       setTimeout(() => msg.className = 'msg-form', 3000);
     } catch(e) {
@@ -940,6 +955,29 @@
     if (!confirm('Remover esta data do painel dos estudantes?')) return;
     await deleteDoc(doc(db, 'datas', id));
     carregarDatasAdmin();
+  };
+
+  window.editarData = function(id) {
+    const item = (window._datasCache || {})[id];
+    if (!item) return;
+    const pad = n => String(n).padStart(2,'0');
+    const dt = item.dataIso ? new Date(item.dataIso) : null;
+    document.getElementById('data-titulo').value = item.titulo || '';
+    document.getElementById('data-tipo').value = item.tipo || 'Global';
+    if (dt && !isNaN(dt)) {
+      document.getElementById('data-quando').value =
+        `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+    }
+    document.getElementById('data-uc').value = item.ucId || '';
+    document.getElementById('data-link').value = item.link || '';
+    document.getElementById('data-desc').value = item.descricao || '';
+    document.getElementById('data-ano').value = item.ano || '';
+    document.getElementById('data-semestre').value = item.semestre || '';
+    document.getElementById('data-minor').value = item.minor || '';
+    toggleMinorData();
+    window._editandoDataId = id;
+    document.getElementById('btn-criar-data').textContent = 'Guardar alterações';
+    document.getElementById('data-titulo').scrollIntoView({behavior:'smooth', block:'center'});
   };
 
   // --- DOWNLOADS ---
