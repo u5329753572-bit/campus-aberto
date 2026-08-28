@@ -686,7 +686,7 @@
             <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
             <td class="acoes">
-              ${u.estado !== 'ativo'     ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
+              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
               <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
             </td>
@@ -744,7 +744,7 @@
             <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
             <td>${u.ordem || '—'}</td>
             <td>${esc(u.nome)}</td>
-            <td id="uc-docs-${u.id}">–</td>
+            <td id="uc-docs-${u.id}">—</td>
             <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
           </tr>`).join('');
 
@@ -759,7 +759,7 @@
     const sel = document.getElementById('doc-uc');
     sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
       ucsList.map(u => {
-        const label = u.ano ? `${u.ano}ºA ${u.semestre ? · ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
+        const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
         return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
 
