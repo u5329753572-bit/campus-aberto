@@ -205,7 +205,7 @@
 
     .btn {
       width: 100%;
-      padding: 13pt;
+      padding: 13px;
       background: linear-gradient(135deg, var(--verde) 0%, var(--verde-med) 100%);
       color: var(--branco);
       border: none;
@@ -581,11 +581,13 @@
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
     setLoading('btn-registo', true);
+    let credUser = null;
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, senha);
-      await updateProfile(cred.user, { displayName: nome });
+      credUser = cred.user;
+      await updateProfile(credUser, { displayName: nome });
       const codigo = 'CS-' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase().padStart(7, '0').slice(0, 7);
-      await setDoc(doc(db, 'utilizadores', cred.user.uid), {
+      await setDoc(doc(db, 'utilizadores', credUser.uid), {
         nome, email, tel, codigo,
         estado: 'pendente',
         criadoEm: serverTimestamp()
@@ -593,6 +595,10 @@
       mostrarMsg('msg-registo', 'Registo efetuado! Aguarda ativação por parte da administração.', 'sucesso');
       await auth.signOut();
     } catch (e) {
+      // Se o Firestore falhou mas a conta Auth já foi criada, apaga-a para evitar conta órfã
+      if (credUser && e.code !== 'auth/email-already-in-use' && e.code !== 'auth/weak-password') {
+        try { await credUser.delete(); } catch (_) {}
+      }
       if (e.code === 'auth/email-already-in-use') mostrarMsg('msg-registo', 'Este email já está registado.', 'erro');
       else if (e.code === 'auth/weak-password') mostrarMsg('msg-registo', 'Password fraca.', 'erro');
       else mostrarMsg('msg-registo', 'Erro: ' + e.message, 'erro');
