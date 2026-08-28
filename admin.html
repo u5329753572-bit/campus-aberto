@@ -521,6 +521,35 @@
         </div>
       </div>
       <div class="form-row">
+        <div class="campo" style="max-width:150px">
+          <label for="data-ano">Ano (opcional)</label>
+          <select id="data-ano" onchange="toggleMinorData()">
+            <option value="">— Todos —</option>
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
+          </select>
+        </div>
+        <div class="campo" style="max-width:160px">
+          <label for="data-semestre">Semestre (opcional)</label>
+          <select id="data-semestre">
+            <option value="">— Todos —</option>
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
+          </select>
+        </div>
+        <div class="campo" id="campo-minor-data" style="display:none">
+          <label for="data-minor">Minor</label>
+          <select id="data-minor">
+            <option value="">— Todos —</option>
+            <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
+            <option value="Psicologia">Psicologia</option>
+            <option value="Intervenção Social">Intervenção Social</option>
+            <option value="Sociologia">Sociologia</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
         <div class="campo">
           <label for="data-uc">Unidade Curricular (opcional)</label>
           <select id="data-uc"><option value="">— Data geral —</option></select>
@@ -541,8 +570,8 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Datas publicadas</span></div>
       <table>
-        <thead><tr><th>Data</th><th>Tipo</th><th>UC</th><th>Título</th><th>Ações</th></tr></thead>
-        <tbody id="tbody-datas"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+        <thead><tr><th>Data</th><th>Tipo</th><th>Ano/Sem</th><th>Minor</th><th>UC</th><th>Título</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-datas"><tr><td colspan="7" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
@@ -657,7 +686,7 @@
             <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
             <td class="acoes">
-              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
+              ${u.estado !== 'ativo'     ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
               <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
             </td>
@@ -715,7 +744,7 @@
             <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
             <td>${u.ordem || '—'}</td>
             <td>${esc(u.nome)}</td>
-            <td id="uc-docs-${u.id}">—</td>
+            <td id="uc-docs-${u.id}">–</td>
             <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
           </tr>`).join('');
 
@@ -730,7 +759,7 @@
     const sel = document.getElementById('doc-uc');
     sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
       ucsList.map(u => {
-        const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
+        const label = u.ano ? `${u.ano}ºA ${u.semestre ? · ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
         return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
 
@@ -840,16 +869,26 @@
       tb.innerHTML = datas.length ? datas.map(item => {
         const data = new Date(item.dataIso);
         const textoData = Number.isNaN(data.getTime()) ? '—' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
+        const anoSem = item.ano ? `${item.ano}º / ${item.semestre ? item.semestre + 'º' : '—'}` : '—';
         return `<tr>
-          <td>${esc(textoData)}</td><td>${esc(item.tipo || '—')}</td><td>${esc(item.ucNome || 'Geral')}</td>
+          <td>${esc(textoData)}</td><td>${esc(item.tipo || '—')}</td>
+          <td>${esc(anoSem)}</td><td>${esc(item.minor || '—')}</td>
+          <td>${esc(item.ucNome || 'Geral')}</td>
           <td>${esc(item.titulo || '—')}</td>
           <td><button class="btn-acao btn-remover" onclick="window.removerData('${item.id}')">Remover</button></td>
         </tr>`;
-      }).join('') : '<tr><td colspan="5" class="empty-msg">Nenhuma data publicada</td></tr>';
+      }).join('') : '<tr><td colspan="7" class="empty-msg">Nenhuma data publicada</td></tr>';
     } catch(e) {
       tb.innerHTML = `<tr><td colspan="5" class="empty-msg">Não foi possível carregar as datas: ${esc(e.message)}</td></tr>`;
     }
   }
+
+  window.toggleMinorData = function() {
+    const ano = document.getElementById('data-ano').value;
+    const campoMinor = document.getElementById('campo-minor-data');
+    campoMinor.style.display = ano === '3' ? '' : 'none';
+    if (ano !== '3') document.getElementById('data-minor').value = '';
+  };
 
   window.criarData = async function() {
     const titulo = document.getElementById('data-titulo').value.trim();
@@ -858,6 +897,9 @@
     const ucId = document.getElementById('data-uc').value;
     const link = document.getElementById('data-link').value.trim();
     const descricao = document.getElementById('data-desc').value.trim();
+    const anoVal = document.getElementById('data-ano').value;
+    const semestreVal = document.getElementById('data-semestre').value;
+    const minorVal = document.getElementById('data-minor').value;
     const msg = document.getElementById('msg-data');
     const btn = document.getElementById('btn-criar-data');
     if (!titulo || !quando) {
@@ -870,15 +912,19 @@
     const uc = ucsList.find(item => item.id === ucId);
     btn.disabled = true; btn.textContent = 'A publicar...';
     try {
-      await addDoc(collection(db, 'datas'), {
+      const payload = {
         titulo, tipo, dataIso:data.toISOString(), ucId:ucId || '', ucNome:uc?.nome || '',
         link, descricao, criadoEm:serverTimestamp()
+      };
+      if (anoVal) payload.ano = parseInt(anoVal);
+      if (semestreVal) payload.semestre = parseInt(semestreVal);
+      if (minorVal) payload.minor = minorVal;
+      await addDoc(collection(db, 'datas'), payload);
+      ['data-titulo','data-quando','data-uc','data-link','data-desc','data-ano','data-semestre','data-minor'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
       });
-      document.getElementById('data-titulo').value = '';
-      document.getElementById('data-quando').value = '';
-      document.getElementById('data-uc').value = '';
-      document.getElementById('data-link').value = '';
-      document.getElementById('data-desc').value = '';
+      document.getElementById('campo-minor-data').style.display = 'none';
       msg.textContent = 'Data publicada no painel dos estudantes.'; msg.className = 'msg-form ok';
       await carregarDatasAdmin();
       setTimeout(() => msg.className = 'msg-form', 3000);
