@@ -374,6 +374,7 @@
     <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('importar')" style="background:#fef3c7;color:#92400e">Importar 3ºA</button>
   </div>
 
   <!-- TAB: UTILIZADORES -->
@@ -581,6 +582,15 @@
   </div>
 
   <!-- TAB: DOWNLOADS -->
+  <div class="tab-content" id="tab-importar">
+    <h2 class="secao-titulo">Importar — 3.º Ano · 1.º Semestre (2026/2027)</h2>
+    <div class="form-card">
+      <p style="margin:0 0 12px;font-size:.9rem">Cria 20 UCs e 40 datas de exame (época normal + recurso) em batch. Só deve ser executado uma vez.</p>
+      <button class="btn-primario" onclick="window.importarDados3Ano()">▶ Iniciar importação</button>
+      <div id="import-log" style="margin-top:14px;background:#0f172a;color:#e2e8f0;padding:14px;border-radius:8px;font-family:monospace;font-size:.78rem;white-space:pre-wrap;max-height:500px;overflow-y:auto;display:none"></div>
+    </div>
+  </div>
+
   <div class="tab-content" id="tab-downloads">
     <h2 class="secao-titulo">Histórico de Downloads</h2>
 
@@ -1037,6 +1047,85 @@
       tb.appendChild(tr);
     });
   }
+
+  window.importarDados3Ano = async function() {
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+
+    const UCS = [
+      ['41106','Direito da União Europeia',1,'Ciência Política e Administrativa'],
+      ['41033','Introdução ao Direito Administrativo',2,'Ciência Política e Administrativa'],
+      ['41035','Introdução ao Direito do Ambiente',3,'Ciência Política e Administrativa'],
+      ['41044','Política Internacional',4,'Ciência Política e Administrativa'],
+      ['41067','Teoria das Relações Internacionais',5,'Ciência Política e Administrativa'],
+      ['41042','Noções de Psicopatologia',1,'Psicologia'],
+      ['41053','Psicologia Social Aplicada',2,'Psicologia'],
+      ['41107','Psicologia do Desenvolvimento Humano',3,'Psicologia'],
+      ['41048','Psicologia Clínica e da Saúde',4,'Psicologia'],
+      ['31104','Psicologia da Arte',5,'Psicologia'],
+      ['41019','Desenvolvimento Comunitário',1,'Intervenção Social'],
+      ['41029','Intervenção Psicossocial',2,'Intervenção Social'],
+      ['41109','Intervenção Social e Saúde Mental',3,'Intervenção Social'],
+      ['41110','Teoria Geral de Serviço Social',4,'Intervenção Social'],
+      ['41124','Contextos Organizacionais da Intervenção Social',5,'Intervenção Social'],
+      ['41066','Sociologia Urbana',1,'Sociologia'],
+      ['41116','Sociologia das Migrações',2,'Sociologia'],
+      ['41114','Sociologia da Comunicação e da Informação',3,'Sociologia'],
+      ['41115','Sociologia da Família',4,'Sociologia'],
+      ['41117','Teorias Sociológicas',5,'Sociologia'],
+    ];
+    const DATAS = [
+      ['41106','Direito da União Europeia','2027-01-12T10:00','2027-02-16T10:00'],
+      ['41033','Introdução ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00'],
+      ['41035','Introdução ao Direito do Ambiente','2027-01-18T16:00','2027-02-23T10:00'],
+      ['41044','Política Internacional','2027-01-20T16:00','2027-02-11T16:00'],
+      ['41067','Teoria das Relações Internacionais','2027-01-22T10:00','2027-02-24T16:00'],
+      ['41042','Noções de Psicopatologia','2027-01-11T16:00','2027-02-11T13:00'],
+      ['41053','Psicologia Social Aplicada','2027-01-13T16:00','2027-02-16T16:00'],
+      ['41107','Psicologia do Desenvolvimento Humano','2027-01-15T16:00','2027-02-24T10:00'],
+      ['41048','Psicologia Clínica e da Saúde','2027-01-19T10:00','2027-02-18T10:00'],
+      ['31104','Psicologia da Arte','2027-01-21T10:00','2027-02-22T16:00'],
+      ['41019','Desenvolvimento Comunitário','2027-01-12T13:00','2027-02-17T16:00'],
+      ['41029','Intervenção Psicossocial','2027-01-14T13:00','2027-02-11T16:00'],
+      ['41109','Intervenção Social e Saúde Mental','2027-01-19T13:00','2027-02-15T13:00'],
+      ['41110','Teoria Geral de Serviço Social','2027-01-21T13:00','2027-02-24T10:00'],
+      ['41124','Contextos Organizacionais da Intervenção Social','2027-01-25T10:00','2027-02-19T13:00'],
+      ['41066','Sociologia Urbana','2027-01-12T16:00','2027-02-15T16:00'],
+      ['41116','Sociologia das Migrações','2027-01-14T13:00','2027-02-19T10:00'],
+      ['41114','Sociologia da Comunicação e da Informação','2027-01-18T16:00','2027-02-11T10:00'],
+      ['41115','Sociologia da Família','2027-01-21T16:00','2027-02-22T13:00'],
+      ['41117','Teorias Sociológicas','2027-01-25T13:00','2027-02-17T16:00'],
+    ];
+
+    out('=== A criar UCs ===', '#60a5fa');
+    const ucIdMap = {};
+    for (const [codigo, nome, ordem, minor] of UCS) {
+      try {
+        const ref = await addDoc(collection(db,'ucs'), { nome, ano:3, semestre:1, ordem, minor, oculta:false, criadoEm:serverTimestamp() });
+        ucIdMap[codigo] = ref.id;
+        out(`✓ UC ${codigo} — ${nome}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
+    }
+    out('\n=== A criar Datas ===', '#60a5fa');
+    for (const [codigo, titulo, isoNormal, isoRecurso] of DATAS) {
+      const ucId = ucIdMap[codigo];
+      const minor = (UCS.find(u=>u[0]===codigo)||[])[3]||'';
+      if (!ucId) { out(`✗ UC ${codigo} não encontrada`, '#f87171'); continue; }
+      try {
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
+        out(`✓ Exame   ${codigo} ${isoNormal}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO exame ${codigo}: ${e.message}`, '#f87171'); }
+      const flag = ['41116','41114'].includes(codigo) ? ' ⚠️ hora estimada' : '';
+      try {
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Época de recurso — ${codigo}${flag}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
+        out(`✓ Recurso ${codigo} ${isoRecurso}${flag}`, flag ? '#fbbf24' : '#4ade80');
+      } catch(e) { out(`✗ ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
+    }
+    out('\n=== Concluído! ===', '#60a5fa');
+    out('⚠️ Confirma horas de recurso de 41116 e 41114 no separador Datas.', '#fbbf24');
+    carregarUCs();
+  };
 
   window.sair = async function() {
     await signOut(auth);
