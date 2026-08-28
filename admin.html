@@ -443,7 +443,7 @@
         <input type="checkbox" id="uc-oculta" style="width:16px;height:16px;cursor:pointer"/>
         Ocultar da biblioteca académica
       </label>
-      <button class="btn-primario" onclick="criarUC()">Criar UC</button>
+      <button class="btn-primario" id="btn-criar-uc" onclick="criarUC()">Criar UC</button>
       <div class="msg-form" id="msg-uc"></div>
     </div>
 
@@ -729,7 +729,8 @@
   async function carregarUCs() {
     const snap = await getDocs(collection(db, 'ucs'));
     ucsList = [];
-    snap.forEach(d => ucsList.push({ id: d.id, ...d.data() }));
+    window._ucsCache = {};
+    snap.forEach(d => { const o = { id: d.id, ...d.data() }; ucsList.push(o); window._ucsCache[d.id] = o; });
 
     // Ordena: ano → semestre → ordem
     ucsList.sort((a, b) => {
@@ -750,7 +751,10 @@
             <td>${u.ordem || '—'}</td>
             <td>${esc(u.nome)}</td>
             <td id="uc-docs-${u.id}">—</td>
-            <td><button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button></td>
+            <td class="acoes">
+              <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarUC('${u.id}')">Editar</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button>
+            </td>
           </tr>`).join('');
 
     // Contar docs por UC
@@ -773,6 +777,19 @@
       ucsList.map(u => `<option value="${u.id}">${esc(u.nome)}</option>`).join('');
   }
 
+  window.editarUC = function(id) {
+    const u = (window._ucsCache || {})[id];
+    if (!u) return;
+    document.getElementById('uc-nome').value = u.nome || '';
+    document.getElementById('uc-ano').value = u.ano || '1';
+    document.getElementById('uc-semestre').value = u.semestre || '1';
+    document.getElementById('uc-ordem').value = u.ordem || '';
+    document.getElementById('uc-oculta').checked = !!u.oculta;
+    window._editandoUCId = id;
+    document.getElementById('btn-criar-uc').textContent = 'Guardar alterações';
+    document.getElementById('uc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   window.criarUC = async function() {
     const nome     = document.getElementById('uc-nome').value.trim();
     const ano      = parseInt(document.getElementById('uc-ano').value);
@@ -780,14 +797,25 @@
     const ordem    = parseInt(document.getElementById('uc-ordem').value) || 99;
     const oculta   = document.getElementById('uc-oculta').checked;
     const msgEl    = document.getElementById('msg-uc');
+    const editId   = window._editandoUCId || null;
 
     if (!nome) { msgEl.textContent = 'Introduz o nome da UC.'; msgEl.className = 'msg-form err'; return; }
 
-    await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, criadoEm: serverTimestamp() });
+    if (editId) {
+      const old = (window._ucsCache || {})[editId] || {};
+      const payload = { nome, ano, semestre, ordem, oculta };
+      if (old.criadoEm) payload.criadoEm = old.criadoEm;
+      await setDoc(doc(db, 'ucs', editId), payload);
+      window._editandoUCId = null;
+      msgEl.textContent = `UC "${nome}" atualizada.`;
+    } else {
+      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, criadoEm: serverTimestamp() });
+      msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
+    }
     document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
     document.getElementById('uc-oculta').checked = false;
-    msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
+    document.getElementById('btn-criar-uc').textContent = 'Criar UC';
     msgEl.className = 'msg-form ok';
     carregarUCs();
     setTimeout(() => msgEl.className = 'msg-form', 3000);
