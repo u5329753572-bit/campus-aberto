@@ -439,6 +439,10 @@
           <input type="number" id="uc-ordem" placeholder="1" min="1"/>
         </div>
       </div>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.82rem;cursor:pointer">
+        <input type="checkbox" id="uc-oculta" style="width:16px;height:16px;cursor:pointer"/>
+        Ocultar da biblioteca académica
+      </label>
       <button class="btn-primario" onclick="criarUC()">Criar UC</button>
       <div class="msg-form" id="msg-uc"></div>
     </div>
@@ -774,13 +778,15 @@
     const ano      = parseInt(document.getElementById('uc-ano').value);
     const semestre = parseInt(document.getElementById('uc-semestre').value);
     const ordem    = parseInt(document.getElementById('uc-ordem').value) || 99;
+    const oculta   = document.getElementById('uc-oculta').checked;
     const msgEl    = document.getElementById('msg-uc');
 
     if (!nome) { msgEl.textContent = 'Introduz o nome da UC.'; msgEl.className = 'msg-form err'; return; }
 
-    await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, criadoEm: serverTimestamp() });
+    await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, criadoEm: serverTimestamp() });
     document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
+    document.getElementById('uc-oculta').checked = false;
     msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
     msgEl.className = 'msg-form ok';
     carregarUCs();
