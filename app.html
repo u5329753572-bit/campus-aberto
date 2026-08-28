@@ -1253,6 +1253,11 @@
       <select id="filtro-uc" onchange="filtrarDatas()">
         <option value="">Todas as UCs</option>
       </select>
+      <select id="filtro-epoca" onchange="filtrarDatas()">
+        <option value="">Todas as épocas</option>
+        <option value="Exame">Época Normal</option>
+        <option value="Recurso">Época Recurso</option>
+      </select>
     </div>
     <div class="datas-lista-completa" id="datas-lista-completa"></div>
   </div>
@@ -1607,6 +1612,7 @@
     const sem = document.getElementById('filtro-semestre').value;
     const minor = document.getElementById('filtro-minor').value;
     const ucId = document.getElementById('filtro-uc').value;
+    const epoca = document.getElementById('filtro-epoca').value;
     // Mostrar/ocultar filtro de minor
     document.getElementById('filtro-minor').style.display = ano === '3' ? '' : 'none';
 
@@ -1616,6 +1622,7 @@
       if (sem && String(d.semestre || '') !== sem) return false;
       if (ano === '3' && minor && (d.minor || '') !== minor) return false;
       if (ucId && d.ucId !== ucId) return false;
+      if (epoca && d.tipo !== epoca) return false;
       return true;
     });
 
