@@ -586,6 +586,9 @@
     <div class="form-card">
       <p style="margin:0 0 12px;font-size:.9rem">Cria 20 UCs e 40 datas de exame (época normal + recurso) em batch. Só deve ser executado uma vez.</p>
       <button class="btn-primario" onclick="window.importarDados3Ano()">▶ Iniciar importação</button>
+      <hr style="margin:20px 0;border-color:#e5e7eb"/>
+      <p style="margin:0 0 10px;font-size:.9rem"><strong>Migração de tipos:</strong> converte todas as datas com tipo "Global" ou "Exame" para "Global/Exame".</p>
+      <button class="btn-primario" style="background:#0369a1" onclick="window.migrarTipos()">🔄 Migrar Global + Exame → Global/Exame</button>
       <div id="import-log" style="margin-top:14px;background:#0f172a;color:#e2e8f0;padding:14px;border-radius:8px;font-family:monospace;font-size:.78rem;white-space:pre-wrap;max-height:500px;overflow-y:auto;display:none"></div>
     </div>
   </div>
@@ -1046,6 +1049,28 @@
       tb.appendChild(tr);
     });
   }
+
+  window.migrarTipos = async function() {
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+    out('A procurar datas com tipo "Global" ou "Exame"...', '#60a5fa');
+    const snap = await getDocs(collection(db, 'datas'));
+    let total = 0, atualizadas = 0;
+    for (const d of snap.docs) {
+      const tipo = d.data().tipo;
+      if (tipo === 'Global' || tipo === 'Exame') {
+        total++;
+        try {
+          await updateDoc(doc(db, 'datas', d.id), { tipo: 'Global/Exame' });
+          out(`✓ ${d.data().titulo || d.id} [${tipo} → Global/Exame]`, '#4ade80');
+          atualizadas++;
+        } catch(e) { out(`✗ ERRO ${d.id}: ${e.message}`, '#f87171'); }
+      }
+    }
+    out(`\n=== Concluído: ${atualizadas}/${total} datas atualizadas ===`, '#60a5fa');
+    carregarDatasAdmin();
+  };
 
   window.importarDados3Ano = async function() {
     const logEl = document.getElementById('import-log');
