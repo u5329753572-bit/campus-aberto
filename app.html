@@ -212,6 +212,31 @@
     .painel-vazio strong { display:block; margin-bottom:5px; color:var(--verde); font:600 .85rem/1.2 'Playfair Display',serif; }
     .painel-vazio p { color:var(--cinza); font-size:.66rem; line-height:1.5; }
     .retomar-destaque { margin:auto 0 0; }
+    .painel-ver-todas { margin-top:10px; width:100%; padding:9px; background:none; border:1.5px solid var(--ouro); border-radius:3px 10px 3px 3px; color:var(--verde); font:.7rem/1 'Inter',sans-serif; font-weight:600; cursor:pointer; letter-spacing:.03em; transition:all .2s; }
+    .painel-ver-todas:hover { background:var(--ouro-pale); }
+
+    /* Ecrã de todas as datas */
+    #ecra-datas { display:none; padding:32px 28px 48px; max-width:900px; margin:0 auto; }
+    .datas-header { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
+    .datas-back { background:none; border:none; cursor:pointer; color:var(--verde); font-size:.8rem; font-weight:600; font-family:'Inter',sans-serif; display:flex; align-items:center; gap:6px; padding:0; }
+    .datas-back:hover { opacity:.75; }
+    .datas-header h2 { font:700 1.4rem/1 'Playfair Display',serif; color:var(--verde); margin:0; }
+    .datas-filtros { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+    .datas-filtros select { padding:8px 12px; border:1.5px solid #e0e4ea; border-radius:4px; font:.75rem/1 'Inter',sans-serif; color:var(--verde); background:#fff; cursor:pointer; outline:none; min-width:130px; }
+    .datas-filtros select:focus { border-color:var(--ouro); }
+    .datas-lista-completa { display:flex; flex-direction:column; gap:10px; }
+    .data-item-full { display:grid; grid-template-columns:56px 1fr auto; align-items:center; gap:14px; padding:14px 16px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; border-left:3px solid var(--ouro); }
+    .data-item-full.clickable { cursor:pointer; }
+    .data-item-full.clickable:hover { background:var(--ouro-pale); }
+    .data-item-full-dia { color:var(--ouro); font:700 1.3rem/1 'Playfair Display',serif; text-align:center; }
+    .data-item-full-dia small { display:block; margin-top:3px; color:var(--cinza); font:700 .5rem/1 'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    .data-item-full-info strong { display:block; color:var(--verde); font-size:.8rem; margin-bottom:4px; }
+    .data-item-full-info span { color:var(--cinza); font-size:.65rem; }
+    .data-item-full-tags { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+    .data-tag { padding:3px 8px; border-radius:99px; font:.55rem/1 'Inter',sans-serif; font-weight:700; white-space:nowrap; }
+    .data-tag.dias { background:var(--ouro-pale); color:var(--verde); }
+    .data-tag.tipo { background:#f0f4f8; color:var(--cinza); }
+    .datas-vazio { text-align:center; padding:40px 20px; color:var(--cinza); font-size:.8rem; }
     .retomar-destaque .painel-item { min-height:116px; grid-template-columns:44px minmax(0,1fr) auto; background:linear-gradient(135deg,#f7f9fb,#fbf1dc); }
     .retomar-sigla { display:grid; place-items:center; width:42px; height:48px; color:#fff; background:var(--verde); border-radius:3px 12px 3px 3px; font-size:.56rem; font-weight:800; }
     .favorito-btn {
@@ -1200,6 +1225,38 @@
     </div>
   </div>
 
+  <!-- ECRÃ TODAS AS DATAS -->
+  <div id="ecra-datas">
+    <div class="datas-header">
+      <button type="button" class="datas-back" onclick="fecharEcranDatas()">← Voltar</button>
+      <h2>Calendário académico</h2>
+    </div>
+    <div class="datas-filtros">
+      <select id="filtro-ano" onchange="filtrarDatas()">
+        <option value="">Todos os anos</option>
+        <option value="1">1º Ano</option>
+        <option value="2">2º Ano</option>
+        <option value="3">3º Ano</option>
+      </select>
+      <select id="filtro-semestre" onchange="filtrarDatas()">
+        <option value="">Todos os semestres</option>
+        <option value="1">1º Semestre</option>
+        <option value="2">2º Semestre</option>
+      </select>
+      <select id="filtro-minor" onchange="filtrarDatas()" style="display:none">
+        <option value="">Todos os minors</option>
+        <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
+        <option value="Psicologia">Psicologia</option>
+        <option value="Intervenção Social">Intervenção Social</option>
+        <option value="Sociologia">Sociologia</option>
+      </select>
+      <select id="filtro-uc" onchange="filtrarDatas()">
+        <option value="">Todas as UCs</option>
+      </select>
+    </div>
+    <div class="datas-lista-completa" id="datas-lista-completa"></div>
+  </div>
+
   <!-- ECRÃ DOCUMENTOS -->
   <div id="ecra-docs" style="display:none">
     <div class="docs-header">
@@ -1410,12 +1467,12 @@
     let item = null;
     try { item = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null'); } catch (_) {}
     if (!item) {
-      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não há atividade</strong><p>Quando abrires uma UC ou um documento, poderás retomá-lo aqui.</p></div>`;
+      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não h1 atividade</strong><p>Quando abrires uma UC ou um documento, poder�h�s retomá-lo aqui.</p></div>`;
       return;
     }
     area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
       <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
-      <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
+      <span><strong>${esc(item.titulo]}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
       <span class="painel-item-dias">Continuar →</span>
     </button>`;
     document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
@@ -1473,26 +1530,30 @@
     });
   }
 
+  let todasAsDatas = [];
+
   async function carregarDatas() {
     const lista = document.getElementById('datas-lista');
     const contador = document.getElementById('datas-contador');
     try {
       const snap = await getDocs(collection(db, 'datas'));
       const agora = new Date();
-      const datas = [];
+      todasAsDatas = [];
       snap.forEach(d => {
         const item = { id:d.id, ...d.data() };
         const data = new Date(item.dataIso);
-        if (!Number.isNaN(data.getTime()) && data >= agora) datas.push({ ...item, data });
+        if (!Number.isNaN(data.getTime()) && data >= agora) todasAsDatas.push({ ...item, data });
       });
-      datas.sort((a,b) => a.data - b.data);
-      contador.textContent = datas.length === 1 ? '1 data' : `${datas.length} datas`;
-      if (!datas.length) {
+      todasAsDatas.sort((a,b) => a.data - b.data);
+      const total = todasAsDatas.length;
+      contador.textContent = total === 1 ? '1 data' : `${total} datas`;
+      if (!total) {
         lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As próximas entregas e provas aparecerão aqui quando forem adicionadas.</p></div>`;
         return;
       }
-      lista.innerHTML = datas.slice(0,3).map(item => {
-        const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
+      const renderItem = item => {
+        const agora2 = new Date();
+        const dias = Math.max(0, Math.ceil((item.data - agora2) / 86400000));
         const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
         const tag = item.link ? 'button' : 'div';
         const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
@@ -1501,14 +1562,75 @@
           <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
           <span class="painel-item-dias">${dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`}</span>
         </${tag}>`;
-      }).join('');
+      };
+      const visiveis = todasAsDatas.slice(0,3);
+      let html = visiveis.map(renderItem).join('');
+      if (total > 3) {
+        html += `<button type="button" class="painel-ver-todas" onclick="abrirEcranDatas()">Ver todas as ${total} datas →</button>`;
+      }
+      lista.innerHTML = html;
       lista.querySelectorAll('[data-data-link]').forEach(btn => btn.addEventListener('click', () => window.open(btn.dataset.dataLink,'_blank','noopener')));
+      // Popular filtro de UCs no ecrã de todas as datas
+      const ucsUnicas = [...new Map(todasAsDatas.filter(d => d.ucId && d.ucNome).map(d => [d.ucId, d.ucNome])).entries()];
+      const filtroUc = document.getElementById('filtro-uc');
+      filtroUc.innerHTML = '<option value="">Todas as UCs</option>' + ucsUnicas.map(([id, nome]) => `<option value="${esc(id)}">${esc(nome)}</option>`).join('');
     } catch(e) {
       console.warn('Datas não carregadas:', e.message);
       contador.textContent = 'Indisponível';
       lista.innerHTML = `<div class="painel-vazio"><strong>Calendário indisponível</strong><p>Não foi possível consultar as próximas datas neste momento.</p></div>`;
     }
   }
+
+  window.abrirEcranDatas = function() {
+    document.getElementById('ecra-ucs').style.display = 'none';
+    document.getElementById('ecra-datas').style.display = 'block';
+    filtrarDatas();
+  };
+
+  window.fecharEcranDatas = function() {
+    document.getElementById('ecra-datas').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display = 'block';
+  };
+
+  window.filtrarDatas = function() {
+    const ano = document.getElementById('filtro-ano').value;
+    const sem = document.getElementById('filtro-semestre').value;
+    const minor = document.getElementById('filtro-minor').value;
+    const ucId = document.getElementById('filtro-uc').value;
+    // Mostrar/ocultar filtro de minor
+    document.getElementById('filtro-minor').style.display = ano === '3' ? '' : 'none';
+
+    const agora = new Date();
+    let resultado = todasAsDatas.filter(d => {
+      if (ano && String(d.ano || '') !== ano) return false;
+      if (sem && String(d.semestre || '') !== sem) return false;
+      if (ano === '3' && minor && (d.minor || '') !== minor) return false;
+      if (ucId && d.ucId !== ucId) return false;
+      return true;
+    });
+
+    const lista = document.getElementById('datas-lista-completa');
+    if (!resultado.length) {
+      lista.innerHTML = '<div class="datas-vazio">Nenhuma data encontrada para os filtros selecionados.</div>';
+      return;
+    }
+    lista.innerHTML = resultado.map(item => {
+      const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
+      const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
+      const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`;
+      const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
+      const cls = item.link ? 'data-item-full clickable' : 'data-item-full';
+      const onclick = item.link ? `onclick="window.open('${esc(item.link)}','_blank','noopener')"` : '';
+      return `<div class="${cls}" ${onclick}>
+        <div class="data-item-full-dia">${item.data.getDate()}<small>${mes}</small></div>
+        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data académica')}</strong><span>${esc(subtag || item.tipo || '—')}</span></div>
+        <div class="data-item-full-tags">
+          <span class="data-tag dias">${diasTexto}</span>
+          <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
+        </div>
+      </div>`;
+    }).join('');
+  };
 
   // --- AUTH ---
   onAuthStateChanged(auth, async (user) => {
@@ -1555,7 +1677,7 @@
         container.innerHTML = `<div class="empty">
           <div class="empty-icon">📂</div>
           <h4>Nenhuma UC disponível</h4>
-          <p>Ainda não há Unidades Curriculares criadas.</p>
+          <p>Ainda não h1 Unidades Curriculares criadas.</p>
         </div>`;
         document.getElementById('stat-ucs').textContent  = '0';
         document.getElementById('stat-docs').textContent = '0';
@@ -1580,11 +1702,11 @@
       });
 
       document.getElementById('stat-ucs').textContent  = ucs.length;
-      document.getElementById('stat-docs').textContent = '…';
+      document.getElementById('stat-docs').textContent = '✦';
 
       const grupos = {};
       ucs.forEach(uc => {
-        const a = uc.ano      || 0;
+         const a = uc.ano      || 0;
         const s = uc.semestre || 0;
         if (!grupos[a])    grupos[a] = {};
         if (!grupos[a][s]) grupos[a][s] = [];
@@ -1707,7 +1829,7 @@
         lista.innerHTML = `<div class="empty">
           <div class="empty-icon">📄</div>
           <h4>Sem documentos</h4>
-          <p>Ainda não há documentos nesta UC.</p>
+          <p>Ainda não h1 documentos nesta UC.</p>
         </div>`;
         return;
       }
@@ -1777,8 +1899,8 @@
       for (let i = 1; i <= pdf.numPages; i++) {
         const page  = await pdf.getPage(i);
         const vp0   = page.getViewport({ scale: 1 });
-        const maxW  = Math.min(conteudo.clientWidth - 40, 900);
-        const scale = maxW / vp0.width;
+        const maqW  = Math.min(conteudo.clientWidth - 40, 900);
+        const scale = maqW / vp0.width;
         const vp    = page.getViewport({ scale });
 
         const canvas  = document.createElement('canvas');
@@ -1797,7 +1919,7 @@
     } catch(e) {
       conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">
         Não foi possível carregar o PDF.<br/>
-        <small style="color:#555;font-size:.74rem">${e.message}</small>
+        <small style=="color:#555;font-size:.74rem">${e.message}</small>
       </p>`;
     }
   };
