@@ -1711,11 +1711,12 @@
         });
       });
 
-      document.getElementById('stat-ucs').textContent  = ucs.length;
+      const ucsVisiveis = ucs.filter(uc => !uc.oculta);
+      document.getElementById('stat-ucs').textContent  = ucsVisiveis.length;
       document.getElementById('stat-docs').textContent = '…';
 
       const grupos = {};
-      ucs.forEach(uc => {
+      ucsVisiveis.forEach(uc => {
         const a = uc.ano      || 0;
         const s = uc.semestre || 0;
         if (!grupos[a])    grupos[a] = {};
