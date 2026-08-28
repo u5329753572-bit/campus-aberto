@@ -1472,7 +1472,7 @@
     }
     area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
       <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
-      <span><strong>${esc(item.titulo]}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
+      <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
       <span class="painel-item-dias">Continuar →</span>
     </button>`;
     document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
