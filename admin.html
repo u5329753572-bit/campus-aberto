@@ -707,7 +707,8 @@
           });
         }
       } catch(e) {
-        console.warn('Email de ativação não enviado:', e.message);
+        console.error('Email de ativação não enviado:', e);
+        alert('⚠️ Utilizador ativado, mas o email de notificação falhou:\n' + (e.text || e.message || JSON.stringify(e)));
       }
     }
 
