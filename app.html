@@ -964,7 +964,7 @@
 <body>
 
 <header>
-  <div class="header-logo">
+  <div class="header-logo" onclick="window.voltarInicio()" role="button" title="Ir para a página principal" style="cursor:pointer">
     <div class="header-logo-icon">
       <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
     </div>
@@ -1600,6 +1600,14 @@
     document.getElementById('ecra-ucs').style.display = 'none';
     document.getElementById('ecra-datas').style.display = 'block';
     filtrarDatas();
+  };
+
+  window.voltarInicio = function() {
+    document.getElementById('viewer-overlay').classList.remove('visivel');
+    document.getElementById('ecra-datas').style.display = 'none';
+    document.getElementById('ecra-docs').style.display  = 'none';
+    document.getElementById('ecra-ucs').style.display   = 'block';
+    viewerDocAtual = null;
   };
 
   window.fecharEcranDatas = function() {
