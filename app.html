@@ -1926,12 +1926,15 @@
         const page  = await pdf.getPage(i);
         const vp0   = page.getViewport({ scale: 1 });
         const maxW  = Math.min(conteudo.clientWidth - 40, 900);
-        const scale = maxW / vp0.width;
+        const dpr   = window.devicePixelRatio || 1;
+        const scale = (maxW / vp0.width) * dpr;
         const vp    = page.getViewport({ scale });
 
         const canvas  = document.createElement('canvas');
         canvas.width  = vp.width;
         canvas.height = vp.height;
+        canvas.style.width  = (vp.width  / dpr) + 'px';
+        canvas.style.height = (vp.height / dpr) + 'px';
         await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
         conteudo.appendChild(canvas);
 
