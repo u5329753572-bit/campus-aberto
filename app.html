@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CampusAberto · Arquivo de Estudo</title>
   <link rel="icon" type="image/png" href="logo-cs.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#071d34"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="CampusAberto"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
@@ -981,6 +986,7 @@
         <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
       </div>
     </div>
+    <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -2117,6 +2123,33 @@
     await signOut(auth);
     window.location.href = 'index.html';
   };
+</script>
+<script>
+  // PWA — Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+  // PWA — Botão de instalação
+  let _installPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    _installPrompt = e;
+    const btn = document.getElementById('btn-instalar');
+    if (btn) btn.style.display = '';
+  });
+  window.instalarApp = async function() {
+    if (!_installPrompt) return;
+    const result = await _installPrompt.prompt();
+    if (result?.outcome === 'accepted') {
+      document.getElementById('btn-instalar').style.display = 'none';
+      _installPrompt = null;
+    }
+  };
+  window.addEventListener('appinstalled', () => {
+    const btn = document.getElementById('btn-instalar');
+    if (btn) btn.style.display = 'none';
+    _installPrompt = null;
+  });
 </script>
 </body>
 </html>
