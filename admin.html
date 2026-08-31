@@ -611,8 +611,25 @@
     <h2 class="secao-titulo">Utilizadores Online</h2>
     <p style="color:#6b7280;font-size:.85rem;margin-bottom:16px">Sessões ativas nos últimos 5 minutos.</p>
     <button class="btn-primario" style="margin-bottom:20px;background:#0369a1" onclick="carregarOnline()">🔄 Atualizar</button>
-    <div id="online-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden">
+    <div id="online-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:32px">
       <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Atualizar para ver quem está online.</p>
+    </div>
+
+    <h2 class="secao-titulo" style="margin-top:0">Histórico de Sessões</h2>
+    <p style="color:#6b7280;font-size:.85rem;margin-bottom:12px">Todas as sessões registadas, da mais recente para a mais antiga.</p>
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="filtro-sessao-nome" placeholder="Filtrar por nome..." style="padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem;width:200px" oninput="filtrarHistorico()"/>
+      <select id="filtro-sessao-dias" onchange="carregarHistorico()" style="padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
+        <option value="7">Últimos 7 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="90">Últimos 90 dias</option>
+        <option value="0">Todas</option>
+      </select>
+      <button class="btn-primario" style="background:#0369a1" onclick="carregarHistorico()">🔄 Carregar</button>
+    </div>
+    <div id="historico-stats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
+    <div id="historico-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden">
+      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Carregar para ver o histórico.</p>
     </div>
   </div>
 
@@ -676,6 +693,77 @@
     document.getElementById('tab-' + id).classList.add('ativa');
     if (id === 'online') carregarOnline();
   };
+
+  let _todasSessoes = [];
+
+  window.carregarHistorico = async function() {
+    const lista   = document.getElementById('historico-lista');
+    const statsEl = document.getElementById('historico-stats');
+    if (!lista) return;
+    lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">A carregar...</p>';
+    statsEl.innerHTML = '';
+    try {
+      const dias  = parseInt(document.getElementById('filtro-sessao-dias').value);
+      let q = query(collection(db, 'sessoes'), orderBy('inicio', 'desc'));
+      const snap  = await getDocs(q);
+      let sessoes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (dias > 0) {
+        const limite = new Date(Date.now() - dias * 86400000);
+        sessoes = sessoes.filter(s => s.inicio?.toDate?.() >= limite);
+      }
+      _todasSessoes = sessoes;
+      renderHistorico(sessoes);
+    } catch(e) {
+      lista.innerHTML = `<p style="padding:20px;color:#dc2626">Erro: ${e.message}</p>`;
+    }
+  };
+
+  window.filtrarHistorico = function() {
+    const termo = document.getElementById('filtro-sessao-nome').value.toLowerCase();
+    const filtradas = _todasSessoes.filter(s => (s.nome||'').toLowerCase().includes(termo));
+    renderHistorico(filtradas);
+  };
+
+  function renderHistorico(sessoes) {
+    const lista   = document.getElementById('historico-lista');
+    const statsEl = document.getElementById('historico-stats');
+    if (!sessoes.length) {
+      lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">Nenhuma sessão encontrada.</p>';
+      statsEl.innerHTML = '';
+      return;
+    }
+    // Stats
+    const totalSessoes = sessoes.length;
+    const utilizadores = [...new Set(sessoes.map(s => s.uid))].length;
+    const comDuracao = sessoes.filter(s => s.duracao != null);
+    const duracaoMedia = comDuracao.length ? Math.round(comDuracao.reduce((a,s)=>a+(s.duracao||0),0)/comDuracao.length) : null;
+    const statCard = (label, val) => `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 20px;text-align:center;min-width:120px">
+      <div style="font-size:1.4rem;font-weight:700;color:#071d34">${val}</div>
+      <div style="font-size:.75rem;color:#6b7280;margin-top:2px">${label}</div>
+    </div>`;
+    statsEl.innerHTML = statCard('sessões', totalSessoes) + statCard('utilizadores únicos', utilizadores) + (duracaoMedia!=null ? statCard('duração média', duracaoMedia+'min') : '');
+    // Tabela
+    const rows = sessoes.map(s => {
+      const inicio = s.inicio?.toDate?.() ? s.inicio.toDate().toLocaleString('pt-PT') : '—';
+      const fim    = s.fim?.toDate?.()    ? s.fim.toDate().toLocaleString('pt-PT')    : (s.ativo ? '<span style="color:#22c55e">online</span>' : '—');
+      const dur    = s.duracao != null    ? s.duracao + ' min' : '—';
+      return `<tr style="border-top:1px solid #f3f4f6">
+        <td style="padding:9px 14px;font-size:.83rem;font-weight:600">${s.nome||'—'}</td>
+        <td style="padding:9px 14px;font-size:.78rem;color:#6b7280">${inicio}</td>
+        <td style="padding:9px 14px;font-size:.78rem;color:#6b7280">${fim}</td>
+        <td style="padding:9px 14px;font-size:.78rem;color:#374151">${dur}</td>
+      </tr>`;
+    }).join('');
+    lista.innerHTML = `<table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:#f9fafb;font-size:.75rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
+        <th style="padding:10px 14px;text-align:left">Nome</th>
+        <th style="padding:10px 14px;text-align:left">Entrada</th>
+        <th style="padding:10px 14px;text-align:left">Saída</th>
+        <th style="padding:10px 14px;text-align:left">Duração</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
 
   window.carregarOnline = async function() {
     const lista = document.getElementById('online-lista');
