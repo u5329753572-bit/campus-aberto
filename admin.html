@@ -587,6 +587,9 @@
       <p style="margin:0 0 12px;font-size:.9rem">Cria 20 UCs e 40 datas de exame (época normal + recurso) em batch. Só deve ser executado uma vez.</p>
       <button class="btn-primario" onclick="window.importarDados3Ano()">▶ Iniciar importação</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
+      <p style="margin:0 0 12px;font-size:.9rem">Cria as UCs do 1.º e 2.º Ano (1.º Semestre) e as respetivas datas. Só deve ser executado uma vez.</p>
+      <button class="btn-primario" style="background:#047857" onclick="window.importarDados12Ano()">▶ Importar 1.º e 2.º Ano</button>
+      <hr style="margin:20px 0;border-color:#e5e7eb"/>
       <p style="margin:0 0 10px;font-size:.9rem"><strong>Migração de tipos:</strong> converte todas as datas com tipo "Global" ou "Exame" para "Global/Exame".</p>
       <button class="btn-primario" style="background:#0369a1" onclick="window.migrarTipos()">🔄 Migrar Global + Exame → Global/Exame</button>
       <div id="import-log" style="margin-top:14px;background:#0f172a;color:#e2e8f0;padding:14px;border-radius:8px;font-family:monospace;font-size:.78rem;white-space:pre-wrap;max-height:500px;overflow-y:auto;display:none"></div>
@@ -1049,6 +1052,74 @@
       tb.appendChild(tr);
     });
   }
+
+  window.importarDados12Ano = async function() {
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+
+    const UCS = [
+      // 1º Ano
+      ['41037','Introdução ao Direito',1,1,''],
+      ['41018','Demografia',2,1,''],
+      ['41098','Antropologia Geral',3,1,''],
+      ['41050','Psicologia Geral',4,1,''],
+      ['41036','Introdução às Ciências Sociais',5,1,''],
+      ['21160','Matemática Preparatória',6,1,''],
+      // 2º Ano — Obrigatórias
+      ['61029','Princípios de Gestão',1,2,''],
+      ['41038','Metodologia das Ciências Sociais: Métodos Qualitativos',2,2,''],
+      ['41101','Etnografias',3,2,''],
+      // 2º Ano — Opcionais
+      ['41009','Antropologia das Religiões',4,2,''],
+      ['41056','Sociedade Portuguesa Contemporânea',5,2,''],
+      ['41103','Justiça, Segurança e Criminalidade',6,2,''],
+      ['41102','Igualdade, Exclusão Social e Cidadania',7,2,''],
+    ];
+
+    const DATAS = [
+      // 1º Ano
+      ['41037','Introdução ao Direito',         '2027-01-11T10:00','2027-02-11T10:00',1],
+      ['41018','Demografia',                    '2027-01-13T10:00','2027-02-12T13:00',1],
+      ['41098','Antropologia Geral',            '2027-01-15T10:00','2027-02-15T10:00',1],
+      ['41050','Psicologia Geral',              '2027-01-18T10:00','2027-02-19T10:00',1],
+      ['41036','Introdução às Ciências Sociais','2027-01-20T10:00','2027-02-17T10:00',1],
+      ['21160','Matemática Preparatória',       '2027-02-10T10:00','2027-05-04T10:00',1],
+      // 2º Ano
+      ['61029','Princípios de Gestão',                                          '2027-01-11T13:00','2027-02-12T10:00',2],
+      ['41038','Metodologia das Ciências Sociais: Métodos Qualitativos',        '2027-01-15T13:00','2027-02-22T10:00',2],
+      ['41101','Etnografias',                                                   '2027-01-18T13:00','2027-02-16T13:00',2],
+      ['41009','Antropologia das Religiões',                                    '2027-01-13T13:00','2027-02-18T13:00',2],
+      ['41056','Sociedade Portuguesa Contemporânea',                            '2027-01-14T16:00','2027-02-26T16:00',2],
+      ['41103','Justiça, Segurança e Criminalidade',                            '2027-01-19T16:00','2027-02-23T16:00',2],
+      ['41102','Igualdade, Exclusão Social e Cidadania',                        '2027-01-20T13:00','2027-02-25T10:00',2],
+    ];
+
+    out('=== A criar UCs ===','#60a5fa');
+    const ucIdMap = {};
+    for (const [codigo, nome, ordem, ano, minor] of UCS) {
+      try {
+        const ref = await addDoc(collection(db,'ucs'), { nome, ano, semestre:1, ordem, oculta:false, criadoEm:serverTimestamp() });
+        ucIdMap[codigo] = ref.id;
+        out(`✓ UC ${codigo} — ${nome} (${ano}ºA)`, '#4ade80');
+      } catch(e) { out(`✗ ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
+    }
+    out('\n=== A criar Datas ===','#60a5fa');
+    for (const [codigo, titulo, isoNormal, isoRecurso, ano] of DATAS) {
+      const ucId = ucIdMap[codigo];
+      if (!ucId) { out(`✗ UC ${codigo} não encontrada`,'#f87171'); continue; }
+      try {
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
+        out(`✓ Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO normal ${codigo}: ${e.message}`, '#f87171'); }
+      try {
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Época de recurso — ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
+        out(`✓ Recurso ${codigo} ${isoRecurso}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
+    }
+    out('\n=== Concluído! ===','#60a5fa');
+    carregarUCs();
+  };
 
   window.migrarTipos = async function() {
     const logEl = document.getElementById('import-log');
