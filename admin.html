@@ -374,6 +374,7 @@
     <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">🟢 Online</button>
     <button type="button" class="tab-nav" onclick="mudarTab('importar')" style="background:#fef3c7;color:#92400e">Importar 3ºA</button>
   </div>
 
@@ -605,6 +606,16 @@
     </div>
   </div>
 
+  <!-- TAB: ONLINE -->
+  <div class="tab-content" id="tab-online">
+    <h2 class="secao-titulo">Utilizadores Online</h2>
+    <p style="color:#6b7280;font-size:.85rem;margin-bottom:16px">Sessões ativas nos últimos 5 minutos.</p>
+    <button class="btn-primario" style="margin-bottom:20px;background:#0369a1" onclick="carregarOnline()">🔄 Atualizar</button>
+    <div id="online-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden">
+      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Atualizar para ver quem está online.</p>
+    </div>
+  </div>
+
   <div class="tab-content" id="tab-downloads">
     <h2 class="secao-titulo">Histórico de Downloads</h2>
 
@@ -624,7 +635,7 @@
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
-    collection, getDocs, addDoc, query, orderBy, serverTimestamp
+    collection, getDocs, addDoc, query, orderBy, where, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
   const firebaseConfig = {
@@ -658,12 +669,47 @@
 
   // --- TABS ---
   window.mudarTab = function(id) {
-    document.querySelectorAll('.tab-nav').forEach((t,i) => {
-      const ids = ['utilizadores','ucs','documentos','datas','downloads'];
-      t.classList.toggle('ativa', ids[i] === id);
-    });
+    document.querySelectorAll('.tab-nav').forEach(t => t.classList.remove('ativa'));
+    const btn = document.querySelector(`.tab-nav[onclick="mudarTab('${id}')"]`);
+    if (btn) btn.classList.add('ativa');
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativa'));
     document.getElementById('tab-' + id).classList.add('ativa');
+    if (id === 'online') carregarOnline();
+  };
+
+  window.carregarOnline = async function() {
+    const lista = document.getElementById('online-lista');
+    if (!lista) return;
+    lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">A carregar...</p>';
+    try {
+      const limite = new Date(Date.now() - 5 * 60 * 1000);
+      const snap = await getDocs(query(collection(db, 'presencas'), where('ultimaVez', '>=', limite)));
+      if (snap.empty) {
+        lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">Nenhum utilizador online agora.</p>';
+        return;
+      }
+      const rows = snap.docs.map(d => {
+        const p = d.data();
+        const quando = p.ultimaVez?.toDate ? p.ultimaVez.toDate() : new Date();
+        const diffMin = Math.floor((Date.now() - quando.getTime()) / 60000);
+        return `<tr>
+          <td style="padding:10px 16px;font-size:.85rem;font-weight:600">${p.nome || '—'}</td>
+          <td style="padding:10px 16px;font-size:.82rem;color:#6b7280">${p.uid || '—'}</td>
+          <td style="padding:10px 16px;font-size:.82rem;color:#22c55e">há ${diffMin} min</td>
+        </tr>`;
+      }).join('');
+      lista.innerHTML = `<table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:#f9fafb;font-size:.78rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
+          <th style="padding:10px 16px;text-align:left">Nome</th>
+          <th style="padding:10px 16px;text-align:left">UID</th>
+          <th style="padding:10px 16px;text-align:left">Última atividade</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p style="padding:10px 16px;font-size:.78rem;color:#9ca3af;border-top:1px solid #f3f4f6">${snap.size} sessão(ões) ativa(s)</p>`;
+    } catch(e) {
+      lista.innerHTML = `<p style="padding:20px;color:#dc2626">Erro: ${e.message}</p>`;
+    }
   };
 
   async function carregarTudo() {
