@@ -590,6 +590,9 @@
       <p style="margin:0 0 12px;font-size:.9rem">Cria as UCs do 1.º e 2.º Ano (1.º Semestre) e as respetivas datas. Só deve ser executado uma vez.</p>
       <button class="btn-primario" style="background:#047857" onclick="window.importarDados12Ano()">▶ Importar 1.º e 2.º Ano</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
+      <p style="margin:0 0 10px;font-size:.9rem"><strong>Limpar duplicados:</strong> remove datas duplicadas (mesmo título + data + tipo), mantendo a versão com UC associada.</p>
+      <button class="btn-primario" style="background:#b91c1c" onclick="window.limparDuplicados()">🗑 Remover datas duplicadas</button>
+      <hr style="margin:20px 0;border-color:#e5e7eb"/>
       <p style="margin:0 0 10px;font-size:.9rem"><strong>Migração de tipos:</strong> converte todas as datas com tipo "Global" ou "Exame" para "Global/Exame".</p>
       <button class="btn-primario" style="background:#0369a1" onclick="window.migrarTipos()">🔄 Migrar Global + Exame → Global/Exame</button>
       <div id="import-log" style="margin-top:14px;background:#0f172a;color:#e2e8f0;padding:14px;border-radius:8px;font-family:monospace;font-size:.78rem;white-space:pre-wrap;max-height:500px;overflow-y:auto;display:none"></div>
@@ -1052,6 +1055,38 @@
       tb.appendChild(tr);
     });
   }
+
+  window.limparDuplicados = async function() {
+    if (!confirm('Vai apagar datas duplicadas do Firestore. Continuar?')) return;
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+    out('A carregar todas as datas...', '#60a5fa');
+    const snap = await getDocs(collection(db, 'datas'));
+    const grupos = {};
+    snap.forEach(d => {
+      const data = d.data();
+      const chave = `${data.dataIso}|${data.tipo}|${(data.titulo||'').trim()}`;
+      if (!grupos[chave]) grupos[chave] = [];
+      grupos[chave].push({ id: d.id, ...data });
+    });
+    let apagados = 0;
+    for (const [chave, lista] of Object.entries(grupos)) {
+      if (lista.length <= 1) continue;
+      // Ordenar: primeiro os que têm ucId, depois os que não têm
+      lista.sort((a, b) => (b.ucId ? 1 : 0) - (a.ucId ? 1 : 0));
+      // Manter o primeiro (com ucId), apagar os restantes
+      for (let i = 1; i < lista.length; i++) {
+        try {
+          await deleteDoc(doc(db, 'datas', lista[i].id));
+          out(`🗑 Apagado: "${lista[i].titulo}" ${lista[i].dataIso} [${lista[i].tipo}]`, '#fbbf24');
+          apagados++;
+        } catch(e) { out(`✗ ERRO ${lista[i].id}: ${e.message}`, '#f87171'); }
+      }
+    }
+    out(`\n=== Concluído: ${apagados} duplicados removidos ===`, '#60a5fa');
+    carregarDatasAdmin();
+  };
 
   window.importarDados12Ano = async function() {
     const logEl = document.getElementById('import-log');
