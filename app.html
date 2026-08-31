@@ -1584,13 +1584,15 @@
     const proximas = todasAsDatas.filter(d => d.data >= agora && d.data <= em7dias);
     if (!proximas.length) { banner.style.display = 'none'; return; }
 
-    const temUrgente = proximas.some(d => Math.ceil((d.data - agora) / 86400000) <= 2);
+    const temUrgente = proximas.some(d => Math.round((new Date(d.data.getFullYear(),d.data.getMonth(),d.data.getDate()) - new Date(agora.getFullYear(),agora.getMonth(),agora.getDate())) / 86400000) <= 2);
     const cls = temUrgente ? 'urgente' : 'aviso';
     const icone = temUrgente ? '🚨' : '📅';
     const titulo = temUrgente ? 'Atenção — datas muito próximas!' : 'Datas nos próximos 7 dias';
 
+    const hojeCalendario = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
     const itens = proximas.map(d => {
-      const dias = Math.ceil((d.data - agora) / 86400000);
+      const eventoCalendario = new Date(d.data.getFullYear(), d.data.getMonth(), d.data.getDate());
+      const dias = Math.round((eventoCalendario - hojeCalendario) / 86400000);
       const dataStr = d.data.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
       const diasStr = dias === 0 ? 'hoje' : dias === 1 ? 'amanhã' : `em ${dias} dias`;
       return `<li><strong>${esc(d.titulo)}</strong> — ${dataStr} <em>(${diasStr})</em></li>`;
