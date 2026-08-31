@@ -1066,20 +1066,25 @@
     const grupos = {};
     snap.forEach(d => {
       const data = d.data();
-      const chave = `${data.dataIso}|${data.tipo}|${(data.titulo||'').trim()}`;
+      // Agrupa por data+tipo+ano+semestre, ignorando o título (que pode diferir)
+      const chave = `${data.dataIso}|${data.tipo}|${data.ano||''}|${data.semestre||''}`;
       if (!grupos[chave]) grupos[chave] = [];
       grupos[chave].push({ id: d.id, ...data });
     });
     let apagados = 0;
     for (const [chave, lista] of Object.entries(grupos)) {
       if (lista.length <= 1) continue;
-      // Ordenar: primeiro os que têm ucId, depois os que não têm
-      lista.sort((a, b) => (b.ucId ? 1 : 0) - (a.ucId ? 1 : 0));
-      // Manter o primeiro (com ucId), apagar os restantes
+      // Ordenar: 1º os com ucId, 2º os com título mais longo (mais completo)
+      lista.sort((a, b) => {
+        if (!!b.ucId !== !!a.ucId) return (b.ucId ? 1 : 0) - (a.ucId ? 1 : 0);
+        return (b.titulo||'').length - (a.titulo||'').length;
+      });
+      // Manter o primeiro, apagar os restantes
+      out(`Mantendo: "${lista[0].titulo}" ${lista[0].dataIso}`, '#4ade80');
       for (let i = 1; i < lista.length; i++) {
         try {
           await deleteDoc(doc(db, 'datas', lista[i].id));
-          out(`🗑 Apagado: "${lista[i].titulo}" ${lista[i].dataIso} [${lista[i].tipo}]`, '#fbbf24');
+          out(`  🗑 Apagado: "${lista[i].titulo}" ${lista[i].dataIso} [${lista[i].tipo}]`, '#fbbf24');
           apagados++;
         } catch(e) { out(`✗ ERRO ${lista[i].id}: ${e.message}`, '#f87171'); }
       }
