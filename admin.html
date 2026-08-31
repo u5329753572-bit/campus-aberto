@@ -588,7 +588,10 @@
       <button class="btn-primario" onclick="window.importarDados3Ano()">▶ Iniciar importação</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
       <p style="margin:0 0 12px;font-size:.9rem">Cria as UCs do 1.º e 2.º Ano (1.º Semestre) e as respetivas datas. Só deve ser executado uma vez.</p>
-      <button class="btn-primario" style="background:#047857" onclick="window.importarDados12Ano()">▶ Importar 1.º e 2.º Ano</button>
+      <button class="btn-primario" style="background:#047857" onclick="window.importarDados12Ano()">▶ Importar UCs 1.º e 2.º Ano</button>
+      <hr style="margin:20px 0;border-color:#e5e7eb"/>
+      <p style="margin:0 0 12px;font-size:.9rem"><strong>Importar TODAS as datas</strong> (1º + 2º + 3º Ano · 1º Semestre). Executa após apagar as datas existentes.</p>
+      <button class="btn-primario" style="background:#1e40af" onclick="window.importarTodasDatas()">📅 Importar TODAS as datas</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
       <p style="margin:0 0 10px;font-size:.9rem"><strong>Apagar TODAS as datas:</strong> remove todas as entradas da coleção "datas" do Firestore.</p>
       <button class="btn-primario" style="background:#7f1d1d" onclick="window.apagarTodasDatas()">☠ Apagar TODAS as datas</button>
@@ -1058,6 +1061,91 @@
       tb.appendChild(tr);
     });
   }
+
+  window.importarTodasDatas = async function() {
+    if (!confirm('Vai criar todas as datas (1º+2º+3º Ano). Continuar?')) return;
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+
+    // Carregar todas as UCs e criar mapa nome→id
+    out('A carregar UCs...', '#60a5fa');
+    const snapUCs = await getDocs(collection(db, 'ucs'));
+    const ucNomeMap = {};
+    snapUCs.forEach(d => { ucNomeMap[d.data().nome] = d.id; });
+    out(`${snapUCs.size} UCs carregadas.`, '#60a5fa');
+
+    // [nome_uc, iso_normal, iso_recurso, ano, semestre, minor]
+    const DATAS = [
+      // 1º ANO
+      ['Introdução ao Direito',          '2027-01-11T10:00','2027-02-11T10:00','1','1',''],
+      ['Demografia',                     '2027-01-13T10:00','2027-02-12T13:00','1','1',''],
+      ['Antropologia Geral',             '2027-01-15T10:00','2027-02-15T10:00','1','1',''],
+      ['Psicologia Geral',               '2027-01-18T10:00','2027-02-19T10:00','1','1',''],
+      ['Introdução às Ciências Sociais', '2027-01-20T10:00','2027-02-17T10:00','1','1',''],
+      ['Matemática Preparatória',        '2027-02-10T10:00','2027-05-04T10:00','1','1',''],
+      // 2º ANO — Obrigatórias
+      ['Princípios de Gestão',                                        '2027-01-11T13:00','2027-02-12T10:00','2','1',''],
+      ['Metodologia das Ciências Sociais: Métodos Qualitativos',      '2027-01-15T13:00','2027-02-22T10:00','2','1',''],
+      ['Etnografias',                                                  '2027-01-18T13:00','2027-02-16T13:00','2','1',''],
+      // 2º ANO — Opcionais
+      ['Antropologia das Religiões',                '2027-01-13T13:00','2027-02-18T13:00','2','1',''],
+      ['Sociedade Portuguesa Contemporânea',        '2027-01-14T16:00','2027-02-26T16:00','2','1',''],
+      ['Justiça, Segurança e Criminalidade',        '2027-01-19T16:00','2027-02-23T16:00','2','1',''],
+      ['Igualdade, Exclusão Social e Cidadania',    '2027-01-20T13:00','2027-02-25T10:00','2','1',''],
+      // 3º ANO — Minor Ciência Política e Administrativa
+      ['Direito da União Europeia',           '2027-01-12T10:00','2027-02-16T10:00','3','1','Ciência Política e Administrativa'],
+      ['Introdução ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00','3','1','Ciência Política e Administrativa'],
+      ['Introdução ao Direito do Ambiente',   '2027-01-18T16:00','2027-02-23T10:00','3','1','Ciência Política e Administrativa'],
+      ['Política Internacional',              '2027-01-20T16:00','2027-02-11T16:00','3','1','Ciência Política e Administrativa'],
+      ['Teoria das Relações Internacionais',  '2027-01-22T10:00','2027-02-24T16:00','3','1','Ciência Política e Administrativa'],
+      // 3º ANO — Minor Psicologia
+      ['Noções de Psicopatologia',             '2027-01-11T16:00','2027-02-11T13:00','3','1','Psicologia'],
+      ['Psicologia Social Aplicada',           '2027-01-13T16:00','2027-02-16T16:00','3','1','Psicologia'],
+      ['Psicologia do Desenvolvimento Humano', '2027-01-15T16:00','2027-02-24T10:00','3','1','Psicologia'],
+      ['Psicologia Clínica e da Saúde',        '2027-01-19T10:00','2027-02-18T10:00','3','1','Psicologia'],
+      ['Psicologia da Arte',                   '2027-01-21T10:00','2027-02-22T16:00','3','1','Psicologia'],
+      // 3º ANO — Minor Intervenção Social
+      ['Desenvolvimento Comunitário',                     '2027-01-12T13:00','2027-02-17T16:00','3','1','Intervenção Social'],
+      ['Intervenção Psicossocial',                        '2027-01-14T13:00','2027-02-11T16:00','3','1','Intervenção Social'],
+      ['Intervenção Social e Saúde Mental',               '2027-01-19T13:00','2027-02-15T13:00','3','1','Intervenção Social'],
+      ['Teoria Geral de Serviço Social',                  '2027-01-21T13:00','2027-02-24T10:00','3','1','Intervenção Social'],
+      ['Contextos Organizacionais da Intervenção Social', '2027-01-25T10:00','2027-02-19T13:00','3','1','Intervenção Social'],
+      // 3º ANO — Minor Sociologia
+      ['Sociologia Urbana',                         '2027-01-12T16:00','2027-02-15T16:00','3','1','Sociologia'],
+      ['Sociologia das Migrações',                  '2027-01-14T13:00','2027-02-19T10:00','3','1','Sociologia'],
+      ['Sociologia da Comunicação e da Informação', '2027-01-18T16:00','2027-02-11T10:00','3','1','Sociologia'],
+      ['Sociologia da Família',                     '2027-01-21T16:00','2027-02-22T13:00','3','1','Sociologia'],
+      ['Teorias Sociológicas',                      '2027-01-25T13:00','2027-02-17T16:00','3','1','Sociologia'],
+    ];
+
+    out('\n=== A criar datas ===', '#60a5fa');
+    let ok = 0, erros = 0;
+    for (const [nome, isoNormal, isoRecurso, ano, semestre, minor] of DATAS) {
+      const ucId = ucNomeMap[nome] || '';
+      if (!ucId) out(`⚠ UC não encontrada: "${nome}"`, '#fbbf24');
+      // Época Normal
+      try {
+        await addDoc(collection(db,'datas'), {
+          titulo: nome, tipo: 'Global/Exame', ucId, dataIso: isoNormal,
+          ano, semestre, minor, criadoEm: serverTimestamp()
+        });
+        out(`✓ Global/Exame  ${ano}ºA ${isoNormal}  ${nome}`, '#4ade80');
+        ok++;
+      } catch(e) { out(`✗ ERRO normal ${nome}: ${e.message}`, '#f87171'); erros++; }
+      // Época Recurso
+      try {
+        await addDoc(collection(db,'datas'), {
+          titulo: nome, tipo: 'Recurso', ucId, dataIso: isoRecurso,
+          ano, semestre, minor, criadoEm: serverTimestamp()
+        });
+        out(`✓ Recurso       ${ano}ºA ${isoRecurso}  ${nome}`, '#4ade80');
+        ok++;
+      } catch(e) { out(`✗ ERRO recurso ${nome}: ${e.message}`, '#f87171'); erros++; }
+    }
+    out(`\n=== Concluído: ${ok} datas criadas, ${erros} erros ===`, '#60a5fa');
+    carregarDatasAdmin();
+  };
 
   window.apagarTodasDatas = async function() {
     if (!confirm('⚠️ Isto vai apagar TODAS as datas permanentemente. Tens a certeza?')) return;
