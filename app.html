@@ -217,6 +217,19 @@
     .painel-vazio strong { display:block; margin-bottom:5px; color:var(--verde); font:600 .85rem/1.2 'Playfair Display',serif; }
     .painel-vazio p { color:var(--cinza); font-size:.66rem; line-height:1.5; }
     .retomar-destaque { margin:auto 0 0; }
+    .banner-datas-wrap { padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
+    .banner-datas-wrap.urgente { background:#fee2e2; border-left:4px solid #dc2626; }
+    .banner-datas-wrap.aviso   { background:#fefce8; border-left:4px solid var(--ouro); }
+    .banner-datas-icone { font-size:1.3rem; line-height:1; flex-shrink:0; margin-top:2px; }
+    .banner-datas-corpo { flex:1; }
+    .banner-datas-titulo { font:.75rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .banner-datas-wrap.urgente .banner-datas-titulo { color:#991b1b; }
+    .banner-datas-wrap.aviso   .banner-datas-titulo { color:#92400e; }
+    .banner-datas-lista { list-style:none; display:flex; flex-direction:column; gap:3px; }
+    .banner-datas-lista li { font:.8rem/1.4 'Inter',sans-serif; color:#374151; }
+    .banner-datas-lista li strong { color:#111827; }
+    .banner-datas-fechar { background:none; border:none; cursor:pointer; font-size:1.1rem; color:#9ca3af; padding:0 0 0 8px; flex-shrink:0; line-height:1; }
+    .banner-datas-fechar:hover { color:#374151; }
     .painel-ver-todas { margin-top:10px; width:100%; padding:9px; background:none; border:1.5px solid var(--ouro); border-radius:3px 10px 3px 3px; color:var(--verde); font:.7rem/1 'Inter',sans-serif; font-weight:600; cursor:pointer; letter-spacing:.03em; transition:all .2s; }
     .painel-ver-todas:hover { background:var(--ouro-pale); }
 
@@ -1027,6 +1040,8 @@
       </div>
     </div>
 
+    <div id="banner-datas" style="display:none;margin:0 0 22px;border-radius:10px;overflow:hidden"></div>
+
     <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
       <div class="secao-cabecalho-uniforme">
         <div><div class="secao-kicker-uniforme">Visão pessoal</div><h2 id="painel-titulo">O teu painel</h2></div>
@@ -1553,6 +1568,47 @@
 
   let todasAsDatas = [];
 
+  function mostrarBannerDatas() {
+    const banner = document.getElementById('banner-datas');
+    if (!banner) return;
+    // Verificar se já foi fechado hoje
+    const hoje = new Date().toDateString();
+    if (localStorage.getItem('banner-fechado') === hoje) { banner.style.display = 'none'; return; }
+
+    const agora = new Date();
+    const em7dias = new Date(agora.getTime() + 7 * 86400000);
+    const proximas = todasAsDatas.filter(d => d.data >= agora && d.data <= em7dias);
+    if (!proximas.length) { banner.style.display = 'none'; return; }
+
+    const temUrgente = proximas.some(d => Math.ceil((d.data - agora) / 86400000) <= 2);
+    const cls = temUrgente ? 'urgente' : 'aviso';
+    const icone = temUrgente ? '🚨' : '📅';
+    const titulo = temUrgente ? 'Atenção — datas muito próximas!' : 'Datas nos próximos 7 dias';
+
+    const itens = proximas.map(d => {
+      const dias = Math.ceil((d.data - agora) / 86400000);
+      const dataStr = d.data.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
+      const diasStr = dias === 0 ? 'hoje' : dias === 1 ? 'amanhã' : `em ${dias} dias`;
+      return `<li><strong>${esc(d.titulo)}</strong> — ${dataStr} <em>(${diasStr})</em></li>`;
+    }).join('');
+
+    banner.innerHTML = `<div class="banner-datas-wrap ${cls}">
+      <span class="banner-datas-icone">${icone}</span>
+      <div class="banner-datas-corpo">
+        <div class="banner-datas-titulo">${titulo}</div>
+        <ul class="banner-datas-lista">${itens}</ul>
+      </div>
+      <button class="banner-datas-fechar" onclick="fecharBannerDatas()" aria-label="Fechar">✕</button>
+    </div>`;
+    banner.style.display = 'block';
+  }
+
+  window.fecharBannerDatas = function() {
+    const banner = document.getElementById('banner-datas');
+    if (banner) banner.style.display = 'none';
+    localStorage.setItem('banner-fechado', new Date().toDateString());
+  };
+
   async function carregarDatas() {
     const lista = document.getElementById('datas-lista');
     const contador = document.getElementById('datas-contador');
@@ -1566,6 +1622,7 @@
         if (!Number.isNaN(data.getTime()) && data >= agora) todasAsDatas.push({ ...item, data });
       });
       todasAsDatas.sort((a,b) => a.data - b.data);
+      mostrarBannerDatas();
       const total = todasAsDatas.length;
       contador.textContent = total === 1 ? '1 data' : `${total} datas`;
       if (!total) {
