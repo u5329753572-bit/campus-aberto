@@ -2181,22 +2181,42 @@
     }
   };
 
-  // --- PRESENÇA ONLINE ---
-  let _presencaRef = null;
+  // --- PRESENÇA ONLINE + HISTÓRICO DE SESSÕES ---
+  let _presencaRef  = null;
+  let _sessaoRef    = null;
+  let _sessionStart = null;
   let _presencaInterval = null;
 
   async function iniciarPresenca(user, nome) {
     const sessionId = user.uid + '_' + Date.now();
-    _presencaRef = doc(db, 'presencas', sessionId);
-    const escrever = () => setDoc(_presencaRef, {
-      uid: user.uid,
-      nome: nome,
-      ultimaVez: serverTimestamp()
+    _presencaRef  = doc(db, 'presencas', sessionId);
+    _sessaoRef    = doc(db, 'sessoes',   sessionId);
+    _sessionStart = Date.now();
+
+    // Registo de sessão (histórico permanente)
+    await setDoc(_sessaoRef, {
+      uid: user.uid, nome, inicio: serverTimestamp(),
+      ultimaAtividade: serverTimestamp(), ativo: true
     }).catch(() => {});
-    await escrever();
-    _presencaInterval = setInterval(escrever, 2 * 60 * 1000);
+
+    const heartbeat = () => {
+      setDoc(_presencaRef, { uid: user.uid, nome, ultimaVez: serverTimestamp() }).catch(() => {});
+      setDoc(_sessaoRef, { ultimaAtividade: serverTimestamp() }, { merge: true }).catch(() => {});
+    };
+    heartbeat();
+    _presencaInterval = setInterval(heartbeat, 2 * 60 * 1000);
     atualizarContadorOnline();
     setInterval(atualizarContadorOnline, 3 * 60 * 1000);
+  }
+
+  async function terminarSessao() {
+    if (_presencaInterval) { clearInterval(_presencaInterval); _presencaInterval = null; }
+    if (_presencaRef) { deleteDoc(_presencaRef).catch(() => {}); _presencaRef = null; }
+    if (_sessaoRef && _sessionStart) {
+      const duracao = Math.round((Date.now() - _sessionStart) / 60000);
+      await setDoc(_sessaoRef, { fim: serverTimestamp(), duracao, ativo: false }, { merge: true }).catch(() => {});
+      _sessaoRef = null;
+    }
   }
 
   async function atualizarContadorOnline() {
@@ -2210,14 +2230,10 @@
     } catch(e) {}
   }
 
-  window.addEventListener('beforeunload', () => {
-    if (_presencaRef) deleteDoc(_presencaRef).catch(() => {});
-    if (_presencaInterval) clearInterval(_presencaInterval);
-  });
+  window.addEventListener('beforeunload', () => { terminarSessao(); });
 
   window.sair = async function() {
-    if (_presencaRef) await deleteDoc(_presencaRef).catch(() => {});
-    if (_presencaInterval) clearInterval(_presencaInterval);
+    await terminarSessao();
     await signOut(auth);
     window.location.href = 'index.html';
   };
