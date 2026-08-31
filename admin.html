@@ -590,6 +590,9 @@
       <p style="margin:0 0 12px;font-size:.9rem">Cria as UCs do 1.º e 2.º Ano (1.º Semestre) e as respetivas datas. Só deve ser executado uma vez.</p>
       <button class="btn-primario" style="background:#047857" onclick="window.importarDados12Ano()">▶ Importar 1.º e 2.º Ano</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
+      <p style="margin:0 0 10px;font-size:.9rem"><strong>Apagar TODAS as datas:</strong> remove todas as entradas da coleção "datas" do Firestore.</p>
+      <button class="btn-primario" style="background:#7f1d1d" onclick="window.apagarTodasDatas()">☠ Apagar TODAS as datas</button>
+      <hr style="margin:20px 0;border-color:#e5e7eb"/>
       <p style="margin:0 0 10px;font-size:.9rem"><strong>Limpar duplicados:</strong> remove datas duplicadas (mesmo título + data + tipo), mantendo a versão com UC associada.</p>
       <button class="btn-primario" style="background:#b91c1c" onclick="window.limparDuplicados()">🗑 Remover datas duplicadas</button>
       <hr style="margin:20px 0;border-color:#e5e7eb"/>
@@ -1055,6 +1058,25 @@
       tb.appendChild(tr);
     });
   }
+
+  window.apagarTodasDatas = async function() {
+    if (!confirm('⚠️ Isto vai apagar TODAS as datas permanentemente. Tens a certeza?')) return;
+    if (!confirm('Última confirmação — apagar tudo?')) return;
+    const logEl = document.getElementById('import-log');
+    logEl.style.display = 'block'; logEl.innerHTML = '';
+    const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
+    out('A apagar todas as datas...', '#f87171');
+    const snap = await getDocs(collection(db, 'datas'));
+    let apagados = 0;
+    for (const d of snap.docs) {
+      try {
+        await deleteDoc(doc(db, 'datas', d.id));
+        apagados++;
+      } catch(e) { out(`✗ ERRO ${d.id}: ${e.message}`, '#f87171'); }
+    }
+    out(`\n=== Concluído: ${apagados} datas apagadas ===`, '#4ade80');
+    carregarDatasAdmin();
+  };
 
   window.limparDuplicados = async function() {
     if (!confirm('Vai apagar datas duplicadas do Firestore. Continuar?')) return;
