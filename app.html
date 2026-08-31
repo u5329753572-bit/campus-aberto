@@ -999,6 +999,10 @@
         <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
       </div>
     </div>
+    <div id="online-badge" title="Utilizadores online agora" style="display:none;align-items:center;gap:5px;font-size:.75rem;color:#6b7280;padding:4px 10px;border-radius:20px;background:#f3f4f6">
+      <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+      <span id="online-count">—</span> online
+    </div>
     <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
@@ -1368,8 +1372,8 @@
   import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
-    getFirestore, doc, getDoc, collection, getDocs,
-    addDoc, serverTimestamp, query, orderBy
+    getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs,
+    addDoc, serverTimestamp, query, orderBy, where
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -1748,6 +1752,7 @@
       prepararPesquisa();
       carregarDatas();
       carregarUCs();
+      iniciarPresenca(user, utilizadorAtual.nome || user.email);
     } catch (err) {
       console.warn('Perfil não carregado:', err);
       await signOut(auth);
@@ -2176,7 +2181,43 @@
     }
   };
 
+  // --- PRESENÇA ONLINE ---
+  let _presencaRef = null;
+  let _presencaInterval = null;
+
+  async function iniciarPresenca(user, nome) {
+    const sessionId = user.uid + '_' + Date.now();
+    _presencaRef = doc(db, 'presencas', sessionId);
+    const escrever = () => setDoc(_presencaRef, {
+      uid: user.uid,
+      nome: nome,
+      ultimaVez: serverTimestamp()
+    }).catch(() => {});
+    await escrever();
+    _presencaInterval = setInterval(escrever, 2 * 60 * 1000);
+    atualizarContadorOnline();
+    setInterval(atualizarContadorOnline, 3 * 60 * 1000);
+  }
+
+  async function atualizarContadorOnline() {
+    try {
+      const limite = new Date(Date.now() - 5 * 60 * 1000);
+      const snap = await getDocs(query(collection(db, 'presencas'), where('ultimaVez', '>=', limite)));
+      const n = snap.size;
+      const badge = document.getElementById('online-badge');
+      const cnt   = document.getElementById('online-count');
+      if (badge && cnt) { cnt.textContent = n; badge.style.display = 'flex'; }
+    } catch(e) {}
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if (_presencaRef) deleteDoc(_presencaRef).catch(() => {});
+    if (_presencaInterval) clearInterval(_presencaInterval);
+  });
+
   window.sair = async function() {
+    if (_presencaRef) await deleteDoc(_presencaRef).catch(() => {});
+    if (_presencaInterval) clearInterval(_presencaInterval);
     await signOut(auth);
     window.location.href = 'index.html';
   };
