@@ -676,6 +676,15 @@
       align-items: center; justify-content: center; padding: 24px;
     }
     .modal-overlay.visivel { display: flex; }
+    /* Aviso legal */
+    #modal-aviso { z-index: 500; }
+    #modal-aviso .modal { max-width: 560px; }
+    #modal-aviso .aviso-titulo { font:700 1.25rem/1.2 'Playfair Display',serif; color:var(--verde); margin-bottom:14px; }
+    #modal-aviso .aviso-corpo { font-size:.84rem; line-height:1.7; color:#374151; white-space:pre-line; }
+    #modal-aviso .aviso-corpo strong { color:#071d34; }
+    .app-rodape { text-align:center; padding:24px 20px 40px; border-top:1px solid #e9eff5; margin-top:40px; }
+    .app-rodape-aviso { display:inline-flex; align-items:center; gap:6px; font-size:.72rem; color:#9ca3af; cursor:pointer; background:none; border:none; padding:0; }
+    .app-rodape-aviso:hover { color:#6b7280; }
 
     .modal {
       background: var(--branco); border-radius: 24px;
@@ -1512,8 +1521,8 @@
     }
     area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
       <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
-      <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
-      <span class="painel-item-dias">Continuar →</span>
+      <span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
+      <span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar →</span>
     </button>`;
     document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
   }
@@ -2266,6 +2275,53 @@
     if (btn) btn.style.display = 'none';
     _installPrompt = null;
   });
+
+  // --- AVISO LEGAL ---
+  window.AVISO_TEXTO = `Prezados colegas,
+
+Todos os materiais disponibilizados na nossa aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
+
+Os guias, resumos e restantes informações são elaborados por nós, enquanto estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. São apenas ferramentas de apoio e, por isso, não substituem os documentos, materiais e orientações oficiais disponibilizados pelos docentes no Moodle.
+
+Em caso de dúvida ou divergência, devem prevalecer sempre as informações e os materiais oficiais fornecidos pelos docentes.
+
+Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.`;
+
+  window.mostrarAviso = function() {
+    document.getElementById('aviso-corpo-texto').textContent = window.AVISO_TEXTO;
+    document.getElementById('modal-aviso').classList.add('visivel');
+  };
+  window.fecharAviso = function() {
+    document.getElementById('modal-aviso').classList.remove('visivel');
+    localStorage.setItem('aviso-aceite', '1');
+  };
+
+  // Mostrar na primeira visita após login + mostrar rodapé
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('rodape-app').style.display = 'block';
+      if (!localStorage.getItem('aviso-aceite')) {
+        setTimeout(() => mostrarAviso(), 1200);
+      }
+    }
+  });
 </script>
+
+<!-- Modal aviso legal -->
+<div class="modal-overlay" id="modal-aviso" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:560px">
+    <div class="aviso-titulo">ℹ️ Aviso de utilização</div>
+    <div class="aviso-corpo" id="aviso-corpo-texto"></div>
+    <button class="btn-primario" style="margin-top:24px;width:100%" onclick="fecharAviso()">Li e compreendo</button>
+  </div>
+</div>
+
+<!-- Rodapé discreto -->
+<footer class="app-rodape" id="rodape-app">
+  <button class="app-rodape-aviso" onclick="mostrarAviso()" title="Ver aviso de utilização">
+    ℹ️ Conteúdos de uso exclusivo desta comunidade · Campus Aberto
+  </button>
+</footer>
+
 </body>
 </html>
