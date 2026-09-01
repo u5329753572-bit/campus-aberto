@@ -866,6 +866,7 @@
           await emailjs.send('service_nxmlu8q', 'template_9k3j0vi', {
             nome:     u.nome  || 'Utilizador',
             to_email: u.email || '',
+            email:    u.email || '',
           });
         }
       } catch(e) {
