@@ -487,6 +487,7 @@
         </p>
       </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
+      <button class="btn-primario" id="btn-cancelar-doc" style="display:none;background:#6b7280;margin-left:8px" onclick="cancelarEdicaoDoc()">Cancelar</button>
       <div class="msg-form" id="msg-doc"></div>
     </div>
 
@@ -1003,20 +1004,30 @@
       msgEl.className = 'msg-form err'; return;
     }
 
+    const editUcId = window._editandoDocUcId || null;
+    const editDocId = window._editandoDocId || null;
     btn.disabled = true; btn.textContent = 'A guardar...';
     try {
-      const q     = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
-      const ordem = q.size + 1;
-      await addDoc(collection(db, 'ucs', ucId, 'documentos'), {
-        nome, descricao: desc, driveUrl: url, ordem,
-        criadoEm: serverTimestamp()
-      });
-      msgEl.textContent = `"${nome}" adicionado com sucesso.`;
+      if (editDocId) {
+        const old = (window._docsCache || {})[editUcId + '|' + editDocId] || {};
+        await setDoc(doc(db, 'ucs', editUcId, 'documentos', editDocId), {
+          nome, descricao: desc, driveUrl: url,
+          ordem: old.ordem || 1,
+          criadoEm: old.criadoEm || serverTimestamp()
+        });
+        msgEl.textContent = `"${nome}" atualizado.`;
+        window._editandoDocUcId = null; window._editandoDocId = null;
+        document.getElementById('btn-cancelar-doc').style.display = 'none';
+      } else {
+        const q     = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
+        const ordem = q.size + 1;
+        await addDoc(collection(db, 'ucs', ucId, 'documentos'), {
+          nome, descricao: desc, driveUrl: url, ordem, criadoEm: serverTimestamp()
+        });
+        msgEl.textContent = `"${nome}" adicionado com sucesso.`;
+      }
       msgEl.className = 'msg-form ok';
-      document.getElementById('doc-nome').value = '';
-      document.getElementById('doc-desc').value = '';
-      document.getElementById('doc-uc').value   = '';
-      document.getElementById('doc-url').value  = '';
+      ['doc-nome','doc-desc','doc-uc','doc-url'].forEach(id => document.getElementById(id).value = '');
       carregarDocs(); carregarUCs();
       setTimeout(() => msgEl.className = 'msg-form', 3000);
     } catch(e) {
@@ -1035,6 +1046,9 @@
       snap.forEach(d => rows.push({ ucNome: uc.nome, ucId: uc.id, id: d.id, ...d.data() }));
     }
 
+    window._docsCache = {};
+    rows.forEach(r => { window._docsCache[r.ucId + '|' + r.id] = r; });
+
     tb.innerHTML = rows.length === 0
       ? '<tr><td colspan="4" class="empty-msg">Nenhum documento carregado</td></tr>'
       : rows.map(r => `
@@ -1042,9 +1056,35 @@
             <td>${esc(r.ucNome)}</td>
             <td>${esc(r.nome)}</td>
             <td>${esc(r.descricao || '—')}</td>
-            <td><button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button></td>
+            <td class="acoes">
+              <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarDoc('${r.ucId}','${r.id}')">Editar</button>
+              <button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button>
+            </td>
           </tr>`).join('');
   }
+
+  window.editarDoc = function(ucId, docId) {
+    const r = (window._docsCache || {})[ucId + '|' + docId];
+    if (!r) return;
+    document.getElementById('doc-uc').value   = ucId;
+    document.getElementById('doc-nome').value = r.nome || '';
+    document.getElementById('doc-desc').value = r.descricao || '';
+    document.getElementById('doc-url').value  = r.driveUrl || '';
+    window._editandoDocUcId = ucId;
+    window._editandoDocId   = docId;
+    document.getElementById('btn-upload').textContent = 'Guardar alterações';
+    document.getElementById('btn-cancelar-doc').style.display = '';
+    document.getElementById('doc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  function cancelarEdicaoDoc() {
+    window._editandoDocUcId = null;
+    window._editandoDocId   = null;
+    document.getElementById('btn-upload').textContent = 'Adicionar documento';
+    document.getElementById('btn-cancelar-doc').style.display = 'none';
+    ['doc-uc','doc-nome','doc-desc','doc-url'].forEach(id => document.getElementById(id).value = '');
+  }
+  window.cancelarEdicaoDoc = cancelarEdicaoDoc;
 
   window.removerDoc = async function(ucId, docId) {
     if (!confirm('Remover este documento?')) return;
