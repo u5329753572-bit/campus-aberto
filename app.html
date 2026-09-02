@@ -2526,12 +2526,17 @@ Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os co
 
 Ao prosseguir, declaro que li e compreendi este aviso.`;
 
-  window.mostrarAviso = function() {
+  window.mostrarAviso = function(forcar) {
+    const uid = utilizadorAtual?.uid;
+    const key = uid ? `ca_aviso_visto_${uid}` : null;
+    if (!forcar && key && localStorage.getItem(key)) return; // já viu
     document.getElementById('aviso-corpo-texto').textContent = window.AVISO_TEXTO;
     document.getElementById('modal-aviso').classList.add('visivel');
   };
   window.fecharAviso = function() {
     document.getElementById('modal-aviso').classList.remove('visivel');
+    const uid = utilizadorAtual?.uid;
+    if (uid) localStorage.setItem(`ca_aviso_visto_${uid}`, '1');
   };
 
 </script>
@@ -2551,7 +2556,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 
 <!-- Rodapé discreto -->
 <footer class="app-rodape" id="rodape-app">
-  <button class="app-rodape-aviso" onclick="mostrarAviso()" title="Ver aviso de utilização">
+  <button class="app-rodape-aviso" onclick="mostrarAviso(true)" title="Ver aviso de utilização">
     ℹ️ Conteúdos de uso exclusivo desta comunidade · Campus Aberto
   </button>
 </footer>
