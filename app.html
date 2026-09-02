@@ -2054,23 +2054,26 @@
     if (!ucIds.length) return;
 
     try {
-      let total = 0;
+      const novos = [];
       await Promise.all(ucIds.map(async ucId => {
+        const ucNome = ucsMap[ucId]?.nome || ucId;
         const snap = await getDocs(query(
           collection(db, 'ucs', ucId, 'documentos'),
           where('criadoEm', '>', prevDate)
         ));
-        total += snap.size;
+        snap.forEach(d => novos.push({ nome: d.data().nome || '—', ucNome }));
       }));
+      const total = novos.length;
       if (total === 0) return;
 
       // Banner
       const banner = document.getElementById('notif-novos-docs');
       const texto  = document.getElementById('notif-novos-docs-texto');
       if (banner && texto) {
-        texto.textContent = total === 1
-          ? '1 novo documento adicionado desde a tua última visita.'
-          : `${total} novos documentos adicionados desde a tua última visita.`;
+        const visiveis = novos.slice(0, 3);
+        const lista = visiveis.map(n => `"${n.nome}" (${n.ucNome})`).join(', ');
+        const extra = total > 3 ? ` e mais ${total - 3}` : '';
+        texto.textContent = `📄 Novo${total > 1 ? 's' : ''} desde a tua última visita: ${lista}${extra}.`;
         banner.style.display = 'flex';
       }
 
