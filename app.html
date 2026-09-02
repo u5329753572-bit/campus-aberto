@@ -1753,13 +1753,17 @@
     document.getElementById('ecra-docs').style.display  = 'none';
     document.getElementById('ecra-ucs').style.display   = 'block';
     window.bnavAtualizar(id);
-    if (id === 'ucs') {
-      document.querySelector('.ecosistema')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else if (id === 'ferramentas') {
-      document.querySelector('.ferramentas-secao')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    requestAnimationFrame(() => {
+      if (id === 'ucs') {
+        const el = document.querySelector('.ecosistema');
+        if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+      } else if (id === 'ferramentas') {
+        const el = document.querySelector('.ferramentas-secao');
+        if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   };
 
   window.addEventListener('scroll', function() {
