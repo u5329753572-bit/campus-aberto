@@ -2256,6 +2256,10 @@
   // PWA — Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
+    // Recarrega automaticamente quando um novo SW toma controlo
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
   }
   // PWA — Botão de instalação
   let _installPrompt = null;
