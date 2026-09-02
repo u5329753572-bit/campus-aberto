@@ -2304,6 +2304,7 @@
   window.voltarUCs = function() {
     document.getElementById('ecra-docs').style.display = 'none';
     document.getElementById('ecra-ucs').style.display  = 'block';
+    bnavAtualizar('ucs');
   };
 
   // --- VIEWER PDF ---
@@ -2336,21 +2337,40 @@
       const pdf = await window.pdfjsLib.getDocument(doc_.driveUrl).promise;
       conteudo.innerHTML = '';
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page  = await pdf.getPage(i);
-        const vp0   = page.getViewport({ scale: 1 });
-        const maxW  = Math.min(conteudo.clientWidth - 40, 900);
-        const dpr   = window.devicePixelRatio || 1;
-        const scale = (maxW / vp0.width) * dpr;
-        const vp    = page.getViewport({ scale });
+      // Lazy-render: só renderiza páginas quando ficam visíveis (poupa RAM no mobile)
+      const renderizando = new Set();
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(async entry => {
+          if (!entry.isIntersecting) return;
+          const wrapper = entry.target;
+          const pnum = parseInt(wrapper.dataset.pnum, 10);
+          if (renderizando.has(pnum)) return;
+          renderizando.add(pnum);
+          obs.unobserve(wrapper);
+          const page = await pdf.getPage(pnum);
+          const vp0  = page.getViewport({ scale: 1 });
+          const maxW = Math.min(conteudo.clientWidth - 40, 900);
+          const dpr  = window.devicePixelRatio || 1;
+          const scale = (maxW / vp0.width) * dpr;
+          const vp   = page.getViewport({ scale });
+          const canvas = document.createElement('canvas');
+          canvas.width  = vp.width;
+          canvas.height = vp.height;
+          canvas.style.width  = (vp.width  / dpr) + 'px';
+          canvas.style.height = (vp.height / dpr) + 'px';
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          wrapper.replaceChildren(canvas);
+          wrapper.style.minHeight = '';
+        });
+      }, { rootMargin: '250px' });
 
-        const canvas  = document.createElement('canvas');
-        canvas.width  = vp.width;
-        canvas.height = vp.height;
-        canvas.style.width  = (vp.width  / dpr) + 'px';
-        canvas.style.height = (vp.height / dpr) + 'px';
-        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-        conteudo.appendChild(canvas);
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.dataset.pnum = i;
+        wrapper.style.cssText = 'min-height:300px;display:flex;align-items:center;justify-content:center;';
+        wrapper.innerHTML = `<span style="color:rgba(255,255,255,.25);font-size:.65rem">pág. ${i}</span>`;
+        conteudo.appendChild(wrapper);
+        obs.observe(wrapper);
 
         if (pdf.numPages > 1) {
           const sep = document.createElement('div');
@@ -2577,6 +2597,9 @@
   }
 
   window.addEventListener('beforeunload', () => { terminarSessao(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') terminarSessao();
+  });
 
   window.sair = async function() {
     await terminarSessao();
@@ -2653,7 +2676,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
       <div class="aviso-corpo" id="aviso-corpo-texto"></div>
     </div>
     <div class="aviso-footer">
-      <button class="btn-primario" style="width:100%" onclick="fecharAviso()">Li e compreendo</button>
+      <button class="btn-confirmar" style="width:100%;flex:1" onclick="fecharAviso()">Li e compreendo</button>
     </div>
   </div>
 </div>
