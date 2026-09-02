@@ -1966,9 +1966,10 @@
       const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
       const cls = item.link ? 'data-item-full clickable' : 'data-item-full';
       const onclick = item.link ? `onclick="window.open('${esc(item.link)}','_blank','noopener')"` : '';
+      const notaHtml = item.descricao ? `<span style="display:block;margin-top:5px;font-size:.67rem;color:#92400e;background:#fffbeb;border-left:2px solid var(--ouro);padding:3px 7px;border-radius:0 4px 4px 0">${esc(item.descricao)}</span>` : '';
       return `<div class="${cls}" ${onclick}>
         <div class="data-item-full-dia">${item.data.getDate()}<small>${mes}</small></div>
-        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data académica')}</strong><span>${esc(subtag || item.tipo || '—')}</span></div>
+        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data académica')}</strong><span>${esc(subtag || item.tipo || '—')}</span>${notaHtml}</div>
         <div class="data-item-full-tags">
           <span class="data-tag dias">${diasTexto}</span>
           <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
