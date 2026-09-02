@@ -2073,7 +2073,7 @@
         docMap[`${uc.id}:${d.id}`] = doc_;
         const lKey   = `${uc.id}_${d.id}`;
         const estado = (utilizadorAtual.leituras || {})[lKey] || '';
-        const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : '○ Marcar';
+        const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : 'Não lido';
         const el     = document.createElement('div');
         el.className = 'doc-item' + (estado ? ' ' + estado : '');
         el.innerHTML = `
@@ -2115,7 +2115,7 @@
     docEl.classList.remove('lendo', 'lido');
     if (proximo) docEl.classList.add(proximo);
     btn.className = 'btn-progresso' + (proximo ? ' ' + proximo : '');
-    btn.textContent = proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : '○ Marcar';
+    btn.textContent = proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : 'Não lido';
 
     // Persistir no Firestore
     try {
