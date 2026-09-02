@@ -670,12 +670,14 @@
   }
 
   // --- AUTH CHECK (admin) ---
+  let _adminUid = null;
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = 'index.html'; return; }
     const snap = await getDoc(doc(db, 'utilizadores', user.uid));
     if (!snap.exists() || !snap.data().admin) {
       window.location.href = 'app.html'; return;
     }
+    _adminUid = user.uid;
     carregarTudo();
   });
 
@@ -738,9 +740,9 @@
     </div>`;
     statsEl.innerHTML = statCard('sessões', totalSessoes) + statCard('utilizadores únicos', utilizadores) + (duracaoMedia!=null ? statCard('duração média', duracaoMedia+'min') : '');
 
-    // Group by uid
+    // Group by uid (excluir sessões do próprio admin)
     const grupos = {};
-    sessoes.forEach(s => {
+    sessoes.filter(s => s.uid !== _adminUid).forEach(s => {
       const uid = s.uid || 'desconhecido';
       if (!grupos[uid]) grupos[uid] = { nome: s.nome || '—', sessoes: [] };
       grupos[uid].sessoes.push(s);
