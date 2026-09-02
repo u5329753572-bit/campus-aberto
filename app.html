@@ -987,6 +987,48 @@
     }
     .btn-confirmar-perfil:hover { opacity: 0.9; }
     .btn-confirmar-perfil:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── BOTTOM NAV MOBILE ───────────────────────────── */
+    .bottom-nav { display:none; }
+    @media (max-width:640px) {
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 300;
+        background: #fff;
+        border-top: 1.5px solid rgba(26,58,42,.10);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+      }
+      .bottom-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 4px 8px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #9ca3af;
+        font-size: .59rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        letter-spacing: .02em;
+        gap: 4px;
+        transition: color .18s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .bottom-nav-btn svg {
+        width: 22px; height: 22px;
+        stroke-width: 1.8;
+        transition: transform .18s;
+      }
+      .bottom-nav-btn.ativa { color: var(--verde); }
+      .bottom-nav-btn.ativa svg { transform: translateY(-1px); }
+      main { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+    }
   </style>
 </head>
 <body>
@@ -1017,6 +1059,25 @@
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
+
+<nav class="bottom-nav" id="bottom-nav" aria-label="Navegação principal">
+  <button type="button" class="bottom-nav-btn ativa" id="bnav-inicio" onclick="window.bnavIr('inicio')" aria-label="Início">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Início
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-ucs" onclick="window.bnavIr('ucs')" aria-label="UCs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    UCs
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-ferramentas" onclick="window.bnavIr('ferramentas')" aria-label="Ferramentas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    Ferramentas
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-datas" onclick="window.bnavIr('datas')" aria-label="Datas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Datas
+  </button>
+</nav>
 
 <main>
   <div id="loading-inicial" class="loading">
@@ -1675,9 +1736,50 @@
     }
   }
 
+  // ── BOTTOM NAV ─────────────────────────────────────────
+  window.bnavAtualizar = function(id) {
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('ativa'));
+    const btn = document.getElementById('bnav-' + id);
+    if (btn) btn.classList.add('ativa');
+  };
+
+  window.bnavIr = function(id) {
+    if (id === 'datas') {
+      window.abrirEcranDatas();
+      return;
+    }
+    document.getElementById('ecra-datas').style.display = 'none';
+    document.getElementById('ecra-docs').style.display  = 'none';
+    document.getElementById('ecra-ucs').style.display   = 'block';
+    window.bnavAtualizar(id);
+    if (id === 'ucs') {
+      document.querySelector('.ecosistema')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (id === 'ferramentas') {
+      document.querySelector('.ferramentas-secao')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  window.addEventListener('scroll', function() {
+    if (window.innerWidth > 640) return;
+    const eco  = document.querySelector('.ecosistema');
+    const ferr = document.querySelector('.ferramentas-secao');
+    if (!eco || !ferr) return;
+    const y = window.scrollY + 80;
+    let ativo = 'inicio';
+    if (y >= ferr.offsetTop) ativo = 'ferramentas';
+    else if (y >= eco.offsetTop) ativo = 'ucs';
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('ativa'));
+    const btn = document.getElementById('bnav-' + ativo);
+    if (btn) btn.classList.add('ativa');
+  }, { passive: true });
+  // ───────────────────────────────────────────────────────
+
   window.abrirEcranDatas = function() {
     document.getElementById('ecra-ucs').style.display = 'none';
     document.getElementById('ecra-datas').style.display = 'block';
+    window.bnavAtualizar('datas');
     filtrarDatas();
   };
 
@@ -1686,12 +1788,14 @@
     document.getElementById('ecra-datas').style.display = 'none';
     document.getElementById('ecra-docs').style.display  = 'none';
     document.getElementById('ecra-ucs').style.display   = 'block';
+    window.bnavAtualizar('inicio');
     viewerDocAtual = null;
   };
 
   window.fecharEcranDatas = function() {
     document.getElementById('ecra-datas').style.display = 'none';
     document.getElementById('ecra-ucs').style.display = 'block';
+    window.bnavAtualizar('inicio');
   };
 
   window.filtrarDatas = function() {
@@ -1923,6 +2027,7 @@
     guardarRetomar(catalogo.get(`uc:${uc.id}`));
     document.getElementById('ecra-ucs').style.display  = 'none';
     document.getElementById('ecra-docs').style.display = 'block';
+    window.bnavAtualizar('ucs');
     document.getElementById('docs-titulo').textContent  = uc.nome;
     document.getElementById('docs-sub').textContent     = 'Materiais de estudo disponíveis';
 
