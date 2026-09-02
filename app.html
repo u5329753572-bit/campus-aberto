@@ -2303,7 +2303,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('rodape-app').style.display = 'block';
-      setTimeout(() => mostrarAviso(), 1200);
+      setTimeout(() => window.mostrarAviso(), 1200);
     }
   });
 </script>
