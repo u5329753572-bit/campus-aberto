@@ -558,8 +558,13 @@
     .uc-nome {
       font-family: 'Playfair Display', serif;
       font-size: 0.98rem; font-weight: 600;
-      color: var(--verde); line-height: 1.4; flex: 1;
-      margin-bottom: 16px;
+      color: var(--verde); line-height: 1.4;
+      margin-bottom: 5px;
+    }
+    .uc-desc {
+      font-size: .67rem; color: var(--cinza); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; margin-bottom: 12px; flex: 1;
     }
     .uc-card-footer {
       display: flex; align-items: center;
@@ -1524,6 +1529,81 @@
     { banda: 'linear-gradient(135deg,#263d45,#3f626b)', emoji: 'UC' },
   ];
 
+  const SINOPSES = {
+    // 1º Ano S1
+    'Demografia': 'Estuda a estrutura, composição e dinâmica das populações humanas — natalidade, mortalidade, migrações e envelhecimento — e o seu impacto nas políticas sociais e na organização das sociedades contemporâneas.',
+    'Introdução às Ciências Sociais': 'Apresenta as principais disciplinas, tradições teóricas e métodos das Ciências Sociais, desenvolvendo a capacidade de análise crítica dos fenómenos que estruturam a vida coletiva e política.',
+    'Introdução ao Direito': 'Explora os fundamentos do sistema jurídico e os conceitos essenciais do direito — norma, fonte, interpretação e principais ramos — indispensáveis para compreender as regras que organizam a vida em sociedade.',
+    'Psicologia Geral': 'Introduz as teorias e conceitos fundamentais da Psicologia enquanto ciência do comportamento e dos processos mentais, cobrindo perceção, memória, aprendizagem, motivação e personalidade.',
+    'Antropologia Geral': 'Aborda a diversidade cultural e biológica da espécie humana, questionando o etnocentrismo e mostrando como diferentes sociedades constroem realidades sociais, simbólicas e organizacionais distintas.',
+    // 1º Ano S2
+    'Estatística para as Ciências Sociais': 'Desenvolve competências de análise quantitativa — distribuições, medidas de tendência central, correlação e testes de hipóteses — aplicadas à interpretação de dados sociais e à produção de evidência empírica.',
+    'Introdução à Ciência Política': 'Explora os conceitos centrais da Ciência Política — poder, Estado, regime, democracia e representação — e as teorias que explicam como as sociedades se organizam e tomam decisões coletivas.',
+    'Política Social': 'Analisa os fundamentos, evolução e instrumentos das políticas públicas em áreas como segurança social, saúde, educação e habitação, examinando o papel do Estado na resposta às desigualdades.',
+    'Sociologia Geral': 'Introduz as grandes correntes do pensamento sociológico — de Durkheim e Weber a Bourdieu e Giddens — e os conceitos que permitem analisar a sociedade com rigor crítico e distância analítica.',
+    'Introdução à Economia': 'Apresenta os princípios fundamentais da análise económica — oferta, procura, mercados, produção e distribuição — e a sua relação com as dinâmicas sociais e institucionais das economias modernas.',
+    // 2º Ano S1
+    'Metodologia das Ciências Sociais: Métodos Qualitativos': 'Aborda as técnicas de investigação qualitativa — entrevista, observação participante e análise de conteúdo — e os fundamentos epistemológicos que as sustentam, preparando para projetos de investigação em profundidade.',
+    'Etnografias': 'Apresenta a etnografia como método de conhecimento, explorando como a observação participante e a escrita etnográfica permitem compreender culturas e contextos sociais a partir de dentro.',
+    'Princípios de Gestão': 'Introduz os conceitos fundamentais da gestão organizacional — planeamento, organização, liderança e controlo — desenvolvendo competências de análise em organizações públicas, privadas e do terceiro setor.',
+    'Antropologia das Religiões': 'Examina o papel da religião nas sociedades humanas, analisando rituais, crenças, mitos e práticas religiosas numa perspetiva comparada, questionando as fronteiras entre sagrado e profano.',
+    'Sociedade Portuguesa Contemporânea': 'Analisa as transformações estruturais da sociedade portuguesa nas últimas décadas — família, trabalho, educação, imigração e cultura — num olhar crítico sobre os paradoxos e desafios do Portugal atual.',
+    'Igualdade, Exclusão Social e Cidadania': 'Problematiza os mecanismos de produção da desigualdade e da exclusão social, examinando os conceitos de cidadania e direitos sociais e as políticas orientadas para a inclusão.',
+    'Justiça, Segurança e Criminalidade': 'Analisa os sistemas de justiça e segurança a partir das Ciências Sociais, questionando as causas sociais do crime, o controlo social e as respostas institucionais à criminalidade.',
+    // 2º Ano S2
+    'Metodologia das Ciências Sociais: Métodos Quantitativos': 'Aprofunda as técnicas de investigação quantitativa — questionários, bases de dados e análise estatística — desenvolvendo a capacidade de produzir e interpretar estudos empíricos com rigor científico.',
+    'Psicologia Social': 'Estuda como os contextos sociais influenciam o pensamento e o comportamento humano, abordando atitudes, preconceito, conformidade, influência social e dinâmicas de grupo.',
+    'História Económica e Social': 'Analisa a evolução das sociedades e economias ao longo do tempo, explorando transformações na produção, trabalho, classes sociais e instituições numa perspetiva histórica sobre os problemas contemporâneos.',
+    'Elites e Movimentos Sociais': 'Examina como as elites se formam e exercem influência, e como os movimentos sociais emergem como resposta às desigualdades, analisando casos históricos e contemporâneos de mobilização coletiva.',
+    'Globalização, Cidadania e Identidades': 'Problematiza os processos de globalização e os seus efeitos sobre as identidades culturais e políticas, examinando como reconfiguram as fronteiras da cidadania e os modos de pertença.',
+    'Ambiente, Saúde e Bem-Estar': 'Analisa as relações entre contextos sociais, ambientais e estados de saúde das populações, abordando os determinantes sociais da saúde e o papel das políticas públicas na promoção do bem-estar.',
+    'Sociedade, Género e Poder': 'Examina as dimensões sociais e políticas do género, analisando como as desigualdades se constroem e contestam nas instituições, no trabalho e no quotidiano, numa perspetiva crítica e feminista.',
+    // 3º Ano — Minor Ciência Política e Administrativa
+    'Introdução ao Direito Administrativo': 'Apresenta os princípios e regras fundamentais do Direito Administrativo — atividade administrativa, atos e contencioso — necessários para compreender e intervir nos contextos da administração pública.',
+    'Introdução ao Direito do Ambiente': 'Examina os instrumentos jurídicos de proteção ambiental e os princípios do Direito do Ambiente, num contexto de crescente urgência ecológica e de regulação das relações entre atividade humana e recursos naturais.',
+    'Política Internacional': 'Analisa as dinâmicas do sistema internacional — conflito, cooperação, organizações e diplomacia — e os fatores que determinam o comportamento dos Estados e outros atores no cenário global.',
+    'Teoria das Relações Internacionais': 'Apresenta os principais paradigmas que explicam as relações entre Estados — realismo, liberalismo, construtivismo — e a sua aplicação a problemas e casos concretos da política mundial.',
+    'Direito da União Europeia': 'Introduz o quadro jurídico e institucional da União Europeia, abordando as fontes do direito europeu, as instituições, o mercado interno e os direitos dos cidadãos europeus.',
+    'Ciência da Administração': 'Estuda as teorias e práticas da administração pública, analisando a organização do Estado, os modelos de gestão pública e as reformas administrativas nas democracias contemporâneas.',
+    'Direito Constitucional Comparado': 'Examina as constituições de diferentes países, comparando sistemas de governo, direitos fundamentais, separação de poderes e regimes democráticos numa perspetiva de direito comparado.',
+    'Organizações Políticas': 'Analisa os partidos políticos, sistemas eleitorais, grupos de interesse e outras organizações que estruturam a competição e a representação política nas democracias.',
+    'Sistemas de Poder': 'Examina as formas de organização e exercício do poder político — autoritarismo, democracia, federalismo — e os mecanismos de legitimação e contestação do poder nas sociedades contemporâneas.',
+    'Teoria Política': 'Explora as grandes tradições do pensamento político — liberalismo, republicanismo, socialismo, comunitarismo — e os conceitos de justiça, liberdade, igualdade e democracia que estruturam o debate político moderno.',
+    // 3º Ano — Minor Psicologia
+    'Psicologia da Arte': 'Explora as relações entre processos psicológicos e a criação e receção da arte, examinando criatividade, perceção estética e o papel da expressão artística no desenvolvimento e bem-estar humano.',
+    'Noções de Psicopatologia': 'Introduz os principais quadros de perturbação mental — ansiedade, depressão, psicose, perturbações da personalidade — numa perspetiva de compreensão clínica e social das condições de saúde mental.',
+    'Psicologia Clínica e da Saúde': 'Aborda a aplicação da Psicologia nos contextos clínicos e de saúde, explorando a promoção da saúde, a doença crónica e a intervenção psicológica em diferentes populações.',
+    'Psicologia Social Aplicada': 'Aplica os conhecimentos da Psicologia Social a contextos organizacionais e comunitários, trabalhando temas como liderança, conflito, comunicação e mudança comportamental.',
+    'Psicologia de Desenvolvimento Humano': 'Estuda as transformações psicológicas ao longo do ciclo de vida — da infância à velhice — analisando os processos cognitivos, emocionais e sociais que marcam cada fase do desenvolvimento.',
+    'Comunicação Intercultural': 'Examina os desafios da comunicação entre pessoas de diferentes culturas, explorando estereótipos, competências interculturais e estratégias de mediação em contextos de crescente diversidade.',
+    'Psicologia da Família': 'Analisa a família como sistema psicossocial, explorando as dinâmicas relacionais, os ciclos de vida familiar, as crises e as intervenções psicológicas no contexto familiar.',
+    'Psicologia Intercultural': 'Examina como a cultura molda os processos psicológicos — cognição, emoção, identidade e valores — e as implicações para a prática psicológica em contextos multiculturais e de diversidade.',
+    'Psicologia Social da Vida Quotidiana': 'Aplica os conceitos da Psicologia Social à análise do quotidiano, examinando como interações, normas e representações sociais estruturam as experiências e práticas do dia a dia.',
+    'Psicologia Comunitária': 'Orientada para a prevenção e promoção do bem-estar, aborda a intervenção psicológica em comunidades, trabalhando capacitação, redes de suporte social e processos de mudança coletiva.',
+    // 3º Ano — Minor Intervenção Social
+    'Desenvolvimento Comunitário': 'Apresenta as teorias e práticas do desenvolvimento comunitário, explorando metodologias de diagnóstico, planeamento e intervenção orientadas para o empowerment das comunidades.',
+    'Intervenção Psico-Social': 'Examina as abordagens que articulam dimensões psicológicas e sociais na intervenção, desenvolvendo competências para apoiar indivíduos e grupos em situação de vulnerabilidade.',
+    'Intervenção Social e Saúde Mental': 'Analisa a relação entre exclusão social e saúde mental, explorando os modelos de intervenção comunitária e as respostas institucionais para pessoas com perturbações mentais.',
+    'Teoria Geral de Serviço Social': 'Apresenta os fundamentos teóricos, éticos e históricos do Serviço Social, examinando os modelos de intervenção e o papel dos profissionais na promoção da justiça e da inclusão social.',
+    'Contextos Organizacionais da Intervenção Social': 'Analisa as organizações do setor social — públicas, privadas e do terceiro setor — e os contextos institucionais em que se desenvolve a intervenção, incluindo gestão de projetos e parcerias.',
+    'Intervenção Social com Grupos': 'Aborda as metodologias de intervenção em contexto grupal, explorando dinâmicas de grupo, facilitação e as especificidades do trabalho social com diferentes populações.',
+    'Intervenção Social com Crianças e Jovens': 'Examina as problemáticas da infância e juventude em risco, as respostas do sistema de proteção e as abordagens de intervenção orientadas para a promoção dos direitos e do bem-estar.',
+    'Intervenção Social e Deficiência': 'Analisa os modelos social e de direitos na abordagem à deficiência, explorando as políticas de inclusão e as práticas de intervenção orientadas para a autonomia e participação plena.',
+    'Intervenção Social e Envelhecimento': 'Examina os desafios do envelhecimento demográfico e as respostas sociais e institucionais, explorando intervenções orientadas para a qualidade de vida e a dignidade dos idosos.',
+    'Metodologia da Intervenção Social': 'Apresenta as metodologias de planeamento, monitorização e avaliação de projetos de intervenção social, desenvolvendo competências para uma prática baseada em evidência e orientada para resultados.',
+    // 3º Ano — Minor Sociologia
+    'Sociologia Urbana': 'Analisa a cidade como espaço social, examinando processos de urbanização, segregação, gentrificação e as formas de vida e organização social que caracterizam os contextos urbanos contemporâneos.',
+    'Sociologia da Comunicação e da Informação': 'Examina o papel dos média e das tecnologias de informação na vida social e cultural, analisando os processos de produção, circulação e consumo de informação nas sociedades contemporâneas.',
+    'Sociologia da Familia': 'Analisa as transformações das estruturas e funções familiares nas sociedades contemporâneas, abordando conjugalidade, parentalidade, género, diversidade familiar e políticas de apoio.',
+    'Sociologia das Migrações': 'Examina os processos migratórios — causas, fluxos, integração e identidade — e os seus efeitos sobre as sociedades de origem e destino, articulando dimensões económicas, políticas e culturais.',
+    'Teorias Sociológicas': 'Apresenta os principais paradigmas e autores da teoria sociológica contemporânea, articulando as tradições clássicas com os debates atuais sobre modernidade, globalização e desigualdade.',
+    'Sociologia da Arte': 'Examina a arte como fenómeno social, analisando campos artísticos, produção e receção das obras, mercado e instituições culturais, e o papel da arte na reprodução e contestação das desigualdades.',
+    'Prática da Sociologia': 'Desenvolve competências para a aplicação das ferramentas sociológicas em contextos profissionais, trabalhando o diagnóstico social, a produção de relatórios e a intervenção baseada em evidência.',
+    'Sociologia da Educação': 'Analisa o sistema educativo como instituição social, examinando as relações entre educação, desigualdade, reprodução social, identidade e as políticas educativas nas sociedades contemporâneas.',
+    'Sociologia da Saúde': 'Examina a saúde e a doença enquanto fenómenos socialmente construídos, analisando os determinantes sociais da saúde, as desigualdades em saúde e o papel das instituições de saúde.',
+    'Sociologia do Trabalho': 'Analisa as transformações do mundo do trabalho — precariedade, automação, globalização e novas formas de organização — e as implicações para as identidades, desigualdades e relações laborais.',
+  };
+
   let utilizadorAtual = null;
   let docPendente     = null;
   let ucAtualId       = null;
@@ -2033,6 +2113,7 @@
                 </span>
                 <span class="uc-card-corpo">
                   <span class="uc-nome">${esc(uc.nome)}</span>
+                  ${SINOPSES[uc.nome] ? `<span class="uc-desc">${esc(SINOPSES[uc.nome])}</span>` : ''}
                   <span class="uc-card-footer">
                     <span class="uc-count" id="count-${uc.id}">A carregar...</span>
                     <span class="uc-card-cta">Ver →</span>
@@ -2141,7 +2222,7 @@
     document.getElementById('ecra-docs').style.display = 'block';
     window.bnavAtualizar('ucs');
     document.getElementById('docs-titulo').textContent  = uc.nome;
-    document.getElementById('docs-sub').textContent     = 'Materiais de estudo disponíveis';
+    document.getElementById('docs-sub').textContent     = SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
 
     const lista = document.getElementById('docs-lista');
     lista.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
