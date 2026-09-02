@@ -2085,7 +2085,10 @@
             <div class="doc-meta">${esc(doc_.descricao || 'Documento de estudo')}</div>
           </div>
           <div class="doc-acoes">
-            <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso de leitura">${btnLabel}</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0">
+              <span style="font-size:.54rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9ca3af;font-family:'Inter',sans-serif">Progresso</span>
+              <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso de leitura">${btnLabel} ▾</button>
+            </div>
             <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
             <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>
           </div>`;
@@ -2115,7 +2118,7 @@
     docEl.classList.remove('lendo', 'lido');
     if (proximo) docEl.classList.add(proximo);
     btn.className = 'btn-progresso' + (proximo ? ' ' + proximo : '');
-    btn.textContent = proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : 'Não lido';
+    btn.textContent = (proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : 'Não lido') + ' ▾';
 
     // Persistir no Firestore
     try {
