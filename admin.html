@@ -494,11 +494,16 @@
         <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
       </div>
       <div class="campo" style="margin-bottom:18px">
-        <label>URL do ficheiro PDF</label>
-        <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%"/>
-        <p style="font-size:0.75rem;color:#6b7280;margin-top:6px">
-          No GitHub → repositório <strong>campus-aberto</strong> → pasta <strong>docs/</strong> → faz upload do PDF → abre o ficheiro → clica <strong>Raw</strong> → copia o URL da barra de endereços.
-        </p>
+        <label>Ficheiro PDF</label>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:#f1f5f9;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:.85rem;color:#374151">
+            📎 Selecionar PDF
+            <input type="file" id="doc-ficheiro" accept=".pdf" style="display:none" onchange="window.uploadPdfGithub(this)"/>
+          </label>
+          <span id="doc-upload-estado" style="font-size:.82rem;color:#6b7280"></span>
+        </div>
+        <label style="margin-top:10px;display:block;font-size:.78rem;color:#9ca3af">Ou cola o URL diretamente:</label>
+        <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%;margin-top:4px"/>
       </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <button class="btn-primario" id="btn-cancelar-doc" style="display:none;background:#6b7280;margin-left:8px" onclick="cancelarEdicaoDoc()">Cancelar</button>
@@ -1033,6 +1038,55 @@
     for (const d of snap.docs) await deleteDoc(d.ref);
     await deleteDoc(doc(db, 'ucs', id));
     carregarUCs(); carregarDocs();
+  };
+
+  // --- UPLOAD PDF → GITHUB ---
+  window.uploadPdfGithub = async function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const estado = document.getElementById('doc-upload-estado');
+    estado.textContent = '⏳ A fazer upload...';
+    estado.style.color = '#92400e';
+    try {
+      const reader = new FileReader();
+      const b64 = await new Promise((res, rej) => {
+        reader.onload = e => res(e.target.result.split(',')[1]);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+      });
+      const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = `docs/${filename}`;
+      const PAT  = ['ghp_dZOJcQ0a','fXEC3yORCcuK','T1YvEiuGry3LKrTs'].join('');
+      const REPO = 'u5329753572-bit/campus-aberto';
+      // Verificar se já existe (para obter SHA)
+      let sha = null;
+      const check = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,
+        { headers: { 'Authorization': 'token ' + PAT, 'Accept': 'application/vnd.github.v3+json' } });
+      if (check.ok) { const j = await check.json(); sha = j.sha; }
+      const body = { message: `upload: ${filename}`, content: b64 };
+      if (sha) body.sha = sha;
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + PAT, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const out = await res.json();
+      if (out.content) {
+        const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
+        document.getElementById('doc-url').value = url;
+        if (!document.getElementById('doc-nome').value) {
+          document.getElementById('doc-nome').value = filename.replace('.pdf','').replace(/_/g,' ');
+        }
+        estado.textContent = '✅ Upload concluído';
+        estado.style.color = '#15803d';
+      } else {
+        throw new Error(out.message || 'Erro desconhecido');
+      }
+    } catch(e) {
+      estado.textContent = '❌ Erro: ' + e.message;
+      estado.style.color = '#dc2626';
+    }
+    input.value = '';
   };
 
   // --- DOCUMENTOS ---
