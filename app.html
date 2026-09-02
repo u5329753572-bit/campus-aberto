@@ -615,6 +615,20 @@
 
     .docs-lista { display: flex; flex-direction: column; gap: 12px; }
 
+    /* ── PROGRESSO DE LEITURA ───────────────────────── */
+    .btn-progresso {
+      border: 1.5px solid rgba(26,58,42,.13); border-radius: 8px;
+      padding: 7px 11px; font-size: .7rem; font-weight: 600;
+      cursor: pointer; background: transparent; color: var(--cinza);
+      font-family: 'Inter', sans-serif; transition: all .18s;
+      white-space: nowrap; flex-shrink: 0; letter-spacing: .02em;
+    }
+    .btn-progresso:hover { border-color: rgba(26,58,42,.3); background: #f7f8f9; }
+    .btn-progresso.lendo { background: #fffbeb; border-color: #f59e0b; color: #b45309; }
+    .btn-progresso.lido  { background: #f0fdf4; border-color: #22c55e; color: #166534; }
+    .doc-item.lendo { border-left: 3.5px solid #f59e0b; }
+    .doc-item.lido  { border-left: 3.5px solid #22c55e; }
+
     .doc-item {
       background: var(--branco); border-radius: 16px;
       padding: 20px 24px; display: flex;
@@ -1444,8 +1458,8 @@
   import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
-    getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs,
-    addDoc, serverTimestamp, query, orderBy, where
+    getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs,
+    addDoc, serverTimestamp, query, orderBy, where, deleteField
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -2057,8 +2071,11 @@
       snap.docs.forEach(d => {
         const doc_   = { id: d.id, ...d.data() };
         docMap[`${uc.id}:${d.id}`] = doc_;
+        const lKey   = `${uc.id}_${d.id}`;
+        const estado = (utilizadorAtual.leituras || {})[lKey] || '';
+        const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : '○ Marcar';
         const el     = document.createElement('div');
-        el.className = 'doc-item';
+        el.className = 'doc-item' + (estado ? ' ' + estado : '');
         el.innerHTML = `
           <div class="doc-icone">
             <span class="doc-icone-txt">PDF</span>
@@ -2068,10 +2085,12 @@
             <div class="doc-meta">${esc(doc_.descricao || 'Documento de estudo')}</div>
           </div>
           <div class="doc-acoes">
+            <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso de leitura">${btnLabel}</button>
             <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
             <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>
           </div>`;
         el.querySelector('.doc-favorito').addEventListener('click', () => window.toggleFavorito(`doc:${uc.id}:${d.id}`));
+        el.querySelector('.btn-progresso').addEventListener('click', function() { window.alterarProgresso(this); });
         lista.appendChild(el);
       });
       window.atualizarBotoesFavoritos();
@@ -2079,6 +2098,32 @@
       lista.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar documentos.</p>`;
     }
   }
+
+  window.alterarProgresso = async function(btn) {
+    const ucId  = btn.dataset.uc;
+    const docId = btn.dataset.doc;
+    const key   = `${ucId}_${docId}`;
+    const atual = (utilizadorAtual.leituras || {})[key] || '';
+    const proximo = atual === '' ? 'lendo' : atual === 'lendo' ? 'lido' : '';
+
+    if (!utilizadorAtual.leituras) utilizadorAtual.leituras = {};
+    if (proximo) utilizadorAtual.leituras[key] = proximo;
+    else delete utilizadorAtual.leituras[key];
+
+    // Atualizar UI imediatamente
+    const docEl = btn.closest('.doc-item');
+    docEl.classList.remove('lendo', 'lido');
+    if (proximo) docEl.classList.add(proximo);
+    btn.className = 'btn-progresso' + (proximo ? ' ' + proximo : '');
+    btn.textContent = proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : '○ Marcar';
+
+    // Persistir no Firestore
+    try {
+      const upd = {};
+      upd[`leituras.${key}`] = proximo ? proximo : deleteField();
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), upd);
+    } catch(e) { console.warn('Erro ao guardar progresso:', e); }
+  };
 
   window.voltarUCs = function() {
     document.getElementById('ecra-docs').style.display = 'none';
