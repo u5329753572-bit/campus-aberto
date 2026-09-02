@@ -308,7 +308,7 @@
       line-height: 1.08; font-weight: 600; letter-spacing: -.025em;
     }
     .ecosistema-intro { max-width: 380px; color: rgba(255,255,255,.64); font-size: .82rem; line-height: 1.65; }
-    .recursos-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .recursos-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     .recurso-card {
       min-height: 208px; position: relative; display: flex; flex-direction: column;
       padding: 22px; overflow: hidden; color: var(--texto); text-decoration: none;
@@ -900,7 +900,7 @@
       .painel-card.retomar { grid-column:auto; }
       .secao-cabecalho-uniforme { align-items:start; flex-direction:column; gap:8px; }
       .ecosistema-topo { align-items:start; flex-direction:column; gap:12px; }
-      .recursos-grid { grid-template-columns:1fr; }
+      .recursos-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .recurso-card { min-height:176px; }
       .ferramentas-cabecalho { align-items:start; flex-direction:column; gap:10px; }
       .ferramentas-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -937,7 +937,7 @@
       .ecosistema { margin:0 0 48px; padding:26px 18px 20px; border-radius:3px 24px 3px 3px; }
       .ecosistema h2 { max-width:280px; }
       .ecosistema-intro { font-size:.78rem; }
-      .recursos-grid { gap:10px; }
+      .recursos-grid { grid-template-columns:1fr; gap:10px; }
       .recurso-card { min-height:164px; padding:18px; }
       .recurso-icone { margin-bottom:18px; }
       .ferramentas-secao { margin:0 0 50px; padding:24px 16px 18px; border-radius:3px 22px 3px 3px; }
@@ -1209,6 +1209,16 @@
           <h3>Podcast Campus Aberto</h3>
           <p>Este canal nasceu de uma convicção simples: os temas que estudamos são genuinamente interessantes. O problema nunca foi a matéria, foi a forma como chegou até nós.</p>
           <span class="recurso-link"><span>Ver episódios</span><span aria-hidden="true">↗</span></span>
+        </a>
+
+        <a class="recurso-card" href="https://ecosdassociedades.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir a Revista Ecos das Sociedades numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">04</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          <h3>Revista Ecos das Sociedades</h3>
+          <p>Publicação académica da República das Ciências Sociais com artigos, ensaios e reflexões produzidos pelos estudantes.</p>
+          <span class="recurso-link"><span>Ler a revista</span><span aria-hidden="true">↗</span></span>
         </a>
       </div>
     </section>
