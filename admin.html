@@ -514,8 +514,8 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Documentos carregados</span></div>
       <table>
-        <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
-        <tbody id="tbody-docs"><tr><td colspan="4" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+        <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th style="text-align:center">↓ Downloads</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-docs"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
@@ -1149,18 +1149,35 @@
     window._docsCache = {};
     rows.forEach(r => { window._docsCache[r.ucId + '|' + r.id] = r; });
 
+    // Contar downloads por docId
+    const dlCounts = {};
+    try {
+      const dlSnap = await getDocs(collection(db, 'downloads'));
+      dlSnap.forEach(d => {
+        const id = d.data().docId;
+        if (id) dlCounts[id] = (dlCounts[id] || 0) + 1;
+      });
+    } catch(e) {}
+
     tb.innerHTML = rows.length === 0
-      ? '<tr><td colspan="4" class="empty-msg">Nenhum documento carregado</td></tr>'
-      : rows.map(r => `
+      ? '<tr><td colspan="5" class="empty-msg">Nenhum documento carregado</td></tr>'
+      : rows.map(r => {
+          const n = dlCounts[r.id] || 0;
+          const badge = n > 0
+            ? `<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:.72rem;padding:3px 10px;border-radius:20px">${n} ↓</span>`
+            : `<span style="color:#9ca3af;font-size:.75rem">—</span>`;
+          return `
           <tr>
             <td>${esc(r.ucNome)}</td>
             <td>${esc(r.nome)}</td>
             <td>${esc(r.descricao || '—')}</td>
+            <td style="text-align:center">${badge}</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarDoc('${r.ucId}','${r.id}')">Editar</button>
               <button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button>
             </td>
-          </tr>`).join('');
+          </tr>`;
+        }).join('');
   }
 
   window.editarDoc = function(ucId, docId) {
