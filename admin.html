@@ -763,24 +763,59 @@
       <div style="font-size:.75rem;color:#6b7280;margin-top:2px">${label}</div>
     </div>`;
     statsEl.innerHTML = statCard('sessões', totalSessoes) + statCard('utilizadores únicos', utilizadores) + (duracaoMedia!=null ? statCard('duração média', duracaoMedia+'min') : '');
-    // Tabela
-    const rows = sessoes.map(s => {
-      const inicio = s.inicio?.toDate?.() ? s.inicio.toDate().toLocaleString('pt-PT') : '—';
-      const fim    = s.fim?.toDate?.()    ? s.fim.toDate().toLocaleString('pt-PT')    : (s.ativo ? '<span style="color:#22c55e">online</span>' : '—');
-      const dur    = s.duracao != null    ? s.duracao + ' min' : '—';
-      return `<tr style="border-top:1px solid #f3f4f6">
-        <td style="padding:9px 14px;font-size:.83rem;font-weight:600">${s.nome||'—'}</td>
-        <td style="padding:9px 14px;font-size:.78rem;color:#6b7280">${inicio}</td>
-        <td style="padding:9px 14px;font-size:.78rem;color:#6b7280">${fim}</td>
-        <td style="padding:9px 14px;font-size:.78rem;color:#374151">${dur}</td>
-      </tr>`;
-    }).join('');
+
+    // Group by uid
+    const grupos = {};
+    sessoes.forEach(s => {
+      const uid = s.uid || 'desconhecido';
+      if (!grupos[uid]) grupos[uid] = { nome: s.nome || '—', sessoes: [] };
+      grupos[uid].sessoes.push(s);
+    });
+
+    let rows = '';
+    let idx = 0;
+    Object.values(grupos).forEach(g => {
+      const gid = 'grupo-' + idx++;
+      const ns = g.sessoes.length;
+      const durTotal = g.sessoes.reduce((a,s)=>a+(s.duracao||0),0);
+      const ultima = g.sessoes.reduce((a,s)=>{
+        const t = s.inicio?.toDate?.() || null;
+        return (!a || (t && t > a)) ? t : a;
+      }, null);
+      const ultimaStr = ultima ? ultima.toLocaleDateString('pt-PT') : '—';
+
+      rows += `<tr style="border-top:1px solid #e5e7eb;background:#f9fafb;cursor:pointer" onclick="document.getElementById('${gid}').style.display=document.getElementById('${gid}').style.display==='none'?'table-row-group':'none';this.querySelector('.toggle-icon').textContent=document.getElementById('${gid}').style.display==='none'?'＋':'－'">
+        <td style="padding:10px 14px;font-size:.85rem;font-weight:700;color:#071d34">
+          <span class="toggle-icon" style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#e5e7eb;border-radius:6px;font-size:.8rem;margin-right:8px;font-weight:700">＋</span>
+          ${g.nome}
+        </td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${ns} sess${ns===1?'ão':'ões'}</td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${durTotal ? durTotal+' min total' : '—'}</td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">Última: ${ultimaStr}</td>
+      </tr>
+      <tbody id="${gid}" style="display:none">`;
+
+      g.sessoes.forEach(s => {
+        const inicio = s.inicio?.toDate?.() ? s.inicio.toDate().toLocaleString('pt-PT') : '—';
+        const fim    = s.fim?.toDate?.()    ? s.fim.toDate().toLocaleString('pt-PT')    : (s.ativo ? '<span style="color:#22c55e">● online</span>' : '—');
+        const dur    = s.duracao != null    ? s.duracao + ' min' : '—';
+        rows += `<tr style="border-top:1px solid #f3f4f6;background:#fff">
+          <td style="padding:8px 14px 8px 52px;font-size:.78rem;color:#6b7280">—</td>
+          <td style="padding:8px 14px;font-size:.78rem;color:#6b7280">${inicio}</td>
+          <td style="padding:8px 14px;font-size:.78rem;color:#6b7280">${fim}</td>
+          <td style="padding:8px 14px;font-size:.78rem;color:#374151">${dur}</td>
+        </tr>`;
+      });
+
+      rows += `</tbody>`;
+    });
+
     lista.innerHTML = `<table style="width:100%;border-collapse:collapse">
-      <thead><tr style="background:#f9fafb;font-size:.75rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
-        <th style="padding:10px 14px;text-align:left">Nome</th>
-        <th style="padding:10px 14px;text-align:left">Entrada</th>
-        <th style="padding:10px 14px;text-align:left">Saída</th>
-        <th style="padding:10px 14px;text-align:left">Duração</th>
+      <thead><tr style="background:#f0f4f8;font-size:.75rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
+        <th style="padding:10px 14px;text-align:left">Utilizador</th>
+        <th style="padding:10px 14px;text-align:left">Sessões</th>
+        <th style="padding:10px 14px;text-align:left">Tempo</th>
+        <th style="padding:10px 14px;text-align:left">Última visita</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
