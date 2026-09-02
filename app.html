@@ -2050,12 +2050,18 @@
     if (!prevVisit) return; // primeira visita — não mostrar
 
     const prevDate = new Date(prevVisit);
+    const ucIds = Object.keys(ucsMap);
+    if (!ucIds.length) return;
+
     try {
-      const snap = await getDocs(query(
-        collectionGroup(db, 'documentos'),
-        where('criadoEm', '>', prevDate)
-      ));
-      const total = snap.size;
+      let total = 0;
+      await Promise.all(ucIds.map(async ucId => {
+        const snap = await getDocs(query(
+          collection(db, 'ucs', ucId, 'documentos'),
+          where('criadoEm', '>', prevDate)
+        ));
+        total += snap.size;
+      }));
       if (total === 0) return;
 
       // Banner
@@ -2083,7 +2089,7 @@
           wrapper.appendChild(badge);
         }
       }
-    } catch(e) { /* sem índice ou sem permissão — silencioso */ }
+    } catch(e) { console.warn('verificarNovosDocumentos:', e); }
   };
 
   async function contarDocs(uc) {
