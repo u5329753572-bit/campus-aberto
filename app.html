@@ -2279,13 +2279,17 @@
   // --- AVISO LEGAL ---
   window.AVISO_TEXTO = `Prezados colegas,
 
-Todos os materiais disponibilizados na nossa aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
+Todos os materiais disponibilizados na aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
 
-Os guias, resumos e restantes informações são elaborados por nós, enquanto estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. São apenas ferramentas de apoio e, por isso, não substituem os documentos, materiais e orientações oficiais disponibilizados pelos docentes no Moodle.
+Os guias e restantes conteúdos são elaborados por estudantes para estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. Constituem apenas ferramentas complementares de apoio e orientação, não substituindo, em circunstância alguma, os documentos, materiais, indicações ou esclarecimentos oficiais disponibilizados pelos docentes através do Moodle ou de outros canais institucionais.
 
-Em caso de dúvida ou divergência, devem prevalecer sempre as informações e os materiais oficiais fornecidos pelos docentes.
+Estes conteúdos não devem ser utilizados como fonte única de informação. Cada estudante é responsável por consultar regularmente os canais oficiais, confirmar as informações relevantes junto dos docentes e desenvolver a sua própria autonomia na pesquisa, no estudo e na tomada de decisões académicas.
 
-Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.`;
+Em caso de dúvida, omissão, desatualização ou divergência, prevalecem sempre as informações, orientações e materiais fornecidos pelos docentes através dos canais oficiais.
+
+Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.
+
+Ao prosseguir, declaro que li e compreendi este aviso.`;
 
   window.mostrarAviso = function() {
     document.getElementById('aviso-corpo-texto').textContent = window.AVISO_TEXTO;
@@ -2293,16 +2297,13 @@ Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os co
   };
   window.fecharAviso = function() {
     document.getElementById('modal-aviso').classList.remove('visivel');
-    localStorage.setItem('aviso-aceite', '1');
   };
 
-  // Mostrar na primeira visita após login + mostrar rodapé
+  // Mostrar em cada sessão após login + mostrar rodapé
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('rodape-app').style.display = 'block';
-      if (!localStorage.getItem('aviso-aceite')) {
-        setTimeout(() => mostrarAviso(), 1200);
-      }
+      setTimeout(() => mostrarAviso(), 1200);
     }
   });
 </script>
