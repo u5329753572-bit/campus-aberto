@@ -399,9 +399,23 @@
       </table>
     </div>
 
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="filtro-user-nome" placeholder="🔍 Pesquisar por nome ou email..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem" oninput="filtrarUtilizadores()"/>
+      <select id="filtro-user-estado" onchange="filtrarUtilizadores()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
+        <option value="">Todos os estados</option>
+        <option value="ativo">Ativo</option>
+        <option value="pendente">Pendente</option>
+        <option value="suspenso">Suspenso</option>
+      </select>
+      <select id="filtro-user-ordem" onchange="filtrarUtilizadores()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
+        <option value="nome">Ordenar por nome A→Z</option>
+        <option value="nome-desc">Ordenar por nome Z→A</option>
+        <option value="estado">Ordenar por estado</option>
+      </select>
+    </div>
     <div class="tabela-wrap">
       <div class="tabela-header">
-        <span>Todos os utilizadores</span>
+        <span>Todos os utilizadores</span><span id="filtro-user-count" style="font-size:.78rem;color:#9ca3af"></span>
       </div>
       <table>
         <thead><tr><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Código</th><th>Estado</th><th>Ações</th></tr></thead>
@@ -807,10 +821,50 @@
   }
 
   // --- UTILIZADORES ---
+  let _todosUtilizadores = [];
+
+  window.filtrarUtilizadores = function() {
+    const termo  = (document.getElementById('filtro-user-nome')?.value || '').toLowerCase();
+    const estado = document.getElementById('filtro-user-estado')?.value || '';
+    const ordem  = document.getElementById('filtro-user-ordem')?.value || 'nome';
+    let lista = _todosUtilizadores.filter(u => {
+      const matchNome   = (u.nome || '').toLowerCase().includes(termo) || (u.email || '').toLowerCase().includes(termo);
+      const matchEstado = !estado || u.estado === estado;
+      return matchNome && matchEstado;
+    });
+    if (ordem === 'nome')      lista.sort((a,b) => (a.nome||'').localeCompare(b.nome||''));
+    if (ordem === 'nome-desc') lista.sort((a,b) => (b.nome||'').localeCompare(a.nome||''));
+    if (ordem === 'estado')    lista.sort((a,b) => (a.estado||'').localeCompare(b.estado||''));
+    const cnt = document.getElementById('filtro-user-count');
+    if (cnt) cnt.textContent = lista.length !== _todosUtilizadores.length ? ` · ${lista.length} de ${_todosUtilizadores.length}` : ` · ${lista.length} total`;
+    renderTabelaTodos(lista);
+  };
+
+  function renderTabelaTodos(lista) {
+    const tbT = document.getElementById('tbody-todos');
+    tbT.innerHTML = lista.length === 0
+      ? '<tr><td colspan="6" class="empty-msg">Nenhum utilizador encontrado</td></tr>'
+      : lista.map(u => `
+          <tr>
+            <td>${esc(u.nome)}</td>
+            <td>${esc(u.email)}</td>
+            <td>${esc(u.tel || u.telefone || '—')}</td>
+            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
+            <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
+            <td class="acoes">
+              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
+              ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
+              ${u.admin ? `<button class="btn-acao" style="background:#fef3c7;color:#92400e" onclick="window.alterarAdmin('${u.id}',false)">★ Admin</button>` : `<button class="btn-acao" style="background:#f1f5f9;color:#475569" onclick="window.alterarAdmin('${u.id}',true)">☆ Admin</button>`}
+              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
+            </td>
+          </tr>`).join('');
+  }
+
   async function carregarUtilizadores() {
     const snap = await getDocs(collection(db, 'utilizadores'));
     const todos = [];
     snap.forEach(d => todos.push({ id: d.id, ...d.data() }));
+    _todosUtilizadores = todos;
 
     const pendentes  = todos.filter(u => u.estado === 'pendente');
     const ativos     = todos.filter(u => u.estado === 'ativo');
@@ -837,23 +891,7 @@
             </td>
           </tr>`).join('');
 
-    // Tabela todos
-    const tbT = document.getElementById('tbody-todos');
-    tbT.innerHTML = todos.length === 0
-      ? '<tr><td colspan="6" class="empty-msg">Sem utilizadores</td></tr>'
-      : todos.map(u => `
-          <tr>
-            <td>${esc(u.nome)}</td>
-            <td>${esc(u.email)}</td>
-            <td>${esc(u.tel || u.telefone || '—')}</td>
-            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
-            <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
-            <td class="acoes">
-              ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
-              ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
-              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
-            </td>
-          </tr>`).join('');
+    window.filtrarUtilizadores();
   }
 
   window.alterarEstado = async function(uid, estado) {
@@ -876,6 +914,13 @@
       }
     }
 
+    carregarUtilizadores();
+  };
+
+  window.alterarAdmin = async function(uid, tornarAdmin) {
+    const acao = tornarAdmin ? 'Dar privilégios de administrador' : 'Remover privilégios de administrador';
+    if (!confirm(acao + '?')) return;
+    await updateDoc(doc(db, 'utilizadores', uid), { admin: tornarAdmin });
     carregarUtilizadores();
   };
 
