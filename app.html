@@ -1056,6 +1056,7 @@
       <span id="online-count">—</span> online
     </div>
     <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
+    <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administração">⚙ Admin</a>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -1859,6 +1860,7 @@
       document.getElementById('hdr-avatar').textContent = iniciais;
       document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
       document.getElementById('hdr-codigo').style.display = 'block';
+      if (utilizadorAtual.admin) document.getElementById('btn-admin').style.display = '';
       document.getElementById('bv-nome').textContent   = partes[0];
       document.getElementById('loading-inicial').style.display = 'none';
       document.getElementById('ecra-ucs').style.display = 'block';
