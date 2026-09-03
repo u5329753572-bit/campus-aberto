@@ -635,6 +635,13 @@
     } finally { btn.disabled = false; btn.textContent = 'Enviar email de recuperação'; }
   };
 
+  // Mostrar mensagem vinda da app (ex: conta não encontrada, suspensa, pendente)
+  const loginMsg = localStorage.getItem('login-msg');
+  if (loginMsg) {
+    localStorage.removeItem('login-msg');
+    mostrarMsg('msg-login', loginMsg, 'info');
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter') return;
     if (document.getElementById('sec-login').classList.contains('active')) window.fazerLogin();
