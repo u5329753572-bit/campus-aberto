@@ -1111,6 +1111,11 @@
     .citacoes-campo input, .citacoes-campo select { padding:9px 12px; border:1px solid rgba(11,42,74,.18); border-radius:8px; font:400 .85rem/1.4 'Inter',sans-serif; color:var(--verde); background:#fafbfc; outline:none; transition:border-color .2s; width:100%; }
     .citacoes-campo input:focus, .citacoes-campo select:focus { border-color:var(--ouro); background:#fff; }
     .citacoes-campo small { font-size:.69rem; color:#6b7280; }
+    .citacoes-aviso-autor { background:#fef3c7; border:1px solid #fbbf24; border-radius:8px; padding:8px 11px; font-size:.72rem; line-height:1.55; color:#92400e; margin-top:4px; }
+    .citacoes-aviso-autor strong { display:block; margin-bottom:2px; }
+    .citacoes-aviso-titulo { background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:7px 11px; font-size:.7rem; line-height:1.5; color:#0369a1; margin-top:4px; }
+    .citacoes-aviso-validacao { background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:10px 12px; font-size:.76rem; color:#991b1b; margin-top:8px; display:none; }
+    .citacoes-aviso-validacao ul { margin:4px 0 0 14px; }
     .citacoes-autores-lista { display:flex; flex-direction:column; gap:6px; }
     .citacoes-autor-row { display:flex; gap:6px; align-items:center; }
     .citacoes-autor-row input { flex:1; }
@@ -2222,21 +2227,42 @@
     _ocultarPreview();
   };
 
+  // Converte "Paulo Ferreira da Cunha" → "Cunha, P. F." (autores)
+  // ou → "P. F. Cunha" (editores em capítulos)
+  function _nomeParaAPA7(nome, modoEditor) {
+    nome = nome.trim();
+    if (!nome) return nome;
+    // Se já tem vírgula e não é modo editor, assume já formatado
+    if (nome.includes(',') && !modoEditor) return nome;
+    const PART = new Set(['da','de','do','das','dos','e','van','von','el','al','della','del','den','der','le','la','y','e']);
+    const ps = nome.split(/\s+/);
+    if (ps.length === 1) return ps[0];
+    const apelido = ps[ps.length - 1];
+    const resto = ps.slice(0, -1);
+    const iniciais = resto.filter(p => !PART.has(p.toLowerCase())).map(p => p[0].toUpperCase() + '.').join(' ');
+    if (!iniciais) return apelido;
+    return modoEditor ? `${iniciais} ${apelido}` : `${apelido}, ${iniciais}`;
+  }
+
   function _renderFormCitacao() {
     const tipo = CIT_TIPOS[_citTipoAtivo];
     const form = document.getElementById('cit-form');
-    form.innerHTML = tipo.campos.map(campo => {
+    form.innerHTML = `<div class="citacoes-aviso-validacao" id="cit-aviso-validacao"></div>` +
+    tipo.campos.map(campo => {
       if (campo.tipo === 'autores') {
+        const isEditor = campo.id === 'editores';
+        const ph = isEditor ? 'Ex: Paulo Ferreira da Cunha' : 'Ex: Paulo Ferreira da Cunha';
+        const nota = `<small>Escreve o nome normalmente — a app formata em APA7 automaticamente.</small>`;
         return `<div class="citacoes-campo">
           <label>${campo.label}</label>
           <div class="citacoes-autores-lista" id="lista-${campo.id}">
             <div class="citacoes-autor-row">
-              <input type="text" class="autor-input-${campo.id}" placeholder="${campo.hint||'Sobrenome, N. N.'}" />
+              <input type="text" class="autor-input-${campo.id}" placeholder="${ph}" />
               <button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${campo.id}')" aria-label="Remover">×</button>
             </div>
           </div>
-          <button type="button" class="btn-add-autor" onclick="window._addAutorCit('${campo.id}')">+ Adicionar</button>
-          ${campo.hint?`<small>${campo.hint}</small>`:''}
+          <button type="button" class="btn-add-autor" onclick="window._addAutorCit('${campo.id}')">+ Adicionar autor</button>
+          ${nota}
         </div>`;
       } else if (campo.tipo === 'select') {
         return `<div class="citacoes-campo">
@@ -2244,10 +2270,15 @@
           <select id="cit-${campo.id}">${campo.opcoes.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>
         </div>`;
       } else {
+        const isTitulo = campo.id === 'titulo' || campo.id === 'livro';
+        const avisoTitulo = isTitulo
+          ? `<div class="citacoes-aviso-titulo">ℹ APA7: título em minúsculas (exceto 1ª palavra e nomes próprios).<br>Ex: <em>Teoria geral do direito: Uma síntese crítica</em></div>`
+          : '';
         return `<div class="citacoes-campo">
           <label for="cit-${campo.id}">${campo.label}</label>
           <input type="text" id="cit-${campo.id}" placeholder="${campo.placeholder||''}" />
-          ${campo.hint?`<small>${campo.hint}</small>`:''}
+          ${campo.hint&&!isTitulo?`<small>${campo.hint}</small>`:''}
+          ${avisoTitulo}
         </div>`;
       }
     }).join('');
@@ -2257,7 +2288,7 @@
     const lista = document.getElementById('lista-' + grupo);
     const row = document.createElement('div');
     row.className = 'citacoes-autor-row';
-    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Sobrenome, N. N." /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">×</button>`;
+    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Ex: Maria de Lurdes Santos" /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">×</button>`;
     lista.appendChild(row);
   };
 
@@ -2268,7 +2299,10 @@
   };
 
   function _getAutores(grupo) {
-    return [...document.querySelectorAll(`.autor-input-${grupo}`)].map(i=>i.value.trim()).filter(Boolean);
+    const isEditor = grupo === 'editores';
+    return [...document.querySelectorAll(`.autor-input-${grupo}`)]
+      .map(i => _nomeParaAPA7(i.value.trim(), isEditor))
+      .filter(Boolean);
   }
   function _getVal(id) {
     const el = document.getElementById('cit-' + id);
