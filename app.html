@@ -2892,23 +2892,27 @@
         const lKey   = `${uc.id}_${d.id}`;
         const estado = (utilizadorAtual.leituras || {})[lKey] || '';
         const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : 'Não lido';
+        const isLink = doc_.tipo === 'link';
         const el     = document.createElement('div');
         el.className = 'doc-item' + (estado ? ' ' + estado : '');
         el.innerHTML = `
-          <div class="doc-icone">
-            <span class="doc-icone-txt">PDF</span>
+          <div class="doc-icone" style="${isLink?'background:linear-gradient(135deg,#1d4ed8,#2563eb)':''}">
+            <span class="doc-icone-txt">${isLink?'↗':'PDF'}</span>
           </div>
           <div class="doc-info">
-            <div class="doc-nome">${esc(doc_.nome)}</div>
-            <div class="doc-meta">${esc(doc_.descricao || 'Documento de estudo')}</div>
+            <div class="doc-nome">${esc(doc_.nome)}${isLink?'<span style="font-size:.65rem;color:#1d4ed8;font-weight:700;margin-left:6px;background:#dbeafe;padding:2px 6px;border-radius:6px">Link</span>':''}</div>
+            <div class="doc-meta">${esc(doc_.descricao || (isLink?'Recurso externo':'Documento de estudo'))}</div>
           </div>
           <div class="doc-acoes">
             <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0">
               <span style="font-size:.54rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9ca3af;font-family:'Inter',sans-serif">Progresso</span>
-              <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso de leitura">${btnLabel} ▾</button>
+              <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso">${btnLabel} ▾</button>
             </div>
             <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
-            <button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>
+            ${isLink
+              ? `<a class="btn-ver" href="${esc(doc_.driveUrl||'')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span>↗</span><span>Abrir</span></a>`
+              : `<button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>`
+            }
           </div>`;
         el.querySelector('.doc-favorito').addEventListener('click', () => window.toggleFavorito(`doc:${uc.id}:${d.id}`));
         el.querySelector('.btn-progresso').addEventListener('click', function() { window.alterarProgresso(this); });
