@@ -645,6 +645,24 @@
     .nota-btn-save { padding:6px 14px; background:var(--verde); color:#fff; border:0; border-radius:6px; font-size:.7rem; font-weight:700; letter-spacing:.02em; cursor:pointer; transition:all .2s; }
     .nota-btn-save:hover { opacity:.88; }
     .nota-btn-save.ok { background:#047857; }
+    /* -- modo selector -- */
+    .nota-modo-selector { display:flex; gap:6px; margin-bottom:12px; }
+    .nota-modo-btn { flex:1; padding:7px 10px; border:1.5px solid #e2e5e9; border-radius:8px; font:600 .68rem/1 'Inter',sans-serif; cursor:pointer; background:#fff; color:var(--cinza); transition:all .18s; }
+    .nota-modo-btn.ativo { border-color:var(--verde); background:var(--verde); color:#fff; }
+    /* -- panels -- */
+    .nota-painel { display:none; }
+    .nota-painel.ativo { display:block; }
+    /* -- section title inside card -- */
+    .nota-sec-titulo { font:.6rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); margin:10px 0 7px; }
+    .nota-sec-sub { font-size:.58rem; font-weight:400; text-transform:none; letter-spacing:0; opacity:.72; }
+    /* -- threshold indicator -- */
+    .nota-limiar { display:flex; align-items:center; gap:4px; font-size:.68rem; font-weight:600; padding:6px 10px; border-radius:7px; margin-top:6px; line-height:1.3; }
+    .nota-limiar.ok  { background:#f0fdf4; color:#166534; }
+    .nota-limiar.nok { background:#fff7ed; color:#c2410c; }
+    .nota-limiar.vazio { background:#f8fafc; color:#9ca3af; font-weight:500; }
+    /* -- final result row -- */
+    .nota-resultado { display:flex; align-items:center; justify-content:space-between; background:#eef2f7; border-radius:8px; padding:8px 12px; margin-top:10px; }
+    .nota-resultado-label { font:.6rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); }
 
     /* ── PROGRESSO DO CURSO ──────────────────────────── */
     .progresso-wrap { margin-top:18px; padding:16px 18px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; }
@@ -1549,20 +1567,63 @@
     <!-- Notas desta UC -->
     <div class="notas-uc-card" id="notas-uc-card">
       <div class="notas-uc-titulo">📊 As minhas notas</div>
-      <div class="notas-campos">
-        <div class="nota-campo">
-          <label for="nota-continua">Frequência</label>
-          <input type="number" id="nota-continua" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+
+      <!-- Seletor de modalidade -->
+      <div class="nota-modo-selector">
+        <button type="button" class="nota-modo-btn ativo" id="nota-modo-ac" onclick="notaModoSelecionar('continua')">📚 Av. Contínua</button>
+        <button type="button" class="nota-modo-btn" id="nota-modo-ex" onclick="notaModoSelecionar('exame')">📝 Só Exame</button>
+      </div>
+
+      <!-- ── Painel: Avaliação Contínua ── -->
+      <div class="nota-painel ativo" id="nota-painel-continua">
+        <div class="nota-sec-titulo">E-fólios</div>
+        <div class="notas-campos" style="grid-template-columns:1fr 1fr">
+          <div class="nota-campo">
+            <label for="nota-efolio-a">E-fólio A</label>
+            <input type="number" id="nota-efolio-a" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label for="nota-efolio-b">E-fólio B</label>
+            <input type="number" id="nota-efolio-b" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
         </div>
-        <div class="nota-campo">
-          <label for="nota-exame">Exame</label>
-          <input type="number" id="nota-exame" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+        <div class="nota-limiar vazio" id="nota-soma-limiar">Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span></div>
+
+        <!-- E-Fólio Global (aparece quando soma ≥ 3,5) -->
+        <div id="nota-sec-global" style="display:none">
+          <div class="nota-sec-titulo">E-Fólio Global <span class="nota-sec-sub">máx. 12 val. · mín. 5,5</span></div>
+          <div class="nota-campo" style="max-width:130px">
+            <label for="nota-global">Nota</label>
+            <input type="number" id="nota-global" min="0" max="12" step="0.1" placeholder="0 – 12" oninput="notaAtualizar()">
+          </div>
+          <div class="nota-limiar vazio" id="nota-global-limiar" style="margin-top:8px"></div>
         </div>
-        <div class="nota-campo">
-          <label>Nota final</label>
-          <span class="nota-final-val" id="nota-final-val">—</span>
+
+        <!-- Exame recurso (aparece quando soma < 3,5 e ambos preenchidos) -->
+        <div id="nota-sec-exame-rec" style="display:none">
+          <div class="nota-sec-titulo" style="color:#c2410c">⚠️ Exame <span class="nota-sec-sub" style="color:inherit">somatório e-fólios insuficiente (&lt; 3,5)</span></div>
+          <div class="nota-campo" style="max-width:130px">
+            <label for="nota-exame-rec">Nota do exame</label>
+            <input type="number" id="nota-exame-rec" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
         </div>
       </div>
+
+      <!-- ── Painel: Só Exame ── -->
+      <div class="nota-painel" id="nota-painel-exame">
+        <div class="nota-sec-titulo">Exame <span class="nota-sec-sub">mín. 10 val. (9,5 arredonda para 10)</span></div>
+        <div class="nota-campo" style="max-width:130px">
+          <label for="nota-so-exame">Nota</label>
+          <input type="number" id="nota-so-exame" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+        </div>
+      </div>
+
+      <!-- Nota final (partilhada, aparece quando há valor) -->
+      <div class="nota-resultado" id="nota-resultado" style="display:none">
+        <span class="nota-resultado-label">Nota final</span>
+        <span class="nota-final-val" id="nota-final-val">—</span>
+      </div>
+
       <div class="nota-rodape">
         <span class="nota-badge em-curso" id="nota-badge">Em curso</span>
         <button class="nota-btn-save" id="nota-btn-save" onclick="guardarNotaUC()">Guardar</button>
@@ -1788,6 +1849,7 @@
   let utilizadorAtual = null;
   let docPendente     = null;
   let ucAtualId       = null;
+  let notaModoAtual   = 'continua'; // 'continua' | 'exame'
   let viewerDocAtual  = null;
   let totalDocs       = 0;
   const ucsMap        = {};
@@ -2787,43 +2849,169 @@
     window.atualizarBotoesFavoritos();
   }
 
-  // --- NOTAS ---
+  // --- NOTAS (Regras UAb MPV 2026-2027) ---
+
+  function notaModoSelecionar(modo) {
+    notaModoAtual = modo;
+    document.getElementById('nota-modo-ac').classList.toggle('ativo', modo === 'continua');
+    document.getElementById('nota-modo-ex').classList.toggle('ativo', modo === 'exame');
+    document.getElementById('nota-painel-continua').classList.toggle('ativo', modo === 'continua');
+    document.getElementById('nota-painel-exame').classList.toggle('ativo', modo === 'exame');
+    notaAtualizar();
+  }
+
+  function _notaFmt(v) { return v.toFixed(1).replace('.', ','); }
+
   function notaAtualizar() {
-    const c = parseFloat(document.getElementById('nota-continua').value);
-    const e = parseFloat(document.getElementById('nota-exame').value);
-    const valEl  = document.getElementById('nota-final-val');
-    const badge  = document.getElementById('nota-badge');
-    let final = null;
-    if (!isNaN(c) && !isNaN(e)) final = Math.round(((c + e) / 2) * 10) / 10;
-    else if (!isNaN(e))          final = e;
-    else if (!isNaN(c))          final = c;
-    if (final !== null) {
-      valEl.textContent = final.toFixed(1).replace('.', ',') + ' val.';
-      const aprov = final >= 9.5;
-      badge.className   = 'nota-badge ' + (aprov ? 'aprovado' : 'reprovado');
-      badge.textContent = aprov ? '✓ Aprovado' : '✗ Reprovado';
+    const badge     = document.getElementById('nota-badge');
+    const finalEl   = document.getElementById('nota-final-val');
+    const resultEl  = document.getElementById('nota-resultado');
+
+    function setBadge(estado) {
+      if (estado === 'aprovado')   { badge.className = 'nota-badge aprovado';  badge.textContent = '✓ Aprovado'; }
+      else if (estado === 'rep')   { badge.className = 'nota-badge reprovado'; badge.textContent = '✗ Reprovado'; }
+      else                         { badge.className = 'nota-badge em-curso';  badge.textContent = 'Em curso'; }
+    }
+    function mostrarFinal(val) {
+      finalEl.textContent = _notaFmt(val) + ' val.';
+      resultEl.style.display = 'flex';
+    }
+    function esconderFinal() {
+      finalEl.textContent = '—';
+      resultEl.style.display = 'none';
+    }
+
+    // ── Só Exame ──
+    if (notaModoAtual === 'exame') {
+      const ex = parseFloat(document.getElementById('nota-so-exame').value);
+      if (isNaN(ex)) { esconderFinal(); setBadge('curso'); return; }
+      const aprov = ex >= 9.5;
+      const displayVal = (aprov && ex < 10) ? 10 : ex;
+      mostrarFinal(displayVal);
+      setBadge(aprov ? 'aprovado' : 'rep');
+      return;
+    }
+
+    // ── Avaliação Contínua ──
+    const a = parseFloat(document.getElementById('nota-efolio-a').value);
+    const b = parseFloat(document.getElementById('nota-efolio-b').value);
+    const somaEl = document.getElementById('nota-soma-limiar');
+    const secGlobal    = document.getElementById('nota-sec-global');
+    const secExameRec  = document.getElementById('nota-sec-exame-rec');
+
+    if (isNaN(a) || isNaN(b)) {
+      somaEl.className = 'nota-limiar vazio';
+      somaEl.innerHTML = 'Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span>';
+      secGlobal.style.display = 'none';
+      secExameRec.style.display = 'none';
+      esconderFinal(); setBadge('curso');
+      return;
+    }
+
+    const soma = a + b;
+    const somaStr = _notaFmt(soma);
+
+    if (soma >= 3.5) {
+      // ✅ Acesso ao E-Fólio Global
+      somaEl.className = 'nota-limiar ok';
+      somaEl.innerHTML = `✓ Soma e-fólios: <strong>${somaStr}</strong> — acesso ao E-Fólio Global`;
+      secGlobal.style.display = 'block';
+      secExameRec.style.display = 'none';
+
+      const g = parseFloat(document.getElementById('nota-global').value);
+      const globalEl = document.getElementById('nota-global-limiar');
+
+      if (isNaN(g)) {
+        // mostrar o mínimo necessário no Global para passar
+        const necTotal  = Math.max(0, 9.5 - soma);
+        const necGlobal = Math.max(5.5, necTotal); // tem de ter pelo menos 5,5
+        globalEl.className = 'nota-limiar vazio';
+        globalEl.innerHTML = `Precisas de ≥ <strong>${_notaFmt(necGlobal)} val.</strong> no E-Fólio Global para passar`;
+        esconderFinal(); setBadge('curso');
+        return;
+      }
+
+      const total  = soma + g;
+      const aprov  = total >= 9.5 && g >= 5.5;
+      mostrarFinal(total);
+
+      if (!aprov) {
+        if (g < 5.5) {
+          globalEl.className = 'nota-limiar nok';
+          globalEl.innerHTML = `✗ E-Fólio Global insuficiente — mínimo obrigatório 5,5 val.`;
+        } else {
+          globalEl.className = 'nota-limiar nok';
+          globalEl.innerHTML = `✗ Total insuficiente — faltam <strong>${_notaFmt(9.5 - total)} val.</strong>`;
+        }
+        setBadge('rep');
+      } else {
+        globalEl.className = 'nota-limiar ok';
+        globalEl.innerHTML = `✓ E-Fólio Global: ${_notaFmt(g)} val. — condições cumpridas`;
+        setBadge('aprovado');
+      }
+
     } else {
-      valEl.textContent = '—';
-      badge.className   = 'nota-badge em-curso';
-      badge.textContent = 'Em curso';
+      // ⚠️ Soma insuficiente → Exame obrigatório
+      somaEl.className = 'nota-limiar nok';
+      somaEl.innerHTML = `✗ Soma e-fólios: <strong>${somaStr}</strong> — abaixo do mínimo (3,5). Exame obrigatório.`;
+      secGlobal.style.display = 'none';
+      secExameRec.style.display = 'block';
+
+      const ex = parseFloat(document.getElementById('nota-exame-rec').value);
+      if (isNaN(ex)) { esconderFinal(); setBadge('curso'); return; }
+      const aprov = ex >= 9.5;
+      mostrarFinal(aprov && ex < 10 ? 10 : ex);
+      setBadge(aprov ? 'aprovado' : 'rep');
     }
   }
 
   window.guardarNotaUC = async function() {
     if (!ucAtualId) return;
-    const c = parseFloat(document.getElementById('nota-continua').value);
-    const e = parseFloat(document.getElementById('nota-exame').value);
-    let final = null;
-    if (!isNaN(c) && !isNaN(e)) final = Math.round(((c + e) / 2) * 10) / 10;
-    else if (!isNaN(e))          final = e;
-    else if (!isNaN(c))          final = c;
+    const modo = notaModoAtual;
+    let dadosNota = { modo, ects: 6, final: null, aprovado: false };
+
+    if (modo === 'exame') {
+      const ex = parseFloat(document.getElementById('nota-so-exame').value);
+      dadosNota.soExame = isNaN(ex) ? null : ex;
+      if (!isNaN(ex)) {
+        const aprov = ex >= 9.5;
+        dadosNota.final    = aprov ? (ex < 10 ? 10 : ex) : ex;
+        dadosNota.aprovado = aprov;
+      }
+    } else {
+      const a = parseFloat(document.getElementById('nota-efolio-a').value);
+      const b = parseFloat(document.getElementById('nota-efolio-b').value);
+      dadosNota.efolioA = isNaN(a) ? null : a;
+      dadosNota.efolioB = isNaN(b) ? null : b;
+      if (!isNaN(a) && !isNaN(b)) {
+        const soma = a + b;
+        if (soma >= 3.5) {
+          const g = parseFloat(document.getElementById('nota-global').value);
+          dadosNota.global = isNaN(g) ? null : g;
+          if (!isNaN(g)) {
+            const total = soma + g;
+            const aprov = total >= 9.5 && g >= 5.5;
+            dadosNota.final    = total;
+            dadosNota.aprovado = aprov;
+          }
+        } else {
+          const ex = parseFloat(document.getElementById('nota-exame-rec').value);
+          dadosNota.exameRec = isNaN(ex) ? null : ex;
+          if (!isNaN(ex)) {
+            const aprov = ex >= 9.5;
+            dadosNota.final    = aprov ? (ex < 10 ? 10 : ex) : ex;
+            dadosNota.aprovado = aprov;
+          }
+        }
+      }
+    }
+
     const btn = document.getElementById('nota-btn-save');
     btn.textContent = '…'; btn.disabled = true;
     try {
-      const nota = { continua: isNaN(c) ? null : c, exame: isNaN(e) ? null : e, final, ects: 6 };
-      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { [`notas.${ucAtualId}`]: nota });
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { [`notas.${ucAtualId}`]: dadosNota });
       utilizadorAtual.notas = utilizadorAtual.notas || {};
-      utilizadorAtual.notas[ucAtualId] = nota;
+      utilizadorAtual.notas[ucAtualId] = dadosNota;
       btn.textContent = '✓ Guardado'; btn.className = 'nota-btn-save ok';
       setTimeout(() => { btn.textContent = 'Guardar'; btn.className = 'nota-btn-save'; btn.disabled = false; }, 2000);
       atualizarProgresso();
@@ -2835,15 +3023,26 @@
 
   function carregarNotasUC(ucId) {
     const nota = (utilizadorAtual.notas || {})[ucId] || {};
-    document.getElementById('nota-continua').value = nota.continua ?? '';
-    document.getElementById('nota-exame').value    = nota.exame    ?? '';
+    // Restaurar modo
+    const modo = nota.modo || 'continua';
+    notaModoSelecionar(modo); // também chama notaAtualizar
+
+    if (modo === 'exame') {
+      document.getElementById('nota-so-exame').value = nota.soExame ?? '';
+    } else {
+      document.getElementById('nota-efolio-a').value  = nota.efolioA  ?? (nota.continua ?? '');
+      document.getElementById('nota-efolio-b').value  = nota.efolioB  ?? '';
+      document.getElementById('nota-global').value    = nota.global   ?? '';
+      document.getElementById('nota-exame-rec').value = nota.exameRec ?? (nota.exame ?? '');
+    }
     notaAtualizar();
   }
 
   function atualizarProgresso() {
     const notas = utilizadorAtual.notas || {};
     const todas = Object.values(notas).filter(n => n.final !== null && n.final !== undefined);
-    const aprov = todas.filter(n => n.final >= 9.5);
+    // Suporte ao novo campo 'aprovado' (novo formato) + backward compat (formato antigo)
+    const aprov = todas.filter(n => typeof n.aprovado === 'boolean' ? n.aprovado : n.final >= 9.5);
     const ectsTotal = aprov.reduce((s, n) => s + (n.ects || 6), 0);
     const media  = aprov.length > 0
       ? aprov.reduce((s, n) => s + n.final * (n.ects || 6), 0) / ectsTotal
