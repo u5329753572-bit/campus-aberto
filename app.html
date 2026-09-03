@@ -232,6 +232,13 @@
     .banner-datas-fechar:hover { color:#374151; }
     .painel-ver-todas { margin-top:10px; width:100%; padding:9px; background:none; border:1.5px solid var(--ouro); border-radius:3px 10px 3px 3px; color:var(--verde); font:.7rem/1 'Inter',sans-serif; font-weight:600; cursor:pointer; letter-spacing:.03em; transition:all .2s; }
     .painel-ver-todas:hover { background:var(--ouro-pale); }
+    .painel-item.urgente { background:linear-gradient(135deg,#fff7ed,#fef3c7); border-left:3px solid #f97316; }
+    .painel-item.critico { background:linear-gradient(135deg,#fee2e2,#fff1f2); border-left:3px solid #dc2626; }
+    .painel-item.urgente .painel-item-dias { color:#ea580c; font-size:.68rem; font-weight:800; }
+    .painel-item.critico .painel-item-dias { color:#dc2626; font-size:.68rem; font-weight:800; animation:pulsar-urgencia 1.4s ease-in-out infinite; }
+    .painel-item.urgente .painel-data-dia,
+    .painel-item.critico .painel-data-dia { color:#dc2626; }
+    @keyframes pulsar-urgencia { 0%,100%{opacity:1} 50%{opacity:.45} }
 
     /* Ecrã de todas as datas */
     #ecra-datas { display:none; padding:32px 28px 48px; max-width:900px; margin:0 auto; }
@@ -1839,20 +1846,30 @@
         lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As próximas entregas e provas aparecerão aqui quando forem adicionadas.</p></div>`;
         return;
       }
-      const renderItem = item => {
+      const renderItem = (item, isFirst) => {
         const agora2 = new Date();
-        const dias = Math.max(0, Math.ceil((item.data - agora2) / 86400000));
+        const diffMs = item.data - agora2;
+        const dias = Math.max(0, Math.ceil(diffMs / 86400000));
         const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
         const tag = item.link ? 'button' : 'div';
         const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
-        return `<${tag} class="painel-item${item.link ? '' : ' estatico'}" ${attrs}>
+        // Destaque só no item mais urgente
+        let cls = 'painel-item' + (item.link ? '' : ' estatico');
+        if (isFirst) {
+          if (dias <= 1)      cls += ' critico';
+          else if (dias <= 7) cls += ' urgente';
+        }
+        const diasLabel = dias === 0
+          ? `Hoje · ${Math.max(0,Math.ceil(diffMs/3600000))}h`
+          : dias === 1 ? 'Amanhã' : `${dias} dias`;
+        return `<${tag} class="${cls}" ${attrs}>
           <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small></span>
           <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
-          <span class="painel-item-dias">${dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`}</span>
+          <span class="painel-item-dias">${diasLabel}</span>
         </${tag}>`;
       };
       const visiveis = todasAsDatas.slice(0,3);
-      let html = visiveis.map(renderItem).join('');
+      let html = visiveis.map((item, i) => renderItem(item, i === 0)).join('');
       if (total > 3) {
         html += `<button type="button" class="painel-ver-todas" onclick="abrirEcranDatas()">Ver todas as ${total} datas →</button>`;
       }
