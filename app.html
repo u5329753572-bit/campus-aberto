@@ -1983,7 +1983,16 @@
     if (!user) { window.location.href = 'index.html'; return; }
     try {
       const snap = await getDoc(doc(db, 'utilizadores', user.uid));
-      if (!snap.exists() || snap.data().estado !== 'ativo') {
+      if (!snap.exists()) {
+        localStorage.setItem('login-msg', 'A tua conta não foi encontrada. Contacta a administração.');
+        await signOut(auth);
+        window.location.href = 'index.html';
+        return;
+      }
+      if (snap.data().estado !== 'ativo') {
+        localStorage.setItem('login-msg', snap.data().estado === 'pendente'
+          ? 'A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.'
+          : 'A tua conta foi suspensa. Contacta a administração.');
         await signOut(auth);
         window.location.href = 'index.html';
         return;
