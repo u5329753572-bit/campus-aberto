@@ -414,7 +414,7 @@
     </details>
 
     <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <input type="text" id="filtro-user-nome" placeholder="🔍 Pesquisar por nome ou email..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem" oninput="filtrarUtilizadores()"/>
+      <input type="text" id="filtro-user-nome" placeholder="🔍 Pesquisar por nome, email ou telemóvel..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem" oninput="filtrarUtilizadores()"/>
       <select id="filtro-user-estado" onchange="filtrarUtilizadores()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
         <option value="">Todos os estados</option>
         <option value="ativo">Ativo</option>
@@ -859,7 +859,7 @@
     const estado = document.getElementById('filtro-user-estado')?.value || '';
     const ordem  = document.getElementById('filtro-user-ordem')?.value || 'nome';
     let lista = _todosUtilizadores.filter(u => {
-      const matchNome   = (u.nome || '').toLowerCase().includes(termo) || (u.email || '').toLowerCase().includes(termo);
+      const matchNome   = (u.nome || '').toLowerCase().includes(termo) || (u.email || '').toLowerCase().includes(termo) || (u.tel || u.telefone || '').includes(termo);
       const matchEstado = !estado || u.estado === estado;
       return matchNome && matchEstado;
     });
