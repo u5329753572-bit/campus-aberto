@@ -508,7 +508,17 @@
         <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
       </div>
       <div class="campo" style="margin-bottom:18px">
-        <label>Ficheiro PDF</label>
+        <label>Tipo de recurso</label>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <button type="button" id="tipo-pdf-btn" onclick="window.selecionarTipoDoc('pdf')"
+            style="flex:1;padding:9px;border-radius:8px;border:2px solid #166534;background:#dcfce7;color:#166534;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">📄 Ficheiro PDF</button>
+          <button type="button" id="tipo-link-btn" onclick="window.selecionarTipoDoc('link')"
+            style="flex:1;padding:9px;border-radius:8px;border:2px solid #d1d5db;background:#f9fafb;color:#6b7280;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">🔗 Link externo</button>
+        </div>
+        <input type="hidden" id="doc-tipo" value="pdf"/>
+      </div>
+      <div id="secao-pdf" style="margin-bottom:18px">
+        <label class="campo" style="display:block;margin-bottom:6px;font-size:.82rem;font-weight:600;color:#374151">Ficheiro PDF</label>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:#f1f5f9;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:.85rem;color:#374151">
             📎 Selecionar PDF
@@ -519,6 +529,11 @@
         <label style="margin-top:10px;display:block;font-size:.78rem;color:#9ca3af">Ou cola o URL diretamente:</label>
         <input type="url" id="doc-url" placeholder="https://raw.githubusercontent.com/u5329753572-bit/campus-aberto/main/docs/ficheiro.pdf" style="width:100%;margin-top:4px"/>
       </div>
+      <div id="secao-link" style="display:none;margin-bottom:18px">
+        <label class="campo" style="display:block;margin-bottom:6px;font-size:.82rem;font-weight:600;color:#374151">URL do link</label>
+        <input type="url" id="doc-link-url" placeholder="https://testedemografia.netlify.app/" style="width:100%"/>
+        <p style="font-size:.74rem;color:#6b7280;margin-top:6px">O link abre diretamente no browser do estudante, sem sair da app.</p>
+      </div>
       <button class="btn-primario" id="btn-upload" onclick="fazerUpload()">Adicionar documento</button>
       <button class="btn-primario" id="btn-cancelar-doc" style="display:none;background:#6b7280;margin-left:8px" onclick="cancelarEdicaoDoc()">Cancelar</button>
       <div class="msg-form" id="msg-doc"></div>
@@ -528,7 +543,7 @@
       <div class="tabela-header"><span>Documentos carregados</span></div>
       <table>
         <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th style="text-align:center">↓ Downloads</th><th>Ações</th></tr></thead>
-        <tbody id="tbody-docs"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+        <tbody id="tbody-docs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
@@ -1134,17 +1149,32 @@
     input.value = '';
   };
 
+  // --- TIPO DOC ---
+  window.selecionarTipoDoc = function(tipo) {
+    document.getElementById('doc-tipo').value = tipo;
+    const isPdf = tipo === 'pdf';
+    document.getElementById('secao-pdf').style.display  = isPdf ? '' : 'none';
+    document.getElementById('secao-link').style.display = isPdf ? 'none' : '';
+    document.getElementById('tipo-pdf-btn').style.cssText  = `flex:1;padding:9px;border-radius:8px;border:2px solid ${isPdf?'#166534':'#d1d5db'};background:${isPdf?'#dcfce7':'#f9fafb'};color:${isPdf?'#166534':'#6b7280'};font:700 .8rem/1 'Inter',sans-serif;cursor:pointer`;
+    document.getElementById('tipo-link-btn').style.cssText = `flex:1;padding:9px;border-radius:8px;border:2px solid ${!isPdf?'#1d4ed8':'#d1d5db'};background:${!isPdf?'#dbeafe':'#f9fafb'};color:${!isPdf?'#1d4ed8':'#6b7280'};font:700 .8rem/1 'Inter',sans-serif;cursor:pointer`;
+  };
+
   // --- DOCUMENTOS ---
   window.fazerUpload = async function() {
     const ucId  = document.getElementById('doc-uc').value;
     const nome  = document.getElementById('doc-nome').value.trim();
     const desc  = document.getElementById('doc-desc').value.trim();
-    const url   = document.getElementById('doc-url').value.trim();
+    const tipo  = document.getElementById('doc-tipo').value || 'pdf';
+    const url   = tipo === 'link'
+      ? document.getElementById('doc-link-url').value.trim()
+      : document.getElementById('doc-url').value.trim();
     const msgEl = document.getElementById('msg-doc');
     const btn   = document.getElementById('btn-upload');
 
     if (!ucId || !nome || !url) {
-      msgEl.textContent = 'Preenche a UC, o nome e o URL do ficheiro PDF.';
+      msgEl.textContent = tipo === 'link'
+        ? 'Preenche a UC, o nome e o URL do link.'
+        : 'Preenche a UC, o nome e o URL do ficheiro PDF.';
       msgEl.className = 'msg-form err'; return;
     }
 
@@ -1155,7 +1185,7 @@
       if (editDocId) {
         const old = (window._docsCache || {})[editUcId + '|' + editDocId] || {};
         await setDoc(doc(db, 'ucs', editUcId, 'documentos', editDocId), {
-          nome, descricao: desc, driveUrl: url,
+          nome, descricao: desc, driveUrl: url, tipo,
           ordem: old.ordem || 1,
           criadoEm: old.criadoEm || serverTimestamp()
         });
@@ -1166,12 +1196,13 @@
         const q     = await getDocs(collection(db, 'ucs', ucId, 'documentos'));
         const ordem = q.size + 1;
         await addDoc(collection(db, 'ucs', ucId, 'documentos'), {
-          nome, descricao: desc, driveUrl: url, ordem, criadoEm: serverTimestamp()
+          nome, descricao: desc, driveUrl: url, tipo, ordem, criadoEm: serverTimestamp()
         });
         msgEl.textContent = `"${nome}" adicionado com sucesso.`;
       }
       msgEl.className = 'msg-form ok';
-      ['doc-nome','doc-desc','doc-uc','doc-url'].forEach(id => document.getElementById(id).value = '');
+      ['doc-nome','doc-desc','doc-uc','doc-url','doc-link-url'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+      window.selecionarTipoDoc('pdf');
       carregarDocs(); carregarUCs();
       setTimeout(() => msgEl.className = 'msg-form', 3000);
     } catch(e) {
@@ -1204,18 +1235,21 @@
     } catch(e) {}
 
     tb.innerHTML = rows.length === 0
-      ? '<tr><td colspan="5" class="empty-msg">Nenhum documento carregado</td></tr>'
+      ? '<tr><td colspan="6" class="empty-msg">Nenhum documento carregado</td></tr>'
       : rows.map(r => {
           const n = dlCounts[r.id] || 0;
-          const badge = n > 0
+          const dlBadge = n > 0
             ? `<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:.72rem;padding:3px 10px;border-radius:20px">${n} ↓</span>`
             : `<span style="color:#9ca3af;font-size:.75rem">—</span>`;
+          const tipoBadge = (r.tipo === 'link')
+            ? `<span style="background:#dbeafe;color:#1d4ed8;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">🔗 Link</span>`
+            : `<span style="background:#dcfce7;color:#166534;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">📄 PDF</span>`;
           return `
           <tr>
             <td>${esc(r.ucNome)}</td>
-            <td>${esc(r.nome)}</td>
+            <td>${esc(r.nome)} ${tipoBadge}</td>
             <td>${esc(r.descricao || '—')}</td>
-            <td style="text-align:center">${badge}</td>
+            <td style="text-align:center">${dlBadge}</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarDoc('${r.ucId}','${r.id}')">Editar</button>
               <button class="btn-acao btn-remover" onclick="window.removerDoc('${r.ucId}','${r.id}')">Remover</button>
@@ -1227,10 +1261,16 @@
   window.editarDoc = function(ucId, docId) {
     const r = (window._docsCache || {})[ucId + '|' + docId];
     if (!r) return;
+    const tipo = r.tipo || 'pdf';
+    window.selecionarTipoDoc(tipo);
     document.getElementById('doc-uc').value   = ucId;
     document.getElementById('doc-nome').value = r.nome || '';
     document.getElementById('doc-desc').value = r.descricao || '';
-    document.getElementById('doc-url').value  = r.driveUrl || '';
+    if (tipo === 'link') {
+      document.getElementById('doc-link-url').value = r.driveUrl || '';
+    } else {
+      document.getElementById('doc-url').value = r.driveUrl || '';
+    }
     window._editandoDocUcId = ucId;
     window._editandoDocId   = docId;
     document.getElementById('btn-upload').textContent = 'Guardar alterações';
