@@ -627,6 +627,35 @@
 
     .docs-lista { display: flex; flex-direction: column; gap: 12px; }
 
+    /* ── NOTAS POR UC ────────────────────────────────── */
+    .notas-uc-card { background:#f8f6f1; border:1px solid rgba(11,42,74,.1); border-radius:3px 14px 3px 3px; padding:14px 16px; margin-bottom:18px; }
+    .notas-uc-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
+    .notas-campos { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; align-items:end; }
+    .nota-campo label { display:block; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); margin-bottom:5px; }
+    .nota-campo input[type=number] { width:100%; padding:7px 10px; border:1.5px solid #e2e5e9; border-radius:7px; font-size:.88rem; font-family:'Inter',sans-serif; color:var(--verde); background:#fff; box-sizing:border-box; -moz-appearance:textfield; }
+    .nota-campo input[type=number]::-webkit-outer-spin-button,
+    .nota-campo input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+    .nota-campo input[type=number]:focus { outline:none; border-color:var(--ouro); }
+    .nota-final-val { font:700 1.3rem/1 'Playfair Display',serif; color:var(--verde); padding-bottom:2px; display:block; }
+    .nota-rodape { display:flex; align-items:center; justify-content:space-between; margin-top:12px; flex-wrap:wrap; gap:8px; }
+    .nota-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px; font-size:.63rem; font-weight:700; }
+    .nota-badge.aprovado  { background:#dcfce7; color:#166534; }
+    .nota-badge.reprovado { background:#fee2e2; color:#991b1b; }
+    .nota-badge.em-curso  { background:#f1f5f9; color:var(--cinza); }
+    .nota-btn-save { padding:6px 14px; background:var(--verde); color:#fff; border:0; border-radius:6px; font-size:.7rem; font-weight:700; letter-spacing:.02em; cursor:pointer; transition:all .2s; }
+    .nota-btn-save:hover { opacity:.88; }
+    .nota-btn-save.ok { background:#047857; }
+
+    /* ── PROGRESSO DO CURSO ──────────────────────────── */
+    .progresso-wrap { margin-top:18px; padding:16px 18px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; }
+    .progresso-wrap-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
+    .progresso-barra-fundo { background:#f0f4f8; border-radius:99px; height:8px; overflow:hidden; margin-bottom:14px; }
+    .progresso-barra-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--verde),#2d648f); transition:width .7s ease; min-width:2px; }
+    .progresso-stats { display:flex; gap:18px; flex-wrap:wrap; }
+    .prog-stat { display:flex; flex-direction:column; gap:1px; }
+    .prog-stat-val { font:700 1.05rem/1 'Playfair Display',serif; color:var(--verde); }
+    .prog-stat-label { font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--cinza); }
+
     /* ── PROGRESSO DE LEITURA ───────────────────────── */
     .btn-progresso {
       border: 1.5px solid rgba(26,58,42,.13); border-radius: 8px;
@@ -1067,6 +1096,53 @@
         border: 1.5px solid #fff; line-height: 1;
       }
     }
+
+    /* ── CITAÇÕES APA7 ────────────────────────────── */
+    #ecra-citacoes { display:none; padding:20px 20px 90px; max-width:720px; margin:0 auto; }
+    .citacoes-header { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+    .citacoes-titulo { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--verde); letter-spacing:-.02em; }
+    .citacoes-card { background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 18px 3px 3px; padding:22px; margin-bottom:20px; box-shadow:0 4px 18px rgba(11,42,74,.06); }
+    .citacoes-tipo-lista { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px; }
+    .citacoes-tipo-btn { padding:7px 14px; border:1.5px solid rgba(11,42,74,.15); border-radius:3px 12px 3px 3px; background:#f6f7f9; color:var(--verde-leve); font:600 .72rem/1 'Inter',sans-serif; cursor:pointer; transition:all .2s; }
+    .citacoes-tipo-btn.ativo { background:var(--verde); color:#fff; border-color:var(--verde); }
+    .citacoes-form { display:grid; gap:12px; }
+    .citacoes-campo { display:flex; flex-direction:column; gap:5px; }
+    .citacoes-campo label { font:600 .72rem/1 'Inter',sans-serif; color:var(--verde); letter-spacing:.02em; text-transform:uppercase; }
+    .citacoes-campo input, .citacoes-campo select { padding:9px 12px; border:1px solid rgba(11,42,74,.18); border-radius:8px; font:400 .85rem/1.4 'Inter',sans-serif; color:var(--verde); background:#fafbfc; outline:none; transition:border-color .2s; width:100%; }
+    .citacoes-campo input:focus, .citacoes-campo select:focus { border-color:var(--ouro); background:#fff; }
+    .citacoes-campo small { font-size:.69rem; color:#6b7280; }
+    .citacoes-autores-lista { display:flex; flex-direction:column; gap:6px; }
+    .citacoes-autor-row { display:flex; gap:6px; align-items:center; }
+    .citacoes-autor-row input { flex:1; }
+    .btn-rem-autor { background:none; border:none; color:#dc2626; font-size:1.1rem; cursor:pointer; padding:4px 8px; border-radius:6px; line-height:1; flex-shrink:0; }
+    .btn-add-autor { background:none; border:1px dashed rgba(11,42,74,.2); color:var(--verde-leve); font:.65rem/1 'Inter',sans-serif; padding:6px 10px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; margin-top:2px; font-weight:600; }
+    .btn-add-autor:hover { border-color:var(--ouro); color:var(--ouro); }
+    .citacoes-preview { background:#fffbeb; border-left:3px solid var(--ouro); padding:14px 16px; border-radius:0 8px 8px 0; font-size:.83rem; line-height:1.9; color:#1c1917; font-family:'Inter',sans-serif; white-space:pre-wrap; word-break:break-word; margin-top:16px; display:none; }
+    .citacoes-preview em { font-style:italic; }
+    .citacoes-acoes { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+    .btn-cit-gerar { background:var(--verde); color:#fff; border:none; border-radius:3px 12px 3px 3px; padding:10px 20px; font:700 .78rem/1 'Inter',sans-serif; cursor:pointer; letter-spacing:.02em; }
+    .btn-cit-copiar { background:#f3f4f6; color:var(--verde); border:1px solid rgba(11,42,74,.15); border-radius:8px; padding:9px 16px; font:600 .75rem/1 'Inter',sans-serif; cursor:pointer; display:none; }
+    .btn-cit-guardar { background:var(--ouro); color:#fff; border:none; border-radius:8px; padding:9px 16px; font:600 .75rem/1 'Inter',sans-serif; cursor:pointer; display:none; }
+    .citacoes-biblio { background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 18px 3px 3px; padding:22px; box-shadow:0 4px 18px rgba(11,42,74,.06); }
+    .citacoes-biblio-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+    .citacoes-biblio-titulo { font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--verde); }
+    .btn-cit-copiar-tudo { background:var(--verde); color:#fff; border:none; border-radius:8px; padding:8px 14px; font:600 .72rem/1 'Inter',sans-serif; cursor:pointer; }
+    .citacoes-biblio-lista { display:flex; flex-direction:column; gap:10px; }
+    .citacoes-item { background:#f8f9fa; border:1px solid rgba(11,42,74,.08); border-radius:10px; padding:12px 14px; }
+    .citacoes-item-texto { font-size:.8rem; line-height:1.8; color:#1c1917; font-family:'Inter',sans-serif; word-break:break-word; }
+    .citacoes-item-texto em { font-style:italic; }
+    .citacoes-item-acoes { display:flex; gap:6px; margin-top:8px; justify-content:flex-end; }
+    .btn-cit-item-copiar, .btn-cit-item-del { padding:5px 10px; border-radius:7px; font:600 .68rem/1 'Inter',sans-serif; cursor:pointer; border:none; }
+    .btn-cit-item-copiar { background:#e5e7eb; color:var(--verde); }
+    .btn-cit-item-del { background:#fee2e2; color:#dc2626; }
+    .citacoes-vazia { color:#9ca3af; font-size:.82rem; text-align:center; padding:28px; font-family:'Inter',sans-serif; }
+    .cta-citacoes { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#fffbeb,#fef9ec); border:1px solid rgba(216,155,44,.3); border-radius:3px 16px 3px 3px; padding:16px 20px; margin-top:20px; cursor:pointer; transition:transform .2s,box-shadow .2s; text-decoration:none; width:100%; }
+    .cta-citacoes:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(216,155,44,.15); }
+    .cta-citacoes-icone { font-size:1.8rem; flex-shrink:0; }
+    .cta-citacoes-corpo { text-align:left; }
+    .cta-citacoes-corpo h4 { font-family:'Playfair Display',serif; color:var(--verde); font-size:.98rem; margin:0 0 3px; }
+    .cta-citacoes-corpo p { font-size:.74rem; color:#6b7280; margin:0; line-height:1.5; }
+    .cta-citacoes-seta { margin-left:auto; font-size:1.2rem; color:var(--ouro); font-weight:700; flex-shrink:0; }
   </style>
 </head>
 <body>
@@ -1180,6 +1256,17 @@
           <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">↻</span>Continuar a estudar</div><span class="painel-card-contador">Último acesso</span></div>
           <div class="retomar-destaque" id="retomar-conteudo"></div>
         </article>
+      </div>
+      <!-- Progresso do curso (aparece quando há notas) -->
+      <div class="progresso-wrap" id="progresso-wrap" style="display:none">
+        <div class="progresso-wrap-titulo">Progresso do curso</div>
+        <div class="progresso-barra-fundo"><div class="progresso-barra-fill" id="prog-barra" style="width:0%"></div></div>
+        <div class="progresso-stats">
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-aprovadas">0</span><span class="prog-stat-label">UCs aprovadas</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-media">—</span><span class="prog-stat-label">Média ponderada</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-ects">0</span><span class="prog-stat-label">ECTS concluídos</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-pct">0%</span><span class="prog-stat-label">Do curso completo</span></div>
+        </div>
       </div>
     </section>
 
@@ -1358,6 +1445,16 @@
             <a class="ferramenta-conteudo" href="${item[2]}" target="_blank" rel="noopener noreferrer"><h3>${item[0]}</h3><p>${item[1]}</p><span class="ferramenta-destino">${destino}</span></a>
           </article>`;
         }).join('');
+        if (categoria === 'references') {
+          grid.insertAdjacentHTML('afterend', `<button class="cta-citacoes" onclick="window.abrirCitacoes()" type="button">
+            <span class="cta-citacoes-icone">🎓</span>
+            <div class="cta-citacoes-corpo">
+              <h4>Gerador de Citações APA 7</h4>
+              <p>Cria e guarda as tuas referências bibliográficas corretamente formatadas, prontas a copiar.</p>
+            </div>
+            <span class="cta-citacoes-seta">→</span>
+          </button>`);
+        }
         if (window.atualizarBotoesFavoritos) window.atualizarBotoesFavoritos();
       }
 
@@ -1432,8 +1529,63 @@
         <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
       </div>
     </div>
+    <!-- Notas desta UC -->
+    <div class="notas-uc-card" id="notas-uc-card">
+      <div class="notas-uc-titulo">📊 As minhas notas</div>
+      <div class="notas-campos">
+        <div class="nota-campo">
+          <label for="nota-continua">Frequência</label>
+          <input type="number" id="nota-continua" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+        </div>
+        <div class="nota-campo">
+          <label for="nota-exame">Exame</label>
+          <input type="number" id="nota-exame" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+        </div>
+        <div class="nota-campo">
+          <label>Nota final</label>
+          <span class="nota-final-val" id="nota-final-val">—</span>
+        </div>
+      </div>
+      <div class="nota-rodape">
+        <span class="nota-badge em-curso" id="nota-badge">Em curso</span>
+        <button class="nota-btn-save" id="nota-btn-save" onclick="guardarNotaUC()">Guardar</button>
+      </div>
+    </div>
     <div class="docs-lista" id="docs-lista">
       <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ECRÃ CITAÇÕES APA7 -->
+  <div id="ecra-citacoes" style="display:none">
+    <div class="citacoes-header">
+      <button type="button" class="btn-voltar" onclick="fecharCitacoes()" title="Voltar" aria-label="Voltar às ferramentas">←</button>
+      <div>
+        <div class="citacoes-titulo">Citações APA 7</div>
+        <div style="font-size:.72rem;color:#6b7280;font-family:'Inter',sans-serif">Gerador de referências bibliográficas</div>
+      </div>
+    </div>
+
+    <div class="citacoes-card">
+      <div style="font:600 .7rem/1 'Inter',sans-serif;color:var(--verde);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Tipo de fonte</div>
+      <div class="citacoes-tipo-lista" id="cit-tipos"></div>
+      <div class="citacoes-form" id="cit-form"></div>
+      <div class="citacoes-preview" id="cit-preview"></div>
+      <div class="citacoes-acoes">
+        <button class="btn-cit-gerar" onclick="gerarCitacao()">Gerar citação</button>
+        <button class="btn-cit-copiar" id="btn-cit-copiar" onclick="copiarCitacao()">Copiar</button>
+        <button class="btn-cit-guardar" id="btn-cit-guardar" onclick="guardarCitacao()">Guardar na bibliografia</button>
+      </div>
+    </div>
+
+    <div class="citacoes-biblio">
+      <div class="citacoes-biblio-header">
+        <div class="citacoes-biblio-titulo">A minha bibliografia</div>
+        <button class="btn-cit-copiar-tudo" onclick="copiarTodaCitacoes()">Copiar tudo A–Z</button>
+      </div>
+      <div class="citacoes-biblio-lista" id="cit-biblio-lista">
+        <div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>
+      </div>
     </div>
   </div>
 </main>
@@ -1898,9 +2050,10 @@
       window.abrirEcranDatas();
       return;
     }
-    document.getElementById('ecra-datas').style.display = 'none';
-    document.getElementById('ecra-docs').style.display  = 'none';
-    document.getElementById('ecra-ucs').style.display   = 'block';
+    document.getElementById('ecra-datas').style.display     = 'none';
+    document.getElementById('ecra-docs').style.display      = 'none';
+    document.getElementById('ecra-citacoes').style.display  = 'none';
+    document.getElementById('ecra-ucs').style.display       = 'block';
     window.bnavAtualizar(id);
     requestAnimationFrame(() => {
       if (id === 'ucs') {
@@ -1931,17 +2084,19 @@
   // ───────────────────────────────────────────────────────
 
   window.abrirEcranDatas = function() {
-    document.getElementById('ecra-ucs').style.display = 'none';
-    document.getElementById('ecra-datas').style.display = 'block';
+    document.getElementById('ecra-ucs').style.display      = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-datas').style.display    = 'block';
     window.bnavAtualizar('datas');
     filtrarDatas();
   };
 
   window.voltarInicio = function() {
     document.getElementById('viewer-overlay').classList.remove('visivel');
-    document.getElementById('ecra-datas').style.display = 'none';
-    document.getElementById('ecra-docs').style.display  = 'none';
-    document.getElementById('ecra-ucs').style.display   = 'block';
+    document.getElementById('ecra-datas').style.display    = 'none';
+    document.getElementById('ecra-docs').style.display     = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display      = 'block';
     window.bnavAtualizar('inicio');
     viewerDocAtual = null;
   };
@@ -1951,6 +2106,330 @@
     document.getElementById('ecra-ucs').style.display = 'block';
     window.bnavAtualizar('inicio');
   };
+
+  // ── CITAÇÕES APA7 ─────────────────────────────────────────────────────
+  const CIT_TIPOS = {
+    livro: {
+      label: 'Livro',
+      campos: [
+        { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do livro',          tipo:'text',    placeholder:'Título completo', hint:'Em itálico na citação' },
+        { id:'edicao',   label:'Edição (opcional)',        tipo:'text',    placeholder:'2ª' },
+        { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
+        { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    artigo: {
+      label: 'Artigo Científico',
+      campos: [
+        { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do artigo',         tipo:'text',    placeholder:'Título do artigo' },
+        { id:'revista',  label:'Nome da revista',          tipo:'text',    placeholder:'Journal of Social Sciences', hint:'Em itálico na citação' },
+        { id:'volume',   label:'Volume',                   tipo:'text',    placeholder:'12' },
+        { id:'numero',   label:'Número',                   tipo:'text',    placeholder:'3' },
+        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'doi',      label:'DOI',                      tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    capitulo: {
+      label: 'Capítulo',
+      campos: [
+        { id:'autores',  label:'Autor(es) do capítulo',   tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do capítulo',       tipo:'text',    placeholder:'Título do capítulo' },
+        { id:'editores', label:'Editor(es) do livro',      tipo:'autores', hint:'Formato: N. N. Sobrenome (iniciais primeiro)' },
+        { id:'livro',    label:'Título do livro',          tipo:'text',    placeholder:'Título da obra completa', hint:'Em itálico na citação' },
+        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
+        { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    website: {
+      label: 'Website',
+      campos: [
+        { id:'autores',  label:'Autor(es) ou Organização',tipo:'autores', hint:'Para organização, escrever o nome completo num campo' },
+        { id:'ano',      label:'Ano (ou s.d. se sem data)',tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título da página',         tipo:'text',    placeholder:'Título da página web' },
+        { id:'site',     label:'Nome do site',             tipo:'text',    placeholder:'Nome do website', hint:'Em itálico na citação' },
+        { id:'url',      label:'URL',                      tipo:'text',    placeholder:'https://www.exemplo.com/pagina' },
+      ]
+    },
+    tese: {
+      label: 'Tese',
+      campos: [
+        { id:'autores',    label:'Autor',                  tipo:'autores', hint:'' },
+        { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
+        { id:'titulo',     label:'Título da tese',         tipo:'text',    placeholder:'Título completo da tese', hint:'Em itálico na citação' },
+        { id:'tipo_tese',  label:'Tipo',                   tipo:'select',  opcoes:['Tese de doutoramento','Dissertação de mestrado'] },
+        { id:'instituicao',label:'Instituição',            tipo:'text',    placeholder:'Universidade Aberta' },
+        { id:'url',        label:'URL ou repositório (opcional)', tipo:'text', placeholder:'https://repositorio.uab.pt/...' },
+      ]
+    },
+    relatorio: {
+      label: 'Relatório',
+      campos: [
+        { id:'autores',    label:'Autor(es) ou Organização',tipo:'autores', hint:'' },
+        { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
+        { id:'titulo',     label:'Título do relatório',    tipo:'text',    placeholder:'Título do relatório', hint:'Em itálico na citação' },
+        { id:'numero',     label:'Número (opcional)',       tipo:'text',    placeholder:'No. 42' },
+        { id:'organizacao',label:'Organização/Editora',    tipo:'text',    placeholder:'Nome da organização' },
+        { id:'url',        label:'URL (opcional)',          tipo:'text',    placeholder:'https://...' },
+      ]
+    }
+  };
+
+  let _citTipoAtivo = 'livro';
+  let _citAtual = '';
+
+  window.abrirCitacoes = function() {
+    document.getElementById('ecra-ucs').style.display    = 'none';
+    document.getElementById('ecra-docs').style.display   = 'none';
+    document.getElementById('ecra-datas').style.display  = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'block';
+    window.bnavAtualizar('ferramentas');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    _iniciarGerador();
+    _renderBibliografia();
+  };
+
+  window.fecharCitacoes = function() {
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display = 'block';
+    window.bnavAtualizar('ferramentas');
+    requestAnimationFrame(() => {
+      const el = document.querySelector('.ferramentas-secao');
+      if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+    });
+  };
+
+  function _iniciarGerador() {
+    const tiposEl = document.getElementById('cit-tipos');
+    tiposEl.innerHTML = Object.entries(CIT_TIPOS).map(([id, t]) =>
+      `<button class="citacoes-tipo-btn${id===_citTipoAtivo?' ativo':''}" onclick="window._selecionarTipoCit('${id}')">${t.label}</button>`
+    ).join('');
+    _renderFormCitacao();
+    _ocultarPreview();
+  }
+
+  window._selecionarTipoCit = function(tipo) {
+    _citTipoAtivo = tipo;
+    document.querySelectorAll('.citacoes-tipo-btn').forEach(b =>
+      b.classList.toggle('ativo', b.textContent === CIT_TIPOS[tipo].label)
+    );
+    _renderFormCitacao();
+    _ocultarPreview();
+  };
+
+  function _renderFormCitacao() {
+    const tipo = CIT_TIPOS[_citTipoAtivo];
+    const form = document.getElementById('cit-form');
+    form.innerHTML = tipo.campos.map(campo => {
+      if (campo.tipo === 'autores') {
+        return `<div class="citacoes-campo">
+          <label>${campo.label}</label>
+          <div class="citacoes-autores-lista" id="lista-${campo.id}">
+            <div class="citacoes-autor-row">
+              <input type="text" class="autor-input-${campo.id}" placeholder="${campo.hint||'Sobrenome, N. N.'}" />
+              <button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${campo.id}')" aria-label="Remover">×</button>
+            </div>
+          </div>
+          <button type="button" class="btn-add-autor" onclick="window._addAutorCit('${campo.id}')">+ Adicionar</button>
+          ${campo.hint?`<small>${campo.hint}</small>`:''}
+        </div>`;
+      } else if (campo.tipo === 'select') {
+        return `<div class="citacoes-campo">
+          <label for="cit-${campo.id}">${campo.label}</label>
+          <select id="cit-${campo.id}">${campo.opcoes.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>
+        </div>`;
+      } else {
+        return `<div class="citacoes-campo">
+          <label for="cit-${campo.id}">${campo.label}</label>
+          <input type="text" id="cit-${campo.id}" placeholder="${campo.placeholder||''}" />
+          ${campo.hint?`<small>${campo.hint}</small>`:''}
+        </div>`;
+      }
+    }).join('');
+  }
+
+  window._addAutorCit = function(grupo) {
+    const lista = document.getElementById('lista-' + grupo);
+    const row = document.createElement('div');
+    row.className = 'citacoes-autor-row';
+    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Sobrenome, N. N." /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">×</button>`;
+    lista.appendChild(row);
+  };
+
+  window._remAutorCit = function(btn, grupo) {
+    const rows = document.querySelectorAll(`#lista-${grupo} .citacoes-autor-row`);
+    if (rows.length <= 1) { btn.previousElementSibling.value = ''; return; }
+    btn.parentElement.remove();
+  };
+
+  function _getAutores(grupo) {
+    return [...document.querySelectorAll(`.autor-input-${grupo}`)].map(i=>i.value.trim()).filter(Boolean);
+  }
+  function _getVal(id) {
+    const el = document.getElementById('cit-' + id);
+    return el ? el.value.trim() : '';
+  }
+  function _fmtAutores(autores) {
+    if (!autores.length) return '';
+    if (autores.length === 1) return autores[0];
+    if (autores.length <= 20) return autores.slice(0,-1).join(', ') + ', & ' + autores[autores.length-1];
+    return autores.slice(0,19).join(', ') + ', ... ' + autores[autores.length-1];
+  }
+  function _fmtEditores(editores) {
+    if (!editores.length) return '';
+    const lbl = editores.length === 1 ? 'Ed.' : 'Eds.';
+    return editores.length === 1
+      ? `${editores[0]} (${lbl})`
+      : editores.slice(0,-1).join(', ') + ', & ' + editores[editores.length-1] + ` (${lbl})`;
+  }
+  function _citTxt(html) { return html.replace(/<\/?em>/g,''); }
+
+  window.gerarCitacao = function() {
+    const tipo = _citTipoAtivo;
+    let c = '';
+    if (tipo === 'livro') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), ed = _getVal('edicao'),
+            edit = _getVal('editora'), doi = _getVal('doi');
+      if (!au.length||!ti) { alert('Preenche Autor(es) e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${ed?` (${ed} ed.)`:''}.${edit?' '+edit+'.':''}${doi?' '+doi:''}`;
+    } else if (tipo === 'artigo') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), rev = _getVal('revista'),
+            vol = _getVal('volume'), num = _getVal('numero'),
+            pag = _getVal('paginas'), doi = _getVal('doi');
+      if (!au.length||!ti||!rev) { alert('Preenche Autor(es), Título e Revista.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${rev}</em>${vol?`, <em>${vol}</em>`:''}${num?`(${num})`:''}${pag?`, ${pag}`:''}.${doi?' '+doi:''}`;
+    } else if (tipo === 'capitulo') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), eds = _getAutores('editores'),
+            liv = _getVal('livro'), pag = _getVal('paginas'),
+            edit = _getVal('editora'), doi = _getVal('doi');
+      if (!au.length||!ti||!liv) { alert('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. Em ${eds.length?_fmtEditores(eds)+', ':''}<em>${liv}</em>${pag?` (pp. ${pag})`:''}. ${edit}.${doi?' '+doi:''}`;
+    } else if (tipo === 'website') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), site = _getVal('site'), url = _getVal('url');
+      if (!au.length||!ti||!url) { alert('Preenche Autor/Organização, Título e URL.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${site||url}</em>. ${url}`;
+    } else if (tipo === 'tese') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), tp = _getVal('tipo_tese'),
+            inst = _getVal('instituicao'), url = _getVal('url');
+      if (!au.length||!ti) { alert('Preenche Autor e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em> [${tp}${inst?', '+inst:''}].${url?' '+url:''}`;
+    } else if (tipo === 'relatorio') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _getVal('titulo'), num = _getVal('numero'),
+            org = _getVal('organizacao'), url = _getVal('url');
+      if (!au.length||!ti) { alert('Preenche Autor/Organização e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${num?` (${num})`:''}. ${org}.${url?' '+url:''}`;
+    }
+    _citAtual = c;
+    const preview = document.getElementById('cit-preview');
+    preview.innerHTML = c;
+    preview.style.display = 'block';
+    document.getElementById('btn-cit-copiar').style.display  = 'inline-flex';
+    document.getElementById('btn-cit-guardar').style.display = 'inline-flex';
+  };
+
+  function _ocultarPreview() {
+    _citAtual = '';
+    document.getElementById('cit-preview').style.display    = 'none';
+    document.getElementById('btn-cit-copiar').style.display = 'none';
+    document.getElementById('btn-cit-guardar').style.display= 'none';
+  }
+
+  window.copiarCitacao = async function() {
+    try {
+      await navigator.clipboard.writeText(_citTxt(_citAtual));
+      const btn = document.getElementById('btn-cit-copiar');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = orig, 1800);
+    } catch(e) { alert('Não foi possível copiar.'); }
+  };
+
+  window.guardarCitacao = async function() {
+    if (!_citAtual || !utilizadorAtual) return;
+    const key = 'cit_' + Date.now();
+    try {
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {
+        [`citacoes.${key}`]: { tipo: _citTipoAtivo, html: _citAtual, ts: Date.now() }
+      });
+      if (!utilizadorAtual.citacoes) utilizadorAtual.citacoes = {};
+      utilizadorAtual.citacoes[key] = { tipo: _citTipoAtivo, html: _citAtual, ts: Date.now() };
+      _renderBibliografia();
+      const btn = document.getElementById('btn-cit-guardar');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Guardado!';
+      setTimeout(() => btn.textContent = orig, 1800);
+    } catch(e) { alert('Erro ao guardar: ' + e.message); }
+  };
+
+  function _renderBibliografia() {
+    const lista = document.getElementById('cit-biblio-lista');
+    if (!lista) return;
+    const citacoes = utilizadorAtual?.citacoes;
+    if (!citacoes || !Object.keys(citacoes).length) {
+      lista.innerHTML = '<div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>';
+      return;
+    }
+    const entradas = Object.entries(citacoes).sort((a,b) =>
+      _citTxt(a[1].html).toLowerCase().localeCompare(_citTxt(b[1].html).toLowerCase(), 'pt')
+    );
+    lista.innerHTML = entradas.map(([key, cit]) => `
+      <div class="citacoes-item" data-cit-key="${key}">
+        <div class="citacoes-item-texto">${cit.html}</div>
+        <div class="citacoes-item-acoes">
+          <button class="btn-cit-item-copiar" onclick="window._copiarItemCit('${key}')">Copiar</button>
+          <button class="btn-cit-item-del" onclick="window._eliminarCit('${key}')">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window._copiarItemCit = async function(key) {
+    const cit = utilizadorAtual?.citacoes?.[key];
+    if (!cit) return;
+    try {
+      await navigator.clipboard.writeText(_citTxt(cit.html));
+      const btn = document.querySelector(`[data-cit-key="${key}"] .btn-cit-item-copiar`);
+      if (btn) { const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,1400); }
+    } catch(e) {}
+  };
+
+  window._eliminarCit = async function(key) {
+    if (!utilizadorAtual) return;
+    if (!confirm('Eliminar esta citação da tua bibliografia?')) return;
+    try {
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {
+        [`citacoes.${key}`]: deleteField()
+      });
+      delete utilizadorAtual.citacoes[key];
+      _renderBibliografia();
+    } catch(e) { alert('Erro: ' + e.message); }
+  };
+
+  window.copiarTodaCitacoes = async function() {
+    const citacoes = utilizadorAtual?.citacoes;
+    if (!citacoes || !Object.keys(citacoes).length) { alert('Não tens citações guardadas.'); return; }
+    const sorted = Object.values(citacoes).sort((a,b) =>
+      _citTxt(a.html).toLowerCase().localeCompare(_citTxt(b.html).toLowerCase(), 'pt')
+    );
+    const texto = sorted.map(c => _citTxt(c.html)).join('\n\n');
+    try {
+      await navigator.clipboard.writeText(texto);
+      const btn = document.querySelector('.btn-cit-copiar-tudo');
+      if (btn) { const o=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=o,1800); }
+    } catch(e) { alert('Erro ao copiar.'); }
+  };
+  // ── FIM CITAÇÕES APA7 ─────────────────────────────────────────────────
 
   window.filtrarDatas = function() {
     const ano = document.getElementById('filtro-ano').value;
@@ -2033,6 +2512,7 @@
       prepararPesquisa();
       carregarDatas();
       carregarUCs();
+      atualizarProgresso();
       iniciarPresenca(user, utilizadorAtual.nome || user.email);
       document.getElementById('rodape-app').style.display = 'block';
       setTimeout(() => window.mostrarAviso(), 1200);
@@ -2240,6 +2720,77 @@
     window.atualizarBotoesFavoritos();
   }
 
+  // --- NOTAS ---
+  function notaAtualizar() {
+    const c = parseFloat(document.getElementById('nota-continua').value);
+    const e = parseFloat(document.getElementById('nota-exame').value);
+    const valEl  = document.getElementById('nota-final-val');
+    const badge  = document.getElementById('nota-badge');
+    let final = null;
+    if (!isNaN(c) && !isNaN(e)) final = Math.round(((c + e) / 2) * 10) / 10;
+    else if (!isNaN(e))          final = e;
+    else if (!isNaN(c))          final = c;
+    if (final !== null) {
+      valEl.textContent = final.toFixed(1).replace('.', ',') + ' val.';
+      const aprov = final >= 9.5;
+      badge.className   = 'nota-badge ' + (aprov ? 'aprovado' : 'reprovado');
+      badge.textContent = aprov ? '✓ Aprovado' : '✗ Reprovado';
+    } else {
+      valEl.textContent = '—';
+      badge.className   = 'nota-badge em-curso';
+      badge.textContent = 'Em curso';
+    }
+  }
+
+  window.guardarNotaUC = async function() {
+    if (!ucAtualId) return;
+    const c = parseFloat(document.getElementById('nota-continua').value);
+    const e = parseFloat(document.getElementById('nota-exame').value);
+    let final = null;
+    if (!isNaN(c) && !isNaN(e)) final = Math.round(((c + e) / 2) * 10) / 10;
+    else if (!isNaN(e))          final = e;
+    else if (!isNaN(c))          final = c;
+    const btn = document.getElementById('nota-btn-save');
+    btn.textContent = '…'; btn.disabled = true;
+    try {
+      const nota = { continua: isNaN(c) ? null : c, exame: isNaN(e) ? null : e, final, ects: 6 };
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { [`notas.${ucAtualId}`]: nota });
+      utilizadorAtual.notas = utilizadorAtual.notas || {};
+      utilizadorAtual.notas[ucAtualId] = nota;
+      btn.textContent = '✓ Guardado'; btn.className = 'nota-btn-save ok';
+      setTimeout(() => { btn.textContent = 'Guardar'; btn.className = 'nota-btn-save'; btn.disabled = false; }, 2000);
+      atualizarProgresso();
+    } catch(err) {
+      btn.textContent = 'Erro'; btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Guardar'; }, 2000);
+    }
+  };
+
+  function carregarNotasUC(ucId) {
+    const nota = (utilizadorAtual.notas || {})[ucId] || {};
+    document.getElementById('nota-continua').value = nota.continua ?? '';
+    document.getElementById('nota-exame').value    = nota.exame    ?? '';
+    notaAtualizar();
+  }
+
+  function atualizarProgresso() {
+    const notas = utilizadorAtual.notas || {};
+    const todas = Object.values(notas).filter(n => n.final !== null && n.final !== undefined);
+    const aprov = todas.filter(n => n.final >= 9.5);
+    const ectsTotal = aprov.reduce((s, n) => s + (n.ects || 6), 0);
+    const media  = aprov.length > 0
+      ? aprov.reduce((s, n) => s + n.final * (n.ects || 6), 0) / ectsTotal
+      : null;
+    const totalCurso = 180;
+    const pct = Math.min(100, Math.round((ectsTotal / totalCurso) * 100));
+    document.getElementById('prog-barra').style.width      = pct + '%';
+    document.getElementById('prog-aprovadas').textContent  = aprov.length;
+    document.getElementById('prog-media').textContent      = media !== null ? media.toFixed(1).replace('.', ',') : '—';
+    document.getElementById('prog-ects').textContent       = ectsTotal;
+    document.getElementById('prog-pct').textContent        = pct + '%';
+    document.getElementById('progresso-wrap').style.display = todas.length > 0 ? 'block' : 'none';
+  }
+
   // --- DOCUMENTOS ---
   async function abrirUC(uc, emoji) {
     ucAtualId = uc.id;
@@ -2249,6 +2800,7 @@
     window.bnavAtualizar('ucs');
     document.getElementById('docs-titulo').textContent  = uc.nome;
     document.getElementById('docs-sub').textContent     = SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
+    carregarNotasUC(uc.id);
 
     const lista = document.getElementById('docs-lista');
     lista.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
