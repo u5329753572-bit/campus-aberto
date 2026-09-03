@@ -2323,43 +2323,59 @@
   }
   function _citTxt(html) { return html.replace(/<\/?em>/g,''); }
 
+  // Se o título estiver todo (ou maioritariamente) em maiúsculas → converte para sentence case APA7
+  function _normalizarTitulo(t) {
+    if (!t) return t;
+    const alfa = t.replace(/[^a-zA-ZÀ-ɏ]/g, '');
+    if (!alfa.length) return t;
+    const nMaius = (t.match(/[A-ZÀ-ÖØ-Þ]/g) || []).length;
+    if (nMaius / alfa.length < 0.5) return t; // já tem letras minúsculas suficientes
+    // Converte tudo para minúsculas
+    let r = t.toLowerCase();
+    // 1ª letra sempre maiúscula
+    r = r.charAt(0).toUpperCase() + r.slice(1);
+    // Primeira letra após ': ' também maiúscula (subtítulo APA7)
+    r = r.replace(/:\s+([a-zà-þ])/g, (_, c) => ': ' + c.toUpperCase());
+    return r;
+  }
+
   window.gerarCitacao = function() {
     const tipo = _citTipoAtivo;
     let c = '';
     if (tipo === 'livro') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), ed = _getVal('edicao'),
+            ti = _normalizarTitulo(_getVal('titulo')), ed = _getVal('edicao'),
             edit = _getVal('editora'), doi = _getVal('doi');
       if (!au.length||!ti) { alert('Preenche Autor(es) e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${ed?` (${ed} ed.)`:''}.${edit?' '+edit+'.':''}${doi?' '+doi:''}`;
     } else if (tipo === 'artigo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), rev = _getVal('revista'),
+            ti = _normalizarTitulo(_getVal('titulo')), rev = _getVal('revista'),
             vol = _getVal('volume'), num = _getVal('numero'),
             pag = _getVal('paginas'), doi = _getVal('doi');
       if (!au.length||!ti||!rev) { alert('Preenche Autor(es), Título e Revista.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${rev}</em>${vol?`, <em>${vol}</em>`:''}${num?`(${num})`:''}${pag?`, ${pag}`:''}.${doi?' '+doi:''}`;
     } else if (tipo === 'capitulo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), eds = _getAutores('editores'),
-            liv = _getVal('livro'), pag = _getVal('paginas'),
+            ti = _normalizarTitulo(_getVal('titulo')), eds = _getAutores('editores'),
+            liv = _normalizarTitulo(_getVal('livro')), pag = _getVal('paginas'),
             edit = _getVal('editora'), doi = _getVal('doi');
       if (!au.length||!ti||!liv) { alert('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. Em ${eds.length?_fmtEditores(eds)+', ':''}<em>${liv}</em>${pag?` (pp. ${pag})`:''}. ${edit}.${doi?' '+doi:''}`;
     } else if (tipo === 'website') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), site = _getVal('site'), url = _getVal('url');
+            ti = _normalizarTitulo(_getVal('titulo')), site = _getVal('site'), url = _getVal('url');
       if (!au.length||!ti||!url) { alert('Preenche Autor/Organização, Título e URL.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${site||url}</em>. ${url}`;
     } else if (tipo === 'tese') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), tp = _getVal('tipo_tese'),
+            ti = _normalizarTitulo(_getVal('titulo')), tp = _getVal('tipo_tese'),
             inst = _getVal('instituicao'), url = _getVal('url');
       if (!au.length||!ti) { alert('Preenche Autor e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em> [${tp}${inst?', '+inst:''}].${url?' '+url:''}`;
     } else if (tipo === 'relatorio') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
-            ti = _getVal('titulo'), num = _getVal('numero'),
+            ti = _normalizarTitulo(_getVal('titulo')), num = _getVal('numero'),
             org = _getVal('organizacao'), url = _getVal('url');
       if (!au.length||!ti) { alert('Preenche Autor/Organização e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${num?` (${num})`:''}. ${org}.${url?' '+url:''}`;
