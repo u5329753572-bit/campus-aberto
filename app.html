@@ -2862,7 +2862,7 @@
 
   function _notaFmt(v) { return v.toFixed(1).replace('.', ','); }
 
-  function notaAtualizar() {
+  window.notaAtualizar = function notaAtualizar() {
     const badge     = document.getElementById('nota-badge');
     const finalEl   = document.getElementById('nota-final-val');
     const resultEl  = document.getElementById('nota-resultado');
@@ -2963,7 +2963,7 @@
       mostrarFinal(aprov && ex < 10 ? 10 : ex);
       setBadge(aprov ? 'aprovado' : 'rep');
     }
-  }
+  };
 
   window.guardarNotaUC = async function() {
     if (!ucAtualId) return;
@@ -3025,7 +3025,7 @@
     const nota = (utilizadorAtual.notas || {})[ucId] || {};
     // Restaurar modo
     const modo = nota.modo || 'continua';
-    notaModoSelecionar(modo); // também chama notaAtualizar
+    window.notaModoSelecionar(modo);
 
     if (modo === 'exame') {
       document.getElementById('nota-so-exame').value = nota.soExame ?? '';
@@ -3035,7 +3035,7 @@
       document.getElementById('nota-global').value    = nota.global   ?? '';
       document.getElementById('nota-exame-rec').value = nota.exameRec ?? (nota.exame ?? '');
     }
-    notaAtualizar();
+    window.notaAtualizar();
   }
 
   function atualizarProgresso() {
