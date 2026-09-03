@@ -1589,8 +1589,8 @@
         </div>
         <div class="nota-limiar vazio" id="nota-soma-limiar">Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span></div>
 
-        <!-- E-Fólio Global (aparece quando soma ≥ 3,5) -->
-        <div id="nota-sec-global" style="display:none">
+        <!-- E-Fólio Global (sempre visível em Av. Contínua) -->
+        <div id="nota-sec-global">
           <div class="nota-sec-titulo">E-Fólio Global <span class="nota-sec-sub">máx. 12 val. · mín. 5,5</span></div>
           <div class="nota-campo" style="max-width:130px">
             <label for="nota-global">Nota</label>
@@ -1599,9 +1599,9 @@
           <div class="nota-limiar vazio" id="nota-global-limiar" style="margin-top:8px"></div>
         </div>
 
-        <!-- Exame recurso (aparece quando soma < 3,5 e ambos preenchidos) -->
+        <!-- Exame recurso (aparece apenas quando soma < 3,5) -->
         <div id="nota-sec-exame-rec" style="display:none">
-          <div class="nota-sec-titulo" style="color:#c2410c">⚠️ Exame <span class="nota-sec-sub" style="color:inherit">somatório e-fólios insuficiente (&lt; 3,5)</span></div>
+          <div class="nota-sec-titulo" style="color:#c2410c">⚠️ Exame obrigatório <span class="nota-sec-sub" style="color:inherit">somatório e-fólios &lt; 3,5</span></div>
           <div class="nota-campo" style="max-width:130px">
             <label for="nota-exame-rec">Nota do exame</label>
             <input type="number" id="nota-exame-rec" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
@@ -2851,14 +2851,14 @@
 
   // --- NOTAS (Regras UAb MPV 2026-2027) ---
 
-  function notaModoSelecionar(modo) {
+  window.notaModoSelecionar = function(modo) {
     notaModoAtual = modo;
     document.getElementById('nota-modo-ac').classList.toggle('ativo', modo === 'continua');
     document.getElementById('nota-modo-ex').classList.toggle('ativo', modo === 'exame');
     document.getElementById('nota-painel-continua').classList.toggle('ativo', modo === 'continua');
     document.getElementById('nota-painel-exame').classList.toggle('ativo', modo === 'exame');
     notaAtualizar();
-  }
+  };
 
   function _notaFmt(v) { return v.toFixed(1).replace('.', ','); }
 
@@ -2895,15 +2895,15 @@
     // ── Avaliação Contínua ──
     const a = parseFloat(document.getElementById('nota-efolio-a').value);
     const b = parseFloat(document.getElementById('nota-efolio-b').value);
-    const somaEl = document.getElementById('nota-soma-limiar');
-    const secGlobal    = document.getElementById('nota-sec-global');
-    const secExameRec  = document.getElementById('nota-sec-exame-rec');
+    const somaEl      = document.getElementById('nota-soma-limiar');
+    const secExameRec = document.getElementById('nota-sec-exame-rec');
 
     if (isNaN(a) || isNaN(b)) {
       somaEl.className = 'nota-limiar vazio';
       somaEl.innerHTML = 'Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span>';
-      secGlobal.style.display = 'none';
       secExameRec.style.display = 'none';
+      document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
+      document.getElementById('nota-global-limiar').innerHTML = '';
       esconderFinal(); setBadge('curso');
       return;
     }
@@ -2915,7 +2915,6 @@
       // ✅ Acesso ao E-Fólio Global
       somaEl.className = 'nota-limiar ok';
       somaEl.innerHTML = `✓ Soma e-fólios: <strong>${somaStr}</strong> — acesso ao E-Fólio Global`;
-      secGlobal.style.display = 'block';
       secExameRec.style.display = 'none';
 
       const g = parseFloat(document.getElementById('nota-global').value);
@@ -2954,8 +2953,9 @@
       // ⚠️ Soma insuficiente → Exame obrigatório
       somaEl.className = 'nota-limiar nok';
       somaEl.innerHTML = `✗ Soma e-fólios: <strong>${somaStr}</strong> — abaixo do mínimo (3,5). Exame obrigatório.`;
-      secGlobal.style.display = 'none';
       secExameRec.style.display = 'block';
+      document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
+      document.getElementById('nota-global-limiar').innerHTML = '';
 
       const ex = parseFloat(document.getElementById('nota-exame-rec').value);
       if (isNaN(ex)) { esconderFinal(); setBadge('curso'); return; }
