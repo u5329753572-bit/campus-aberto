@@ -375,6 +375,7 @@
     <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('sugestoes')" id="tab-nav-sugestoes">💡 Sugestões</button>
     <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">🟢 Online</button>
   </div>
 
@@ -659,7 +660,6 @@
 
   <div class="tab-content" id="tab-downloads">
     <h2 class="secao-titulo">Histórico de Downloads</h2>
-
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Todos os downloads registados</span></div>
       <table>
@@ -667,9 +667,11 @@
         <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
+  </div>
 
-    <!-- ── SUGESTÕES ── -->
-    <h2 class="secao-titulo" style="margin-top:36px">💡 Sugestões dos Utilizadores</h2>
+  <!-- TAB: SUGESTÕES -->
+  <div class="tab-content" id="tab-sugestoes">
+    <h2 class="secao-titulo">💡 Sugestões dos Utilizadores</h2>
     <div class="tabela-wrap">
       <div class="tabela-header" style="display:flex;align-items:center;justify-content:space-between">
         <span id="sugestoes-contador">A carregar…</span>
@@ -731,6 +733,7 @@
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativa'));
     document.getElementById('tab-' + id).classList.add('ativa');
     if (id === 'online') carregarOnline();
+    if (id === 'sugestoes') carregarSugestoes();
   };
 
   let _todasSessoes = [];
