@@ -3550,6 +3550,35 @@
     await signOut(auth);
     window.location.href = 'index.html';
   };
+
+  // --- AVISO LEGAL ---
+  window.AVISO_TEXTO = `Prezados colegas,
+
+Todos os materiais disponibilizados na aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
+
+Os guias e restantes conteúdos são elaborados por estudantes para estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. Constituem apenas ferramentas complementares de apoio e orientação, não substituindo, em circunstância alguma, os documentos, materiais, indicações ou esclarecimentos oficiais disponibilizados pelos docentes através do Moodle ou de outros canais institucionais.
+
+Estes conteúdos não devem ser utilizados como fonte única de informação. Cada estudante é responsável por consultar regularmente os canais oficiais, confirmar as informações relevantes junto dos docentes e desenvolver a sua própria autonomia na pesquisa, no estudo e na tomada de decisões académicas.
+
+Em caso de dúvida, omissão, desatualização ou divergência, prevalecem sempre as informações, orientações e materiais fornecidos pelos docentes através dos canais oficiais.
+
+Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.
+
+Ao prosseguir, declaro que li e compreendi este aviso.`;
+
+  window.mostrarAviso = function(forcar) {
+    const uid = utilizadorAtual?.uid;
+    const key = uid ? `ca_aviso_visto_${uid}` : null;
+    if (!forcar && key && localStorage.getItem(key)) return;
+    document.getElementById('aviso-corpo-texto').textContent = window.AVISO_TEXTO;
+    document.getElementById('modal-aviso').classList.add('visivel');
+  };
+  window.fecharAviso = function() {
+    document.getElementById('modal-aviso').classList.remove('visivel');
+    const uid = utilizadorAtual?.uid;
+    if (uid) localStorage.setItem(`ca_aviso_visto_${uid}`, '1');
+  };
+
 </script>
 <script>
   // PWA — Service Worker
@@ -3582,33 +3611,6 @@
     _installPrompt = null;
   });
 
-  // --- AVISO LEGAL ---
-  window.AVISO_TEXTO = `Prezados colegas,
-
-Todos os materiais disponibilizados na aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
-
-Os guias e restantes conteúdos são elaborados por estudantes para estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. Constituem apenas ferramentas complementares de apoio e orientação, não substituindo, em circunstância alguma, os documentos, materiais, indicações ou esclarecimentos oficiais disponibilizados pelos docentes através do Moodle ou de outros canais institucionais.
-
-Estes conteúdos não devem ser utilizados como fonte única de informação. Cada estudante é responsável por consultar regularmente os canais oficiais, confirmar as informações relevantes junto dos docentes e desenvolver a sua própria autonomia na pesquisa, no estudo e na tomada de decisões académicas.
-
-Em caso de dúvida, omissão, desatualização ou divergência, prevalecem sempre as informações, orientações e materiais fornecidos pelos docentes através dos canais oficiais.
-
-Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.
-
-Ao prosseguir, declaro que li e compreendi este aviso.`;
-
-  window.mostrarAviso = function(forcar) {
-    const uid = utilizadorAtual?.uid;
-    const key = uid ? `ca_aviso_visto_${uid}` : null;
-    if (!forcar && key && localStorage.getItem(key)) return; // já viu
-    document.getElementById('aviso-corpo-texto').textContent = window.AVISO_TEXTO;
-    document.getElementById('modal-aviso').classList.add('visivel');
-  };
-  window.fecharAviso = function() {
-    document.getElementById('modal-aviso').classList.remove('visivel');
-    const uid = utilizadorAtual?.uid;
-    if (uid) localStorage.setItem(`ca_aviso_visto_${uid}`, '1');
-  };
 
 </script>
 
