@@ -667,6 +667,19 @@
         <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
+
+    <!-- ── SUGESTÕES ── -->
+    <h2 class="secao-titulo" style="margin-top:36px">💡 Sugestões dos Utilizadores</h2>
+    <div class="tabela-wrap">
+      <div class="tabela-header" style="display:flex;align-items:center;justify-content:space-between">
+        <span id="sugestoes-contador">A carregar…</span>
+        <button onclick="marcarTodasLidas()" style="padding:5px 12px;font-size:.75rem;border:1px solid #ccc;border-radius:6px;cursor:pointer;background:#f8f8f8">✓ Marcar todas como lidas</button>
+      </div>
+      <table>
+        <thead><tr><th>Data</th><th>Nome</th><th>Sugestão</th><th>Estado</th><th>Ação</th></tr></thead>
+        <tbody id="tbody-sugestoes"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+      </table>
+    </div>
   </div>
 </main>
 
@@ -863,7 +876,7 @@
 
   async function carregarTudo() {
     await carregarUCs();
-    await Promise.all([carregarUtilizadores(), carregarDocs(), carregarDatasAdmin(), carregarDownloads()]);
+    await Promise.all([carregarUtilizadores(), carregarDocs(), carregarDatasAdmin(), carregarDownloads(), carregarSugestoes()]);
   }
 
   // --- UTILIZADORES ---
@@ -1751,6 +1764,62 @@
   window.sair = async function() {
     await signOut(auth);
     window.location.href = 'index.html';
+  };
+
+  // --- SUGESTÕES ---
+  let sugestoesCache = [];
+
+  async function carregarSugestoes() {
+    const tb = document.getElementById('tbody-sugestoes');
+    const contador = document.getElementById('sugestoes-contador');
+    try {
+      const q = query(collection(db, 'sugestoes'), orderBy('timestamp', 'desc'));
+      const snap = await getDocs(q);
+      sugestoesCache = [];
+      snap.forEach(d => sugestoesCache.push({ id: d.id, ...d.data() }));
+
+      const naoLidas = sugestoesCache.filter(s => !s.lida).length;
+      contador.textContent = `${sugestoesCache.length} sugestões (${naoLidas} por ler)`;
+
+      if (!sugestoesCache.length) {
+        tb.innerHTML = '<tr><td colspan="5" class="empty-msg">Nenhuma sugestão ainda.</td></tr>';
+        return;
+      }
+
+      tb.innerHTML = sugestoesCache.map(s => {
+        const data = s.timestamp ? new Date(s.timestamp.seconds * 1000).toLocaleDateString('pt-PT', { day:'2-digit', month:'short', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
+        const lida = s.lida;
+        return `<tr style="background:${lida ? '#fff' : '#fffbeb'}">
+          <td style="white-space:nowrap;font-size:.75rem">${data}</td>
+          <td style="font-size:.78rem"><strong>${s.nome || '—'}</strong><br><span style="color:#888;font-size:.68rem">${s.email || ''}</span></td>
+          <td style="font-size:.82rem;max-width:340px">${s.texto || ''}</td>
+          <td><span style="font-size:.7rem;font-weight:700;color:${lida ? '#166534' : '#b45309'}">${lida ? '✓ Lida' : '● Nova'}</span></td>
+          <td style="white-space:nowrap">
+            ${!lida ? `<button onclick="marcarLida('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:5px;cursor:pointer">Marcar lida</button>` : ''}
+            <button onclick="apagarSugestao('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #fca5a5;border-radius:5px;cursor:pointer;color:#dc2626;margin-left:4px">Apagar</button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch(e) {
+      tb.innerHTML = `<tr><td colspan="5" class="empty-msg">Erro: ${e.message}</td></tr>`;
+    }
+  }
+
+  window.marcarLida = async function(id) {
+    await updateDoc(doc(db, 'sugestoes', id), { lida: true });
+    carregarSugestoes();
+  };
+
+  window.marcarTodasLidas = async function() {
+    const porLer = sugestoesCache.filter(s => !s.lida);
+    await Promise.all(porLer.map(s => updateDoc(doc(db, 'sugestoes', s.id), { lida: true })));
+    carregarSugestoes();
+  };
+
+  window.apagarSugestao = async function(id) {
+    if (!confirm('Apagar esta sugestão permanentemente?')) return;
+    await deleteDoc(doc(db, 'sugestoes', id));
+    carregarSugestoes();
   };
 </script>
 </body>
