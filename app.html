@@ -2017,6 +2017,10 @@
       if (uc) await abrirUC(uc, 'UC');
       return;
     }
+    if (item.tipo === 'link') {
+      if (item.href) window.open(item.href, '_blank', 'noopener');
+      return;
+    }
     if (item.tipo === 'doc') {
       const uc = ucsMap[item.ucId];
       if (!docMap[`${item.ucId}:${item.docId}`] && uc) await abrirUC(uc, 'UC');
@@ -2038,7 +2042,7 @@
       const encontrados = [...catalogo.values()].filter(item => normalizar(`${item.titulo} ${item.subtitulo || ''}`).includes(termo)).slice(0,10);
       resultados.innerHTML = encontrados.length ? encontrados.map(item => `
         <button class="pesquisa-item" type="button" role="option" data-resultado-key="${esc(item.key)}">
-          <span class="pesquisa-tipo">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
+          <span class="pesquisa-tipo">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'link' ? 'Link' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
           <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || '')}</small></span>
           <span class="pesquisa-item-seta">→</span>
         </button>`).join('') : `<div class="pesquisa-estado">Não encontrámos resultados para “${esc(input.value.trim())}”.</div>`;
@@ -2212,6 +2216,7 @@
 
   window.abrirEcranDatas = function() {
     document.getElementById('ecra-ucs').style.display      = 'none';
+    document.getElementById('ecra-docs').style.display     = 'none';
     document.getElementById('ecra-citacoes').style.display = 'none';
     document.getElementById('ecra-datas').style.display    = 'block';
     window.bnavAtualizar('datas');
@@ -2881,7 +2886,10 @@
       const doc_ = { id:d.id, ucId:uc.id, ucNome:uc.nome, ...d.data() };
       docMap[`${uc.id}:${d.id}`] = doc_;
       catalogo.set(`doc:${uc.id}:${d.id}`, {
-        key:`doc:${uc.id}:${d.id}`, tipo:'doc', ucId:uc.id, docId:d.id,
+        key:`doc:${uc.id}:${d.id}`,
+        tipo: doc_.tipo === 'link' ? 'link' : 'doc',
+        ucId:uc.id, docId:d.id,
+        href: doc_.tipo === 'link' ? (doc_.driveUrl || '') : undefined,
         titulo:doc_.nome, subtitulo:uc.nome
       });
     });
@@ -2993,11 +3001,13 @@
     const b = parseFloat(document.getElementById('nota-efolio-b').value);
     const somaEl      = document.getElementById('nota-soma-limiar');
     const secExameRec = document.getElementById('nota-sec-exame-rec');
+    const secGlobal   = document.getElementById('nota-sec-global');
 
     if (isNaN(a) || isNaN(b)) {
       somaEl.className = 'nota-limiar vazio';
       somaEl.innerHTML = 'Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span>';
       secExameRec.style.display = 'none';
+      secGlobal.style.display   = 'block';
       document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
       document.getElementById('nota-global-limiar').innerHTML = '';
       esconderFinal(); setBadge('curso');
@@ -3012,6 +3022,7 @@
       somaEl.className = 'nota-limiar ok';
       somaEl.innerHTML = `✓ Soma e-fólios: <strong>${somaStr}</strong> — acesso ao E-Fólio Global`;
       secExameRec.style.display = 'none';
+      secGlobal.style.display   = 'block';
 
       const g = parseFloat(document.getElementById('nota-global').value);
       const globalEl = document.getElementById('nota-global-limiar');
@@ -3050,6 +3061,7 @@
       somaEl.className = 'nota-limiar nok';
       somaEl.innerHTML = `✗ Soma e-fólios: <strong>${somaStr}</strong> — abaixo do mínimo (3,5). Exame obrigatório.`;
       secExameRec.style.display = 'block';
+      secGlobal.style.display   = 'none';
       document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
       document.getElementById('nota-global-limiar').innerHTML = '';
 
