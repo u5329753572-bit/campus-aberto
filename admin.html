@@ -709,10 +709,19 @@
       <div id="pens-lista" style="font-size:.83rem;color:#6b7280">A carregar…</div>
     </div>
     <div class="form-card" style="margin-top:20px">
-      <h3>📋 Todos os pensamentos automáticos</h3>
-      <p style="font-size:.82rem;color:#6b7280;margin:6px 0 16px">Lista das 59 frases em rotação diária. Clica em <strong>Usar</strong> para carregar no formulário, editar e agendar como override.</p>
-      <input type="text" id="pens-filtro" placeholder="🔍 Filtrar frases..." oninput="window.filtrarPensamentos()" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.84rem;margin-bottom:14px"/>
-      <div id="pens-todos" style="max-height:500px;overflow-y:auto;display:grid;gap:8px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <div>
+          <h3 style="margin-bottom:4px">📋 Todas as frases automáticas</h3>
+          <p style="font-size:.82rem;color:#6b7280">Edita diretamente o texto ou o autor de qualquer frase e clica em Guardar.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-primario" onclick="window.guardarTodosPensamentos()" style="white-space:nowrap">💾 Guardar alterações</button>
+          <button class="btn-secundario" onclick="window.adicionarPensamento()" style="white-space:nowrap">＋ Adicionar frase</button>
+        </div>
+      </div>
+      <div id="pens-salvar-msg" style="font-size:.82rem;font-weight:600;margin-bottom:10px"></div>
+      <input type="text" id="pens-filtro" placeholder="🔍 Filtrar frases..." oninput="window.filtrarPensamentos()" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.84rem;margin-bottom:12px"/>
+      <div id="pens-todos" style="max-height:560px;overflow-y:auto;display:grid;gap:8px"></div>
     </div>
   </div>
 
@@ -1949,39 +1958,83 @@
     { texto: 'Aprende mais do que precisas — nunca sabes quando vai ser útil.', autor: '' },
   ];
 
-  function renderPensamentosAuto(filtro) {
+  // frases em memória (carregadas do Firestore ou do array local)
+  let _frasesEditaveis = [];
+
+  async function carregarPensamentosEditaveis() {
+    const container = document.getElementById('pens-todos');
+    if (!container) return;
+    container.innerHTML = '<p style="color:#9ca3af;font-size:.83rem">A carregar…</p>';
+    try {
+      const snap = await getDoc(doc(db, 'config', 'pensamentos'));
+      if (snap.exists() && snap.data().frases?.length) {
+        _frasesEditaveis = snap.data().frases.map(p => ({...p}));
+      } else {
+        // Inicializar Firestore com o array local
+        _frasesEditaveis = PENSAMENTOS_ADMIN.map(p => ({...p}));
+        await setDoc(doc(db, 'config', 'pensamentos'), { frases: _frasesEditaveis });
+      }
+    } catch(e) {
+      _frasesEditaveis = PENSAMENTOS_ADMIN.map(p => ({...p}));
+    }
+    renderFrasesEditaveis();
+  }
+
+  function renderFrasesEditaveis(filtro) {
     const container = document.getElementById('pens-todos');
     if (!container) return;
     const lower = (filtro || '').toLowerCase();
-    const lista = lower
-      ? PENSAMENTOS_ADMIN.filter(p => p.texto.toLowerCase().includes(lower) || p.autor.toLowerCase().includes(lower))
-      : PENSAMENTOS_ADMIN;
-    container.innerHTML = lista.length ? lista.map(p => {
-      const idx = PENSAMENTOS_ADMIN.indexOf(p);
-      return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#fafafa;display:flex;gap:12px;align-items:flex-start">'
-        + '<span style="min-width:26px;height:26px;background:var(--verde);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">'+(idx+1)+'</span>'
-        + '<div style="flex:1;min-width:0">'
-        + '<p style="font-style:italic;color:#374151;font-size:.84rem;margin-bottom:3px;line-height:1.5">&#8220;'+p.texto+'&#8221;</p>'
-        + (p.autor ? '<span style="font-size:.72rem;color:#6b7280">— '+p.autor+'</span>' : '')
+    const indices = _frasesEditaveis.map((_,i)=>i).filter(i =>
+      !lower || _frasesEditaveis[i].texto.toLowerCase().includes(lower) || (_frasesEditaveis[i].autor||'').toLowerCase().includes(lower)
+    );
+    if (!indices.length) { container.innerHTML = '<p style="color:#9ca3af;font-size:.83rem">Sem resultados.</p>'; return; }
+    container.innerHTML = indices.map(i => {
+      const p = _frasesEditaveis[i];
+      return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#fafafa;display:grid;gap:7px" data-pens-idx="'+i+'">'
+        + '<div style="display:flex;align-items:flex-start;gap:8px">'
+        + '<span style="min-width:26px;height:26px;background:var(--verde);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;margin-top:6px">'+(i+1)+'</span>'
+        + '<textarea class="pens-edit-texto" style="flex:1;border:1px solid #d1d5db;border-radius:7px;padding:7px 10px;font-size:.84rem;font-family:'Inter',sans-serif;line-height:1.5;resize:vertical;min-height:58px" data-idx="'+i+'" oninput="window._pensamentoEditado('+i+','texto',this.value)">'+p.texto+'</textarea>'
+        + '<button onclick="window.apagarPensamento('+i+')" title="Apagar esta frase" style="flex-shrink:0;width:28px;height:28px;background:#fee2e2;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;margin-top:4px">🗑</button>'
         + '</div>'
-        + '<button onclick="window.usarPensamento('+idx+')" style="flex-shrink:0;padding:5px 11px;background:var(--verde);color:#fff;border:none;border-radius:7px;font-size:.73rem;font-weight:600;cursor:pointer;white-space:nowrap">Usar</button>'
+        + '<div style="display:flex;align-items:center;gap:6px;padding-left:34px">'
+        + '<span style="font-size:.74rem;color:#9ca3af;white-space:nowrap">Autor:</span>'
+        + '<input type="text" class="pens-edit-autor" placeholder="(opcional)" value="'+(p.autor||'')+'" data-idx="'+i+'" oninput="window._pensamentoEditado('+i+','autor',this.value)" style="flex:1;border:1px solid #e5e7eb;border-radius:6px;padding:4px 8px;font-size:.8rem;font-family:'Inter',sans-serif"/>'
+        + '</div>'
         + '</div>';
-    }).join('') : '<p style="color:#9ca3af;font-size:.83rem">Sem resultados.</p>';
+    }).join('');
   }
 
-  window.filtrarPensamentos = function() {
-    renderPensamentosAuto(document.getElementById('pens-filtro')?.value || '');
+  window._pensamentoEditado = function(idx, campo, valor) {
+    if (_frasesEditaveis[idx]) _frasesEditaveis[idx][campo] = valor;
   };
 
-  window.usarPensamento = function(idx) {
-    const p = PENSAMENTOS_ADMIN[idx];
-    document.getElementById('pens-texto').value = p.texto;
-    document.getElementById('pens-autor').value = p.autor || '';
-    document.getElementById('pens-data').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    document.getElementById('pens-data').focus();
-    const msgEl = document.getElementById('pens-msg');
-    msgEl.style.color = '#6b7280';
-    msgEl.textContent = 'Frase carregada — escolhe uma data e clica Guardar.';
+  window.filtrarPensamentos = function() {
+    renderFrasesEditaveis(document.getElementById('pens-filtro')?.value || '');
+  };
+
+  window.guardarTodosPensamentos = async function() {
+    const msgEl = document.getElementById('pens-salvar-msg');
+    msgEl.style.color = '#6b7280'; msgEl.textContent = 'A guardar…';
+    try {
+      const frases = _frasesEditaveis.filter(p => p.texto?.trim());
+      await setDoc(doc(db, 'config', 'pensamentos'), { frases });
+      msgEl.style.color = '#16a34a'; msgEl.textContent = '✅ ' + frases.length + ' frases guardadas com sucesso!';
+      setTimeout(() => { msgEl.textContent = ''; }, 4000);
+    } catch(e) { msgEl.style.color = '#dc2626'; msgEl.textContent = 'Erro: ' + e.message; }
+  };
+
+  window.adicionarPensamento = function() {
+    _frasesEditaveis.push({ texto: '', autor: '' });
+    renderFrasesEditaveis(document.getElementById('pens-filtro')?.value || '');
+    const container = document.getElementById('pens-todos');
+    container.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+    container.lastElementChild?.querySelector('textarea')?.focus();
+  };
+
+  window.apagarPensamento = function(idx) {
+    if (!confirm('Apagar esta frase da lista?')) return;
+    _frasesEditaveis.splice(idx, 1);
+    renderFrasesEditaveis(document.getElementById('pens-filtro')?.value || '');
   };
 
   // ── PENSAMENTO DO DIA ──────────────────────────────────────
@@ -1989,7 +2042,7 @@
     const inp = document.getElementById('pens-data');
     if (!inp.value) inp.value = new Date().toISOString().slice(0, 10);
     carregarMensagensAgendadas();
-    renderPensamentosAuto();
+    carregarPensamentosEditaveis();
   });
 
   window.guardarMensagemDiaria = async function() {
