@@ -2220,6 +2220,7 @@
     document.getElementById('ecra-citacoes').style.display = 'none';
     document.getElementById('ecra-datas').style.display    = 'block';
     window.bnavAtualizar('datas');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     filtrarDatas();
   };
 
@@ -2322,7 +2323,7 @@
     document.getElementById('ecra-citacoes').style.display = 'block';
     window.bnavAtualizar('ferramentas');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    _iniciarGerador();
+    if (!window._citGeradorIniciado) { _iniciarGerador(); window._citGeradorIniciado = true; }
     _renderBibliografia();
   };
 
@@ -2895,6 +2896,7 @@
   };
 
   async function contarDocs(uc) {
+    try {
     const snap = await getDocs(collection(db, 'ucs', uc.id, 'documentos'));
     snap.forEach(d => {
       const doc_ = { id:d.id, ucId:uc.id, ucNome:uc.nome, ...d.data() };
@@ -2913,6 +2915,11 @@
     const statEl = document.getElementById('stat-docs');
     if (statEl) statEl.textContent = totalDocs;
     window.atualizarBotoesFavoritos();
+    } catch(e) {
+      const el = document.getElementById('count-' + uc.id);
+      if (el) el.textContent = 'Erro';
+      console.warn('contarDocs:', uc.nome, e);
+    }
   }
 
   // --- SUGESTÕES ---
@@ -2978,7 +2985,7 @@
     notaAtualizar();
   };
 
-  function _notaFmt(v) { return v.toFixed(1).replace('.', ','); }
+  function _notaFmt(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
 
   window.notaAtualizar = function notaAtualizar() {
     const badge     = document.getElementById('nota-badge');
@@ -3090,7 +3097,8 @@
   window.guardarNotaUC = async function() {
     if (!ucAtualId) return;
     const modo = notaModoAtual;
-    let dadosNota = { modo, ects: 6, final: null, aprovado: false };
+    const ects = (ucsMap[ucAtualId]?.ects) || 6;
+    let dadosNota = { modo, ects, final: null, aprovado: false };
 
     if (modo === 'exame') {
       const ex = parseFloat(document.getElementById('nota-so-exame').value);
@@ -3152,10 +3160,10 @@
     if (modo === 'exame') {
       document.getElementById('nota-so-exame').value = nota.soExame ?? '';
     } else {
-      document.getElementById('nota-efolio-a').value  = nota.efolioA  ?? (nota.continua ?? '');
+      document.getElementById('nota-efolio-a').value  = nota.efolioA  ?? '';
       document.getElementById('nota-efolio-b').value  = nota.efolioB  ?? '';
       document.getElementById('nota-global').value    = nota.global   ?? '';
-      document.getElementById('nota-exame-rec').value = nota.exameRec ?? (nota.exame ?? '');
+      document.getElementById('nota-exame-rec').value = nota.exameRec ?? '';
     }
     window.notaAtualizar();
   }
@@ -3186,6 +3194,7 @@
     document.getElementById('ecra-ucs').style.display  = 'none';
     document.getElementById('ecra-docs').style.display = 'block';
     window.bnavAtualizar('ucs');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('docs-titulo').textContent  = uc.nome;
     document.getElementById('docs-sub').textContent     = uc.sinopse || SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
     carregarNotasUC(uc.id);
