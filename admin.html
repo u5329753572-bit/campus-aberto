@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AdministraÃ§Ã£o Â· CampusAberto</title>
+  <title>Administração · CampusAberto</title>
   <link rel="icon" type="image/png" href="logo-cs.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -103,7 +103,7 @@
     .tab-content { display:none; }
     .tab-content.ativa { display:block; }
 
-    /* SECÃÃO */
+    /* SECÇÃO */
     .secao-titulo {
       font-family:'Playfair Display',serif;
       font-size:1.4rem;
@@ -185,7 +185,7 @@
     .btn-suspender{ background:#fee2e2; color:#991b1b; }
     .btn-remover  { background:#f1f5f9; color:#475569; }
 
-    /* FORMULÃRIOS */
+    /* FORMULÁRIOS */
     .form-card {
       background:var(--branco);
       border-radius:12px;
@@ -356,66 +356,66 @@
 
 <header>
   <div class="header-logo">
-    <img src="logo-cs.png" alt="CS â RepÃºblica das CiÃªncias Sociais"/>
-    <span>CiÃªncias Sociais <em>UAb</em></span>
+    <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
+    <span>Ciências Sociais <em>UAb</em></span>
     <span class="badge-admin">ADMIN</span>
   </div>
-  <a href="app.html" class="btn-sair" style="text-decoration:none;background:var(--ouro,#d89b2c);color:#071d34;font-weight:700" title="Regressar Ã  aplicaÃ§Ã£o">â App</a>
+  <a href="app.html" class="btn-sair" style="text-decoration:none;background:var(--ouro,#d89b2c);color:#071d34;font-weight:700" title="Regressar à aplicação">← App</a>
   <button class="btn-sair" onclick="sair()">Sair</button>
 </header>
 
 <main>
   <div class="admin-intro">
-    <div><span class="admin-kicker">Ãrea reservada</span><h1>Painel AdministraÃ§Ã£o</h1></div>
-    <p>Gere acessos, unidades curriculares, documentos, datas acadÃ©micas e o histÃ³rico da comunidade num Ãºnico lugar.</p>
+    <div><span class="admin-kicker">Área reservada</span><h1>Painel Administração</h1></div>
+    <p>Gere acessos, unidades curriculares, documentos, datas académicas e o histórico da comunidade num único lugar.</p>
   </div>
   <div class="tabs-nav">
     <button type="button" class="tab-nav ativa" onclick="mudarTab('utilizadores')">Utilizadores</button>
     <button type="button" class="tab-nav" onclick="mudarTab('ucs')">Unidades curriculares</button>
     <button type="button" class="tab-nav" onclick="mudarTab('documentos')">Documentos</button>
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
-    <button type="button" class="tab-nav" onclick="mudarTab('downloads')">HistÃ³rico</button>
-    <button type="button" class="tab-nav" onclick="mudarTab('sugestoes')" id="tab-nav-sugestoes">ð¡ SugestÃµes</button>
-    <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">ð¢ Online</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('sugestoes')" id="tab-nav-sugestoes">💡 Sugestões</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">🟢 Online</button>
   </div>
 
   <!-- TAB: UTILIZADORES -->
   <div class="tab-content ativa" id="tab-utilizadores">
-    <h2 class="secao-titulo">GestÃ£o de Utilizadores</h2>
+    <h2 class="secao-titulo">Gestão de Utilizadores</h2>
 
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num" id="s-total">â</div><div class="stat-label">Total</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-ativos">â</div><div class="stat-label">Ativos</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-pendentes">â</div><div class="stat-label">Pendentes</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-suspensos">â</div><div class="stat-label">Suspensos</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-total">–</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-ativos">–</div><div class="stat-label">Ativos</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-pendentes">–</div><div class="stat-label">Pendentes</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-suspensos">–</div><div class="stat-label">Suspensos</div></div>
     </div>
 
     <div class="tabela-wrap">
       <div class="tabela-header">
-        <span>Utilizadores pendentes de ativaÃ§Ã£o</span>
+        <span>Utilizadores pendentes de ativação</span>
       </div>
       <table>
-        <thead><tr><th>Nome</th><th>Email</th><th>TelemÃ³vel</th><th>CÃ³digo</th><th>AÃ§Ãµes</th></tr></thead>
+        <thead><tr><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Código</th><th>Ações</th></tr></thead>
         <tbody id="tbody-pendentes"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
 
-    <!-- Criar perfil para utilizador Ã³rfÃ£o (existe no Auth mas nÃ£o no Firestore) -->
+    <!-- Criar perfil para utilizador órfão (existe no Auth mas não no Firestore) -->
     <details style="margin-bottom:20px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 16px">
-      <summary style="cursor:pointer;font-weight:600;font-size:.85rem;color:#92400e">â ï¸ Criar perfil para utilizador sem documento</summary>
-      <p style="font-size:.8rem;color:#78350f;margin:8px 0 12px">Usa este formulÃ¡rio quando o utilizador existe no Firebase Auth mas nÃ£o aparece na lista (o registo falhou a meio). O UID encontra-se na Consola do Firebase â Authentication.</p>
+      <summary style="cursor:pointer;font-weight:600;font-size:.85rem;color:#92400e">⚠️ Criar perfil para utilizador sem documento</summary>
+      <p style="font-size:.8rem;color:#78350f;margin:8px 0 12px">Usa este formulário quando o utilizador existe no Firebase Auth mas não aparece na lista (o registo falhou a meio). O UID encontra-se na Consola do Firebase → Authentication.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
         <input type="text" id="orphan-uid"   placeholder="UID (Firebase Auth)" style="padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:.82rem;font-family:monospace"/>
         <input type="text" id="orphan-nome"  placeholder="Nome completo"       style="padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:.82rem"/>
         <input type="email" id="orphan-email" placeholder="Email"              style="padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:.82rem"/>
-        <input type="text" id="orphan-tel"   placeholder="TelemÃ³vel (opcional)" style="padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:.82rem"/>
+        <input type="text" id="orphan-tel"   placeholder="Telemóvel (opcional)" style="padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:.82rem"/>
       </div>
       <button class="btn-primario" style="background:#047857" onclick="window.criarPerfilOrfao()">Criar perfil (fica pendente)</button>
       <div id="orphan-msg" style="margin-top:8px;font-size:.8rem"></div>
     </details>
 
     <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <input type="text" id="filtro-user-nome" placeholder="ð Pesquisar por nome, email ou telemÃ³vel..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem" oninput="filtrarUtilizadores()"/>
+      <input type="text" id="filtro-user-nome" placeholder="🔍 Pesquisar por nome, email ou telemóvel..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem" oninput="filtrarUtilizadores()"/>
       <select id="filtro-user-estado" onchange="filtrarUtilizadores()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
         <option value="">Todos os estados</option>
         <option value="ativo">Ativo</option>
@@ -423,8 +423,8 @@
         <option value="suspenso">Suspenso</option>
       </select>
       <select id="filtro-user-ordem" onchange="filtrarUtilizadores()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
-        <option value="nome">Ordenar por nome AâZ</option>
-        <option value="nome-desc">Ordenar por nome ZâA</option>
+        <option value="nome">Ordenar por nome A→Z</option>
+        <option value="nome-desc">Ordenar por nome Z→A</option>
         <option value="estado">Ordenar por estado</option>
       </select>
     </div>
@@ -433,7 +433,7 @@
         <span>Todos os utilizadores</span><span id="filtro-user-count" style="font-size:.78rem;color:#9ca3af"></span>
       </div>
       <table>
-        <thead><tr><th>Nome</th><th>Email</th><th>TelemÃ³vel</th><th>CÃ³digo</th><th>Estado</th><th>AÃ§Ãµes</th></tr></thead>
+        <thead><tr><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Código</th><th>Estado</th><th>Ações</th></tr></thead>
         <tbody id="tbody-todos"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -444,7 +444,7 @@
     <h2 class="secao-titulo">Unidades Curriculares</h2>
 
     <div class="form-card">
-      <h3>â Adicionar UC</h3>
+      <h3>➕ Adicionar UC</h3>
       <div class="form-row">
         <div class="campo">
           <label>Nome da UC</label>
@@ -453,16 +453,16 @@
         <div class="campo" style="max-width:130px">
           <label>Ano</label>
           <select id="uc-ano">
-            <option value="1">1Âº Ano</option>
-            <option value="2">2Âº Ano</option>
-            <option value="3">3Âº Ano</option>
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
           </select>
         </div>
         <div class="campo" style="max-width:150px">
           <label>Semestre</label>
           <select id="uc-semestre">
-            <option value="1">1Âº Semestre</option>
-            <option value="2">2Âº Semestre</option>
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
           </select>
         </div>
         <div class="campo" style="max-width:110px">
@@ -472,7 +472,7 @@
       </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.82rem;cursor:pointer">
         <input type="checkbox" id="uc-oculta" style="width:16px;height:16px;cursor:pointer"/>
-        Ocultar da biblioteca acadÃ©mica
+        Ocultar da biblioteca académica
       </label>
       <button class="btn-primario" id="btn-criar-uc" onclick="criarUC()">Criar UC</button>
       <div class="msg-form" id="msg-uc"></div>
@@ -481,7 +481,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>UCs existentes</span></div>
       <table>
-        <thead><tr><th>Ano</th><th>Semestre</th><th>Ordem</th><th>Nome</th><th>Documentos</th><th>AÃ§Ãµes</th></tr></thead>
+        <thead><tr><th>Ano</th><th>Semestre</th><th>Ordem</th><th>Nome</th><th>Documentos</th><th>Ações</th></tr></thead>
         <tbody id="tbody-ucs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -496,7 +496,7 @@
         <div class="campo">
           <label>UC de destino</label>
           <select id="doc-uc">
-            <option value="">â Seleciona a UC â</option>
+            <option value="">— Seleciona a UC —</option>
           </select>
         </div>
         <div class="campo">
@@ -505,16 +505,16 @@
         </div>
       </div>
       <div class="campo" style="margin-bottom:14px">
-        <label>DescriÃ§Ã£o (opcional)</label>
-        <textarea id="doc-desc" placeholder="Breve descriÃ§Ã£o do conteÃºdo..."></textarea>
+        <label>Descrição (opcional)</label>
+        <textarea id="doc-desc" placeholder="Breve descrição do conteúdo..."></textarea>
       </div>
       <div class="campo" style="margin-bottom:18px">
         <label>Tipo de recurso</label>
         <div style="display:flex;gap:8px;margin-top:6px">
           <button type="button" id="tipo-pdf-btn" onclick="window.selecionarTipoDoc('pdf')"
-            style="flex:1;padding:9px;border-radius:8px;border:2px solid #166534;background:#dcfce7;color:#166534;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">ð Ficheiro PDF</button>
+            style="flex:1;padding:9px;border-radius:8px;border:2px solid #166534;background:#dcfce7;color:#166534;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">📄 Ficheiro PDF</button>
           <button type="button" id="tipo-link-btn" onclick="window.selecionarTipoDoc('link')"
-            style="flex:1;padding:9px;border-radius:8px;border:2px solid #d1d5db;background:#f9fafb;color:#6b7280;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">ð Link externo</button>
+            style="flex:1;padding:9px;border-radius:8px;border:2px solid #d1d5db;background:#f9fafb;color:#6b7280;font:700 .8rem/1 'Inter',sans-serif;cursor:pointer">🔗 Link externo</button>
         </div>
         <input type="hidden" id="doc-tipo" value="pdf"/>
       </div>
@@ -522,7 +522,7 @@
         <label class="campo" style="display:block;margin-bottom:6px;font-size:.82rem;font-weight:600;color:#374151">Ficheiro PDF</label>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:#f1f5f9;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:.85rem;color:#374151">
-            ð Selecionar PDF
+            📎 Selecionar PDF
             <input type="file" id="doc-ficheiro" accept=".pdf" style="display:none" onchange="window.uploadPdfGithub(this)"/>
           </label>
           <span id="doc-upload-estado" style="font-size:.82rem;color:#6b7280"></span>
@@ -547,7 +547,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Documentos carregados</span></div>
       <table>
-        <thead><tr><th>UC</th><th>Nome</th><th>DescriÃ§Ã£o</th><th style="text-align:center">â Downloads</th><th>AÃ§Ãµes</th></tr></thead>
+        <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th style="text-align:center">↓ Downloads</th><th>Ações</th></tr></thead>
         <tbody id="tbody-docs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -555,22 +555,22 @@
 
   <!-- TAB: DATAS -->
   <div class="tab-content" id="tab-datas">
-    <h2 class="secao-titulo">Datas AcadÃ©micas</h2>
+    <h2 class="secao-titulo">Datas Académicas</h2>
 
     <div class="form-card">
       <h3>Adicionar uma data ao painel dos estudantes</h3>
       <div class="form-row">
         <div class="campo">
-          <label for="data-titulo">TÃ­tulo</label>
-          <input type="text" id="data-titulo" placeholder="ex: Entrega do e-fÃ³lio A"/>
+          <label for="data-titulo">Título</label>
+          <input type="text" id="data-titulo" placeholder="ex: Entrega do e-fólio A"/>
         </div>
         <div class="campo" style="max-width:210px">
           <label for="data-tipo">Tipo</label>
           <select id="data-tipo">
             <option value="Global/Exame">Global/Exame</option>
-            <option value="E-fÃ³lio">E-fÃ³lio</option>
+            <option value="E-fólio">E-fólio</option>
             <option value="Recurso">Recurso</option>
-            <option value="Prazo acadÃ©mico">Prazo acadÃ©mico</option>
+            <option value="Prazo académico">Prazo académico</option>
             <option value="Outro">Outro</option>
           </select>
         </div>
@@ -583,27 +583,27 @@
         <div class="campo" style="max-width:150px">
           <label for="data-ano">Ano (opcional)</label>
           <select id="data-ano" onchange="toggleMinorData()">
-            <option value="">â Todos â</option>
-            <option value="1">1Âº Ano</option>
-            <option value="2">2Âº Ano</option>
-            <option value="3">3Âº Ano</option>
+            <option value="">— Todos —</option>
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
           </select>
         </div>
         <div class="campo" style="max-width:160px">
           <label for="data-semestre">Semestre (opcional)</label>
           <select id="data-semestre">
-            <option value="">â Todos â</option>
-            <option value="1">1Âº Semestre</option>
-            <option value="2">2Âº Semestre</option>
+            <option value="">— Todos —</option>
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
           </select>
         </div>
         <div class="campo" id="campo-minor-data" style="display:none">
           <label for="data-minor">Minor</label>
           <select id="data-minor">
-            <option value="">â Todos â</option>
-            <option value="CiÃªncia PolÃ­tica e Administrativa">CiÃªncia PolÃ­tica e Administrativa</option>
+            <option value="">— Todos —</option>
+            <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
             <option value="Psicologia">Psicologia</option>
-            <option value="IntervenÃ§Ã£o Social">IntervenÃ§Ã£o Social</option>
+            <option value="Intervenção Social">Intervenção Social</option>
             <option value="Sociologia">Sociologia</option>
           </select>
         </div>
@@ -611,16 +611,16 @@
       <div class="form-row">
         <div class="campo">
           <label for="data-uc">Unidade Curricular (opcional)</label>
-          <select id="data-uc"><option value="">â Data geral â</option></select>
+          <select id="data-uc"><option value="">— Data geral —</option></select>
         </div>
         <div class="campo">
-          <label for="data-link">LigaÃ§Ã£o de apoio (opcional)</label>
+          <label for="data-link">Ligação de apoio (opcional)</label>
           <input type="url" id="data-link" placeholder="https://..."/>
         </div>
       </div>
       <div class="campo" style="margin-bottom:18px">
         <label for="data-desc">Nota breve (opcional)</label>
-        <textarea id="data-desc" placeholder="InformaÃ§Ã£o adicional para os estudantes..."></textarea>
+        <textarea id="data-desc" placeholder="Informação adicional para os estudantes..."></textarea>
       </div>
       <button class="btn-primario" id="btn-criar-data" onclick="criarData()">Publicar data</button>
       <div class="msg-form" id="msg-data"></div>
@@ -629,7 +629,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Datas publicadas</span></div>
       <table>
-        <thead><tr><th>Data</th><th>Tipo</th><th>Ano/Sem</th><th>Minor</th><th>UC</th><th>TÃ­tulo</th><th>AÃ§Ãµes</th></tr></thead>
+        <thead><tr><th>Data</th><th>Tipo</th><th>Ano/Sem</th><th>Minor</th><th>UC</th><th>Título</th><th>Ações</th></tr></thead>
         <tbody id="tbody-datas"><tr><td colspan="7" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -638,51 +638,51 @@
   <!-- TAB: ONLINE -->
   <div class="tab-content" id="tab-online">
     <h2 class="secao-titulo">Utilizadores Online</h2>
-    <p style="color:#6b7280;font-size:.85rem;margin-bottom:16px">SessÃµes ativas nos Ãºltimos 5 minutos.</p>
-    <button class="btn-primario" style="margin-bottom:20px;background:#0369a1" onclick="carregarOnline()">ð Atualizar</button>
+    <p style="color:#6b7280;font-size:.85rem;margin-bottom:16px">Sessões ativas nos últimos 5 minutos.</p>
+    <button class="btn-primario" style="margin-bottom:20px;background:#0369a1" onclick="carregarOnline()">🔄 Atualizar</button>
     <div id="online-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:32px">
-      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Atualizar para ver quem estÃ¡ online.</p>
+      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Atualizar para ver quem está online.</p>
     </div>
 
-    <h2 class="secao-titulo" style="margin-top:0">HistÃ³rico de SessÃµes</h2>
-    <p style="color:#6b7280;font-size:.85rem;margin-bottom:12px">Todas as sessÃµes registadas, da mais recente para a mais antiga.</p>
+    <h2 class="secao-titulo" style="margin-top:0">Histórico de Sessões</h2>
+    <p style="color:#6b7280;font-size:.85rem;margin-bottom:12px">Todas as sessões registadas, da mais recente para a mais antiga.</p>
     <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
       <input type="text" id="filtro-sessao-nome" placeholder="Filtrar por nome..." style="padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem;width:200px" oninput="filtrarHistorico()"/>
       <select id="filtro-sessao-dias" onchange="carregarHistorico()" style="padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.85rem">
-        <option value="7">Ãltimos 7 dias</option>
-        <option value="30">Ãltimos 30 dias</option>
-        <option value="90">Ãltimos 90 dias</option>
+        <option value="7">Últimos 7 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="90">Últimos 90 dias</option>
         <option value="0">Todas</option>
       </select>
-      <button class="btn-primario" style="background:#0369a1" onclick="carregarHistorico()">ð Carregar</button>
+      <button class="btn-primario" style="background:#0369a1" onclick="carregarHistorico()">🔄 Carregar</button>
     </div>
     <div id="historico-stats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
     <div id="historico-lista" style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden">
-      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Carregar para ver o histÃ³rico.</p>
+      <p style="padding:20px;color:#9ca3af;text-align:center">Clica em Carregar para ver o histórico.</p>
     </div>
   </div>
 
   <div class="tab-content" id="tab-downloads">
-    <h2 class="secao-titulo">HistÃ³rico de Downloads</h2>
+    <h2 class="secao-titulo">Histórico de Downloads</h2>
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Todos os downloads registados</span></div>
       <table>
-        <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>CÃ³digo User</th><th>CÃ³digo DL</th><th>Documento</th></tr></thead>
+        <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>Código User</th><th>Código DL</th><th>Documento</th></tr></thead>
         <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
 
-  <!-- TAB: SUGESTÃES -->
+  <!-- TAB: SUGESTÕES -->
   <div class="tab-content" id="tab-sugestoes">
-    <h2 class="secao-titulo">ð¡ SugestÃµes dos Utilizadores</h2>
+    <h2 class="secao-titulo">💡 Sugestões dos Utilizadores</h2>
     <div class="tabela-wrap">
       <div class="tabela-header" style="display:flex;align-items:center;justify-content:space-between">
-        <span id="sugestoes-contador">A carregarâ¦</span>
-        <button onclick="marcarTodasLidas()" style="padding:5px 12px;font-size:.75rem;border:1px solid #ccc;border-radius:6px;cursor:pointer;background:#f8f8f8">â Marcar todas como lidas</button>
+        <span id="sugestoes-contador">A carregar…</span>
+        <button onclick="marcarTodasLidas()" style="padding:5px 12px;font-size:.75rem;border:1px solid #ccc;border-radius:6px;cursor:pointer;background:#f8f8f8">✓ Marcar todas como lidas</button>
       </div>
       <table>
-        <thead><tr><th>Data</th><th>Nome</th><th>SugestÃ£o</th><th>Estado</th><th>AÃ§Ã£o</th></tr></thead>
+        <thead><tr><th>Data</th><th>Nome</th><th>Sugestão</th><th>Estado</th><th>Ação</th></tr></thead>
         <tbody id="tbody-sugestoes"><tr><td colspan="5" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -697,7 +697,7 @@
     getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
     collection, getDocs, addDoc, query, orderBy, where, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  // â ï¸ SUBSTITUI pelas tuas credenciais Firebase
+  // ⚠️ SUBSTITUI pelas tuas credenciais Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
     authDomain: "uab-comunidade.firebaseapp.com",
@@ -774,7 +774,7 @@
     const lista   = document.getElementById('historico-lista');
     const statsEl = document.getElementById('historico-stats');
     if (!sessoes.length) {
-      lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">Nenhuma sessÃ£o encontrada.</p>';
+      lista.innerHTML = '<p style="padding:20px;color:#9ca3af;text-align:center">Nenhuma sessão encontrada.</p>';
       statsEl.innerHTML = '';
       return;
     }
@@ -787,13 +787,13 @@
       <div style="font-size:1.4rem;font-weight:700;color:#071d34">${val}</div>
       <div style="font-size:.75rem;color:#6b7280;margin-top:2px">${label}</div>
     </div>`;
-    statsEl.innerHTML = statCard('sessÃµes', totalSessoes) + statCard('utilizadores Ãºnicos', utilizadores) + (duracaoMedia!=null ? statCard('duraÃ§Ã£o mÃ©dia', duracaoMedia+'min') : '');
+    statsEl.innerHTML = statCard('sessões', totalSessoes) + statCard('utilizadores únicos', utilizadores) + (duracaoMedia!=null ? statCard('duração média', duracaoMedia+'min') : '');
 
-    // Group by uid (excluir sessÃµes do prÃ³prio admin)
+    // Group by uid (excluir sessões do próprio admin)
     const grupos = {};
     sessoes.filter(s => s.uid !== _adminUid).forEach(s => {
       const uid = s.uid || 'desconhecido';
-      if (!grupos[uid]) grupos[uid] = { nome: s.nome || 'â', sessoes: [] };
+      if (!grupos[uid]) grupos[uid] = { nome: s.nome || '—', sessoes: [] };
       grupos[uid].sessoes.push(s);
     });
 
@@ -807,25 +807,25 @@
         const t = s.inicio?.toDate?.() || null;
         return (!a || (t && t > a)) ? t : a;
       }, null);
-      const ultimaStr = ultima ? ultima.toLocaleDateString('pt-PT') : 'â';
+      const ultimaStr = ultima ? ultima.toLocaleDateString('pt-PT') : '—';
 
-      rows += `<tr style="border-top:1px solid #e5e7eb;background:#f9fafb;cursor:pointer" onclick="document.getElementById('${gid}').style.display=document.getElementById('${gid}').style.display==='none'?'table-row-group':'none';this.querySelector('.toggle-icon').textContent=document.getElementById('${gid}').style.display==='none'?'ï¼':'ï¼'">
+      rows += `<tr style="border-top:1px solid #e5e7eb;background:#f9fafb;cursor:pointer" onclick="document.getElementById('${gid}').style.display=document.getElementById('${gid}').style.display==='none'?'table-row-group':'none';this.querySelector('.toggle-icon').textContent=document.getElementById('${gid}').style.display==='none'?'＋':'－'">
         <td style="padding:10px 14px;font-size:.85rem;font-weight:700;color:#071d34">
-          <span class="toggle-icon" style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#e5e7eb;border-radius:6px;font-size:.8rem;margin-right:8px;font-weight:700">ï¼</span>
+          <span class="toggle-icon" style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#e5e7eb;border-radius:6px;font-size:.8rem;margin-right:8px;font-weight:700">＋</span>
           ${g.nome}
         </td>
-        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${ns} sess${ns===1?'Ã£o':'Ãµes'}</td>
-        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${durTotal ? durTotal+' min total' : 'â'}</td>
-        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">Ãltima: ${ultimaStr}</td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${ns} sess${ns===1?'ão':'ões'}</td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">${durTotal ? durTotal+' min total' : '—'}</td>
+        <td style="padding:10px 14px;font-size:.78rem;color:#6b7280">Última: ${ultimaStr}</td>
       </tr>
       <tbody id="${gid}" style="display:none">`;
 
       g.sessoes.forEach(s => {
-        const inicio = s.inicio?.toDate?.() ? s.inicio.toDate().toLocaleString('pt-PT') : 'â';
-        const fim    = s.fim?.toDate?.()    ? s.fim.toDate().toLocaleString('pt-PT')    : (s.ativo ? '<span style="color:#22c55e">â online</span>' : 'â');
-        const dur    = s.duracao != null    ? s.duracao + ' min' : 'â';
+        const inicio = s.inicio?.toDate?.() ? s.inicio.toDate().toLocaleString('pt-PT') : '—';
+        const fim    = s.fim?.toDate?.()    ? s.fim.toDate().toLocaleString('pt-PT')    : (s.ativo ? '<span style="color:#22c55e">● online</span>' : '—');
+        const dur    = s.duracao != null    ? s.duracao + ' min' : '—';
         rows += `<tr style="border-top:1px solid #f3f4f6;background:#fff">
-          <td style="padding:8px 14px 8px 52px;font-size:.78rem;color:#6b7280">â</td>
+          <td style="padding:8px 14px 8px 52px;font-size:.78rem;color:#6b7280">—</td>
           <td style="padding:8px 14px;font-size:.78rem;color:#6b7280">${inicio}</td>
           <td style="padding:8px 14px;font-size:.78rem;color:#6b7280">${fim}</td>
           <td style="padding:8px 14px;font-size:.78rem;color:#374151">${dur}</td>
@@ -838,9 +838,9 @@
     lista.innerHTML = `<table style="width:100%;border-collapse:collapse">
       <thead><tr style="background:#f0f4f8;font-size:.75rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
         <th style="padding:10px 14px;text-align:left">Utilizador</th>
-        <th style="padding:10px 14px;text-align:left">SessÃµes</th>
+        <th style="padding:10px 14px;text-align:left">Sessões</th>
         <th style="padding:10px 14px;text-align:left">Tempo</th>
-        <th style="padding:10px 14px;text-align:left">Ãltima visita</th>
+        <th style="padding:10px 14px;text-align:left">Última visita</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
@@ -862,20 +862,20 @@
         const quando = p.ultimaVez?.toDate ? p.ultimaVez.toDate() : new Date();
         const diffMin = Math.floor((Date.now() - quando.getTime()) / 60000);
         return `<tr>
-          <td style="padding:10px 16px;font-size:.85rem;font-weight:600">${p.nome || 'â'}</td>
-          <td style="padding:10px 16px;font-size:.82rem;color:#6b7280">${p.uid || 'â'}</td>
-          <td style="padding:10px 16px;font-size:.82rem;color:#22c55e">hÃ¡ ${diffMin} min</td>
+          <td style="padding:10px 16px;font-size:.85rem;font-weight:600">${p.nome || '—'}</td>
+          <td style="padding:10px 16px;font-size:.82rem;color:#6b7280">${p.uid || '—'}</td>
+          <td style="padding:10px 16px;font-size:.82rem;color:#22c55e">há ${diffMin} min</td>
         </tr>`;
       }).join('');
       lista.innerHTML = `<table style="width:100%;border-collapse:collapse">
         <thead><tr style="background:#f9fafb;font-size:.78rem;text-transform:uppercase;color:#9ca3af;letter-spacing:.05em">
           <th style="padding:10px 16px;text-align:left">Nome</th>
           <th style="padding:10px 16px;text-align:left">UID</th>
-          <th style="padding:10px 16px;text-align:left">Ãltima atividade</th>
+          <th style="padding:10px 16px;text-align:left">Última atividade</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
-      <p style="padding:10px 16px;font-size:.78rem;color:#9ca3af;border-top:1px solid #f3f4f6">${snap.size} sessÃ£o(Ãµes) ativa(s)</p>`;
+      <p style="padding:10px 16px;font-size:.78rem;color:#9ca3af;border-top:1px solid #f3f4f6">${snap.size} sessão(ões) ativa(s)</p>`;
     } catch(e) {
       lista.innerHTML = `<p style="padding:20px;color:#dc2626">Erro: ${e.message}</p>`;
     }
@@ -902,7 +902,7 @@
     if (ordem === 'nome-desc') lista.sort((a,b) => (b.nome||'').localeCompare(a.nome||''));
     if (ordem === 'estado')    lista.sort((a,b) => (a.estado||'').localeCompare(b.estado||''));
     const cnt = document.getElementById('filtro-user-count');
-    if (cnt) cnt.textContent = lista.length !== _todosUtilizadores.length ? ` Â· ${lista.length} de ${_todosUtilizadores.length}` : ` Â· ${lista.length} total`;
+    if (cnt) cnt.textContent = lista.length !== _todosUtilizadores.length ? ` · ${lista.length} de ${_todosUtilizadores.length}` : ` · ${lista.length} total`;
     renderTabelaTodos(lista);
   };
 
@@ -914,13 +914,13 @@
           <tr>
             <td>${esc(u.nome)}</td>
             <td>${esc(u.email)}</td>
-            <td>${esc(u.tel || u.telefone || 'â')}</td>
-            <td><span class="log-codigo">${esc(u.codigo || 'â')}</span></td>
+            <td>${esc(u.tel || u.telefone || '—')}</td>
+            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td><span class="badge badge-${esc(u.estado)}">${esc(u.estado)}</span></td>
             <td class="acoes">
               ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
-              ${u.admin ? `<button class="btn-acao" style="background:#fef3c7;color:#92400e" onclick="window.alterarAdmin('${u.id}',false)">â Admin</button>` : `<button class="btn-acao" style="background:#f1f5f9;color:#475569" onclick="window.alterarAdmin('${u.id}',true)">â Admin</button>`}
+              ${u.admin ? `<button class="btn-acao" style="background:#fef3c7;color:#92400e" onclick="window.alterarAdmin('${u.id}',false)">★ Admin</button>` : `<button class="btn-acao" style="background:#f1f5f9;color:#475569" onclick="window.alterarAdmin('${u.id}',true)">☆ Admin</button>`}
               <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button>
             </td>
           </tr>`).join('');
@@ -944,16 +944,16 @@
     // Tabela pendentes
     const tbP = document.getElementById('tbody-pendentes');
     tbP.innerHTML = pendentes.length === 0
-      ? '<tr><td colspan="5" class="empty-msg">Nenhum pedido pendente â</td></tr>'
+      ? '<tr><td colspan="5" class="empty-msg">Nenhum pedido pendente ✓</td></tr>'
       : pendentes.map(u => `
           <tr>
             <td>${esc(u.nome)}</td>
             <td>${esc(u.email)}</td>
-            <td>${esc(u.tel || u.telefone || 'â')}</td>
-            <td><span class="log-codigo">${esc(u.codigo || 'â')}</span></td>
+            <td>${esc(u.tel || u.telefone || '—')}</td>
+            <td><span class="log-codigo">${esc(u.codigo || '—')}</span></td>
             <td class="acoes">
-              <button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">â Ativar</button>
-              <button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">â Recusar</button>
+              <button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">✓ Ativar</button>
+              <button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">✗ Recusar</button>
             </td>
           </tr>`).join('');
 
@@ -966,14 +966,14 @@
     const email = document.getElementById('orphan-email').value.trim();
     const tel   = document.getElementById('orphan-tel').value.trim();
     const msg   = document.getElementById('orphan-msg');
-    if (!uid || !nome || !email) { msg.style.color='#dc2626'; msg.textContent='UID, Nome e Email sÃ£o obrigatÃ³rios.'; return; }
+    if (!uid || !nome || !email) { msg.style.color='#dc2626'; msg.textContent='UID, Nome e Email são obrigatórios.'; return; }
     try {
       const ref = doc(db, 'utilizadores', uid);
       const snap = await getDoc(ref);
-      if (snap.exists()) { msg.style.color='#d97706'; msg.textContent='JÃ¡ existe um documento para este UID.'; return; }
+      if (snap.exists()) { msg.style.color='#d97706'; msg.textContent='Já existe um documento para este UID.'; return; }
       const codigo = 'CS-' + uid.slice(0,7).toUpperCase();
       await setDoc(ref, { nome, email, tel, codigo, estado: 'pendente', criadoEm: serverTimestamp() });
-      msg.style.color='#047857'; msg.textContent='â Perfil criado com estado pendente. Ativa-o na lista abaixo.';
+      msg.style.color='#047857'; msg.textContent='✓ Perfil criado com estado pendente. Ativa-o na lista abaixo.';
       ['orphan-uid','orphan-nome','orphan-email','orphan-tel'].forEach(id => document.getElementById(id).value='');
       carregarTudo();
     } catch(e) { msg.style.color='#dc2626'; msg.textContent='Erro: '+e.message; }
@@ -994,8 +994,8 @@
           });
         }
       } catch(e) {
-        console.error('Email de ativaÃ§Ã£o nÃ£o enviado:', e);
-        alert('â ï¸ Utilizador ativado, mas o email de notificaÃ§Ã£o falhou:\n' + (e.text || e.message || JSON.stringify(e)));
+        console.error('Email de ativação não enviado:', e);
+        alert('⚠️ Utilizador ativado, mas o email de notificação falhou:\n' + (e.text || e.message || JSON.stringify(e)));
       }
     }
 
@@ -1003,7 +1003,7 @@
   };
 
   window.alterarAdmin = async function(uid, tornarAdmin) {
-    const acao = tornarAdmin ? 'Dar privilÃ©gios de administrador' : 'Remover privilÃ©gios de administrador';
+    const acao = tornarAdmin ? 'Dar privilégios de administrador' : 'Remover privilégios de administrador';
     if (!confirm(acao + '?')) return;
     await updateDoc(doc(db, 'utilizadores', uid), { admin: tornarAdmin });
     carregarUtilizadores();
@@ -1022,7 +1022,7 @@
     window._ucsCache = {};
     snap.forEach(d => { const o = { id: d.id, ...d.data() }; ucsList.push(o); window._ucsCache[d.id] = o; });
 
-    // Ordena: ano â semestre â ordem
+    // Ordena: ano → semestre → ordem
     ucsList.sort((a, b) => {
       const dA = (a.ano||99)*100 + (a.semestre||99);
       const dB = (b.ano||99)*100 + (b.semestre||99);
@@ -1036,11 +1036,11 @@
       ? '<tr><td colspan="6" class="empty-msg">Nenhuma UC criada</td></tr>'
       : ucsList.map(u => `
           <tr>
-            <td>${u.ano ? u.ano + 'Âº' : 'â'}</td>
-            <td>${u.semestre ? u.semestre + 'Âº' : 'â'}</td>
-            <td>${u.ordem || 'â'}</td>
+            <td>${u.ano ? u.ano + 'º' : '—'}</td>
+            <td>${u.semestre ? u.semestre + 'º' : '—'}</td>
+            <td>${u.ordem || '—'}</td>
             <td>${esc(u.nome)}</td>
-            <td id="uc-docs-${u.id}">â</td>
+            <td id="uc-docs-${u.id}">—</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarUC('${u.id}')">Editar</button>
               <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button>
@@ -1056,14 +1056,14 @@
 
     // Atualiza select de docs (com info de ano/semestre)
     const sel = document.getElementById('doc-uc');
-    sel.innerHTML = '<option value="">â Seleciona a UC â</option>' +
+    sel.innerHTML = '<option value="">— Seleciona a UC —</option>' +
       ucsList.map(u => {
-        const label = u.ano ? `${u.ano}ÂºA ${u.semestre ? 'Â· ' + u.semestre + 'ÂºS' : ''} Â· ${u.nome}` : u.nome;
+        const label = u.ano ? `${u.ano}ºA ${u.semestre ? '· ' + u.semestre + 'ºS' : ''} · ${u.nome}` : u.nome;
         return `<option value="${u.id}">${esc(label)}</option>`;
       }).join('');
 
     const selData = document.getElementById('data-uc');
-    selData.innerHTML = '<option value="">â Data geral â</option>' +
+    selData.innerHTML = '<option value="">— Data geral —</option>' +
       ucsList.map(u => `<option value="${u.id}">${esc(u.nome)}</option>`).join('');
   }
 
@@ -1076,7 +1076,7 @@
     document.getElementById('uc-ordem').value = u.ordem || '';
     document.getElementById('uc-oculta').checked = !!u.oculta;
     window._editandoUCId = id;
-    document.getElementById('btn-criar-uc').textContent = 'Guardar alteraÃ§Ãµes';
+    document.getElementById('btn-criar-uc').textContent = 'Guardar alterações';
     document.getElementById('uc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
@@ -1100,7 +1100,7 @@
       msgEl.textContent = `UC "${nome}" atualizada.`;
     } else {
       await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, criadoEm: serverTimestamp() });
-      msgEl.textContent = `UC "${nome}" criada (${ano}Âº Ano Â· ${semestre}Âº Semestre).`;
+      msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
     }
     document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
@@ -1120,12 +1120,12 @@
     carregarUCs(); carregarDocs();
   };
 
-  // --- UPLOAD PDF â GITHUB ---
+  // --- UPLOAD PDF → GITHUB ---
   window.uploadPdfGithub = async function(input) {
     const file = input.files[0];
     if (!file) return;
     const estado = document.getElementById('doc-upload-estado');
-    estado.textContent = 'â³ A fazer upload...';
+    estado.textContent = '⏳ A fazer upload...';
     estado.style.color = '#92400e';
     try {
       const reader = new FileReader();
@@ -1138,7 +1138,7 @@
       const path = `docs/${filename}`;
       const PAT  = ['ghp_dZOJcQ0a','fXEC3yORCcuK','T1YvEiuGry3LKrTs'].join('');
       const REPO = 'u5329753572-bit/campus-aberto';
-      // Verificar se jÃ¡ existe (para obter SHA)
+      // Verificar se já existe (para obter SHA)
       let sha = null;
       const check = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,
         { headers: { 'Authorization': 'token ' + PAT, 'Accept': 'application/vnd.github.v3+json' } });
@@ -1157,13 +1157,13 @@
         if (!document.getElementById('doc-nome').value) {
           document.getElementById('doc-nome').value = filename.replace('.pdf','').replace(/_/g,' ');
         }
-        estado.textContent = 'â Upload concluÃ­do';
+        estado.textContent = '✅ Upload concluído';
         estado.style.color = '#15803d';
       } else {
         throw new Error(out.message || 'Erro desconhecido');
       }
     } catch(e) {
-      estado.textContent = 'â Erro: ' + e.message;
+      estado.textContent = '❌ Erro: ' + e.message;
       estado.style.color = '#dc2626';
     }
     input.value = '';
@@ -1264,16 +1264,20 @@
       : rows.map(r => {
           const n = dlCounts[r.id] || 0;
           const dlBadge = n > 0
-            ? `<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:.72rem;padding:3px 10px;border-radius:20px">${n} â</span>`
-            : `<span style="color:#9ca3af;font-size:.75rem">â</span>`;
+            ? `<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:.72rem;padding:3px 10px;border-radius:20px">${n} ↓</span>`
+            : `<span style="color:#9ca3af;font-size:.75rem">—</span>`;
           const tipoBadge = (r.tipo === 'link')
-            ? `<span style="background:#dbeafe;color:#1d4ed8;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">ð Link</span>`
-            : `<span style="background:#dcfce7;color:#166534;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">ð PDF</span>`;
+            ? `<span style="background:#dbeafe;color:#1d4ed8;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">🔗 Link</span>`
+            : `<span style="background:#dcfce7;color:#166534;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px">📄 PDF</span>`;
+          const hoje = new Date(); hoje.setHours(0,0,0,0);
+          const agendadoBadge = (r.dataDisponivel && new Date(r.dataDisponivel + 'T00:00:00') > hoje)
+            ? `<span style="background:#fef3c7;color:#92400e;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:4px">🕐 ${new Date(r.dataDisponivel + 'T00:00:00').toLocaleDateString('pt-PT')}</span>`
+            : '';
           return `
           <tr>
             <td>${esc(r.ucNome)}</td>
-            <td>${esc(r.nome)} ${tipoBadge}</td>
-            <td>${esc(r.descricao || 'â')}</td>
+            <td>${esc(r.nome)} ${tipoBadge}${agendadoBadge}</td>
+            <td>${esc(r.descricao || '—')}</td>
             <td style="text-align:center">${dlBadge}</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarDoc('${r.ucId}','${r.id}')">Editar</button>
@@ -1299,7 +1303,7 @@
     document.getElementById('doc-data-disponivel').value = r.dataDisponivel || '';
     window._editandoDocUcId = ucId;
     window._editandoDocId   = docId;
-    document.getElementById('btn-upload').textContent = 'Guardar alteraÃ§Ãµes';
+    document.getElementById('btn-upload').textContent = 'Guardar alterações';
     document.getElementById('btn-cancelar-doc').style.display = '';
     document.getElementById('doc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
@@ -1319,7 +1323,7 @@
     carregarDocs(); carregarUCs();
   };
 
-  // --- DATAS ACADÃMICAS ---
+  // --- DATAS ACADÉMICAS ---
   async function carregarDatasAdmin() {
     const tb = document.getElementById('tbody-datas');
     try {
@@ -1330,13 +1334,13 @@
       datas.sort((a,b) => new Date(a.dataIso) - new Date(b.dataIso));
       tb.innerHTML = datas.length ? datas.map(item => {
         const data = new Date(item.dataIso);
-        const textoData = Number.isNaN(data.getTime()) ? 'â' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
-        const anoSem = item.ano ? `${item.ano}Âº / ${item.semestre ? item.semestre + 'Âº' : 'â'}` : 'â';
+        const textoData = Number.isNaN(data.getTime()) ? '—' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
+        const anoSem = item.ano ? `${item.ano}º / ${item.semestre ? item.semestre + 'º' : '—'}` : '—';
         return `<tr>
-          <td>${esc(textoData)}</td><td>${esc(item.tipo || 'â')}</td>
-          <td>${esc(anoSem)}</td><td>${esc(item.minor || 'â')}</td>
+          <td>${esc(textoData)}</td><td>${esc(item.tipo || '—')}</td>
+          <td>${esc(anoSem)}</td><td>${esc(item.minor || '—')}</td>
           <td>${esc(item.ucNome || 'Geral')}</td>
-          <td>${esc(item.titulo || 'â')}</td>
+          <td>${esc(item.titulo || '—')}</td>
           <td class="acoes">
             <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarData('${item.id}')">Editar</button>
             <button class="btn-acao btn-remover" onclick="window.removerData('${item.id}')">Remover</button>
@@ -1344,7 +1348,7 @@
         </tr>`;
       }).join('') : '<tr><td colspan="7" class="empty-msg">Nenhuma data publicada</td></tr>';
     } catch(e) {
-      tb.innerHTML = `<tr><td colspan="5" class="empty-msg">NÃ£o foi possÃ­vel carregar as datas: ${esc(e.message)}</td></tr>`;
+      tb.innerHTML = `<tr><td colspan="5" class="empty-msg">Não foi possível carregar as datas: ${esc(e.message)}</td></tr>`;
     }
   }
 
@@ -1368,11 +1372,11 @@
     const msg = document.getElementById('msg-data');
     const btn = document.getElementById('btn-criar-data');
     if (!titulo || !quando) {
-      msg.textContent = 'Preenche o tÃ­tulo e a data.'; msg.className = 'msg-form err'; return;
+      msg.textContent = 'Preenche o título e a data.'; msg.className = 'msg-form err'; return;
     }
     const data = new Date(quando);
     if (Number.isNaN(data.getTime())) {
-      msg.textContent = 'A data introduzida nÃ£o Ã© vÃ¡lida.'; msg.className = 'msg-form err'; return;
+      msg.textContent = 'A data introduzida não é válida.'; msg.className = 'msg-form err'; return;
     }
     const uc = ucsList.find(item => item.id === ucId);
     const editId = window._editandoDataId || null;
@@ -1436,7 +1440,7 @@
     document.getElementById('data-minor').value = item.minor || '';
     toggleMinorData();
     window._editandoDataId = id;
-    document.getElementById('btn-criar-data').textContent = 'Guardar alteraÃ§Ãµes';
+    document.getElementById('btn-criar-data').textContent = 'Guardar alterações';
     document.getElementById('data-titulo').scrollIntoView({behavior:'smooth', block:'center'});
   };
 
@@ -1451,13 +1455,13 @@
     tb.innerHTML = '';
     snap.forEach(d => {
       const dl = d.data();
-      const data = dl.data?.toDate ? dl.data.toDate().toLocaleString('pt-PT') : 'â';
+      const data = dl.data?.toDate ? dl.data.toDate().toLocaleString('pt-PT') : '—';
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="log-data">${data}</td>
         <td>${esc(dl.nome)}</td>
         <td>${esc(dl.email)}</td>
-        <td><span class="log-codigo">${esc(dl.codigoUser || 'â')}</span></td>
+        <td><span class="log-codigo">${esc(dl.codigoUser || '—')}</span></td>
         <td><span class="log-codigo">${esc(dl.codigoDl)}</span></td>
         <td>${esc(dl.docNome)}</td>`;
       tb.appendChild(tr);
@@ -1465,12 +1469,12 @@
   }
 
   window.importarTodasDatas = async function() {
-    if (!confirm('Vai criar todas as datas (1Âº+2Âº+3Âº Ano). Continuar?')) return;
+    if (!confirm('Vai criar todas as datas (1º+2º+3º Ano). Continuar?')) return;
     const logEl = document.getElementById('import-log');
     logEl.style.display = 'block'; logEl.innerHTML = '';
     const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
 
-    // Carregar todas as UCs e criar mapa nomeâid
+    // Carregar todas as UCs e criar mapa nome→id
     out('A carregar UCs...', '#60a5fa');
     const snapUCs = await getDocs(collection(db, 'ucs'));
     const ucNomeMap = {};
@@ -1479,79 +1483,79 @@
 
     // [nome_uc, iso_normal, iso_recurso, ano, semestre, minor]
     const DATAS = [
-      // 1Âº ANO
-      ['IntroduÃ§Ã£o ao Direito',          '2027-01-11T10:00','2027-02-11T10:00','1','1',''],
+      // 1º ANO
+      ['Introdução ao Direito',          '2027-01-11T10:00','2027-02-11T10:00','1','1',''],
       ['Demografia',                     '2027-01-13T10:00','2027-02-12T13:00','1','1',''],
       ['Antropologia Geral',             '2027-01-15T10:00','2027-02-15T10:00','1','1',''],
       ['Psicologia Geral',               '2027-01-18T10:00','2027-02-19T10:00','1','1',''],
-      ['IntroduÃ§Ã£o Ã s CiÃªncias Sociais', '2027-01-20T10:00','2027-02-17T10:00','1','1',''],
-      ['MatemÃ¡tica PreparatÃ³ria',        '2027-02-10T10:00','2027-05-04T10:00','1','1',''],
-      // 2Âº ANO â ObrigatÃ³rias
-      ['PrincÃ­pios de GestÃ£o',                                        '2027-01-11T13:00','2027-02-12T10:00','2','1',''],
-      ['Metodologia das CiÃªncias Sociais: MÃ©todos Qualitativos',      '2027-01-15T13:00','2027-02-22T10:00','2','1',''],
+      ['Introdução às Ciências Sociais', '2027-01-20T10:00','2027-02-17T10:00','1','1',''],
+      ['Matemática Preparatória',        '2027-02-10T10:00','2027-05-04T10:00','1','1',''],
+      // 2º ANO — Obrigatórias
+      ['Princípios de Gestão',                                        '2027-01-11T13:00','2027-02-12T10:00','2','1',''],
+      ['Metodologia das Ciências Sociais: Métodos Qualitativos',      '2027-01-15T13:00','2027-02-22T10:00','2','1',''],
       ['Etnografias',                                                  '2027-01-18T13:00','2027-02-16T13:00','2','1',''],
-      // 2Âº ANO â Opcionais
-      ['Antropologia das ReligiÃµes',                '2027-01-13T13:00','2027-02-18T13:00','2','1',''],
-      ['Sociedade Portuguesa ContemporÃ¢nea',        '2027-01-14T16:00','2027-02-26T16:00','2','1',''],
-      ['JustiÃ§a, SeguranÃ§a e Criminalidade',        '2027-01-19T16:00','2027-02-23T16:00','2','1',''],
-      ['Igualdade, ExclusÃ£o Social e Cidadania',    '2027-01-20T13:00','2027-02-25T10:00','2','1',''],
-      // 3Âº ANO â Minor CiÃªncia PolÃ­tica e Administrativa
-      ['Direito da UniÃ£o Europeia',           '2027-01-12T10:00','2027-02-16T10:00','3','1','CiÃªncia PolÃ­tica e Administrativa'],
-      ['IntroduÃ§Ã£o ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00','3','1','CiÃªncia PolÃ­tica e Administrativa'],
-      ['IntroduÃ§Ã£o ao Direito do Ambiente',   '2027-01-18T16:00','2027-02-23T10:00','3','1','CiÃªncia PolÃ­tica e Administrativa'],
-      ['PolÃ­tica Internacional',              '2027-01-20T16:00','2027-02-11T16:00','3','1','CiÃªncia PolÃ­tica e Administrativa'],
-      ['Teoria das RelaÃ§Ãµes Internacionais',  '2027-01-22T10:00','2027-02-24T16:00','3','1','CiÃªncia PolÃ­tica e Administrativa'],
-      // 3Âº ANO â Minor Psicologia
-      ['NoÃ§Ãµes de Psicopatologia',             '2027-01-11T16:00','2027-02-11T13:00','3','1','Psicologia'],
+      // 2º ANO — Opcionais
+      ['Antropologia das Religiões',                '2027-01-13T13:00','2027-02-18T13:00','2','1',''],
+      ['Sociedade Portuguesa Contemporânea',        '2027-01-14T16:00','2027-02-26T16:00','2','1',''],
+      ['Justiça, Segurança e Criminalidade',        '2027-01-19T16:00','2027-02-23T16:00','2','1',''],
+      ['Igualdade, Exclusão Social e Cidadania',    '2027-01-20T13:00','2027-02-25T10:00','2','1',''],
+      // 3º ANO — Minor Ciência Política e Administrativa
+      ['Direito da União Europeia',           '2027-01-12T10:00','2027-02-16T10:00','3','1','Ciência Política e Administrativa'],
+      ['Introdução ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00','3','1','Ciência Política e Administrativa'],
+      ['Introdução ao Direito do Ambiente',   '2027-01-18T16:00','2027-02-23T10:00','3','1','Ciência Política e Administrativa'],
+      ['Política Internacional',              '2027-01-20T16:00','2027-02-11T16:00','3','1','Ciência Política e Administrativa'],
+      ['Teoria das Relações Internacionais',  '2027-01-22T10:00','2027-02-24T16:00','3','1','Ciência Política e Administrativa'],
+      // 3º ANO — Minor Psicologia
+      ['Noções de Psicopatologia',             '2027-01-11T16:00','2027-02-11T13:00','3','1','Psicologia'],
       ['Psicologia Social Aplicada',           '2027-01-13T16:00','2027-02-16T16:00','3','1','Psicologia'],
       ['Psicologia do Desenvolvimento Humano', '2027-01-15T16:00','2027-02-24T10:00','3','1','Psicologia'],
-      ['Psicologia ClÃ­nica e da SaÃºde',        '2027-01-19T10:00','2027-02-18T10:00','3','1','Psicologia'],
+      ['Psicologia Clínica e da Saúde',        '2027-01-19T10:00','2027-02-18T10:00','3','1','Psicologia'],
       ['Psicologia da Arte',                   '2027-01-21T10:00','2027-02-22T16:00','3','1','Psicologia'],
-      // 3Âº ANO â Minor IntervenÃ§Ã£o Social
-      ['Desenvolvimento ComunitÃ¡rio',                     '2027-01-12T13:00','2027-02-17T16:00','3','1','IntervenÃ§Ã£o Social'],
-      ['IntervenÃ§Ã£o Psicossocial',                        '2027-01-14T13:00','2027-02-11T16:00','3','1','IntervenÃ§Ã£o Social'],
-      ['IntervenÃ§Ã£o Social e SaÃºde Mental',               '2027-01-19T13:00','2027-02-15T13:00','3','1','IntervenÃ§Ã£o Social'],
-      ['Teoria Geral de ServiÃ§o Social',                  '2027-01-21T13:00','2027-02-24T10:00','3','1','IntervenÃ§Ã£o Social'],
-      ['Contextos Organizacionais da IntervenÃ§Ã£o Social', '2027-01-25T10:00','2027-02-19T13:00','3','1','IntervenÃ§Ã£o Social'],
-      // 3Âº ANO â Minor Sociologia
+      // 3º ANO — Minor Intervenção Social
+      ['Desenvolvimento Comunitário',                     '2027-01-12T13:00','2027-02-17T16:00','3','1','Intervenção Social'],
+      ['Intervenção Psicossocial',                        '2027-01-14T13:00','2027-02-11T16:00','3','1','Intervenção Social'],
+      ['Intervenção Social e Saúde Mental',               '2027-01-19T13:00','2027-02-15T13:00','3','1','Intervenção Social'],
+      ['Teoria Geral de Serviço Social',                  '2027-01-21T13:00','2027-02-24T10:00','3','1','Intervenção Social'],
+      ['Contextos Organizacionais da Intervenção Social', '2027-01-25T10:00','2027-02-19T13:00','3','1','Intervenção Social'],
+      // 3º ANO — Minor Sociologia
       ['Sociologia Urbana',                         '2027-01-12T16:00','2027-02-15T16:00','3','1','Sociologia'],
-      ['Sociologia das MigraÃ§Ãµes',                  '2027-01-14T13:00','2027-02-19T10:00','3','1','Sociologia'],
-      ['Sociologia da ComunicaÃ§Ã£o e da InformaÃ§Ã£o', '2027-01-18T16:00','2027-02-11T10:00','3','1','Sociologia'],
-      ['Sociologia da FamÃ­lia',                     '2027-01-21T16:00','2027-02-22T13:00','3','1','Sociologia'],
-      ['Teorias SociolÃ³gicas',                      '2027-01-25T13:00','2027-02-17T16:00','3','1','Sociologia'],
+      ['Sociologia das Migrações',                  '2027-01-14T13:00','2027-02-19T10:00','3','1','Sociologia'],
+      ['Sociologia da Comunicação e da Informação', '2027-01-18T16:00','2027-02-11T10:00','3','1','Sociologia'],
+      ['Sociologia da Família',                     '2027-01-21T16:00','2027-02-22T13:00','3','1','Sociologia'],
+      ['Teorias Sociológicas',                      '2027-01-25T13:00','2027-02-17T16:00','3','1','Sociologia'],
     ];
 
     out('\n=== A criar datas ===', '#60a5fa');
     let ok = 0, erros = 0;
     for (const [nome, isoNormal, isoRecurso, ano, semestre, minor] of DATAS) {
       const ucId = ucNomeMap[nome] || '';
-      if (!ucId) out(`â  UC nÃ£o encontrada: "${nome}"`, '#fbbf24');
-      // Ãpoca Normal
+      if (!ucId) out(`⚠ UC não encontrada: "${nome}"`, '#fbbf24');
+      // Época Normal
       try {
         await addDoc(collection(db,'datas'), {
           titulo: nome, tipo: 'Global/Exame', ucId, dataIso: isoNormal,
           ano, semestre, minor, criadoEm: serverTimestamp()
         });
-        out(`â Global/Exame  ${ano}ÂºA ${isoNormal}  ${nome}`, '#4ade80');
+        out(`✓ Global/Exame  ${ano}ºA ${isoNormal}  ${nome}`, '#4ade80');
         ok++;
-      } catch(e) { out(`â ERRO normal ${nome}: ${e.message}`, '#f87171'); erros++; }
-      // Ãpoca Recurso
+      } catch(e) { out(`✗ ERRO normal ${nome}: ${e.message}`, '#f87171'); erros++; }
+      // Época Recurso
       try {
         await addDoc(collection(db,'datas'), {
           titulo: nome, tipo: 'Recurso', ucId, dataIso: isoRecurso,
           ano, semestre, minor, criadoEm: serverTimestamp()
         });
-        out(`â Recurso       ${ano}ÂºA ${isoRecurso}  ${nome}`, '#4ade80');
+        out(`✓ Recurso       ${ano}ºA ${isoRecurso}  ${nome}`, '#4ade80');
         ok++;
-      } catch(e) { out(`â ERRO recurso ${nome}: ${e.message}`, '#f87171'); erros++; }
+      } catch(e) { out(`✗ ERRO recurso ${nome}: ${e.message}`, '#f87171'); erros++; }
     }
-    out(`\n=== ConcluÃ­do: ${ok} datas criadas, ${erros} erros ===`, '#60a5fa');
+    out(`\n=== Concluído: ${ok} datas criadas, ${erros} erros ===`, '#60a5fa');
     carregarDatasAdmin();
   };
 
   window.apagarTodasDatas = async function() {
-    if (!confirm('â ï¸ Isto vai apagar TODAS as datas permanentemente. Tens a certeza?')) return;
-    if (!confirm('Ãltima confirmaÃ§Ã£o â apagar tudo?')) return;
+    if (!confirm('⚠️ Isto vai apagar TODAS as datas permanentemente. Tens a certeza?')) return;
+    if (!confirm('Última confirmação — apagar tudo?')) return;
     const logEl = document.getElementById('import-log');
     logEl.style.display = 'block'; logEl.innerHTML = '';
     const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
@@ -1562,9 +1566,9 @@
       try {
         await deleteDoc(doc(db, 'datas', d.id));
         apagados++;
-      } catch(e) { out(`â ERRO ${d.id}: ${e.message}`, '#f87171'); }
+      } catch(e) { out(`✗ ERRO ${d.id}: ${e.message}`, '#f87171'); }
     }
-    out(`\n=== ConcluÃ­do: ${apagados} datas apagadas ===`, '#4ade80');
+    out(`\n=== Concluído: ${apagados} datas apagadas ===`, '#4ade80');
     carregarDatasAdmin();
   };
 
@@ -1578,7 +1582,7 @@
     const grupos = {};
     snap.forEach(d => {
       const data = d.data();
-      // Agrupa por data+tipo+ano+semestre, ignorando o tÃ­tulo (que pode diferir)
+      // Agrupa por data+tipo+ano+semestre, ignorando o título (que pode diferir)
       const chave = `${data.dataIso}|${data.tipo}|${data.ano||''}|${data.semestre||''}`;
       if (!grupos[chave]) grupos[chave] = [];
       grupos[chave].push({ id: d.id, ...data });
@@ -1586,7 +1590,7 @@
     let apagados = 0;
     for (const [chave, lista] of Object.entries(grupos)) {
       if (lista.length <= 1) continue;
-      // Ordenar: 1Âº os com ucId, 2Âº os com tÃ­tulo mais longo (mais completo)
+      // Ordenar: 1º os com ucId, 2º os com título mais longo (mais completo)
       lista.sort((a, b) => {
         if (!!b.ucId !== !!a.ucId) return (b.ucId ? 1 : 0) - (a.ucId ? 1 : 0);
         return (b.titulo||'').length - (a.titulo||'').length;
@@ -1596,12 +1600,12 @@
       for (let i = 1; i < lista.length; i++) {
         try {
           await deleteDoc(doc(db, 'datas', lista[i].id));
-          out(`  ð Apagado: "${lista[i].titulo}" ${lista[i].dataIso} [${lista[i].tipo}]`, '#fbbf24');
+          out(`  🗑 Apagado: "${lista[i].titulo}" ${lista[i].dataIso} [${lista[i].tipo}]`, '#fbbf24');
           apagados++;
-        } catch(e) { out(`â ERRO ${lista[i].id}: ${e.message}`, '#f87171'); }
+        } catch(e) { out(`✗ ERRO ${lista[i].id}: ${e.message}`, '#f87171'); }
       }
     }
-    out(`\n=== ConcluÃ­do: ${apagados} duplicados removidos ===`, '#60a5fa');
+    out(`\n=== Concluído: ${apagados} duplicados removidos ===`, '#60a5fa');
     carregarDatasAdmin();
   };
 
@@ -1611,40 +1615,40 @@
     const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
 
     const UCS = [
-      // 1Âº Ano
-      ['41037','IntroduÃ§Ã£o ao Direito',1,1,''],
+      // 1º Ano
+      ['41037','Introdução ao Direito',1,1,''],
       ['41018','Demografia',2,1,''],
       ['41098','Antropologia Geral',3,1,''],
       ['41050','Psicologia Geral',4,1,''],
-      ['41036','IntroduÃ§Ã£o Ã s CiÃªncias Sociais',5,1,''],
-      ['21160','MatemÃ¡tica PreparatÃ³ria',6,1,''],
-      // 2Âº Ano â ObrigatÃ³rias
-      ['61029','PrincÃ­pios de GestÃ£o',1,2,''],
-      ['41038','Metodologia das CiÃªncias Sociais: MÃ©todos Qualitativos',2,2,''],
+      ['41036','Introdução às Ciências Sociais',5,1,''],
+      ['21160','Matemática Preparatória',6,1,''],
+      // 2º Ano — Obrigatórias
+      ['61029','Princípios de Gestão',1,2,''],
+      ['41038','Metodologia das Ciências Sociais: Métodos Qualitativos',2,2,''],
       ['41101','Etnografias',3,2,''],
-      // 2Âº Ano â Opcionais
-      ['41009','Antropologia das ReligiÃµes',4,2,''],
-      ['41056','Sociedade Portuguesa ContemporÃ¢nea',5,2,''],
-      ['41103','JustiÃ§a, SeguranÃ§a e Criminalidade',6,2,''],
-      ['41102','Igualdade, ExclusÃ£o Social e Cidadania',7,2,''],
+      // 2º Ano — Opcionais
+      ['41009','Antropologia das Religiões',4,2,''],
+      ['41056','Sociedade Portuguesa Contemporânea',5,2,''],
+      ['41103','Justiça, Segurança e Criminalidade',6,2,''],
+      ['41102','Igualdade, Exclusão Social e Cidadania',7,2,''],
     ];
 
     const DATAS = [
-      // 1Âº Ano
-      ['41037','IntroduÃ§Ã£o ao Direito',         '2027-01-11T10:00','2027-02-11T10:00',1],
+      // 1º Ano
+      ['41037','Introdução ao Direito',         '2027-01-11T10:00','2027-02-11T10:00',1],
       ['41018','Demografia',                    '2027-01-13T10:00','2027-02-12T13:00',1],
       ['41098','Antropologia Geral',            '2027-01-15T10:00','2027-02-15T10:00',1],
       ['41050','Psicologia Geral',              '2027-01-18T10:00','2027-02-19T10:00',1],
-      ['41036','IntroduÃ§Ã£o Ã s CiÃªncias Sociais','2027-01-20T10:00','2027-02-17T10:00',1],
-      ['21160','MatemÃ¡tica PreparatÃ³ria',       '2027-02-10T10:00','2027-05-04T10:00',1],
-      // 2Âº Ano
-      ['61029','PrincÃ­pios de GestÃ£o',                                          '2027-01-11T13:00','2027-02-12T10:00',2],
-      ['41038','Metodologia das CiÃªncias Sociais: MÃ©todos Qualitativos',        '2027-01-15T13:00','2027-02-22T10:00',2],
+      ['41036','Introdução às Ciências Sociais','2027-01-20T10:00','2027-02-17T10:00',1],
+      ['21160','Matemática Preparatória',       '2027-02-10T10:00','2027-05-04T10:00',1],
+      // 2º Ano
+      ['61029','Princípios de Gestão',                                          '2027-01-11T13:00','2027-02-12T10:00',2],
+      ['41038','Metodologia das Ciências Sociais: Métodos Qualitativos',        '2027-01-15T13:00','2027-02-22T10:00',2],
       ['41101','Etnografias',                                                   '2027-01-18T13:00','2027-02-16T13:00',2],
-      ['41009','Antropologia das ReligiÃµes',                                    '2027-01-13T13:00','2027-02-18T13:00',2],
-      ['41056','Sociedade Portuguesa ContemporÃ¢nea',                            '2027-01-14T16:00','2027-02-26T16:00',2],
-      ['41103','JustiÃ§a, SeguranÃ§a e Criminalidade',                            '2027-01-19T16:00','2027-02-23T16:00',2],
-      ['41102','Igualdade, ExclusÃ£o Social e Cidadania',                        '2027-01-20T13:00','2027-02-25T10:00',2],
+      ['41009','Antropologia das Religiões',                                    '2027-01-13T13:00','2027-02-18T13:00',2],
+      ['41056','Sociedade Portuguesa Contemporânea',                            '2027-01-14T16:00','2027-02-26T16:00',2],
+      ['41103','Justiça, Segurança e Criminalidade',                            '2027-01-19T16:00','2027-02-23T16:00',2],
+      ['41102','Igualdade, Exclusão Social e Cidadania',                        '2027-01-20T13:00','2027-02-25T10:00',2],
     ];
 
     out('=== A criar UCs ===','#60a5fa');
@@ -1653,23 +1657,23 @@
       try {
         const ref = await addDoc(collection(db,'ucs'), { nome, ano, semestre:1, ordem, oculta:false, criadoEm:serverTimestamp() });
         ucIdMap[codigo] = ref.id;
-        out(`â UC ${codigo} â ${nome} (${ano}ÂºA)`, '#4ade80');
-      } catch(e) { out(`â ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
+        out(`✓ UC ${codigo} — ${nome} (${ano}ºA)`, '#4ade80');
+      } catch(e) { out(`✗ ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
     }
     out('\n=== A criar Datas ===','#60a5fa');
     for (const [codigo, titulo, isoNormal, isoRecurso, ano] of DATAS) {
       const ucId = ucIdMap[codigo];
-      if (!ucId) { out(`â UC ${codigo} nÃ£o encontrada`,'#f87171'); continue; }
+      if (!ucId) { out(`✗ UC ${codigo} não encontrada`,'#f87171'); continue; }
       try {
-        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Ãpoca normal â ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
-        out(`â Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
-      } catch(e) { out(`â ERRO normal ${codigo}: ${e.message}`, '#f87171'); }
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
+        out(`✓ Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO normal ${codigo}: ${e.message}`, '#f87171'); }
       try {
-        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Ãpoca de recurso â ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
-        out(`â Recurso ${codigo} ${isoRecurso}`, '#4ade80');
-      } catch(e) { out(`â ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Época de recurso — ${codigo}`, ano:String(ano), semestre:'1', criadoEm:serverTimestamp() });
+        out(`✓ Recurso ${codigo} ${isoRecurso}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
     }
-    out('\n=== ConcluÃ­do! ===','#60a5fa');
+    out('\n=== Concluído! ===','#60a5fa');
     carregarUCs();
   };
 
@@ -1686,12 +1690,12 @@
         total++;
         try {
           await updateDoc(doc(db, 'datas', d.id), { tipo: 'Global/Exame' });
-          out(`â ${d.data().titulo || d.id} [${tipo} â Global/Exame]`, '#4ade80');
+          out(`✓ ${d.data().titulo || d.id} [${tipo} → Global/Exame]`, '#4ade80');
           atualizadas++;
-        } catch(e) { out(`â ERRO ${d.id}: ${e.message}`, '#f87171'); }
+        } catch(e) { out(`✗ ERRO ${d.id}: ${e.message}`, '#f87171'); }
       }
     }
-    out(`\n=== ConcluÃ­do: ${atualizadas}/${total} datas atualizadas ===`, '#60a5fa');
+    out(`\n=== Concluído: ${atualizadas}/${total} datas atualizadas ===`, '#60a5fa');
     carregarDatasAdmin();
   };
 
@@ -1701,48 +1705,48 @@
     const out = (msg, cor='#e2e8f0') => { logEl.innerHTML += `<span style="color:${cor}">${msg}\n</span>`; logEl.scrollTop = logEl.scrollHeight; };
 
     const UCS = [
-      ['41106','Direito da UniÃ£o Europeia',1,'CiÃªncia PolÃ­tica e Administrativa'],
-      ['41033','IntroduÃ§Ã£o ao Direito Administrativo',2,'CiÃªncia PolÃ­tica e Administrativa'],
-      ['41035','IntroduÃ§Ã£o ao Direito do Ambiente',3,'CiÃªncia PolÃ­tica e Administrativa'],
-      ['41044','PolÃ­tica Internacional',4,'CiÃªncia PolÃ­tica e Administrativa'],
-      ['41067','Teoria das RelaÃ§Ãµes Internacionais',5,'CiÃªncia PolÃ­tica e Administrativa'],
-      ['41042','NoÃ§Ãµes de Psicopatologia',1,'Psicologia'],
+      ['41106','Direito da União Europeia',1,'Ciência Política e Administrativa'],
+      ['41033','Introdução ao Direito Administrativo',2,'Ciência Política e Administrativa'],
+      ['41035','Introdução ao Direito do Ambiente',3,'Ciência Política e Administrativa'],
+      ['41044','Política Internacional',4,'Ciência Política e Administrativa'],
+      ['41067','Teoria das Relações Internacionais',5,'Ciência Política e Administrativa'],
+      ['41042','Noções de Psicopatologia',1,'Psicologia'],
       ['41053','Psicologia Social Aplicada',2,'Psicologia'],
       ['41107','Psicologia do Desenvolvimento Humano',3,'Psicologia'],
-      ['41048','Psicologia ClÃ­nica e da SaÃºde',4,'Psicologia'],
+      ['41048','Psicologia Clínica e da Saúde',4,'Psicologia'],
       ['31104','Psicologia da Arte',5,'Psicologia'],
-      ['41019','Desenvolvimento ComunitÃ¡rio',1,'IntervenÃ§Ã£o Social'],
-      ['41029','IntervenÃ§Ã£o Psicossocial',2,'IntervenÃ§Ã£o Social'],
-      ['41109','IntervenÃ§Ã£o Social e SaÃºde Mental',3,'IntervenÃ§Ã£o Social'],
-      ['41110','Teoria Geral de ServiÃ§o Social',4,'IntervenÃ§Ã£o Social'],
-      ['41124','Contextos Organizacionais da IntervenÃ§Ã£o Social',5,'IntervenÃ§Ã£o Social'],
+      ['41019','Desenvolvimento Comunitário',1,'Intervenção Social'],
+      ['41029','Intervenção Psicossocial',2,'Intervenção Social'],
+      ['41109','Intervenção Social e Saúde Mental',3,'Intervenção Social'],
+      ['41110','Teoria Geral de Serviço Social',4,'Intervenção Social'],
+      ['41124','Contextos Organizacionais da Intervenção Social',5,'Intervenção Social'],
       ['41066','Sociologia Urbana',1,'Sociologia'],
-      ['41116','Sociologia das MigraÃ§Ãµes',2,'Sociologia'],
-      ['41114','Sociologia da ComunicaÃ§Ã£o e da InformaÃ§Ã£o',3,'Sociologia'],
-      ['41115','Sociologia da FamÃ­lia',4,'Sociologia'],
-      ['41117','Teorias SociolÃ³gicas',5,'Sociologia'],
+      ['41116','Sociologia das Migrações',2,'Sociologia'],
+      ['41114','Sociologia da Comunicação e da Informação',3,'Sociologia'],
+      ['41115','Sociologia da Família',4,'Sociologia'],
+      ['41117','Teorias Sociológicas',5,'Sociologia'],
     ];
     const DATAS = [
-      ['41106','Direito da UniÃ£o Europeia','2027-01-12T10:00','2027-02-16T10:00'],
-      ['41033','IntroduÃ§Ã£o ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00'],
-      ['41035','IntroduÃ§Ã£o ao Direito do Ambiente','2027-01-18T16:00','2027-02-23T10:00'],
-      ['41044','PolÃ­tica Internacional','2027-01-20T16:00','2027-02-11T16:00'],
-      ['41067','Teoria das RelaÃ§Ãµes Internacionais','2027-01-22T10:00','2027-02-24T16:00'],
-      ['41042','NoÃ§Ãµes de Psicopatologia','2027-01-11T16:00','2027-02-11T13:00'],
+      ['41106','Direito da União Europeia','2027-01-12T10:00','2027-02-16T10:00'],
+      ['41033','Introdução ao Direito Administrativo','2027-01-14T10:00','2027-02-17T13:00'],
+      ['41035','Introdução ao Direito do Ambiente','2027-01-18T16:00','2027-02-23T10:00'],
+      ['41044','Política Internacional','2027-01-20T16:00','2027-02-11T16:00'],
+      ['41067','Teoria das Relações Internacionais','2027-01-22T10:00','2027-02-24T16:00'],
+      ['41042','Noções de Psicopatologia','2027-01-11T16:00','2027-02-11T13:00'],
       ['41053','Psicologia Social Aplicada','2027-01-13T16:00','2027-02-16T16:00'],
       ['41107','Psicologia do Desenvolvimento Humano','2027-01-15T16:00','2027-02-24T10:00'],
-      ['41048','Psicologia ClÃ­nica e da SaÃºde','2027-01-19T10:00','2027-02-18T10:00'],
+      ['41048','Psicologia Clínica e da Saúde','2027-01-19T10:00','2027-02-18T10:00'],
       ['31104','Psicologia da Arte','2027-01-21T10:00','2027-02-22T16:00'],
-      ['41019','Desenvolvimento ComunitÃ¡rio','2027-01-12T13:00','2027-02-17T16:00'],
-      ['41029','IntervenÃ§Ã£o Psicossocial','2027-01-14T13:00','2027-02-11T16:00'],
-      ['41109','IntervenÃ§Ã£o Social e SaÃºde Mental','2027-01-19T13:00','2027-02-15T13:00'],
-      ['41110','Teoria Geral de ServiÃ§o Social','2027-01-21T13:00','2027-02-24T10:00'],
-      ['41124','Contextos Organizacionais da IntervenÃ§Ã£o Social','2027-01-25T10:00','2027-02-19T13:00'],
+      ['41019','Desenvolvimento Comunitário','2027-01-12T13:00','2027-02-17T16:00'],
+      ['41029','Intervenção Psicossocial','2027-01-14T13:00','2027-02-11T16:00'],
+      ['41109','Intervenção Social e Saúde Mental','2027-01-19T13:00','2027-02-15T13:00'],
+      ['41110','Teoria Geral de Serviço Social','2027-01-21T13:00','2027-02-24T10:00'],
+      ['41124','Contextos Organizacionais da Intervenção Social','2027-01-25T10:00','2027-02-19T13:00'],
       ['41066','Sociologia Urbana','2027-01-12T16:00','2027-02-15T16:00'],
-      ['41116','Sociologia das MigraÃ§Ãµes','2027-01-14T13:00','2027-02-19T10:00'],
-      ['41114','Sociologia da ComunicaÃ§Ã£o e da InformaÃ§Ã£o','2027-01-18T16:00','2027-02-11T10:00'],
-      ['41115','Sociologia da FamÃ­lia','2027-01-21T16:00','2027-02-22T13:00'],
-      ['41117','Teorias SociolÃ³gicas','2027-01-25T13:00','2027-02-17T16:00'],
+      ['41116','Sociologia das Migrações','2027-01-14T13:00','2027-02-19T10:00'],
+      ['41114','Sociologia da Comunicação e da Informação','2027-01-18T16:00','2027-02-11T10:00'],
+      ['41115','Sociologia da Família','2027-01-21T16:00','2027-02-22T13:00'],
+      ['41117','Teorias Sociológicas','2027-01-25T13:00','2027-02-17T16:00'],
     ];
 
     out('=== A criar UCs ===', '#60a5fa');
@@ -1751,26 +1755,26 @@
       try {
         const ref = await addDoc(collection(db,'ucs'), { nome, ano:3, semestre:1, ordem, minor, oculta:false, criadoEm:serverTimestamp() });
         ucIdMap[codigo] = ref.id;
-        out(`â UC ${codigo} â ${nome}`, '#4ade80');
-      } catch(e) { out(`â ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
+        out(`✓ UC ${codigo} — ${nome}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO UC ${codigo}: ${e.message}`, '#f87171'); }
     }
     out('\n=== A criar Datas ===', '#60a5fa');
     for (const [codigo, titulo, isoNormal, isoRecurso] of DATAS) {
       const ucId = ucIdMap[codigo];
       const minor = (UCS.find(u=>u[0]===codigo)||[])[3]||'';
-      if (!ucId) { out(`â UC ${codigo} nÃ£o encontrada`, '#f87171'); continue; }
+      if (!ucId) { out(`✗ UC ${codigo} não encontrada`, '#f87171'); continue; }
       try {
-        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Ãpoca normal â ${codigo}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
-        out(`â Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
-      } catch(e) { out(`â ERRO exame ${codigo}: ${e.message}`, '#f87171'); }
-      const flag = ['41116','41114'].includes(codigo) ? ' â ï¸ hora estimada' : '';
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Global/Exame', ucId, dataIso:isoNormal, descricao:`Época normal — ${codigo}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
+        out(`✓ Global/Exame ${codigo} ${isoNormal}`, '#4ade80');
+      } catch(e) { out(`✗ ERRO exame ${codigo}: ${e.message}`, '#f87171'); }
+      const flag = ['41116','41114'].includes(codigo) ? ' ⚠️ hora estimada' : '';
       try {
-        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Ãpoca de recurso â ${codigo}${flag}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
-        out(`â Recurso ${codigo} ${isoRecurso}${flag}`, flag ? '#fbbf24' : '#4ade80');
-      } catch(e) { out(`â ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
+        await addDoc(collection(db,'datas'), { titulo, tipo:'Recurso', ucId, dataIso:isoRecurso, descricao:`Época de recurso — ${codigo}${flag}`, ano:'3', semestre:'1', minor, criadoEm:serverTimestamp() });
+        out(`✓ Recurso ${codigo} ${isoRecurso}${flag}`, flag ? '#fbbf24' : '#4ade80');
+      } catch(e) { out(`✗ ERRO recurso ${codigo}: ${e.message}`, '#f87171'); }
     }
-    out('\n=== ConcluÃ­do! ===', '#60a5fa');
-    out('â ï¸ Confirma horas de recurso de 41116 e 41114 no separador Datas.', '#fbbf24');
+    out('\n=== Concluído! ===', '#60a5fa');
+    out('⚠️ Confirma horas de recurso de 41116 e 41114 no separador Datas.', '#fbbf24');
     carregarUCs();
   };
 
@@ -1779,7 +1783,7 @@
     window.location.href = 'index.html';
   };
 
-  // --- SUGESTÃES ---
+  // --- SUGESTÕES ---
   let sugestoesCache = [];
 
   async function carregarSugestoes() {
@@ -1792,21 +1796,21 @@
       snap.forEach(d => sugestoesCache.push({ id: d.id, ...d.data() }));
 
       const naoLidas = sugestoesCache.filter(s => !s.lida).length;
-      contador.textContent = `${sugestoesCache.length} sugestÃµes (${naoLidas} por ler)`;
+      contador.textContent = `${sugestoesCache.length} sugestões (${naoLidas} por ler)`;
 
       if (!sugestoesCache.length) {
-        tb.innerHTML = '<tr><td colspan="5" class="empty-msg">Nenhuma sugestÃ£o ainda.</td></tr>';
+        tb.innerHTML = '<tr><td colspan="5" class="empty-msg">Nenhuma sugestão ainda.</td></tr>';
         return;
       }
 
       tb.innerHTML = sugestoesCache.map(s => {
-        const data = s.timestamp ? new Date(s.timestamp.seconds * 1000).toLocaleDateString('pt-PT', { day:'2-digit', month:'short', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : 'â';
+        const data = s.timestamp ? new Date(s.timestamp.seconds * 1000).toLocaleDateString('pt-PT', { day:'2-digit', month:'short', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
         const lida = s.lida;
         return `<tr style="background:${lida ? '#fff' : '#fffbeb'}">
           <td style="white-space:nowrap;font-size:.75rem">${data}</td>
-          <td style="font-size:.78rem"><strong>${s.nome || 'â'}</strong><br><span style="color:#888;font-size:.68rem">${s.email || ''}</span></td>
+          <td style="font-size:.78rem"><strong>${s.nome || '—'}</strong><br><span style="color:#888;font-size:.68rem">${s.email || ''}</span></td>
           <td style="font-size:.82rem;max-width:340px">${s.texto || ''}</td>
-          <td><span style="font-size:.7rem;font-weight:700;color:${lida ? '#166534' : '#b45309'}">${lida ? 'â Lida' : 'â Nova'}</span></td>
+          <td><span style="font-size:.7rem;font-weight:700;color:${lida ? '#166534' : '#b45309'}">${lida ? '✓ Lida' : '● Nova'}</span></td>
           <td style="white-space:nowrap">
             ${!lida ? `<button onclick="marcarLida('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:5px;cursor:pointer">Marcar lida</button>` : ''}
             <button onclick="apagarSugestao('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #fca5a5;border-radius:5px;cursor:pointer;color:#dc2626;margin-left:4px">Apagar</button>
@@ -1830,7 +1834,7 @@
   };
 
   window.apagarSugestao = async function(id) {
-    if (!confirm('Apagar esta sugestÃ£o permanentemente?')) return;
+    if (!confirm('Apagar esta sugestão permanentemente?')) return;
     await deleteDoc(doc(db, 'sugestoes', id));
     carregarSugestoes();
   };
