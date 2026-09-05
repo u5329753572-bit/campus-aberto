@@ -3133,15 +3133,24 @@
 
   async function getPensamentoDoDia() {
     const hoje = new Date().toISOString().slice(0, 10);
+    const diaDoAno = () => Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    // 1. Override por data específica
     try {
       const snap = await getDoc(doc(db, 'mensagemDiaria', hoje));
       if (snap.exists() && snap.data().texto) {
         return { texto: snap.data().texto, autor: snap.data().autor || '' };
       }
     } catch(e) {}
-    const inicio = new Date(new Date().getFullYear(), 0, 0);
-    const diaDoAno = Math.floor((new Date() - inicio) / 86400000);
-    return PENSAMENTOS[diaDoAno % PENSAMENTOS.length];
+    // 2. Lista editável no Firestore
+    try {
+      const snap = await getDoc(doc(db, 'config', 'pensamentos'));
+      if (snap.exists() && snap.data().frases?.length) {
+        const frases = snap.data().frases;
+        return frases[diaDoAno() % frases.length];
+      }
+    } catch(e) {}
+    // 3. Fallback local
+    return PENSAMENTOS[diaDoAno() % PENSAMENTOS.length];
   }
 
   async function mostrarPensamentoDoDia() {
