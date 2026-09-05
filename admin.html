@@ -376,7 +376,7 @@
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
     <button type="button" class="tab-nav" onclick="mudarTab('sugestoes')" id="tab-nav-sugestoes">💡 Sugestões</button>
-    <button type="button" class="tab-nav" onclick="mudarTab('pensamento')">✨ Pensamento</button>
+    <button type="button" class="tab-nav" id="btn-tab-pensamento" onclick="mudarTab('pensamento')">✨ Pensamento</button>
     <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">🟢 Online</button>
   </div>
 
@@ -2038,12 +2038,15 @@
   };
 
   // ── PENSAMENTO DO DIA ──────────────────────────────────────
-  document.querySelector('[onclick="mudarTab(\'pensamento\')"]').addEventListener('click', () => {
-    const inp = document.getElementById('pens-data');
-    if (!inp.value) inp.value = new Date().toISOString().slice(0, 10);
-    carregarMensagensAgendadas();
-    carregarPensamentosEditaveis();
-  });
+  try {
+    const _btnPens = document.getElementById('btn-tab-pensamento');
+    if (_btnPens) _btnPens.addEventListener('click', () => {
+      const inp = document.getElementById('pens-data');
+      if (inp && !inp.value) inp.value = new Date().toISOString().slice(0, 10);
+      carregarMensagensAgendadas().catch(e => console.warn('mensagens agendadas:', e));
+      carregarPensamentosEditaveis().catch(e => console.warn('pensamentos:', e));
+    });
+  } catch(e) { console.warn('pensamento tab init:', e); }
 
   window.guardarMensagemDiaria = async function() {
     const data  = document.getElementById('pens-data').value;
