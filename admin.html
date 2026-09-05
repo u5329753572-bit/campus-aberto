@@ -376,6 +376,7 @@
     <button type="button" class="tab-nav" onclick="mudarTab('datas')">Datas</button>
     <button type="button" class="tab-nav" onclick="mudarTab('downloads')">Histórico</button>
     <button type="button" class="tab-nav" onclick="mudarTab('sugestoes')" id="tab-nav-sugestoes">💡 Sugestões</button>
+    <button type="button" class="tab-nav" onclick="mudarTab('pensamento')">✨ Pensamento</button>
     <button type="button" class="tab-nav" onclick="mudarTab('online')" id="tab-nav-online">🟢 Online</button>
   </div>
 
@@ -674,6 +675,38 @@
         <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>Código User</th><th>Código DL</th><th>Documento</th></tr></thead>
         <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- TAB: PENSAMENTO DO DIA -->
+  <div class="tab-content" id="tab-pensamento">
+    <h2 class="secao-titulo">✨ Pensamento do Dia</h2>
+    <div class="form-card" style="max-width:620px">
+      <h3>Definir mensagem de override</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin:6px 0 18px">Se definires uma mensagem para uma data específica, ela substitui a frase automática da app nesse dia. Deixa em branco para usar a frase automática.</p>
+      <div class="form-row" style="margin-bottom:14px">
+        <div class="campo">
+          <label>Data</label>
+          <input type="date" id="pens-data" style="font-size:.88rem"/>
+        </div>
+        <div class="campo" style="max-width:240px">
+          <label>Autor <span style="font-weight:400;color:#9ca3af">(opcional)</span></label>
+          <input type="text" id="pens-autor" placeholder="ex: Albert Einstein"/>
+        </div>
+      </div>
+      <div class="campo" style="margin-bottom:16px">
+        <label>Mensagem</label>
+        <textarea id="pens-texto" placeholder="Escreve aqui a frase motivacional..." style="min-height:80px"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-primario" onclick="window.guardarMensagemDiaria()">💾 Guardar</button>
+        <button class="btn-secundario" onclick="window.removerMensagemDiaria()">🗑 Remover override</button>
+      </div>
+      <div id="pens-msg" style="margin-top:12px;font-size:.82rem;font-weight:600"></div>
+    </div>
+    <div class="form-card" style="max-width:620px;margin-top:20px">
+      <h3>Mensagens agendadas</h3>
+      <div id="pens-lista" style="font-size:.83rem;color:#6b7280">A carregar…</div>
     </div>
   </div>
 
@@ -1845,6 +1878,62 @@
     await deleteDoc(doc(db, 'sugestoes', id));
     carregarSugestoes();
   };
+
+  // ── PENSAMENTO DO DIA ──────────────────────────────────────
+  document.querySelector('[onclick="mudarTab(\'pensamento\')"]').addEventListener('click', () => {
+    const inp = document.getElementById('pens-data');
+    if (!inp.value) inp.value = new Date().toISOString().slice(0, 10);
+    carregarMensagensAgendadas();
+  });
+
+  window.guardarMensagemDiaria = async function() {
+    const data  = document.getElementById('pens-data').value;
+    const texto = document.getElementById('pens-texto').value.trim();
+    const autor = document.getElementById('pens-autor').value.trim();
+    const msgEl = document.getElementById('pens-msg');
+    if (!data)  { msgEl.style.color='#dc2626'; msgEl.textContent='Escolhe uma data.'; return; }
+    if (!texto) { msgEl.style.color='#dc2626'; msgEl.textContent='Escreve a mensagem.'; return; }
+    try {
+      await setDoc(doc(db,'mensagemDiaria',data),{texto,autor,criadoPor:_adminUid,data});
+      msgEl.style.color='#16a34a';
+      msgEl.textContent='✅ Guardado para ' + new Date(data+'T12:00:00').toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'}) + '.';
+      carregarMensagensAgendadas();
+    } catch(e){ msgEl.style.color='#dc2626'; msgEl.textContent='Erro: '+e.message; }
+  };
+
+  window.removerMensagemDiaria = async function() {
+    const data  = document.getElementById('pens-data').value;
+    const msgEl = document.getElementById('pens-msg');
+    if (!data) { msgEl.style.color='#dc2626'; msgEl.textContent='Escolhe uma data.'; return; }
+    try {
+      await deleteDoc(doc(db,'mensagemDiaria',data));
+      msgEl.style.color='#6b7280';
+      msgEl.textContent='Override de '+data+' removido — voltará a usar a frase automática.';
+      carregarMensagensAgendadas();
+    } catch(e){ msgEl.style.color='#dc2626'; msgEl.textContent='Erro: '+e.message; }
+  };
+
+  async function carregarMensagensAgendadas() {
+    const listaEl = document.getElementById('pens-lista');
+    if (!listaEl) return;
+    listaEl.textContent = 'A carregar…';
+    try {
+      const snap = await getDocs(query(collection(db,'mensagemDiaria'),orderBy('data','desc')));
+      if (snap.empty) { listaEl.textContent='Sem mensagens agendadas.'; return; }
+      listaEl.innerHTML = snap.docs.map(d=>{
+        const m=d.data();
+        const df=new Date(m.data+'T12:00:00').toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'});
+        return `<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin-bottom:8px;background:#fafafa">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-weight:600;color:var(--verde)">${df}</span>
+            <button onclick="document.getElementById('pens-data').value='${m.data}';document.getElementById('pens-texto').value=\`${(m.texto||'').replace(/\`/g,'')}\`;document.getElementById('pens-autor').value='${(m.autor||'')}'" style="font-size:.72rem;padding:3px 8px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#fff">Editar</button>
+          </div>
+          <p style="font-style:italic;color:#374151;margin-bottom:4px">"${m.texto||''}"</p>
+          ${m.autor?'<span style="font-size:.74rem;color:#6b7280">— '+m.autor+'</span>':''}
+        </div>`;
+      }).join('');
+    } catch(e){ listaEl.textContent='Erro: '+e.message; }
+  }
 </script>
 </body>
 </html>
