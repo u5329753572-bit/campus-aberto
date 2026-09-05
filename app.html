@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>CampusAberto · Arquivo de Estudo</title>
+  <title>CampusAberto Â· Arquivo de Estudo</title>
   <link rel="icon" type="image/png" href="logo-cs.png"/>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#071d34"/>
@@ -42,7 +42,7 @@
       min-height: 100vh;
     }
 
-    /* ── HEADER ─────────────────────────────────────── */
+    /* ââ HEADER âââââââââââââââââââââââââââââââââââââââ */
     header {
       background: linear-gradient(135deg, #0a1c10 0%, #1a3a2a 55%, #1c3e2c 100%);
       padding: 0 48px;
@@ -118,10 +118,10 @@
     }
     .btn-sair:hover { background: rgba(255,255,255,0.14); color: var(--branco); }
 
-    /* ── MAIN ───────────────────────────────────────── */
+    /* ââ MAIN âââââââââââââââââââââââââââââââââââââââââ */
     main { max-width: 1200px; margin: 0 auto; padding: 52px 40px 96px; }
 
-    /* ── WELCOME ────────────────────────────────────── */
+    /* ââ WELCOME ââââââââââââââââââââââââââââââââââââââ */
     .welcome-area { display: none; margin-bottom: 52px; animation: fadeUp 0.5s ease; }
     .welcome-area.visivel { display: block; }
 
@@ -132,7 +132,7 @@
     }
     .welcome-sub { font-size: 0.875rem; color: var(--cinza); margin-bottom: 28px; }
 
-    /* ── PAINEL DO ESTUDANTE ────────────────────────── */
+    /* ââ PAINEL DO ESTUDANTE ââââââââââââââââââââââââââ */
     .welcome-topo { display:grid; grid-template-columns:minmax(0,1fr) 350px; align-items:end; gap:34px; }
     .pesquisa-global { position:relative; margin-top:24px; z-index:60; }
     .pesquisa-global-campo {
@@ -240,7 +240,7 @@
     .painel-item.critico .painel-data-dia { color:#dc2626; }
     @keyframes pulsar-urgencia { 0%,100%{opacity:1} 50%{opacity:.45} }
 
-    /* Ecrã de todas as datas */
+    /* EcrÃ£ de todas as datas */
     #ecra-datas { display:none; padding:32px 28px 48px; max-width:900px; margin:0 auto; }
     .datas-header { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
     .datas-back { background:none; border:none; cursor:pointer; color:var(--verde); font-size:.8rem; font-weight:600; font-family:'Inter',sans-serif; display:flex; align-items:center; gap:6px; padding:0; }
@@ -279,7 +279,7 @@
     .ferramenta-favorito.ativo { color:#fff; }
     .arquivo-cabecalho { margin:0 0 28px; }
 
-    /* ── ECOSSISTEMA CAMPUSABERTO ───────────────────── */
+    /* ââ ECOSSISTEMA CAMPUSABERTO âââââââââââââââââââââ */
     .ecosistema {
       position: relative;
       margin: 0 0 64px;
@@ -350,7 +350,7 @@
     }
     .recurso-card:hover .recurso-link span:last-child { transform: translate(2px,-2px); background: var(--ouro); }
 
-    /* ── FERRAMENTAS ────────────────────────────────── */
+    /* ââ FERRAMENTAS ââââââââââââââââââââââââââââââââââ */
     .ferramentas-secao {
       margin: 0 0 68px; padding: clamp(26px,4vw,42px);
       background: rgba(255,255,255,.9); border: 1px solid rgba(11,42,74,.08);
@@ -453,7 +453,7 @@
       text-transform: uppercase; letter-spacing: 0.11em; font-weight: 500;
     }
 
-    /* ── ANO / SEMESTRE ─────────────────────────────── */
+    /* ââ ANO / SEMESTRE âââââââââââââââââââââââââââââââ */
     .ano-secao { margin-bottom: 60px; }
 
     .ano-titulo {
@@ -492,7 +492,7 @@
       border-radius: 1px;
     }
 
-    /* ── UC CARDS ───────────────────────────────────── */
+    /* ââ UC CARDS âââââââââââââââââââââââââââââââââââââ */
     .ucs-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -595,7 +595,7 @@
     }
     .uc-card:hover .uc-card-cta { letter-spacing: 0.09em; }
 
-    /* ── DOCS SECTION ───────────────────────────────── */
+    /* ââ DOCS SECTION âââââââââââââââââââââââââââââââââ */
     .docs-section { display: none; animation: fadeUp 0.3s ease; }
     .docs-section.visivel { display: block; }
 
@@ -627,7 +627,7 @@
 
     .docs-lista { display: flex; flex-direction: column; gap: 12px; }
 
-    /* ── NOTAS POR UC ────────────────────────────────── */
+    /* ââ NOTAS POR UC ââââââââââââââââââââââââââââââââââ */
     .notas-uc-card { background:#f8f6f1; border:1px solid rgba(11,42,74,.1); border-radius:3px 14px 3px 3px; padding:14px 16px; margin-bottom:18px; }
     .notas-uc-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
     .notas-campos { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; align-items:end; }
@@ -664,7 +664,7 @@
     .nota-resultado { display:flex; align-items:center; justify-content:space-between; background:#eef2f7; border-radius:8px; padding:8px 12px; margin-top:10px; }
     .nota-resultado-label { font:.6rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); }
 
-    /* ── PROGRESSO DO CURSO ──────────────────────────── */
+    /* ââ PROGRESSO DO CURSO ââââââââââââââââââââââââââââ */
     .progresso-wrap { margin-top:18px; padding:16px 18px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; }
     .progresso-wrap-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
     .progresso-barra-fundo { background:#f0f4f8; border-radius:99px; height:8px; overflow:hidden; margin-bottom:14px; }
@@ -674,7 +674,7 @@
     .prog-stat-val { font:700 1.05rem/1 'Playfair Display',serif; color:var(--verde); }
     .prog-stat-label { font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--cinza); }
 
-    /* ── PROGRESSO DE LEITURA ───────────────────────── */
+    /* ââ PROGRESSO DE LEITURA âââââââââââââââââââââââââ */
     .btn-progresso {
       border: 1.5px solid rgba(26,58,42,.13); border-radius: 8px;
       padding: 7px 11px; font-size: .7rem; font-weight: 600;
@@ -740,7 +740,7 @@
     .btn-ver:hover { background: var(--verde-med); box-shadow: 0 6px 22px rgba(26,58,42,0.34); transform: translateY(-1px); }
     .btn-ver:active { transform: scale(0.96); }
 
-    /* ── MODAL ──────────────────────────────────────── */
+    /* ââ MODAL ââââââââââââââââââââââââââââââââââââââââ */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(8,22,14,0.72);
@@ -819,7 +819,7 @@
     .btn-confirmar:hover { opacity: 0.9; box-shadow: 0 6px 22px rgba(26,58,42,0.38); }
     .btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── EMPTY & LOADING ────────────────────────────── */
+    /* ââ EMPTY & LOADING ââââââââââââââââââââââââââââââ */
     .empty { text-align: center; padding: 80px 24px; color: var(--cinza); }
     .empty-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.3; }
     .empty h4 {
@@ -840,7 +840,7 @@
     @keyframes spin   { to { transform: rotate(360deg); } }
     @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
 
-    /* ── PDF VIEWER ─────────────────────────────────── */
+    /* ââ PDF VIEWER âââââââââââââââââââââââââââââââââââ */
     .viewer-overlay {
       display: none; position: fixed; inset: 0;
       background: #1a1a1a; z-index: 300; flex-direction: column;
@@ -897,7 +897,7 @@
       letter-spacing: 0.14em; user-select: none;
     }
 
-    /* ── RESPONSIVE ─────────────────────────────────── */
+    /* ââ RESPONSIVE âââââââââââââââââââââââââââââââââââ */
     @media (max-width: 640px) {
       header { padding: 0 18px; height: 64px; }
       main { padding: 32px 18px 68px; }
@@ -1007,7 +1007,7 @@
       .ferramenta-link { min-height:150px; }
     }
 
-    /* ── MODAL PERFIL ───────────────────────────────── */
+    /* ââ MODAL PERFIL âââââââââââââââââââââââââââââââââ */
     .perfil-info-grid {
       display: flex; flex-direction: column; gap: 10px;
       margin-bottom: 24px;
@@ -1063,7 +1063,7 @@
     .btn-confirmar-perfil:hover { opacity: 0.9; }
     .btn-confirmar-perfil:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── FAB SUGESTÃO ───────────────────────────────── */
+    /* ââ FAB SUGESTÃO âââââââââââââââââââââââââââââââââ */
     .sugestao-fab {
       position: fixed; bottom: 80px; right: 16px; z-index: 400;
       width: 48px; height: 48px; border-radius: 50%;
@@ -1106,7 +1106,7 @@
     .sugestao-ok-emoji { font-size: 2rem; }
     .sugestao-ok-texto { font:.8rem/1.5 'Inter',sans-serif; color:var(--cinza); margin-top:6px; }
 
-    /* ── BOTTOM NAV MOBILE ───────────────────────────── */
+    /* ââ BOTTOM NAV MOBILE âââââââââââââââââââââââââââââ */
     .bottom-nav { display:none; }
     @media (max-width:640px) {
       .bottom-nav {
@@ -1158,7 +1158,7 @@
       }
     }
 
-    /* ── CITAÇÕES APA7 ────────────────────────────── */
+    /* ââ CITAÃÃES APA7 ââââââââââââââââââââââââââââââ */
     #ecra-citacoes { display:none; padding:20px 20px 90px; max-width:720px; margin:0 auto; }
     .citacoes-header { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
     .citacoes-titulo { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--verde); letter-spacing:-.02em; }
@@ -1209,7 +1209,7 @@
     .cta-citacoes-corpo h4 { font-family:'Playfair Display',serif; color:var(--verde); font-size:.98rem; margin:0 0 3px; }
     .cta-citacoes-corpo p { font-size:.74rem; color:#6b7280; margin:0; line-height:1.5; }
     .cta-citacoes-seta { margin-left:auto; font-size:1.2rem; color:var(--ouro); font-weight:700; flex-shrink:0; }
-    /* Destaque APA7 na secção Ferramentas */
+    /* Destaque APA7 na secÃ§Ã£o Ferramentas */
     .apa7-destaque { display:flex; align-items:center; gap:18px; background:linear-gradient(135deg,var(--verde) 0%,#1a4a5e 100%); border-radius:3px 22px 3px 3px; padding:20px 24px; margin-bottom:24px; box-shadow:0 8px 28px rgba(11,42,74,.18); cursor:pointer; border:none; width:100%; text-align:left; transition:transform .18s,box-shadow .18s; }
     .apa7-destaque:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(11,42,74,.25); }
     .apa7-destaque-badge { background:var(--ouro); color:#fff; font:800 .65rem/1 'Inter',sans-serif; padding:5px 10px; border-radius:4px 12px 4px 4px; letter-spacing:.06em; flex-shrink:0; }
@@ -1217,7 +1217,7 @@
     .apa7-destaque-corpo h3 { font-family:'Playfair Display',serif; color:#fff; font-size:1.05rem; margin:0 0 4px; }
     .apa7-destaque-corpo p { color:rgba(255,255,255,.75); font-size:.74rem; margin:0; line-height:1.5; }
     .apa7-destaque-seta { color:var(--ouro); font-size:1.4rem; font-weight:700; flex-shrink:0; }
-    /* Normas UAb no ecrã de citações */
+    /* Normas UAb no ecrÃ£ de citaÃ§Ãµes */
     .citacoes-normas-bar { display:flex; align-items:center; gap:10px; background:linear-gradient(135deg,#eff6ff,#dbeafe); border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; margin-bottom:20px; }
     .citacoes-normas-bar span { font-size:.76rem; color:#1e40af; flex:1; line-height:1.45; }
     .citacoes-normas-bar a { font:700 .72rem/1 'Inter',sans-serif; color:#1d4ed8; white-space:nowrap; text-decoration:none; border-bottom:1px solid #93c5fd; padding-bottom:1px; }
@@ -1227,37 +1227,37 @@
 <body>
 
 <header>
-  <div class="header-logo" onclick="window.voltarInicio()" role="button" title="Ir para a página principal" style="cursor:pointer">
+  <div class="header-logo" onclick="window.voltarInicio()" role="button" title="Ir para a pÃ¡gina principal" style="cursor:pointer">
     <div class="header-logo-icon">
-      <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
+      <img src="logo-cs.png" alt="CS â RepÃºblica das CiÃªncias Sociais"/>
     </div>
     <div class="header-logo-txt">
       <div class="header-logo-nome">Campus<em>Aberto</em></div>
-      <div class="header-logo-sub">República das Ciências Sociais</div>
+      <div class="header-logo-sub">RepÃºblica das CiÃªncias Sociais</div>
     </div>
   </div>
   <div class="header-right">
     <div class="user-chip" onclick="abrirPerfil()" title="Ver perfil" role="button" aria-label="Ver perfil">
-      <div class="user-avatar" id="hdr-avatar">—</div>
+      <div class="user-avatar" id="hdr-avatar">â</div>
       <div class="user-info">
-        <div class="user-nome"   id="hdr-nome">—</div>
+        <div class="user-nome"   id="hdr-nome">â</div>
         <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
       </div>
     </div>
     <div id="online-badge" title="Utilizadores online agora" style="display:none;align-items:center;gap:5px;font-size:.75rem;color:#6b7280;padding:4px 10px;border-radius:20px;background:#f3f4f6">
       <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block"></span>
-      <span id="online-count">—</span> online
+      <span id="online-count">â</span> online
     </div>
-    <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
-    <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administração">⚙ Admin</a>
+    <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">â¬ Instalar</button>
+    <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administraÃ§Ã£o">â Admin</a>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
 
-<nav class="bottom-nav" id="bottom-nav" aria-label="Navegação principal">
-  <button type="button" class="bottom-nav-btn ativa" id="bnav-inicio" onclick="window.bnavIr('inicio')" aria-label="Início">
+<nav class="bottom-nav" id="bottom-nav" aria-label="NavegaÃ§Ã£o principal">
+  <button type="button" class="bottom-nav-btn ativa" id="bnav-inicio" onclick="window.bnavIr('inicio')" aria-label="InÃ­cio">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Início
+    InÃ­cio
   </button>
   <button type="button" class="bottom-nav-btn" id="bnav-ucs" onclick="window.bnavIr('ucs')" aria-label="UCs">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -1278,28 +1278,28 @@
     <div class="spinner"></div><br/>A carregar...
   </div>
 
-  <!-- ECRÃ PRINCIPAL: UCs -->
+  <!-- ECRÃ PRINCIPAL: UCs -->
   <div id="ecra-ucs" style="display:none">
     <div id="notif-novos-docs" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:12px;padding:12px 16px;margin-bottom:14px;align-items:center;gap:10px;font-size:.82rem;color:#1e40af;font-family:'Inter',sans-serif;flex-wrap:wrap">
-      <span style="font-size:1.1rem">📄</span>
+      <span style="font-size:1.1rem">ð</span>
       <span id="notif-novos-docs-texto" style="flex:1;min-width:120px"></span>
       <button onclick="window.bnavIr('ucs');document.getElementById('notif-novos-docs').style.display='none'" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0">Ver UCs</button>
-      <button onclick="document.getElementById('notif-novos-docs').style.display='none'" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:1.1rem;padding:0 2px;line-height:1" aria-label="Fechar">×</button>
+      <button onclick="document.getElementById('notif-novos-docs').style.display='none'" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:1.1rem;padding:0 2px;line-height:1" aria-label="Fechar">Ã</button>
     </div>
     <div class="welcome-area" id="welcome-bar">
       <div class="welcome-topo">
         <div>
-          <div class="welcome-saudacao">Olá, <span id="bv-nome">—</span>.</div>
-          <div class="welcome-sub">Encontra o que precisas, acompanha as próximas datas e retoma o teu estudo.</div>
+          <div class="welcome-saudacao">OlÃ¡, <span id="bv-nome">â</span>.</div>
+          <div class="welcome-sub">Encontra o que precisas, acompanha as prÃ³ximas datas e retoma o teu estudo.</div>
         </div>
         <div class="stats-bar">
           <div class="stat-item">
-            <div class="stat-val" id="stat-ucs">—</div>
+            <div class="stat-val" id="stat-ucs">â</div>
             <div class="stat-label">Unidades Curriculares</div>
           </div>
           <div class="stat-item">
-            <div class="stat-val" id="stat-docs">—</div>
-            <div class="stat-label">Documentos disponíveis</div>
+            <div class="stat-val" id="stat-docs">â</div>
+            <div class="stat-label">Documentos disponÃ­veis</div>
           </div>
         </div>
       </div>
@@ -1319,31 +1319,31 @@
 
     <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
       <div class="secao-cabecalho-uniforme">
-        <div><div class="secao-kicker-uniforme">Visão pessoal</div><h2 id="painel-titulo">O teu painel</h2></div>
-        <p>O essencial para não perder prazos e voltar rapidamente ao que estavas a consultar.</p>
+        <div><div class="secao-kicker-uniforme">VisÃ£o pessoal</div><h2 id="painel-titulo">O teu painel</h2></div>
+        <p>O essencial para nÃ£o perder prazos e voltar rapidamente ao que estavas a consultar.</p>
       </div>
       <div class="painel-grid">
         <article class="painel-card datas">
-          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">◷</span>Próximas datas</div><span class="painel-card-contador" id="datas-contador">A carregar</span></div>
-          <div class="painel-lista" id="datas-lista"><div class="painel-vazio"><p>A consultar o calendário...</p></div></div>
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">â·</span>PrÃ³ximas datas</div><span class="painel-card-contador" id="datas-contador">A carregar</span></div>
+          <div class="painel-lista" id="datas-lista"><div class="painel-vazio"><p>A consultar o calendÃ¡rio...</p></div></div>
         </article>
         <article class="painel-card favoritos">
-          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">★</span>Favoritos</div><span class="painel-card-contador" id="favoritos-contador">0 guardados</span></div>
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">â</span>Favoritos</div><span class="painel-card-contador" id="favoritos-contador">0 guardados</span></div>
           <div class="painel-lista" id="favoritos-lista"></div>
         </article>
         <article class="painel-card retomar">
-          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">↻</span>Continuar a estudar</div><span class="painel-card-contador">Último acesso</span></div>
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">â»</span>Continuar a estudar</div><span class="painel-card-contador">Ãltimo acesso</span></div>
           <div class="retomar-destaque" id="retomar-conteudo"></div>
         </article>
       </div>
-      <!-- Progresso do curso (aparece quando há notas) -->
+      <!-- Progresso do curso (aparece quando hÃ¡ notas) -->
       <div class="progresso-wrap" id="progresso-wrap" style="display:none">
         <div class="progresso-wrap-titulo">Progresso do curso</div>
         <div class="progresso-barra-fundo"><div class="progresso-barra-fill" id="prog-barra" style="width:0%"></div></div>
         <div class="progresso-stats">
           <div class="prog-stat"><span class="prog-stat-val" id="prog-aprovadas">0</span><span class="prog-stat-label">UCs aprovadas</span></div>
-          <div class="prog-stat"><span class="prog-stat-val" id="prog-media">—</span><span class="prog-stat-label">Média ponderada</span></div>
-          <div class="prog-stat"><span class="prog-stat-val" id="prog-ects">0</span><span class="prog-stat-label">ECTS concluídos</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-media">â</span><span class="prog-stat-label">MÃ©dia ponderada</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-ects">0</span><span class="prog-stat-label">ECTS concluÃ­dos</span></div>
           <div class="prog-stat"><span class="prog-stat-val" id="prog-pct">0%</span><span class="prog-stat-label">Do curso completo</span></div>
         </div>
       </div>
@@ -1352,10 +1352,10 @@
     <section class="ecosistema" aria-labelledby="ecosistema-titulo">
       <div class="ecosistema-topo">
         <div>
-          <div class="ecosistema-kicker">Para além do arquivo</div>
+          <div class="ecosistema-kicker">Para alÃ©m do arquivo</div>
           <h2 id="ecosistema-titulo">Explora o que temos na nossa comunidade</h2>
         </div>
-        <p class="ecosistema-intro">Guias, vozes e conversas que prolongam a vida académica para lá dos documentos.</p>
+        <p class="ecosistema-intro">Guias, vozes e conversas que prolongam a vida acadÃ©mica para lÃ¡ dos documentos.</p>
       </div>
 
       <div class="recursos-grid">
@@ -1365,18 +1365,18 @@
             <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
           </span>
           <h3>Guia de Estudantes para Estudantes</h3>
-          <p>Informação prática para orientar o teu percurso académico.</p>
-          <span class="recurso-link"><span>Consultar guia</span><span aria-hidden="true">↗</span></span>
+          <p>InformaÃ§Ã£o prÃ¡tica para orientar o teu percurso acadÃ©mico.</p>
+          <span class="recurso-link"><span>Consultar guia</span><span aria-hidden="true">â</span></span>
         </a>
 
-        <a class="recurso-card" href="https://frequenciaberta.pt/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Rádio Frequênciaberta numa nova janela">
+        <a class="recurso-card" href="https://frequenciaberta.pt/" target="_blank" rel="noopener noreferrer" aria-label="Abrir RÃ¡dio FrequÃªnciaberta numa nova janela">
           <span class="recurso-numero" aria-hidden="true">02</span>
           <span class="recurso-icone" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 10a8 8 0 0 1 16 0"/><path d="M5 10h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5Z"/><path d="M19 10h-2a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h2Z"/></svg>
           </span>
-          <h3>Rádio Frequênciaberta</h3>
-          <p>A rádio da comunidade, feita de vozes, ideias e vida académica.</p>
-          <span class="recurso-link"><span>Ouvir a rádio</span><span aria-hidden="true">↗</span></span>
+          <h3>RÃ¡dio FrequÃªnciaberta</h3>
+          <p>A rÃ¡dio da comunidade, feita de vozes, ideias e vida acadÃ©mica.</p>
+          <span class="recurso-link"><span>Ouvir a rÃ¡dio</span><span aria-hidden="true">â</span></span>
         </a>
 
         <a class="recurso-card" href="https://www.youtube.com/@Campus_aberto" target="_blank" rel="noopener noreferrer" aria-label="Abrir o Podcast Campus Aberto no YouTube numa nova janela">
@@ -1385,8 +1385,8 @@
             <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="m10 9 5 3-5 3Z"/></svg>
           </span>
           <h3>Podcast Campus Aberto</h3>
-          <p>Os temas que estudamos são genuinamente interessantes. O problema nunca foi a matéria, foi a forma como chegou até nós. Entra e subscreve o Canal.</p>
-          <span class="recurso-link"><span>Ver episódios</span><span aria-hidden="true">↗</span></span>
+          <p>Os temas que estudamos sÃ£o genuinamente interessantes. O problema nunca foi a matÃ©ria, foi a forma como chegou atÃ© nÃ³s. Entra e subscreve o Canal.</p>
+          <span class="recurso-link"><span>Ver episÃ³dios</span><span aria-hidden="true">â</span></span>
         </a>
 
         <a class="recurso-card" href="https://ecosdassociedades.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir a Revista Ecos das Sociedades numa nova janela">
@@ -1395,8 +1395,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </span>
           <h3>Revista Ecos das Sociedades</h3>
-          <p>Publicação académica da República das Ciências Sociais com artigos, ensaios e reflexões produzidos pelos estudantes.</p>
-          <span class="recurso-link"><span>Ler a revista</span><span aria-hidden="true">↗</span></span>
+          <p>PublicaÃ§Ã£o acadÃ©mica da RepÃºblica das CiÃªncias Sociais com artigos, ensaios e reflexÃµes produzidos pelos estudantes.</p>
+          <span class="recurso-link"><span>Ler a revista</span><span aria-hidden="true">â</span></span>
         </a>
 
         <a class="recurso-card" href="https://narrativas-sociais-revisao.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Narrativas Sociais numa nova janela">
@@ -1405,8 +1405,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </span>
           <h3>Narrativas Sociais</h3>
-          <p>O Narrativas Sociais é um espaço dedicado à escrita criativa e à experimentação. Todas as semanas partimos de um tema e desafiamos diferentes formas de o transformar em palavras. Envia os teus textos.</p>
-          <span class="recurso-link"><span>Ler textos</span><span aria-hidden="true">↗</span></span>
+          <p>O Narrativas Sociais Ã© um espaÃ§o dedicado Ã  escrita criativa e Ã  experimentaÃ§Ã£o. Todas as semanas partimos de um tema e desafiamos diferentes formas de o transformar em palavras. Envia os teus textos.</p>
+          <span class="recurso-link"><span>Ler textos</span><span aria-hidden="true">â</span></span>
         </a>
       </div>
     </section>
@@ -1420,23 +1420,23 @@
         <p class="ferramentas-intro">Links diretos para estudar com mais autonomia: transcrever, resumir, trabalhar PDFs, pesquisar, citar e traduzir.</p>
       </div>
 
-      <button class="apa7-destaque" onclick="window.abrirCitacoes()" type="button" aria-label="Abrir gerador de citações APA7">
+      <button class="apa7-destaque" onclick="window.abrirCitacoes()" type="button" aria-label="Abrir gerador de citaÃ§Ãµes APA7">
         <span class="apa7-destaque-badge">APA 7</span>
         <div class="apa7-destaque-corpo">
-          <h3>Gerador de Citações</h3>
-          <p>Cria referências bibliográficas formatadas automaticamente. Livro, artigo, website, tese e mais — guarda na tua bibliografia pessoal.</p>
+          <h3>Gerador de CitaÃ§Ãµes</h3>
+          <p>Cria referÃªncias bibliogrÃ¡ficas formatadas automaticamente. Livro, artigo, website, tese e mais â guarda na tua bibliografia pessoal.</p>
         </div>
-        <span class="apa7-destaque-seta" aria-hidden="true">→</span>
+        <span class="apa7-destaque-seta" aria-hidden="true">â</span>
       </button>
 
       <div class="ferramentas-tabs" role="tablist" aria-label="Categorias de ferramentas">
-        <button class="ferramenta-tab" id="tab-transcribe" type="button" role="tab" aria-selected="true" aria-controls="ferramentas-painel" data-categoria="transcribe">Transcrição</button>
+        <button class="ferramenta-tab" id="tab-transcribe" type="button" role="tab" aria-selected="true" aria-controls="ferramentas-painel" data-categoria="transcribe">TranscriÃ§Ã£o</button>
         <button class="ferramenta-tab" id="tab-summary" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="summary" tabindex="-1">Resumos</button>
         <button class="ferramenta-tab" id="tab-pdf" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="pdf" tabindex="-1">PDFs</button>
-        <button class="ferramenta-tab" id="tab-youtube" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="youtube" tabindex="-1">Vídeos</button>
+        <button class="ferramenta-tab" id="tab-youtube" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="youtube" tabindex="-1">VÃ­deos</button>
         <button class="ferramenta-tab" id="tab-articles" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="articles" tabindex="-1">Artigos</button>
         <button class="ferramenta-tab" id="tab-references" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="references" tabindex="-1">Bibliografia</button>
-        <button class="ferramenta-tab" id="tab-translation" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="translation" tabindex="-1">Tradução</button>
+        <button class="ferramenta-tab" id="tab-translation" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="translation" tabindex="-1">TraduÃ§Ã£o</button>
       </div>
 
       <div class="ferramentas-painel" id="ferramentas-painel" role="tabpanel" aria-labelledby="tab-transcribe">
@@ -1448,65 +1448,65 @@
     <script>
       window.ferramentasCampus = {
         transcribe: {
-          titulo: 'Transcrição de vídeos e áudio', codigo: 'TR',
+          titulo: 'TranscriÃ§Ã£o de vÃ­deos e Ã¡udio', codigo: 'TR',
           items: [
-            ['TurboScribe','Transcreve ficheiros de vídeo e áudio em dezenas de idiomas.','https://turboscribe.ai/'],
-            ['YouTube Auto-Transcript','Permite consultar e copiar as legendas automáticas disponíveis nos vídeos.','https://youtube.com/'],
-            ['Otter.ai','Transcrição automática de gravações, reuniões e conversas em tempo real.','https://otter.ai/']
+            ['TurboScribe','Transcreve ficheiros de vÃ­deo e Ã¡udio em dezenas de idiomas.','https://turboscribe.ai/'],
+            ['YouTube Auto-Transcript','Permite consultar e copiar as legendas automÃ¡ticas disponÃ­veis nos vÃ­deos.','https://youtube.com/'],
+            ['Otter.ai','TranscriÃ§Ã£o automÃ¡tica de gravaÃ§Ãµes, reuniÃµes e conversas em tempo real.','https://otter.ai/']
           ]
         },
         summary: {
-          titulo: 'Resumos e sínteses', codigo: 'RS',
+          titulo: 'Resumos e sÃ­nteses', codigo: 'RS',
           items: [
-            ['NotebookLM (Google)','Cria resumos, guias de estudo, perguntas e sínteses a partir das fontes carregadas.','https://notebooklm.google.com/'],
+            ['NotebookLM (Google)','Cria resumos, guias de estudo, perguntas e sÃ­nteses a partir das fontes carregadas.','https://notebooklm.google.com/'],
             ['Mapify','Transforma textos e ideias em mapas mentais e esquemas visuais.','https://mapify.so/'],
-            ['SciSpace','Ajuda a compreender artigos científicos, conceitos complexos e linguagem técnica.','https://scispace.com/'],
-            ['Notion (com templates)','Organiza notas, resumos, disciplinas e projetos académicos num único espaço.','https://notion.so/']
+            ['SciSpace','Ajuda a compreender artigos cientÃ­ficos, conceitos complexos e linguagem tÃ©cnica.','https://scispace.com/'],
+            ['Notion (com templates)','Organiza notas, resumos, disciplinas e projetos acadÃ©micos num Ãºnico espaÃ§o.','https://notion.so/']
           ]
         },
         pdf: {
           titulo: 'Processar e pesquisar PDFs', codigo: 'PDF',
           items: [
-            ['iLovePDF — OCR','Converte documentos digitalizados em texto pesquisável e editável.','https://www.ilovepdf.com/pt/pdf_para_texto'],
-            ['PDF24 Tools','Reúne OCR, compressão, edição, conversão e outras operações com PDF.','https://tools.pdf24.org/pt/'],
-            ['Smallpdf','Converte, comprime e reorganiza documentos PDF através do navegador.','https://smallpdf.com/pt/pdf-para-word']
+            ['iLovePDF â OCR','Converte documentos digitalizados em texto pesquisÃ¡vel e editÃ¡vel.','https://www.ilovepdf.com/pt/pdf_para_texto'],
+            ['PDF24 Tools','ReÃºne OCR, compressÃ£o, ediÃ§Ã£o, conversÃ£o e outras operaÃ§Ãµes com PDF.','https://tools.pdf24.org/pt/'],
+            ['Smallpdf','Converte, comprime e reorganiza documentos PDF atravÃ©s do navegador.','https://smallpdf.com/pt/pdf-para-word']
           ]
         },
         youtube: {
-          titulo: 'Encontrar vídeos educativos', codigo: 'VD',
+          titulo: 'Encontrar vÃ­deos educativos', codigo: 'VD',
           items: [
-            ['Khan Academy','Vídeos e exercícios educativos organizados por áreas de aprendizagem.','https://pt.khanacademy.org/'],
-            ['YouTube Edu','Pesquisa de aulas, explicações e conteúdos educativos em vídeo.','https://www.youtube.com/'],
-            ['CrashCourse','Cursos em vídeo sobre história, ciências, filosofia e outras áreas.','https://www.youtube.com/@crashcourse'],
-            ['TED-Ed','Lições curtas e vídeos educativos animados sobre temas diversos.','https://ed.ted.com/']
+            ['Khan Academy','VÃ­deos e exercÃ­cios educativos organizados por Ã¡reas de aprendizagem.','https://pt.khanacademy.org/'],
+            ['YouTube Edu','Pesquisa de aulas, explicaÃ§Ãµes e conteÃºdos educativos em vÃ­deo.','https://www.youtube.com/'],
+            ['CrashCourse','Cursos em vÃ­deo sobre histÃ³ria, ciÃªncias, filosofia e outras Ã¡reas.','https://www.youtube.com/@crashcourse'],
+            ['TED-Ed','LiÃ§Ãµes curtas e vÃ­deos educativos animados sobre temas diversos.','https://ed.ted.com/']
           ]
         },
         articles: {
-          titulo: 'Pesquisar artigos científicos', codigo: 'AC',
+          titulo: 'Pesquisar artigos cientÃ­ficos', codigo: 'AC',
           items: [
-            ['Google Scholar','Motor de pesquisa para artigos, teses, livros e literatura académica.','https://scholar.google.com/'],
-            ['SciELO','Biblioteca de revistas e artigos científicos em acesso aberto.','https://scielo.org/'],
-            ['RCAAP','Portal português de teses, dissertações, artigos e repositórios científicos.','https://www.rcaap.pt/'],
-            ['JSTOR','Base de dados académica especialmente relevante para ciências sociais e humanidades.','https://www.jstor.org/'],
-            ['ResearchGate','Rede académica para descobrir publicações e acompanhar investigadores.','https://www.researchgate.net/']
+            ['Google Scholar','Motor de pesquisa para artigos, teses, livros e literatura acadÃ©mica.','https://scholar.google.com/'],
+            ['SciELO','Biblioteca de revistas e artigos cientÃ­ficos em acesso aberto.','https://scielo.org/'],
+            ['RCAAP','Portal portuguÃªs de teses, dissertaÃ§Ãµes, artigos e repositÃ³rios cientÃ­ficos.','https://www.rcaap.pt/'],
+            ['JSTOR','Base de dados acadÃ©mica especialmente relevante para ciÃªncias sociais e humanidades.','https://www.jstor.org/'],
+            ['ResearchGate','Rede acadÃ©mica para descobrir publicaÃ§Ãµes e acompanhar investigadores.','https://www.researchgate.net/']
           ]
         },
         references: {
-          titulo: 'Gerir bibliografia e citações', codigo: 'APA',
+          titulo: 'Gerir bibliografia e citaÃ§Ãµes', codigo: 'APA',
           items: [
             ['Zotero','Guarda, organiza e cita fontes, gerando bibliografias automaticamente.','https://www.zotero.org/'],
-            ['Mendeley','Organiza PDFs, referências, anotações e bibliografias académicas.','https://www.mendeley.com/'],
-            ['CitationMachine','Gera citações em APA, MLA, Chicago e outros estilos.','https://www.citationmachine.net/'],
+            ['Mendeley','Organiza PDFs, referÃªncias, anotaÃ§Ãµes e bibliografias acadÃ©micas.','https://www.mendeley.com/'],
+            ['CitationMachine','Gera citaÃ§Ãµes em APA, MLA, Chicago e outros estilos.','https://www.citationmachine.net/'],
             ['MyBib','Cria e organiza bibliografias online a partir de URLs, livros e artigos.','https://www.mybib.com/']
           ]
         },
         translation: {
-          titulo: 'Tradução e dicionários', codigo: 'PT',
+          titulo: 'TraduÃ§Ã£o e dicionÃ¡rios', codigo: 'PT',
           items: [
             ['DeepL','Traduz textos e documentos preservando melhor o contexto das frases.','https://www.deepl.com/translator'],
-            ['Linguee','Mostra traduções acompanhadas por exemplos retirados de textos reais.','https://www.linguee.pt/'],
-            ['WordReference','Dicionários bilingues, definições e fóruns sobre uso da língua.','https://www.wordreference.com/'],
-            ['Reverso Context','Apresenta traduções de palavras e expressões em diferentes contextos.','https://context.reverso.net/']
+            ['Linguee','Mostra traduÃ§Ãµes acompanhadas por exemplos retirados de textos reais.','https://www.linguee.pt/'],
+            ['WordReference','DicionÃ¡rios bilingues, definiÃ§Ãµes e fÃ³runs sobre uso da lÃ­ngua.','https://www.wordreference.com/'],
+            ['Reverso Context','Apresenta traduÃ§Ãµes de palavras e expressÃµes em diferentes contextos.','https://context.reverso.net/']
           ]
         }
       };
@@ -1529,7 +1529,7 @@
         grid.innerHTML = dados.items.map((item, indice) => {
           const destino = new URL(item[2]).hostname.replace(/^www\./,'');
           return `<article class="ferramenta-link">
-            <div class="ferramenta-link-topo"><span class="ferramenta-marca">${dados.codigo}</span><span style="display:flex;gap:7px;align-items:center"><button class="favorito-btn ferramenta-favorito" type="button" data-fav-key="tool:${categoria}:${indice}" onclick="window.toggleFavorito('tool:${categoria}:${indice}')" aria-label="Adicionar ${item[0]} aos favoritos">☆</button><a class="ferramenta-seta" href="${item[2]}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${item[0]} numa nova janela">↗</a></span></div>
+            <div class="ferramenta-link-topo"><span class="ferramenta-marca">${dados.codigo}</span><span style="display:flex;gap:7px;align-items:center"><button class="favorito-btn ferramenta-favorito" type="button" data-fav-key="tool:${categoria}:${indice}" onclick="window.toggleFavorito('tool:${categoria}:${indice}')" aria-label="Adicionar ${item[0]} aos favoritos">â</button><a class="ferramenta-seta" href="${item[2]}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${item[0]} numa nova janela">â</a></span></div>
             <a class="ferramenta-conteudo" href="${item[2]}" target="_blank" rel="noopener noreferrer"><h3>${item[0]}</h3><p>${item[1]}</p><span class="ferramenta-destino">${destino}</span></a>
           </article>`;
         }).join('');
@@ -1552,8 +1552,8 @@
     </script>
 
     <section class="secao-cabecalho-uniforme arquivo-cabecalho" aria-labelledby="arquivo-titulo">
-      <div><div class="secao-kicker-uniforme">Biblioteca académica</div><h2 id="arquivo-titulo">Unidades curriculares</h2></div>
-      <p>Consulta os materiais organizados por ano e semestre ou encontra-os diretamente através da pesquisa.</p>
+      <div><div class="secao-kicker-uniforme">Biblioteca acadÃ©mica</div><h2 id="arquivo-titulo">Unidades curriculares</h2></div>
+      <p>Consulta os materiais organizados por ano e semestre ou encontra-os diretamente atravÃ©s da pesquisa.</p>
     </section>
 
     <div id="ucs-grid">
@@ -1561,110 +1561,110 @@
     </div>
   </div>
 
-  <!-- ECRÃ TODAS AS DATAS -->
+  <!-- ECRÃ TODAS AS DATAS -->
   <div id="ecra-datas">
     <div class="datas-header">
-      <button type="button" class="datas-back" onclick="fecharEcranDatas()">← Voltar</button>
-      <h2>Calendário académico</h2>
+      <button type="button" class="datas-back" onclick="fecharEcranDatas()">â Voltar</button>
+      <h2>CalendÃ¡rio acadÃ©mico</h2>
     </div>
     <div class="datas-filtros">
       <select id="filtro-ano" onchange="filtrarDatas()">
         <option value="">Todos os anos</option>
-        <option value="1">1º Ano</option>
-        <option value="2">2º Ano</option>
-        <option value="3">3º Ano</option>
+        <option value="1">1Âº Ano</option>
+        <option value="2">2Âº Ano</option>
+        <option value="3">3Âº Ano</option>
       </select>
       <select id="filtro-semestre" onchange="filtrarDatas()">
         <option value="">Todos os semestres</option>
-        <option value="1">1º Semestre</option>
-        <option value="2">2º Semestre</option>
+        <option value="1">1Âº Semestre</option>
+        <option value="2">2Âº Semestre</option>
       </select>
       <select id="filtro-minor" onchange="filtrarDatas()" style="display:none">
         <option value="">Todos os minors</option>
-        <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
+        <option value="CiÃªncia PolÃ­tica e Administrativa">CiÃªncia PolÃ­tica e Administrativa</option>
         <option value="Psicologia">Psicologia</option>
-        <option value="Intervenção Social">Intervenção Social</option>
+        <option value="IntervenÃ§Ã£o Social">IntervenÃ§Ã£o Social</option>
         <option value="Sociologia">Sociologia</option>
       </select>
       <select id="filtro-uc" onchange="filtrarDatas()">
         <option value="">Todas as UCs</option>
       </select>
       <select id="filtro-epoca" onchange="filtrarDatas()">
-        <option value="">Todas as épocas</option>
-        <option value="Global/Exame">Época Normal (Global/Exame)</option>
-        <option value="Recurso">Época Recurso</option>
+        <option value="">Todas as Ã©pocas</option>
+        <option value="Global/Exame">Ãpoca Normal (Global/Exame)</option>
+        <option value="Recurso">Ãpoca Recurso</option>
       </select>
     </div>
     <div class="datas-lista-completa" id="datas-lista-completa"></div>
   </div>
 
-  <!-- ECRÃ DOCUMENTOS -->
+  <!-- ECRÃ DOCUMENTOS -->
   <div id="ecra-docs" style="display:none">
     <div class="docs-header">
-      <button type="button" class="btn-voltar" onclick="voltarUCs()" title="Voltar" aria-label="Voltar às unidades curriculares">←</button>
+      <button type="button" class="btn-voltar" onclick="voltarUCs()" title="Voltar" aria-label="Voltar Ã s unidades curriculares">â</button>
       <div class="docs-titulo-area">
-        <h2 class="docs-titulo" id="docs-titulo">—</h2>
+        <h2 class="docs-titulo" id="docs-titulo">â</h2>
         <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
       </div>
     </div>
     <!-- Notas desta UC -->
     <div class="notas-uc-card" id="notas-uc-card">
-      <div class="notas-uc-titulo">📊 As minhas notas</div>
+      <div class="notas-uc-titulo">ð As minhas notas</div>
 
       <!-- Seletor de modalidade -->
       <div class="nota-modo-selector">
-        <button type="button" class="nota-modo-btn ativo" id="nota-modo-ac" onclick="notaModoSelecionar('continua')">📚 Av. Contínua</button>
-        <button type="button" class="nota-modo-btn" id="nota-modo-ex" onclick="notaModoSelecionar('exame')">📝 Só Exame</button>
+        <button type="button" class="nota-modo-btn ativo" id="nota-modo-ac" onclick="notaModoSelecionar('continua')">ð Av. ContÃ­nua</button>
+        <button type="button" class="nota-modo-btn" id="nota-modo-ex" onclick="notaModoSelecionar('exame')">ð SÃ³ Exame</button>
       </div>
 
-      <!-- ── Painel: Avaliação Contínua ── -->
+      <!-- ââ Painel: AvaliaÃ§Ã£o ContÃ­nua ââ -->
       <div class="nota-painel ativo" id="nota-painel-continua">
-        <div class="nota-sec-titulo">E-fólios</div>
+        <div class="nota-sec-titulo">E-fÃ³lios</div>
         <div class="notas-campos" style="grid-template-columns:1fr 1fr">
           <div class="nota-campo">
-            <label for="nota-efolio-a">E-fólio A</label>
-            <input type="number" id="nota-efolio-a" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+            <label for="nota-efolio-a">E-fÃ³lio A</label>
+            <input type="number" id="nota-efolio-a" min="0" max="20" step="0.1" placeholder="0 â 20" oninput="notaAtualizar()">
           </div>
           <div class="nota-campo">
-            <label for="nota-efolio-b">E-fólio B</label>
-            <input type="number" id="nota-efolio-b" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+            <label for="nota-efolio-b">E-fÃ³lio B</label>
+            <input type="number" id="nota-efolio-b" min="0" max="20" step="0.1" placeholder="0 â 20" oninput="notaAtualizar()">
           </div>
         </div>
-        <div class="nota-limiar vazio" id="nota-soma-limiar">Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span></div>
+        <div class="nota-limiar vazio" id="nota-soma-limiar">Soma: â &nbsp;<span style="opacity:.65;font-weight:400">mÃ­n. 3,5 para ir ao E-FÃ³lio Global</span></div>
 
-        <!-- E-Fólio Global (sempre visível em Av. Contínua) -->
+        <!-- E-FÃ³lio Global (sempre visÃ­vel em Av. ContÃ­nua) -->
         <div id="nota-sec-global">
-          <div class="nota-sec-titulo">E-Fólio Global <span class="nota-sec-sub">máx. 12 val. · mín. 5,5</span></div>
+          <div class="nota-sec-titulo">E-FÃ³lio Global <span class="nota-sec-sub">mÃ¡x. 12 val. Â· mÃ­n. 5,5</span></div>
           <div class="nota-campo" style="max-width:130px">
             <label for="nota-global">Nota</label>
-            <input type="number" id="nota-global" min="0" max="12" step="0.1" placeholder="0 – 12" oninput="notaAtualizar()">
+            <input type="number" id="nota-global" min="0" max="12" step="0.1" placeholder="0 â 12" oninput="notaAtualizar()">
           </div>
           <div class="nota-limiar vazio" id="nota-global-limiar" style="margin-top:8px"></div>
         </div>
 
         <!-- Exame recurso (aparece apenas quando soma < 3,5) -->
         <div id="nota-sec-exame-rec" style="display:none">
-          <div class="nota-sec-titulo" style="color:#c2410c">⚠️ Exame obrigatório <span class="nota-sec-sub" style="color:inherit">somatório e-fólios &lt; 3,5</span></div>
+          <div class="nota-sec-titulo" style="color:#c2410c">â ï¸ Exame obrigatÃ³rio <span class="nota-sec-sub" style="color:inherit">somatÃ³rio e-fÃ³lios &lt; 3,5</span></div>
           <div class="nota-campo" style="max-width:130px">
             <label for="nota-exame-rec">Nota do exame</label>
-            <input type="number" id="nota-exame-rec" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+            <input type="number" id="nota-exame-rec" min="0" max="20" step="0.1" placeholder="0 â 20" oninput="notaAtualizar()">
           </div>
         </div>
       </div>
 
-      <!-- ── Painel: Só Exame ── -->
+      <!-- ââ Painel: SÃ³ Exame ââ -->
       <div class="nota-painel" id="nota-painel-exame">
-        <div class="nota-sec-titulo">Exame <span class="nota-sec-sub">mín. 10 val. (9,5 arredonda para 10)</span></div>
+        <div class="nota-sec-titulo">Exame <span class="nota-sec-sub">mÃ­n. 10 val. (9,5 arredonda para 10)</span></div>
         <div class="nota-campo" style="max-width:130px">
           <label for="nota-so-exame">Nota</label>
-          <input type="number" id="nota-so-exame" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          <input type="number" id="nota-so-exame" min="0" max="20" step="0.1" placeholder="0 â 20" oninput="notaAtualizar()">
         </div>
       </div>
 
-      <!-- Nota final (partilhada, aparece quando há valor) -->
+      <!-- Nota final (partilhada, aparece quando hÃ¡ valor) -->
       <div class="nota-resultado" id="nota-resultado" style="display:none">
         <span class="nota-resultado-label">Nota final</span>
-        <span class="nota-final-val" id="nota-final-val">—</span>
+        <span class="nota-final-val" id="nota-final-val">â</span>
       </div>
 
       <div class="nota-rodape">
@@ -1677,19 +1677,19 @@
     </div>
   </div>
 
-  <!-- ECRÃ CITAÇÕES APA7 -->
+  <!-- ECRÃ CITAÃÃES APA7 -->
   <div id="ecra-citacoes" style="display:none">
     <div class="citacoes-header">
-      <button type="button" class="btn-voltar" onclick="fecharCitacoes()" title="Voltar" aria-label="Voltar às ferramentas">←</button>
+      <button type="button" class="btn-voltar" onclick="fecharCitacoes()" title="Voltar" aria-label="Voltar Ã s ferramentas">â</button>
       <div>
-        <div class="citacoes-titulo">Citações APA 7</div>
-        <div style="font-size:.72rem;color:#6b7280;font-family:'Inter',sans-serif">Gerador de referências bibliográficas</div>
+        <div class="citacoes-titulo">CitaÃ§Ãµes APA 7</div>
+        <div style="font-size:.72rem;color:#6b7280;font-family:'Inter',sans-serif">Gerador de referÃªncias bibliogrÃ¡ficas</div>
       </div>
     </div>
 
     <div class="citacoes-normas-bar">
-      <span>📄 A UAb adota o estilo <strong>APA 7ª edição</strong> para trabalhos académicos.</span>
-      <a href="https://repositorioaberto.uab.pt/entities/publication/73f209d7-a283-46f2-b165-1314483f9d63" target="_blank" rel="noopener noreferrer">Ver normas UAb ↗</a>
+      <span>ð A UAb adota o estilo <strong>APA 7Âª ediÃ§Ã£o</strong> para trabalhos acadÃ©micos.</span>
+      <a href="https://repositorioaberto.uab.pt/entities/publication/73f209d7-a283-46f2-b165-1314483f9d63" target="_blank" rel="noopener noreferrer">Ver normas UAb â</a>
     </div>
 
     <div class="citacoes-card">
@@ -1698,7 +1698,7 @@
       <div class="citacoes-form" id="cit-form"></div>
       <div class="citacoes-preview" id="cit-preview"></div>
       <div class="citacoes-acoes">
-        <button class="btn-cit-gerar" onclick="gerarCitacao()">Gerar citação</button>
+        <button class="btn-cit-gerar" onclick="gerarCitacao()">Gerar citaÃ§Ã£o</button>
         <button class="btn-cit-copiar" id="btn-cit-copiar" onclick="copiarCitacao()">Copiar</button>
         <button class="btn-cit-guardar" id="btn-cit-guardar" onclick="guardarCitacao()">Guardar na bibliografia</button>
       </div>
@@ -1707,10 +1707,10 @@
     <div class="citacoes-biblio">
       <div class="citacoes-biblio-header">
         <div class="citacoes-biblio-titulo">A minha bibliografia</div>
-        <button class="btn-cit-copiar-tudo" onclick="copiarTodaCitacoes()">Copiar tudo A–Z</button>
+        <button class="btn-cit-copiar-tudo" onclick="copiarTodaCitacoes()">Copiar tudo AâZ</button>
       </div>
       <div class="citacoes-biblio-lista" id="cit-biblio-lista">
-        <div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>
+        <div class="citacoes-vazia">Nenhuma citaÃ§Ã£o guardada ainda.</div>
       </div>
     </div>
   </div>
@@ -1719,9 +1719,9 @@
 <!-- VIEWER PDF -->
 <div class="viewer-overlay" id="viewer-overlay" role="dialog" aria-modal="true" aria-label="Leitor de PDF">
   <div class="viewer-toolbar">
-    <button class="btn-viewer-voltar" onclick="window.fecharViewer()">← Lista</button>
-    <span class="viewer-titulo" id="viewer-titulo">—</span>
-    <button class="btn-viewer-dl" onclick="window.iniciarDownloadDoViewer()">↓ Descarregar</button>
+    <button class="btn-viewer-voltar" onclick="window.fecharViewer()">â Lista</button>
+    <span class="viewer-titulo" id="viewer-titulo">â</span>
+    <button class="btn-viewer-dl" onclick="window.iniciarDownloadDoViewer()">â Descarregar</button>
   </div>
   <div class="viewer-conteudo" id="viewer-conteudo">
     <div class="loading">
@@ -1733,16 +1733,16 @@
 <!-- MODAL DOWNLOAD -->
 <div class="modal-overlay" id="modal-dl" role="dialog" aria-modal="true" aria-labelledby="titulo-download">
   <div class="modal">
-    <div class="modal-icon">📥</div>
+    <div class="modal-icon">ð¥</div>
     <h3 id="titulo-download">Descarregar documento</h3>
-    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
-    <div class="modal-codigo" id="modal-codigo-txt">—</div>
+    <p>Este documento ficarÃ¡ associado ao teu registo. O cÃ³digo abaixo identifica este download:</p>
+    <div class="modal-codigo" id="modal-codigo-txt">â</div>
     <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
-      O código é inserido discretamente no documento. Contém o teu nome e um identificador rastreável associado ao teu registo.
+      O cÃ³digo Ã© inserido discretamente no documento. ContÃ©m o teu nome e um identificador rastreÃ¡vel associado ao teu registo.
     </p>
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">â Descarregar</button>
     </div>
   </div>
 </div>
@@ -1750,20 +1750,20 @@
 <!-- MODAL PERFIL -->
 <div class="modal-overlay" id="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="titulo-perfil">
   <div class="modal">
-    <div class="modal-icon">👤</div>
+    <div class="modal-icon">ð¤</div>
     <h3 id="titulo-perfil">O teu perfil</h3>
     <div class="perfil-info-grid">
       <div class="perfil-campo">
         <span class="perfil-campo-label">Nome</span>
-        <span class="perfil-campo-valor" id="perfil-nome">—</span>
+        <span class="perfil-campo-valor" id="perfil-nome">â</span>
       </div>
       <div class="perfil-campo">
         <span class="perfil-campo-label">Email</span>
-        <span class="perfil-campo-valor mono" id="perfil-email">—</span>
+        <span class="perfil-campo-valor mono" id="perfil-email">â</span>
       </div>
       <div class="perfil-campo">
-        <span class="perfil-campo-label">Código de utilizador</span>
-        <span class="perfil-campo-valor mono" id="perfil-codigo">—</span>
+        <span class="perfil-campo-label">CÃ³digo de utilizador</span>
+        <span class="perfil-campo-valor mono" id="perfil-codigo">â</span>
       </div>
     </div>
     <div class="perfil-separador"></div>
@@ -1771,7 +1771,7 @@
     <div class="perfil-msg" id="perfil-msg"></div>
     <div class="perfil-input-group">
       <input class="perfil-input" type="password" id="perfil-pw-atual" placeholder="Password atual" autocomplete="current-password"/>
-      <input class="perfil-input" type="password" id="perfil-pw-nova" placeholder="Nova password (mín. 6 caracteres)" autocomplete="new-password"/>
+      <input class="perfil-input" type="password" id="perfil-pw-nova" placeholder="Nova password (mÃ­n. 6 caracteres)" autocomplete="new-password"/>
       <input class="perfil-input" type="password" id="perfil-pw-conf" placeholder="Confirmar nova password" autocomplete="new-password"/>
     </div>
     <button class="btn-confirmar-perfil" id="btn-alterar-pw" onclick="alterarPassword()">Alterar password</button>
@@ -1815,78 +1815,78 @@
   ];
 
   const SINOPSES = {
-    // 1º Ano S1
-    'Demografia': 'Estuda a estrutura, composição e dinâmica das populações humanas — natalidade, mortalidade, migrações e envelhecimento — e o seu impacto nas políticas sociais e na organização das sociedades contemporâneas.',
-    'Introdução às Ciências Sociais': 'Apresenta as principais disciplinas, tradições teóricas e métodos das Ciências Sociais, desenvolvendo a capacidade de análise crítica dos fenómenos que estruturam a vida coletiva e política.',
-    'Introdução ao Direito': 'Explora os fundamentos do sistema jurídico e os conceitos essenciais do direito — norma, fonte, interpretação e principais ramos — indispensáveis para compreender as regras que organizam a vida em sociedade.',
-    'Psicologia Geral': 'Introduz as teorias e conceitos fundamentais da Psicologia enquanto ciência do comportamento e dos processos mentais, cobrindo perceção, memória, aprendizagem, motivação e personalidade.',
-    'Antropologia Geral': 'Aborda a diversidade cultural e biológica da espécie humana, questionando o etnocentrismo e mostrando como diferentes sociedades constroem realidades sociais, simbólicas e organizacionais distintas.',
-    // 1º Ano S2
-    'Estatística para as Ciências Sociais': 'Desenvolve competências de análise quantitativa — distribuições, medidas de tendência central, correlação e testes de hipóteses — aplicadas à interpretação de dados sociais e à produção de evidência empírica.',
-    'Introdução à Ciência Política': 'Explora os conceitos centrais da Ciência Política — poder, Estado, regime, democracia e representação — e as teorias que explicam como as sociedades se organizam e tomam decisões coletivas.',
-    'Política Social': 'Analisa os fundamentos, evolução e instrumentos das políticas públicas em áreas como segurança social, saúde, educação e habitação, examinando o papel do Estado na resposta às desigualdades.',
-    'Sociologia Geral': 'Introduz as grandes correntes do pensamento sociológico — de Durkheim e Weber a Bourdieu e Giddens — e os conceitos que permitem analisar a sociedade com rigor crítico e distância analítica.',
-    'Introdução à Economia': 'Apresenta os princípios fundamentais da análise económica — oferta, procura, mercados, produção e distribuição — e a sua relação com as dinâmicas sociais e institucionais das economias modernas.',
-    // 2º Ano S1
-    'Metodologia das Ciências Sociais: Métodos Qualitativos': 'Aborda as técnicas de investigação qualitativa — entrevista, observação participante e análise de conteúdo — e os fundamentos epistemológicos que as sustentam, preparando para projetos de investigação em profundidade.',
-    'Etnografias': 'Apresenta a etnografia como método de conhecimento, explorando como a observação participante e a escrita etnográfica permitem compreender culturas e contextos sociais a partir de dentro.',
-    'Princípios de Gestão': 'Introduz os conceitos fundamentais da gestão organizacional — planeamento, organização, liderança e controlo — desenvolvendo competências de análise em organizações públicas, privadas e do terceiro setor.',
-    'Antropologia das Religiões': 'Examina o papel da religião nas sociedades humanas, analisando rituais, crenças, mitos e práticas religiosas numa perspetiva comparada, questionando as fronteiras entre sagrado e profano.',
-    'Sociedade Portuguesa Contemporânea': 'Analisa as transformações estruturais da sociedade portuguesa nas últimas décadas — família, trabalho, educação, imigração e cultura — num olhar crítico sobre os paradoxos e desafios do Portugal atual.',
-    'Igualdade, Exclusão Social e Cidadania': 'Problematiza os mecanismos de produção da desigualdade e da exclusão social, examinando os conceitos de cidadania e direitos sociais e as políticas orientadas para a inclusão.',
-    'Justiça, Segurança e Criminalidade': 'Analisa os sistemas de justiça e segurança a partir das Ciências Sociais, questionando as causas sociais do crime, o controlo social e as respostas institucionais à criminalidade.',
-    // 2º Ano S2
-    'Metodologia das Ciências Sociais: Métodos Quantitativos': 'Aprofunda as técnicas de investigação quantitativa — questionários, bases de dados e análise estatística — desenvolvendo a capacidade de produzir e interpretar estudos empíricos com rigor científico.',
-    'Psicologia Social': 'Estuda como os contextos sociais influenciam o pensamento e o comportamento humano, abordando atitudes, preconceito, conformidade, influência social e dinâmicas de grupo.',
-    'História Económica e Social': 'Analisa a evolução das sociedades e economias ao longo do tempo, explorando transformações na produção, trabalho, classes sociais e instituições numa perspetiva histórica sobre os problemas contemporâneos.',
-    'Elites e Movimentos Sociais': 'Examina como as elites se formam e exercem influência, e como os movimentos sociais emergem como resposta às desigualdades, analisando casos históricos e contemporâneos de mobilização coletiva.',
-    'Globalização, Cidadania e Identidades': 'Problematiza os processos de globalização e os seus efeitos sobre as identidades culturais e políticas, examinando como reconfiguram as fronteiras da cidadania e os modos de pertença.',
-    'Ambiente, Saúde e Bem-Estar': 'Analisa as relações entre contextos sociais, ambientais e estados de saúde das populações, abordando os determinantes sociais da saúde e o papel das políticas públicas na promoção do bem-estar.',
-    'Sociedade, Género e Poder': 'Examina as dimensões sociais e políticas do género, analisando como as desigualdades se constroem e contestam nas instituições, no trabalho e no quotidiano, numa perspetiva crítica e feminista.',
-    // 3º Ano — Minor Ciência Política e Administrativa
-    'Introdução ao Direito Administrativo': 'Apresenta os princípios e regras fundamentais do Direito Administrativo — atividade administrativa, atos e contencioso — necessários para compreender e intervir nos contextos da administração pública.',
-    'Introdução ao Direito do Ambiente': 'Examina os instrumentos jurídicos de proteção ambiental e os princípios do Direito do Ambiente, num contexto de crescente urgência ecológica e de regulação das relações entre atividade humana e recursos naturais.',
-    'Política Internacional': 'Analisa as dinâmicas do sistema internacional — conflito, cooperação, organizações e diplomacia — e os fatores que determinam o comportamento dos Estados e outros atores no cenário global.',
-    'Teoria das Relações Internacionais': 'Apresenta os principais paradigmas que explicam as relações entre Estados — realismo, liberalismo, construtivismo — e a sua aplicação a problemas e casos concretos da política mundial.',
-    'Direito da União Europeia': 'Introduz o quadro jurídico e institucional da União Europeia, abordando as fontes do direito europeu, as instituições, o mercado interno e os direitos dos cidadãos europeus.',
-    'Ciência da Administração': 'Estuda as teorias e práticas da administração pública, analisando a organização do Estado, os modelos de gestão pública e as reformas administrativas nas democracias contemporâneas.',
-    'Direito Constitucional Comparado': 'Examina as constituições de diferentes países, comparando sistemas de governo, direitos fundamentais, separação de poderes e regimes democráticos numa perspetiva de direito comparado.',
-    'Organizações Políticas': 'Analisa os partidos políticos, sistemas eleitorais, grupos de interesse e outras organizações que estruturam a competição e a representação política nas democracias.',
-    'Sistemas de Poder': 'Examina as formas de organização e exercício do poder político — autoritarismo, democracia, federalismo — e os mecanismos de legitimação e contestação do poder nas sociedades contemporâneas.',
-    'Teoria Política': 'Explora as grandes tradições do pensamento político — liberalismo, republicanismo, socialismo, comunitarismo — e os conceitos de justiça, liberdade, igualdade e democracia que estruturam o debate político moderno.',
-    // 3º Ano — Minor Psicologia
-    'Psicologia da Arte': 'Explora as relações entre processos psicológicos e a criação e receção da arte, examinando criatividade, perceção estética e o papel da expressão artística no desenvolvimento e bem-estar humano.',
-    'Noções de Psicopatologia': 'Introduz os principais quadros de perturbação mental — ansiedade, depressão, psicose, perturbações da personalidade — numa perspetiva de compreensão clínica e social das condições de saúde mental.',
-    'Psicologia Clínica e da Saúde': 'Aborda a aplicação da Psicologia nos contextos clínicos e de saúde, explorando a promoção da saúde, a doença crónica e a intervenção psicológica em diferentes populações.',
-    'Psicologia Social Aplicada': 'Aplica os conhecimentos da Psicologia Social a contextos organizacionais e comunitários, trabalhando temas como liderança, conflito, comunicação e mudança comportamental.',
-    'Psicologia de Desenvolvimento Humano': 'Estuda as transformações psicológicas ao longo do ciclo de vida — da infância à velhice — analisando os processos cognitivos, emocionais e sociais que marcam cada fase do desenvolvimento.',
-    'Comunicação Intercultural': 'Examina os desafios da comunicação entre pessoas de diferentes culturas, explorando estereótipos, competências interculturais e estratégias de mediação em contextos de crescente diversidade.',
-    'Psicologia da Família': 'Analisa a família como sistema psicossocial, explorando as dinâmicas relacionais, os ciclos de vida familiar, as crises e as intervenções psicológicas no contexto familiar.',
-    'Psicologia Intercultural': 'Examina como a cultura molda os processos psicológicos — cognição, emoção, identidade e valores — e as implicações para a prática psicológica em contextos multiculturais e de diversidade.',
-    'Psicologia Social da Vida Quotidiana': 'Aplica os conceitos da Psicologia Social à análise do quotidiano, examinando como interações, normas e representações sociais estruturam as experiências e práticas do dia a dia.',
-    'Psicologia Comunitária': 'Orientada para a prevenção e promoção do bem-estar, aborda a intervenção psicológica em comunidades, trabalhando capacitação, redes de suporte social e processos de mudança coletiva.',
-    // 3º Ano — Minor Intervenção Social
-    'Desenvolvimento Comunitário': 'Apresenta as teorias e práticas do desenvolvimento comunitário, explorando metodologias de diagnóstico, planeamento e intervenção orientadas para o empowerment das comunidades.',
-    'Intervenção Psico-Social': 'Examina as abordagens que articulam dimensões psicológicas e sociais na intervenção, desenvolvendo competências para apoiar indivíduos e grupos em situação de vulnerabilidade.',
-    'Intervenção Social e Saúde Mental': 'Analisa a relação entre exclusão social e saúde mental, explorando os modelos de intervenção comunitária e as respostas institucionais para pessoas com perturbações mentais.',
-    'Teoria Geral de Serviço Social': 'Apresenta os fundamentos teóricos, éticos e históricos do Serviço Social, examinando os modelos de intervenção e o papel dos profissionais na promoção da justiça e da inclusão social.',
-    'Contextos Organizacionais da Intervenção Social': 'Analisa as organizações do setor social — públicas, privadas e do terceiro setor — e os contextos institucionais em que se desenvolve a intervenção, incluindo gestão de projetos e parcerias.',
-    'Intervenção Social com Grupos': 'Aborda as metodologias de intervenção em contexto grupal, explorando dinâmicas de grupo, facilitação e as especificidades do trabalho social com diferentes populações.',
-    'Intervenção Social com Crianças e Jovens': 'Examina as problemáticas da infância e juventude em risco, as respostas do sistema de proteção e as abordagens de intervenção orientadas para a promoção dos direitos e do bem-estar.',
-    'Intervenção Social e Deficiência': 'Analisa os modelos social e de direitos na abordagem à deficiência, explorando as políticas de inclusão e as práticas de intervenção orientadas para a autonomia e participação plena.',
-    'Intervenção Social e Envelhecimento': 'Examina os desafios do envelhecimento demográfico e as respostas sociais e institucionais, explorando intervenções orientadas para a qualidade de vida e a dignidade dos idosos.',
-    'Metodologia da Intervenção Social': 'Apresenta as metodologias de planeamento, monitorização e avaliação de projetos de intervenção social, desenvolvendo competências para uma prática baseada em evidência e orientada para resultados.',
-    // 3º Ano — Minor Sociologia
-    'Sociologia Urbana': 'Analisa a cidade como espaço social, examinando processos de urbanização, segregação, gentrificação e as formas de vida e organização social que caracterizam os contextos urbanos contemporâneos.',
-    'Sociologia da Comunicação e da Informação': 'Examina o papel dos média e das tecnologias de informação na vida social e cultural, analisando os processos de produção, circulação e consumo de informação nas sociedades contemporâneas.',
-    'Sociologia da Familia': 'Analisa as transformações das estruturas e funções familiares nas sociedades contemporâneas, abordando conjugalidade, parentalidade, género, diversidade familiar e políticas de apoio.',
-    'Sociologia das Migrações': 'Examina os processos migratórios — causas, fluxos, integração e identidade — e os seus efeitos sobre as sociedades de origem e destino, articulando dimensões económicas, políticas e culturais.',
-    'Teorias Sociológicas': 'Apresenta os principais paradigmas e autores da teoria sociológica contemporânea, articulando as tradições clássicas com os debates atuais sobre modernidade, globalização e desigualdade.',
-    'Sociologia da Arte': 'Examina a arte como fenómeno social, analisando campos artísticos, produção e receção das obras, mercado e instituições culturais, e o papel da arte na reprodução e contestação das desigualdades.',
-    'Prática da Sociologia': 'Desenvolve competências para a aplicação das ferramentas sociológicas em contextos profissionais, trabalhando o diagnóstico social, a produção de relatórios e a intervenção baseada em evidência.',
-    'Sociologia da Educação': 'Analisa o sistema educativo como instituição social, examinando as relações entre educação, desigualdade, reprodução social, identidade e as políticas educativas nas sociedades contemporâneas.',
-    'Sociologia da Saúde': 'Examina a saúde e a doença enquanto fenómenos socialmente construídos, analisando os determinantes sociais da saúde, as desigualdades em saúde e o papel das instituições de saúde.',
-    'Sociologia do Trabalho': 'Analisa as transformações do mundo do trabalho — precariedade, automação, globalização e novas formas de organização — e as implicações para as identidades, desigualdades e relações laborais.',
+    // 1Âº Ano S1
+    'Demografia': 'Estuda a estrutura, composiÃ§Ã£o e dinÃ¢mica das populaÃ§Ãµes humanas â natalidade, mortalidade, migraÃ§Ãµes e envelhecimento â e o seu impacto nas polÃ­ticas sociais e na organizaÃ§Ã£o das sociedades contemporÃ¢neas.',
+    'IntroduÃ§Ã£o Ã s CiÃªncias Sociais': 'Apresenta as principais disciplinas, tradiÃ§Ãµes teÃ³ricas e mÃ©todos das CiÃªncias Sociais, desenvolvendo a capacidade de anÃ¡lise crÃ­tica dos fenÃ³menos que estruturam a vida coletiva e polÃ­tica.',
+    'IntroduÃ§Ã£o ao Direito': 'Explora os fundamentos do sistema jurÃ­dico e os conceitos essenciais do direito â norma, fonte, interpretaÃ§Ã£o e principais ramos â indispensÃ¡veis para compreender as regras que organizam a vida em sociedade.',
+    'Psicologia Geral': 'Introduz as teorias e conceitos fundamentais da Psicologia enquanto ciÃªncia do comportamento e dos processos mentais, cobrindo perceÃ§Ã£o, memÃ³ria, aprendizagem, motivaÃ§Ã£o e personalidade.',
+    'Antropologia Geral': 'Aborda a diversidade cultural e biolÃ³gica da espÃ©cie humana, questionando o etnocentrismo e mostrando como diferentes sociedades constroem realidades sociais, simbÃ³licas e organizacionais distintas.',
+    // 1Âº Ano S2
+    'EstatÃ­stica para as CiÃªncias Sociais': 'Desenvolve competÃªncias de anÃ¡lise quantitativa â distribuiÃ§Ãµes, medidas de tendÃªncia central, correlaÃ§Ã£o e testes de hipÃ³teses â aplicadas Ã  interpretaÃ§Ã£o de dados sociais e Ã  produÃ§Ã£o de evidÃªncia empÃ­rica.',
+    'IntroduÃ§Ã£o Ã  CiÃªncia PolÃ­tica': 'Explora os conceitos centrais da CiÃªncia PolÃ­tica â poder, Estado, regime, democracia e representaÃ§Ã£o â e as teorias que explicam como as sociedades se organizam e tomam decisÃµes coletivas.',
+    'PolÃ­tica Social': 'Analisa os fundamentos, evoluÃ§Ã£o e instrumentos das polÃ­ticas pÃºblicas em Ã¡reas como seguranÃ§a social, saÃºde, educaÃ§Ã£o e habitaÃ§Ã£o, examinando o papel do Estado na resposta Ã s desigualdades.',
+    'Sociologia Geral': 'Introduz as grandes correntes do pensamento sociolÃ³gico â de Durkheim e Weber a Bourdieu e Giddens â e os conceitos que permitem analisar a sociedade com rigor crÃ­tico e distÃ¢ncia analÃ­tica.',
+    'IntroduÃ§Ã£o Ã  Economia': 'Apresenta os princÃ­pios fundamentais da anÃ¡lise econÃ³mica â oferta, procura, mercados, produÃ§Ã£o e distribuiÃ§Ã£o â e a sua relaÃ§Ã£o com as dinÃ¢micas sociais e institucionais das economias modernas.',
+    // 2Âº Ano S1
+    'Metodologia das CiÃªncias Sociais: MÃ©todos Qualitativos': 'Aborda as tÃ©cnicas de investigaÃ§Ã£o qualitativa â entrevista, observaÃ§Ã£o participante e anÃ¡lise de conteÃºdo â e os fundamentos epistemolÃ³gicos que as sustentam, preparando para projetos de investigaÃ§Ã£o em profundidade.',
+    'Etnografias': 'Apresenta a etnografia como mÃ©todo de conhecimento, explorando como a observaÃ§Ã£o participante e a escrita etnogrÃ¡fica permitem compreender culturas e contextos sociais a partir de dentro.',
+    'PrincÃ­pios de GestÃ£o': 'Introduz os conceitos fundamentais da gestÃ£o organizacional â planeamento, organizaÃ§Ã£o, lideranÃ§a e controlo â desenvolvendo competÃªncias de anÃ¡lise em organizaÃ§Ãµes pÃºblicas, privadas e do terceiro setor.',
+    'Antropologia das ReligiÃµes': 'Examina o papel da religiÃ£o nas sociedades humanas, analisando rituais, crenÃ§as, mitos e prÃ¡ticas religiosas numa perspetiva comparada, questionando as fronteiras entre sagrado e profano.',
+    'Sociedade Portuguesa ContemporÃ¢nea': 'Analisa as transformaÃ§Ãµes estruturais da sociedade portuguesa nas Ãºltimas dÃ©cadas â famÃ­lia, trabalho, educaÃ§Ã£o, imigraÃ§Ã£o e cultura â num olhar crÃ­tico sobre os paradoxos e desafios do Portugal atual.',
+    'Igualdade, ExclusÃ£o Social e Cidadania': 'Problematiza os mecanismos de produÃ§Ã£o da desigualdade e da exclusÃ£o social, examinando os conceitos de cidadania e direitos sociais e as polÃ­ticas orientadas para a inclusÃ£o.',
+    'JustiÃ§a, SeguranÃ§a e Criminalidade': 'Analisa os sistemas de justiÃ§a e seguranÃ§a a partir das CiÃªncias Sociais, questionando as causas sociais do crime, o controlo social e as respostas institucionais Ã  criminalidade.',
+    // 2Âº Ano S2
+    'Metodologia das CiÃªncias Sociais: MÃ©todos Quantitativos': 'Aprofunda as tÃ©cnicas de investigaÃ§Ã£o quantitativa â questionÃ¡rios, bases de dados e anÃ¡lise estatÃ­stica â desenvolvendo a capacidade de produzir e interpretar estudos empÃ­ricos com rigor cientÃ­fico.',
+    'Psicologia Social': 'Estuda como os contextos sociais influenciam o pensamento e o comportamento humano, abordando atitudes, preconceito, conformidade, influÃªncia social e dinÃ¢micas de grupo.',
+    'HistÃ³ria EconÃ³mica e Social': 'Analisa a evoluÃ§Ã£o das sociedades e economias ao longo do tempo, explorando transformaÃ§Ãµes na produÃ§Ã£o, trabalho, classes sociais e instituiÃ§Ãµes numa perspetiva histÃ³rica sobre os problemas contemporÃ¢neos.',
+    'Elites e Movimentos Sociais': 'Examina como as elites se formam e exercem influÃªncia, e como os movimentos sociais emergem como resposta Ã s desigualdades, analisando casos histÃ³ricos e contemporÃ¢neos de mobilizaÃ§Ã£o coletiva.',
+    'GlobalizaÃ§Ã£o, Cidadania e Identidades': 'Problematiza os processos de globalizaÃ§Ã£o e os seus efeitos sobre as identidades culturais e polÃ­ticas, examinando como reconfiguram as fronteiras da cidadania e os modos de pertenÃ§a.',
+    'Ambiente, SaÃºde e Bem-Estar': 'Analisa as relaÃ§Ãµes entre contextos sociais, ambientais e estados de saÃºde das populaÃ§Ãµes, abordando os determinantes sociais da saÃºde e o papel das polÃ­ticas pÃºblicas na promoÃ§Ã£o do bem-estar.',
+    'Sociedade, GÃ©nero e Poder': 'Examina as dimensÃµes sociais e polÃ­ticas do gÃ©nero, analisando como as desigualdades se constroem e contestam nas instituiÃ§Ãµes, no trabalho e no quotidiano, numa perspetiva crÃ­tica e feminista.',
+    // 3Âº Ano â Minor CiÃªncia PolÃ­tica e Administrativa
+    'IntroduÃ§Ã£o ao Direito Administrativo': 'Apresenta os princÃ­pios e regras fundamentais do Direito Administrativo â atividade administrativa, atos e contencioso â necessÃ¡rios para compreender e intervir nos contextos da administraÃ§Ã£o pÃºblica.',
+    'IntroduÃ§Ã£o ao Direito do Ambiente': 'Examina os instrumentos jurÃ­dicos de proteÃ§Ã£o ambiental e os princÃ­pios do Direito do Ambiente, num contexto de crescente urgÃªncia ecolÃ³gica e de regulaÃ§Ã£o das relaÃ§Ãµes entre atividade humana e recursos naturais.',
+    'PolÃ­tica Internacional': 'Analisa as dinÃ¢micas do sistema internacional â conflito, cooperaÃ§Ã£o, organizaÃ§Ãµes e diplomacia â e os fatores que determinam o comportamento dos Estados e outros atores no cenÃ¡rio global.',
+    'Teoria das RelaÃ§Ãµes Internacionais': 'Apresenta os principais paradigmas que explicam as relaÃ§Ãµes entre Estados â realismo, liberalismo, construtivismo â e a sua aplicaÃ§Ã£o a problemas e casos concretos da polÃ­tica mundial.',
+    'Direito da UniÃ£o Europeia': 'Introduz o quadro jurÃ­dico e institucional da UniÃ£o Europeia, abordando as fontes do direito europeu, as instituiÃ§Ãµes, o mercado interno e os direitos dos cidadÃ£os europeus.',
+    'CiÃªncia da AdministraÃ§Ã£o': 'Estuda as teorias e prÃ¡ticas da administraÃ§Ã£o pÃºblica, analisando a organizaÃ§Ã£o do Estado, os modelos de gestÃ£o pÃºblica e as reformas administrativas nas democracias contemporÃ¢neas.',
+    'Direito Constitucional Comparado': 'Examina as constituiÃ§Ãµes de diferentes paÃ­ses, comparando sistemas de governo, direitos fundamentais, separaÃ§Ã£o de poderes e regimes democrÃ¡ticos numa perspetiva de direito comparado.',
+    'OrganizaÃ§Ãµes PolÃ­ticas': 'Analisa os partidos polÃ­ticos, sistemas eleitorais, grupos de interesse e outras organizaÃ§Ãµes que estruturam a competiÃ§Ã£o e a representaÃ§Ã£o polÃ­tica nas democracias.',
+    'Sistemas de Poder': 'Examina as formas de organizaÃ§Ã£o e exercÃ­cio do poder polÃ­tico â autoritarismo, democracia, federalismo â e os mecanismos de legitimaÃ§Ã£o e contestaÃ§Ã£o do poder nas sociedades contemporÃ¢neas.',
+    'Teoria PolÃ­tica': 'Explora as grandes tradiÃ§Ãµes do pensamento polÃ­tico â liberalismo, republicanismo, socialismo, comunitarismo â e os conceitos de justiÃ§a, liberdade, igualdade e democracia que estruturam o debate polÃ­tico moderno.',
+    // 3Âº Ano â Minor Psicologia
+    'Psicologia da Arte': 'Explora as relaÃ§Ãµes entre processos psicolÃ³gicos e a criaÃ§Ã£o e receÃ§Ã£o da arte, examinando criatividade, perceÃ§Ã£o estÃ©tica e o papel da expressÃ£o artÃ­stica no desenvolvimento e bem-estar humano.',
+    'NoÃ§Ãµes de Psicopatologia': 'Introduz os principais quadros de perturbaÃ§Ã£o mental â ansiedade, depressÃ£o, psicose, perturbaÃ§Ãµes da personalidade â numa perspetiva de compreensÃ£o clÃ­nica e social das condiÃ§Ãµes de saÃºde mental.',
+    'Psicologia ClÃ­nica e da SaÃºde': 'Aborda a aplicaÃ§Ã£o da Psicologia nos contextos clÃ­nicos e de saÃºde, explorando a promoÃ§Ã£o da saÃºde, a doenÃ§a crÃ³nica e a intervenÃ§Ã£o psicolÃ³gica em diferentes populaÃ§Ãµes.',
+    'Psicologia Social Aplicada': 'Aplica os conhecimentos da Psicologia Social a contextos organizacionais e comunitÃ¡rios, trabalhando temas como lideranÃ§a, conflito, comunicaÃ§Ã£o e mudanÃ§a comportamental.',
+    'Psicologia de Desenvolvimento Humano': 'Estuda as transformaÃ§Ãµes psicolÃ³gicas ao longo do ciclo de vida â da infÃ¢ncia Ã  velhice â analisando os processos cognitivos, emocionais e sociais que marcam cada fase do desenvolvimento.',
+    'ComunicaÃ§Ã£o Intercultural': 'Examina os desafios da comunicaÃ§Ã£o entre pessoas de diferentes culturas, explorando estereÃ³tipos, competÃªncias interculturais e estratÃ©gias de mediaÃ§Ã£o em contextos de crescente diversidade.',
+    'Psicologia da FamÃ­lia': 'Analisa a famÃ­lia como sistema psicossocial, explorando as dinÃ¢micas relacionais, os ciclos de vida familiar, as crises e as intervenÃ§Ãµes psicolÃ³gicas no contexto familiar.',
+    'Psicologia Intercultural': 'Examina como a cultura molda os processos psicolÃ³gicos â cogniÃ§Ã£o, emoÃ§Ã£o, identidade e valores â e as implicaÃ§Ãµes para a prÃ¡tica psicolÃ³gica em contextos multiculturais e de diversidade.',
+    'Psicologia Social da Vida Quotidiana': 'Aplica os conceitos da Psicologia Social Ã  anÃ¡lise do quotidiano, examinando como interaÃ§Ãµes, normas e representaÃ§Ãµes sociais estruturam as experiÃªncias e prÃ¡ticas do dia a dia.',
+    'Psicologia ComunitÃ¡ria': 'Orientada para a prevenÃ§Ã£o e promoÃ§Ã£o do bem-estar, aborda a intervenÃ§Ã£o psicolÃ³gica em comunidades, trabalhando capacitaÃ§Ã£o, redes de suporte social e processos de mudanÃ§a coletiva.',
+    // 3Âº Ano â Minor IntervenÃ§Ã£o Social
+    'Desenvolvimento ComunitÃ¡rio': 'Apresenta as teorias e prÃ¡ticas do desenvolvimento comunitÃ¡rio, explorando metodologias de diagnÃ³stico, planeamento e intervenÃ§Ã£o orientadas para o empowerment das comunidades.',
+    'IntervenÃ§Ã£o Psico-Social': 'Examina as abordagens que articulam dimensÃµes psicolÃ³gicas e sociais na intervenÃ§Ã£o, desenvolvendo competÃªncias para apoiar indivÃ­duos e grupos em situaÃ§Ã£o de vulnerabilidade.',
+    'IntervenÃ§Ã£o Social e SaÃºde Mental': 'Analisa a relaÃ§Ã£o entre exclusÃ£o social e saÃºde mental, explorando os modelos de intervenÃ§Ã£o comunitÃ¡ria e as respostas institucionais para pessoas com perturbaÃ§Ãµes mentais.',
+    'Teoria Geral de ServiÃ§o Social': 'Apresenta os fundamentos teÃ³ricos, Ã©ticos e histÃ³ricos do ServiÃ§o Social, examinando os modelos de intervenÃ§Ã£o e o papel dos profissionais na promoÃ§Ã£o da justiÃ§a e da inclusÃ£o social.',
+    'Contextos Organizacionais da IntervenÃ§Ã£o Social': 'Analisa as organizaÃ§Ãµes do setor social â pÃºblicas, privadas e do terceiro setor â e os contextos institucionais em que se desenvolve a intervenÃ§Ã£o, incluindo gestÃ£o de projetos e parcerias.',
+    'IntervenÃ§Ã£o Social com Grupos': 'Aborda as metodologias de intervenÃ§Ã£o em contexto grupal, explorando dinÃ¢micas de grupo, facilitaÃ§Ã£o e as especificidades do trabalho social com diferentes populaÃ§Ãµes.',
+    'IntervenÃ§Ã£o Social com CrianÃ§as e Jovens': 'Examina as problemÃ¡ticas da infÃ¢ncia e juventude em risco, as respostas do sistema de proteÃ§Ã£o e as abordagens de intervenÃ§Ã£o orientadas para a promoÃ§Ã£o dos direitos e do bem-estar.',
+    'IntervenÃ§Ã£o Social e DeficiÃªncia': 'Analisa os modelos social e de direitos na abordagem Ã  deficiÃªncia, explorando as polÃ­ticas de inclusÃ£o e as prÃ¡ticas de intervenÃ§Ã£o orientadas para a autonomia e participaÃ§Ã£o plena.',
+    'IntervenÃ§Ã£o Social e Envelhecimento': 'Examina os desafios do envelhecimento demogrÃ¡fico e as respostas sociais e institucionais, explorando intervenÃ§Ãµes orientadas para a qualidade de vida e a dignidade dos idosos.',
+    'Metodologia da IntervenÃ§Ã£o Social': 'Apresenta as metodologias de planeamento, monitorizaÃ§Ã£o e avaliaÃ§Ã£o de projetos de intervenÃ§Ã£o social, desenvolvendo competÃªncias para uma prÃ¡tica baseada em evidÃªncia e orientada para resultados.',
+    // 3Âº Ano â Minor Sociologia
+    'Sociologia Urbana': 'Analisa a cidade como espaÃ§o social, examinando processos de urbanizaÃ§Ã£o, segregaÃ§Ã£o, gentrificaÃ§Ã£o e as formas de vida e organizaÃ§Ã£o social que caracterizam os contextos urbanos contemporÃ¢neos.',
+    'Sociologia da ComunicaÃ§Ã£o e da InformaÃ§Ã£o': 'Examina o papel dos mÃ©dia e das tecnologias de informaÃ§Ã£o na vida social e cultural, analisando os processos de produÃ§Ã£o, circulaÃ§Ã£o e consumo de informaÃ§Ã£o nas sociedades contemporÃ¢neas.',
+    'Sociologia da Familia': 'Analisa as transformaÃ§Ãµes das estruturas e funÃ§Ãµes familiares nas sociedades contemporÃ¢neas, abordando conjugalidade, parentalidade, gÃ©nero, diversidade familiar e polÃ­ticas de apoio.',
+    'Sociologia das MigraÃ§Ãµes': 'Examina os processos migratÃ³rios â causas, fluxos, integraÃ§Ã£o e identidade â e os seus efeitos sobre as sociedades de origem e destino, articulando dimensÃµes econÃ³micas, polÃ­ticas e culturais.',
+    'Teorias SociolÃ³gicas': 'Apresenta os principais paradigmas e autores da teoria sociolÃ³gica contemporÃ¢nea, articulando as tradiÃ§Ãµes clÃ¡ssicas com os debates atuais sobre modernidade, globalizaÃ§Ã£o e desigualdade.',
+    'Sociologia da Arte': 'Examina a arte como fenÃ³meno social, analisando campos artÃ­sticos, produÃ§Ã£o e receÃ§Ã£o das obras, mercado e instituiÃ§Ãµes culturais, e o papel da arte na reproduÃ§Ã£o e contestaÃ§Ã£o das desigualdades.',
+    'PrÃ¡tica da Sociologia': 'Desenvolve competÃªncias para a aplicaÃ§Ã£o das ferramentas sociolÃ³gicas em contextos profissionais, trabalhando o diagnÃ³stico social, a produÃ§Ã£o de relatÃ³rios e a intervenÃ§Ã£o baseada em evidÃªncia.',
+    'Sociologia da EducaÃ§Ã£o': 'Analisa o sistema educativo como instituiÃ§Ã£o social, examinando as relaÃ§Ãµes entre educaÃ§Ã£o, desigualdade, reproduÃ§Ã£o social, identidade e as polÃ­ticas educativas nas sociedades contemporÃ¢neas.',
+    'Sociologia da SaÃºde': 'Examina a saÃºde e a doenÃ§a enquanto fenÃ³menos socialmente construÃ­dos, analisando os determinantes sociais da saÃºde, as desigualdades em saÃºde e o papel das instituiÃ§Ãµes de saÃºde.',
+    'Sociologia do Trabalho': 'Analisa as transformaÃ§Ãµes do mundo do trabalho â precariedade, automaÃ§Ã£o, globalizaÃ§Ã£o e novas formas de organizaÃ§Ã£o â e as implicaÃ§Ãµes para as identidades, desigualdades e relaÃ§Ãµes laborais.',
   };
 
   let utilizadorAtual = null;
@@ -1950,7 +1950,7 @@
     document.querySelectorAll('[data-fav-key]').forEach(btn => {
       const ativo = chaves.has(btn.dataset.favKey);
       btn.classList.toggle('ativo', ativo);
-      btn.textContent = ativo ? '★' : '☆';
+      btn.textContent = ativo ? 'â' : 'â';
       btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
       const nome = catalogo.get(btn.dataset.favKey)?.titulo || 'este item';
       btn.setAttribute('aria-label', `${ativo ? 'Remover' : 'Adicionar'} ${nome} ${ativo ? 'dos' : 'aos'} favoritos`);
@@ -1963,7 +1963,7 @@
     if (!lista || !contador) return;
     contador.textContent = favoritos.length === 1 ? '1 guardado' : `${favoritos.length} guardados`;
     if (!favoritos.length) {
-      lista.innerHTML = `<div class="painel-vazio"><strong>A tua seleção começa aqui</strong><p>Usa a estrela nas UCs, documentos e ferramentas que queres encontrar mais depressa.</p></div>`;
+      lista.innerHTML = `<div class="painel-vazio"><strong>A tua seleÃ§Ã£o comeÃ§a aqui</strong><p>Usa a estrela nas UCs, documentos e ferramentas que queres encontrar mais depressa.</p></div>`;
       return;
     }
     const visiveis = window._favoritosExpandidos ? favoritos : favoritos.slice(0,3);
@@ -1971,13 +1971,13 @@
       <button class="painel-item" type="button" data-abrir-item="${esc(item.key)}">
         <span class="painel-data-dia" style="font-size:.64rem">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
         <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'CampusAberto')}</small></span>
-        <span class="painel-item-dias">Abrir →</span>
+        <span class="painel-item-dias">Abrir â</span>
       </button>`).join('');
     if (favoritos.length > 3) {
       if (window._favoritosExpandidos) {
-        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=false;renderFavoritos()">Mostrar menos ↑</button>`;
+        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=false;renderFavoritos()">Mostrar menos â</button>`;
       } else {
-        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=true;renderFavoritos()">Ver todos os ${favoritos.length} favoritos →</button>`;
+        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=true;renderFavoritos()">Ver todos os ${favoritos.length} favoritos â</button>`;
       }
     }
     lista.innerHTML = htmlFav;
@@ -1997,13 +1997,13 @@
     let item = null;
     try { item = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null'); } catch (_) {}
     if (!item) {
-      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não há atividade</strong><p>Quando abrires uma UC ou um documento, poderás retomá-lo aqui.</p></div>`;
+      area.innerHTML = `<div class="painel-vazio"><strong>Ainda nÃ£o hÃ¡ atividade</strong><p>Quando abrires uma UC ou um documento, poderÃ¡s retomÃ¡-lo aqui.</p></div>`;
       return;
     }
     area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
       <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
-      <span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
-      <span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar →</span>
+      <span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Ãltimo conteÃºdo consultado')}</small></span>
+      <span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar â</span>
     </button>`;
     document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
   }
@@ -2040,8 +2040,8 @@
         <button class="pesquisa-item" type="button" role="option" data-resultado-key="${esc(item.key)}">
           <span class="pesquisa-tipo">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
           <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || '')}</small></span>
-          <span class="pesquisa-item-seta">→</span>
-        </button>`).join('') : `<div class="pesquisa-estado">Não encontrámos resultados para “${esc(input.value.trim())}”.</div>`;
+          <span class="pesquisa-item-seta">â</span>
+        </button>`).join('') : `<div class="pesquisa-estado">NÃ£o encontrÃ¡mos resultados para â${esc(input.value.trim())}â.</div>`;
       resultados.classList.add('visivel');
       input.setAttribute('aria-expanded','true');
       resultados.querySelectorAll('[data-resultado-key]').forEach(btn => btn.addEventListener('click', () => {
@@ -2065,7 +2065,7 @@
   function mostrarBannerDatas() {
     const banner = document.getElementById('banner-datas');
     if (!banner) return;
-    // Verificar se já foi fechado hoje
+    // Verificar se jÃ¡ foi fechado hoje
     const hoje = new Date().toDateString();
     if (localStorage.getItem('banner-fechado') === hoje) { banner.style.display = 'none'; return; }
 
@@ -2076,16 +2076,16 @@
 
     const temUrgente = proximas.some(d => Math.round((new Date(d.data.getFullYear(),d.data.getMonth(),d.data.getDate()) - new Date(agora.getFullYear(),agora.getMonth(),agora.getDate())) / 86400000) <= 2);
     const cls = temUrgente ? 'urgente' : 'aviso';
-    const icone = temUrgente ? '🚨' : '📅';
-    const titulo = temUrgente ? 'Atenção — datas muito próximas!' : 'Datas nos próximos 7 dias';
+    const icone = temUrgente ? 'ð¨' : 'ð';
+    const titulo = temUrgente ? 'AtenÃ§Ã£o â datas muito prÃ³ximas!' : 'Datas nos prÃ³ximos 7 dias';
 
     const hojeCalendario = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
     const itens = proximas.map(d => {
       const eventoCalendario = new Date(d.data.getFullYear(), d.data.getMonth(), d.data.getDate());
       const dias = Math.round((eventoCalendario - hojeCalendario) / 86400000);
       const dataStr = d.data.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
-      const diasStr = dias === 0 ? 'hoje' : dias === 1 ? 'amanhã' : `em ${dias} dias`;
-      return `<li><strong>${esc(d.titulo)}</strong> — ${dataStr} <em>(${diasStr})</em></li>`;
+      const diasStr = dias === 0 ? 'hoje' : dias === 1 ? 'amanhÃ£' : `em ${dias} dias`;
+      return `<li><strong>${esc(d.titulo)}</strong> â ${dataStr} <em>(${diasStr})</em></li>`;
     }).join('');
 
     banner.innerHTML = `<div class="banner-datas-wrap ${cls}">
@@ -2094,7 +2094,7 @@
         <div class="banner-datas-titulo">${titulo}</div>
         <ul class="banner-datas-lista">${itens}</ul>
       </div>
-      <button class="banner-datas-fechar" onclick="fecharBannerDatas()" aria-label="Fechar">✕</button>
+      <button class="banner-datas-fechar" onclick="fecharBannerDatas()" aria-label="Fechar">â</button>
     </div>`;
     banner.style.display = 'block';
   }
@@ -2122,7 +2122,7 @@
       const total = todasAsDatas.length;
       contador.textContent = total === 1 ? '1 data' : `${total} datas`;
       if (!total) {
-        lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As próximas entregas e provas aparecerão aqui quando forem adicionadas.</p></div>`;
+        lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As prÃ³ximas entregas e provas aparecerÃ£o aqui quando forem adicionadas.</p></div>`;
         return;
       }
       const renderItem = (item, isFirst) => {
@@ -2132,40 +2132,40 @@
         const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
         const tag = item.link ? 'button' : 'div';
         const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
-        // Destaque só no item mais urgente
+        // Destaque sÃ³ no item mais urgente
         let cls = 'painel-item' + (item.link ? '' : ' estatico');
         if (isFirst) {
           if (dias <= 1)      cls += ' critico';
           else if (dias <= 7) cls += ' urgente';
         }
         const diasLabel = dias === 0
-          ? `Hoje · ${Math.max(0,Math.ceil(diffMs/3600000))}h`
-          : dias === 1 ? 'Amanhã' : `${dias} dias`;
+          ? `Hoje Â· ${Math.max(0,Math.ceil(diffMs/3600000))}h`
+          : dias === 1 ? 'AmanhÃ£' : `${dias} dias`;
         return `<${tag} class="${cls}" ${attrs}>
           <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small></span>
-          <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
+          <span><strong>${esc(item.titulo || 'Data acadÃ©mica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
           <span class="painel-item-dias">${diasLabel}</span>
         </${tag}>`;
       };
       const visiveis = todasAsDatas.slice(0,3);
       let html = visiveis.map((item, i) => renderItem(item, i === 0)).join('');
       if (total > 3) {
-        html += `<button type="button" class="painel-ver-todas" onclick="abrirEcranDatas()">Ver todas as ${total} datas →</button>`;
+        html += `<button type="button" class="painel-ver-todas" onclick="abrirEcranDatas()">Ver todas as ${total} datas â</button>`;
       }
       lista.innerHTML = html;
       lista.querySelectorAll('[data-data-link]').forEach(btn => btn.addEventListener('click', () => window.open(btn.dataset.dataLink,'_blank','noopener')));
-      // Popular filtro de UCs no ecrã de todas as datas
+      // Popular filtro de UCs no ecrÃ£ de todas as datas
       const ucsUnicas = [...new Map(todasAsDatas.filter(d => d.ucId && d.ucNome).map(d => [d.ucId, d.ucNome])).entries()];
       const filtroUc = document.getElementById('filtro-uc');
       filtroUc.innerHTML = '<option value="">Todas as UCs</option>' + ucsUnicas.map(([id, nome]) => `<option value="${esc(id)}">${esc(nome)}</option>`).join('');
     } catch(e) {
-      console.warn('Datas não carregadas:', e.message);
-      contador.textContent = 'Indisponível';
-      lista.innerHTML = `<div class="painel-vazio"><strong>Calendário indisponível</strong><p>Não foi possível consultar as próximas datas neste momento.</p></div>`;
+      console.warn('Datas nÃ£o carregadas:', e.message);
+      contador.textContent = 'IndisponÃ­vel';
+      lista.innerHTML = `<div class="painel-vazio"><strong>CalendÃ¡rio indisponÃ­vel</strong><p>NÃ£o foi possÃ­vel consultar as prÃ³ximas datas neste momento.</p></div>`;
     }
   }
 
-  // ── BOTTOM NAV ─────────────────────────────────────────
+  // ââ BOTTOM NAV âââââââââââââââââââââââââââââââââââââââââ
   window.bnavAtualizar = function(id) {
     document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('ativa'));
     const btn = document.getElementById('bnav-' + id);
@@ -2208,7 +2208,7 @@
     const btn = document.getElementById('bnav-' + ativo);
     if (btn) btn.classList.add('ativa');
   }, { passive: true });
-  // ───────────────────────────────────────────────────────
+  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
   window.abrirEcranDatas = function() {
     document.getElementById('ecra-ucs').style.display      = 'none';
@@ -2234,41 +2234,41 @@
     window.bnavAtualizar('inicio');
   };
 
-  // ── CITAÇÕES APA7 ─────────────────────────────────────────────────────
+  // ââ CITAÃÃES APA7 âââââââââââââââââââââââââââââââââââââââââââââââââââââ
   const CIT_TIPOS = {
     livro: {
       label: 'Livro',
       campos: [
         { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
         { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
-        { id:'titulo',   label:'Título do livro',          tipo:'text',    placeholder:'Título completo', hint:'Em itálico na citação' },
-        { id:'edicao',   label:'Edição (opcional)',        tipo:'text',    placeholder:'2ª' },
+        { id:'titulo',   label:'TÃ­tulo do livro',          tipo:'text',    placeholder:'TÃ­tulo completo', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
+        { id:'edicao',   label:'EdiÃ§Ã£o (opcional)',        tipo:'text',    placeholder:'2Âª' },
         { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
         { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
       ]
     },
     artigo: {
-      label: 'Artigo Científico',
+      label: 'Artigo CientÃ­fico',
       campos: [
         { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
         { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
-        { id:'titulo',   label:'Título do artigo',         tipo:'text',    placeholder:'Título do artigo' },
-        { id:'revista',  label:'Nome da revista',          tipo:'text',    placeholder:'Journal of Social Sciences', hint:'Em itálico na citação' },
+        { id:'titulo',   label:'TÃ­tulo do artigo',         tipo:'text',    placeholder:'TÃ­tulo do artigo' },
+        { id:'revista',  label:'Nome da revista',          tipo:'text',    placeholder:'Journal of Social Sciences', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
         { id:'volume',   label:'Volume',                   tipo:'text',    placeholder:'12' },
-        { id:'numero',   label:'Número',                   tipo:'text',    placeholder:'3' },
-        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'numero',   label:'NÃºmero',                   tipo:'text',    placeholder:'3' },
+        { id:'paginas',  label:'PÃ¡ginas',                  tipo:'text',    placeholder:'45â68' },
         { id:'doi',      label:'DOI',                      tipo:'text',    placeholder:'https://doi.org/...' },
       ]
     },
     capitulo: {
-      label: 'Capítulo',
+      label: 'CapÃ­tulo',
       campos: [
-        { id:'autores',  label:'Autor(es) do capítulo',   tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'autores',  label:'Autor(es) do capÃ­tulo',   tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
         { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
-        { id:'titulo',   label:'Título do capítulo',       tipo:'text',    placeholder:'Título do capítulo' },
+        { id:'titulo',   label:'TÃ­tulo do capÃ­tulo',       tipo:'text',    placeholder:'TÃ­tulo do capÃ­tulo' },
         { id:'editores', label:'Editor(es) do livro',      tipo:'autores', hint:'Formato: N. N. Sobrenome (iniciais primeiro)' },
-        { id:'livro',    label:'Título do livro',          tipo:'text',    placeholder:'Título da obra completa', hint:'Em itálico na citação' },
-        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'livro',    label:'TÃ­tulo do livro',          tipo:'text',    placeholder:'TÃ­tulo da obra completa', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
+        { id:'paginas',  label:'PÃ¡ginas',                  tipo:'text',    placeholder:'45â68' },
         { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
         { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
       ]
@@ -2276,10 +2276,10 @@
     website: {
       label: 'Website',
       campos: [
-        { id:'autores',  label:'Autor(es) ou Organização',tipo:'autores', hint:'Para organização, escrever o nome completo num campo' },
+        { id:'autores',  label:'Autor(es) ou OrganizaÃ§Ã£o',tipo:'autores', hint:'Para organizaÃ§Ã£o, escrever o nome completo num campo' },
         { id:'ano',      label:'Ano (ou s.d. se sem data)',tipo:'text',    placeholder:'2023' },
-        { id:'titulo',   label:'Título da página',         tipo:'text',    placeholder:'Título da página web' },
-        { id:'site',     label:'Nome do site',             tipo:'text',    placeholder:'Nome do website', hint:'Em itálico na citação' },
+        { id:'titulo',   label:'TÃ­tulo da pÃ¡gina',         tipo:'text',    placeholder:'TÃ­tulo da pÃ¡gina web' },
+        { id:'site',     label:'Nome do site',             tipo:'text',    placeholder:'Nome do website', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
         { id:'url',      label:'URL',                      tipo:'text',    placeholder:'https://www.exemplo.com/pagina' },
       ]
     },
@@ -2288,20 +2288,20 @@
       campos: [
         { id:'autores',    label:'Autor',                  tipo:'autores', hint:'' },
         { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
-        { id:'titulo',     label:'Título da tese',         tipo:'text',    placeholder:'Título completo da tese', hint:'Em itálico na citação' },
-        { id:'tipo_tese',  label:'Tipo',                   tipo:'select',  opcoes:['Tese de doutoramento','Dissertação de mestrado'] },
-        { id:'instituicao',label:'Instituição',            tipo:'text',    placeholder:'Universidade Aberta' },
-        { id:'url',        label:'URL ou repositório (opcional)', tipo:'text', placeholder:'https://repositorio.uab.pt/...' },
+        { id:'titulo',     label:'TÃ­tulo da tese',         tipo:'text',    placeholder:'TÃ­tulo completo da tese', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
+        { id:'tipo_tese',  label:'Tipo',                   tipo:'select',  opcoes:['Tese de doutoramento','DissertaÃ§Ã£o de mestrado'] },
+        { id:'instituicao',label:'InstituiÃ§Ã£o',            tipo:'text',    placeholder:'Universidade Aberta' },
+        { id:'url',        label:'URL ou repositÃ³rio (opcional)', tipo:'text', placeholder:'https://repositorio.uab.pt/...' },
       ]
     },
     relatorio: {
-      label: 'Relatório',
+      label: 'RelatÃ³rio',
       campos: [
-        { id:'autores',    label:'Autor(es) ou Organização',tipo:'autores', hint:'' },
+        { id:'autores',    label:'Autor(es) ou OrganizaÃ§Ã£o',tipo:'autores', hint:'' },
         { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
-        { id:'titulo',     label:'Título do relatório',    tipo:'text',    placeholder:'Título do relatório', hint:'Em itálico na citação' },
-        { id:'numero',     label:'Número (opcional)',       tipo:'text',    placeholder:'No. 42' },
-        { id:'organizacao',label:'Organização/Editora',    tipo:'text',    placeholder:'Nome da organização' },
+        { id:'titulo',     label:'TÃ­tulo do relatÃ³rio',    tipo:'text',    placeholder:'TÃ­tulo do relatÃ³rio', hint:'Em itÃ¡lico na citaÃ§Ã£o' },
+        { id:'numero',     label:'NÃºmero (opcional)',       tipo:'text',    placeholder:'No. 42' },
+        { id:'organizacao',label:'OrganizaÃ§Ã£o/Editora',    tipo:'text',    placeholder:'Nome da organizaÃ§Ã£o' },
         { id:'url',        label:'URL (opcional)',          tipo:'text',    placeholder:'https://...' },
       ]
     }
@@ -2349,12 +2349,12 @@
     _ocultarPreview();
   };
 
-  // Converte "Paulo Ferreira da Cunha" → "Cunha, P. F." (autores)
-  // ou → "P. F. Cunha" (editores em capítulos)
+  // Converte "Paulo Ferreira da Cunha" â "Cunha, P. F." (autores)
+  // ou â "P. F. Cunha" (editores em capÃ­tulos)
   function _nomeParaAPA7(nome, modoEditor) {
     nome = nome.trim();
     if (!nome) return nome;
-    // Se já tem vírgula e não é modo editor, assume já formatado
+    // Se jÃ¡ tem vÃ­rgula e nÃ£o Ã© modo editor, assume jÃ¡ formatado
     if (nome.includes(',') && !modoEditor) return nome;
     const PART = new Set(['da','de','do','das','dos','e','van','von','el','al','della','del','den','der','le','la','y','e']);
     const ps = nome.split(/\s+/);
@@ -2374,13 +2374,13 @@
       if (campo.tipo === 'autores') {
         const isEditor = campo.id === 'editores';
         const ph = isEditor ? 'Ex: Paulo Ferreira da Cunha' : 'Ex: Paulo Ferreira da Cunha';
-        const nota = `<small>Escreve o nome normalmente — a app formata em APA7 automaticamente.</small>`;
+        const nota = `<small>Escreve o nome normalmente â a app formata em APA7 automaticamente.</small>`;
         return `<div class="citacoes-campo">
           <label>${campo.label}</label>
           <div class="citacoes-autores-lista" id="lista-${campo.id}">
             <div class="citacoes-autor-row">
               <input type="text" class="autor-input-${campo.id}" placeholder="${ph}" />
-              <button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${campo.id}')" aria-label="Remover">×</button>
+              <button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${campo.id}')" aria-label="Remover">Ã</button>
             </div>
           </div>
           <button type="button" class="btn-add-autor" onclick="window._addAutorCit('${campo.id}')">+ Adicionar autor</button>
@@ -2394,7 +2394,7 @@
       } else {
         const isTitulo = campo.id === 'titulo' || campo.id === 'livro';
         const avisoTitulo = isTitulo
-          ? `<div class="citacoes-aviso-titulo">ℹ APA7: título em minúsculas (exceto 1ª palavra e nomes próprios).<br>Ex: <em>Teoria geral do direito: Uma síntese crítica</em></div>`
+          ? `<div class="citacoes-aviso-titulo">â¹ APA7: tÃ­tulo em minÃºsculas (exceto 1Âª palavra e nomes prÃ³prios).<br>Ex: <em>Teoria geral do direito: Uma sÃ­ntese crÃ­tica</em></div>`
           : '';
         return `<div class="citacoes-campo">
           <label for="cit-${campo.id}">${campo.label}</label>
@@ -2410,7 +2410,7 @@
     const lista = document.getElementById('lista-' + grupo);
     const row = document.createElement('div');
     row.className = 'citacoes-autor-row';
-    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Ex: Maria de Lurdes Santos" /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">×</button>`;
+    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Ex: Maria de Lurdes Santos" /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">Ã</button>`;
     lista.appendChild(row);
   };
 
@@ -2445,19 +2445,19 @@
   }
   function _citTxt(html) { return html.replace(/<\/?em>/g,''); }
 
-  // Se o título estiver todo (ou maioritariamente) em maiúsculas → converte para sentence case APA7
+  // Se o tÃ­tulo estiver todo (ou maioritariamente) em maiÃºsculas â converte para sentence case APA7
   function _normalizarTitulo(t) {
     if (!t) return t;
-    const alfa = t.replace(/[^a-zA-ZÀ-ɏ]/g, '');
+    const alfa = t.replace(/[^a-zA-ZÃ-É]/g, '');
     if (!alfa.length) return t;
-    const nMaius = (t.match(/[A-ZÀ-ÖØ-Þ]/g) || []).length;
-    if (nMaius / alfa.length < 0.5) return t; // já tem letras minúsculas suficientes
-    // Converte tudo para minúsculas
+    const nMaius = (t.match(/[A-ZÃ-ÃÃ-Ã]/g) || []).length;
+    if (nMaius / alfa.length < 0.5) return t; // jÃ¡ tem letras minÃºsculas suficientes
+    // Converte tudo para minÃºsculas
     let r = t.toLowerCase();
-    // 1ª letra sempre maiúscula
+    // 1Âª letra sempre maiÃºscula
     r = r.charAt(0).toUpperCase() + r.slice(1);
-    // Primeira letra após ': ' também maiúscula (subtítulo APA7)
-    r = r.replace(/:\s+([a-zà-þ])/g, (_, c) => ': ' + c.toUpperCase());
+    // Primeira letra apÃ³s ': ' tambÃ©m maiÃºscula (subtÃ­tulo APA7)
+    r = r.replace(/:\s+([a-zÃ -Ã¾])/g, (_, c) => ': ' + c.toUpperCase());
     return r;
   }
 
@@ -2468,38 +2468,38 @@
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), ed = _getVal('edicao'),
             edit = _getVal('editora'), doi = _getVal('doi');
-      if (!au.length||!ti) { alert('Preenche Autor(es) e Título.'); return; }
+      if (!au.length||!ti) { alert('Preenche Autor(es) e TÃ­tulo.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${ed?` (${ed} ed.)`:''}.${edit?' '+edit+'.':''}${doi?' '+doi:''}`;
     } else if (tipo === 'artigo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), rev = _getVal('revista'),
             vol = _getVal('volume'), num = _getVal('numero'),
             pag = _getVal('paginas'), doi = _getVal('doi');
-      if (!au.length||!ti||!rev) { alert('Preenche Autor(es), Título e Revista.'); return; }
+      if (!au.length||!ti||!rev) { alert('Preenche Autor(es), TÃ­tulo e Revista.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${rev}</em>${vol?`, <em>${vol}</em>`:''}${num?`(${num})`:''}${pag?`, ${pag}`:''}.${doi?' '+doi:''}`;
     } else if (tipo === 'capitulo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), eds = _getAutores('editores'),
             liv = _normalizarTitulo(_getVal('livro')), pag = _getVal('paginas'),
             edit = _getVal('editora'), doi = _getVal('doi');
-      if (!au.length||!ti||!liv) { alert('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
+      if (!au.length||!ti||!liv) { alert('Preenche Autor(es), TÃ­tulo do capÃ­tulo e TÃ­tulo do livro.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. Em ${eds.length?_fmtEditores(eds)+', ':''}<em>${liv}</em>${pag?` (pp. ${pag})`:''}. ${edit}.${doi?' '+doi:''}`;
     } else if (tipo === 'website') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), site = _getVal('site'), url = _getVal('url');
-      if (!au.length||!ti||!url) { alert('Preenche Autor/Organização, Título e URL.'); return; }
+      if (!au.length||!ti||!url) { alert('Preenche Autor/OrganizaÃ§Ã£o, TÃ­tulo e URL.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${site||url}</em>. ${url}`;
     } else if (tipo === 'tese') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), tp = _getVal('tipo_tese'),
             inst = _getVal('instituicao'), url = _getVal('url');
-      if (!au.length||!ti) { alert('Preenche Autor e Título.'); return; }
+      if (!au.length||!ti) { alert('Preenche Autor e TÃ­tulo.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em> [${tp}${inst?', '+inst:''}].${url?' '+url:''}`;
     } else if (tipo === 'relatorio') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), num = _getVal('numero'),
             org = _getVal('organizacao'), url = _getVal('url');
-      if (!au.length||!ti) { alert('Preenche Autor/Organização e Título.'); return; }
+      if (!au.length||!ti) { alert('Preenche Autor/OrganizaÃ§Ã£o e TÃ­tulo.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${num?` (${num})`:''}. ${org}.${url?' '+url:''}`;
     }
     _citAtual = c;
@@ -2522,9 +2522,9 @@
       await navigator.clipboard.writeText(_citTxt(_citAtual));
       const btn = document.getElementById('btn-cit-copiar');
       const orig = btn.textContent;
-      btn.textContent = '✓ Copiado';
+      btn.textContent = 'â Copiado';
       setTimeout(() => btn.textContent = orig, 1800);
-    } catch(e) { alert('Não foi possível copiar.'); }
+    } catch(e) { alert('NÃ£o foi possÃ­vel copiar.'); }
   };
 
   window.guardarCitacao = async function() {
@@ -2539,7 +2539,7 @@
       _renderBibliografia();
       const btn = document.getElementById('btn-cit-guardar');
       const orig = btn.textContent;
-      btn.textContent = '✓ Guardado!';
+      btn.textContent = 'â Guardado!';
       setTimeout(() => btn.textContent = orig, 1800);
     } catch(e) { alert('Erro ao guardar: ' + e.message); }
   };
@@ -2549,7 +2549,7 @@
     if (!lista) return;
     const citacoes = utilizadorAtual?.citacoes;
     if (!citacoes || !Object.keys(citacoes).length) {
-      lista.innerHTML = '<div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>';
+      lista.innerHTML = '<div class="citacoes-vazia">Nenhuma citaÃ§Ã£o guardada ainda.</div>';
       return;
     }
     const entradas = Object.entries(citacoes).sort((a,b) =>
@@ -2572,13 +2572,13 @@
     try {
       await navigator.clipboard.writeText(_citTxt(cit.html));
       const btn = document.querySelector(`[data-cit-key="${key}"] .btn-cit-item-copiar`);
-      if (btn) { const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,1400); }
+      if (btn) { const o=btn.textContent; btn.textContent='â'; setTimeout(()=>btn.textContent=o,1400); }
     } catch(e) {}
   };
 
   window._eliminarCit = async function(key) {
     if (!utilizadorAtual) return;
-    if (!confirm('Eliminar esta citação da tua bibliografia?')) return;
+    if (!confirm('Eliminar esta citaÃ§Ã£o da tua bibliografia?')) return;
     try {
       await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {
         [`citacoes.${key}`]: deleteField()
@@ -2590,7 +2590,7 @@
 
   window.copiarTodaCitacoes = async function() {
     const citacoes = utilizadorAtual?.citacoes;
-    if (!citacoes || !Object.keys(citacoes).length) { alert('Não tens citações guardadas.'); return; }
+    if (!citacoes || !Object.keys(citacoes).length) { alert('NÃ£o tens citaÃ§Ãµes guardadas.'); return; }
     const sorted = Object.values(citacoes).sort((a,b) =>
       _citTxt(a.html).toLowerCase().localeCompare(_citTxt(b.html).toLowerCase(), 'pt')
     );
@@ -2598,10 +2598,10 @@
     try {
       await navigator.clipboard.writeText(texto);
       const btn = document.querySelector('.btn-cit-copiar-tudo');
-      if (btn) { const o=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=o,1800); }
+      if (btn) { const o=btn.textContent; btn.textContent='â Copiado!'; setTimeout(()=>btn.textContent=o,1800); }
     } catch(e) { alert('Erro ao copiar.'); }
   };
-  // ── FIM CITAÇÕES APA7 ─────────────────────────────────────────────────
+  // ââ FIM CITAÃÃES APA7 âââââââââââââââââââââââââââââââââââââââââââââââââ
 
   window.filtrarDatas = function() {
     const ano = document.getElementById('filtro-ano').value;
@@ -2630,17 +2630,17 @@
     lista.innerHTML = resultado.map(item => {
       const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
       const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
-      const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`;
-      const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
+      const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'AmanhÃ£' : `${dias} dias`;
+      const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}Âº Ano` : null, item.semestre ? `${item.semestre}Âº Sem.` : null].filter(Boolean).join(' Â· ');
       const cls = item.link ? 'data-item-full clickable' : 'data-item-full';
       const onclick = item.link ? `onclick="window.open('${esc(item.link)}','_blank','noopener')"` : '';
       const notaHtml = item.descricao ? `<span style="display:block;margin-top:5px;font-size:.67rem;color:#92400e;background:#fffbeb;border-left:2px solid var(--ouro);padding:3px 7px;border-radius:0 4px 4px 0">${esc(item.descricao)}</span>` : '';
       return `<div class="${cls}" ${onclick}>
         <div class="data-item-full-dia">${item.data.getDate()}<small>${mes}</small></div>
-        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data académica')}</strong><span>${esc(subtag || item.tipo || '—')}</span>${notaHtml}</div>
+        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data acadÃ©mica')}</strong><span>${esc(subtag || item.tipo || 'â')}</span>${notaHtml}</div>
         <div class="data-item-full-tags">
           <span class="data-tag dias">${diasTexto}</span>
-          <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
+          <span class="data-tag tipo">${esc(item.tipo || 'â')}</span>
         </div>
       </div>`;
     }).join('');
@@ -2652,15 +2652,15 @@
     try {
       const snap = await getDoc(doc(db, 'utilizadores', user.uid));
       if (!snap.exists()) {
-        localStorage.setItem('login-msg', 'A tua conta não foi encontrada. Contacta a administração.');
+        localStorage.setItem('login-msg', 'A tua conta nÃ£o foi encontrada. Contacta a administraÃ§Ã£o.');
         await signOut(auth);
         window.location.href = 'index.html';
         return;
       }
       if (snap.data().estado !== 'ativo') {
         localStorage.setItem('login-msg', snap.data().estado === 'pendente'
-          ? 'A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.'
-          : 'A tua conta foi suspensa. Contacta a administração.');
+          ? 'A tua conta estÃ¡ a aguardar ativaÃ§Ã£o. ReceberÃ¡s um email assim que for aprovada.'
+          : 'A tua conta foi suspensa. Contacta a administraÃ§Ã£o.');
         await signOut(auth);
         window.location.href = 'index.html';
         return;
@@ -2690,7 +2690,7 @@
       mostrarFabSugestao();
       setTimeout(() => window.mostrarAviso(), 1200);
     } catch (err) {
-      console.warn('Perfil não carregado:', err);
+      console.warn('Perfil nÃ£o carregado:', err);
       await signOut(auth);
       window.location.href = 'index.html';
     }
@@ -2704,9 +2704,9 @@
       const snap = await getDocs(collection(db, 'ucs'));
       if (snap.empty) {
         container.innerHTML = `<div class="empty">
-          <div class="empty-icon">📂</div>
-          <h4>Nenhuma UC disponível</h4>
-          <p>Ainda não há Unidades Curriculares criadas.</p>
+          <div class="empty-icon">ð</div>
+          <h4>Nenhuma UC disponÃ­vel</h4>
+          <p>Ainda nÃ£o hÃ¡ Unidades Curriculares criadas.</p>
         </div>`;
         document.getElementById('stat-ucs').textContent  = '0';
         document.getElementById('stat-docs').textContent = '0';
@@ -2726,13 +2726,13 @@
         ucsMap[uc.id] = uc;
         catalogo.set(`uc:${uc.id}`, {
           key:`uc:${uc.id}`, tipo:'uc', id:uc.id, titulo:uc.nome,
-          subtitulo:`${uc.ano || '—'}º Ano · ${uc.semestre || '—'}º Semestre`
+          subtitulo:`${uc.ano || 'â'}Âº Ano Â· ${uc.semestre || 'â'}Âº Semestre`
         });
       });
 
       const ucsVisiveis = ucs.filter(uc => !uc.oculta);
       document.getElementById('stat-ucs').textContent  = ucsVisiveis.length;
-      document.getElementById('stat-docs').textContent = '…';
+      document.getElementById('stat-docs').textContent = 'â¦';
 
       const grupos = {};
       ucsVisiveis.forEach(uc => {
@@ -2753,8 +2753,8 @@
         const anoH = document.createElement('div');
         anoH.className = 'ano-titulo';
         anoH.innerHTML = Number(ano) > 0
-          ? `<span class="ano-titulo-badge">${ano}º Ano</span><span class="ano-titulo-label">Ciências Sociais</span><span class="ano-titulo-linha"></span>`
-          : `<span class="ano-titulo-badge">Sem classificação</span><span class="ano-titulo-linha"></span>`;
+          ? `<span class="ano-titulo-badge">${ano}Âº Ano</span><span class="ano-titulo-label">CiÃªncias Sociais</span><span class="ano-titulo-linha"></span>`
+          : `<span class="ano-titulo-badge">Sem classificaÃ§Ã£o</span><span class="ano-titulo-linha"></span>`;
         anoDiv.appendChild(anoH);
 
         Object.keys(grupos[ano]).sort((a,b) => Number(a)-Number(b)).forEach(sem => {
@@ -2764,7 +2764,7 @@
           if (Number(sem) > 0) {
             const semH = document.createElement('div');
             semH.className   = 'semestre-titulo';
-            semH.textContent = `${sem}º Semestre`;
+            semH.textContent = `${sem}Âº Semestre`;
             semDiv.appendChild(semH);
           }
 
@@ -2784,7 +2784,7 @@
             const el = document.createElement('article');
             el.className = 'uc-card';
             el.innerHTML = `
-              <button class="favorito-btn" type="button" data-fav-key="uc:${uc.id}" aria-label="Adicionar ${esc(uc.nome)} aos favoritos">☆</button>
+              <button class="favorito-btn" type="button" data-fav-key="uc:${uc.id}" aria-label="Adicionar ${esc(uc.nome)} aos favoritos">â</button>
               <button class="uc-card-abrir" type="button" aria-label="Abrir ${esc(uc.nome)}">
                 <span class="uc-card-banda" style="background:${cor.banda}">
                   <span class="uc-card-circles"></span>
@@ -2795,7 +2795,7 @@
                   <span class="uc-nome">${esc(uc.nome)}</span>
                   <span class="uc-card-footer">
                     <span class="uc-count" id="count-${uc.id}">A carregar...</span>
-                    <span class="uc-card-cta">Ver →</span>
+                    <span class="uc-card-cta">Ver â</span>
                   </span>
                 </span>
               </button>`;
@@ -2827,7 +2827,7 @@
     const key = `ca_lastVisit_${utilizadorAtual.uid}`;
     const prevVisit = localStorage.getItem(key);
     localStorage.setItem(key, new Date().toISOString());
-    if (!prevVisit) return; // primeira visita — não mostrar
+    if (!prevVisit) return; // primeira visita â nÃ£o mostrar
 
     const prevDate = new Date(prevVisit);
     const ucIds = Object.keys(ucsMap);
@@ -2841,7 +2841,7 @@
           collection(db, 'ucs', ucId, 'documentos'),
           where('criadoEm', '>', prevDate)
         ));
-        snap.forEach(d => novos.push({ nome: d.data().nome || '—', ucNome }));
+        snap.forEach(d => novos.push({ nome: d.data().nome || 'â', ucNome }));
       }));
       const total = novos.length;
       if (total === 0) return;
@@ -2853,7 +2853,7 @@
         const visiveis = novos.slice(0, 3);
         const lista = visiveis.map(n => `"${n.nome}" (${n.ucNome})`).join(', ');
         const extra = total > 3 ? ` e mais ${total - 3}` : '';
-        texto.textContent = `📄 Novo${total > 1 ? 's' : ''} desde a tua última visita: ${lista}${extra}.`;
+        texto.textContent = `ð Novo${total > 1 ? 's' : ''} desde a tua Ãºltima visita: ${lista}${extra}.`;
         banner.style.display = 'flex';
       }
 
@@ -2893,7 +2893,7 @@
     window.atualizarBotoesFavoritos();
   }
 
-  // --- SUGESTÕES ---
+  // --- SUGESTÃES ---
   window.abrirSugestao = function() {
     if (!utilizadorAtual) return;
     document.getElementById('sugestao-texto').value = '';
@@ -2921,12 +2921,12 @@
     const texto = document.getElementById('sugestao-texto').value.trim();
     if (!texto) { document.getElementById('sugestao-texto').focus(); return; }
     const btn = document.getElementById('btn-sugestao-enviar');
-    btn.textContent = '…'; btn.disabled = true;
+    btn.textContent = 'â¦'; btn.disabled = true;
     try {
       await addDoc(collection(db, 'sugestoes'), {
         texto,
         uid:       utilizadorAtual.uid,
-        nome:      utilizadorAtual.nome || utilizadorAtual.email || 'Anónimo',
+        nome:      utilizadorAtual.nome || utilizadorAtual.email || 'AnÃ³nimo',
         email:     utilizadorAtual.email || '',
         timestamp: serverTimestamp(),
         lida:      false
@@ -2935,12 +2935,12 @@
       document.getElementById('sugestao-ok').style.display = 'block';
       setTimeout(() => window.fecharSugestao(), 2400);
     } catch(err) {
-      btn.textContent = 'Erro — tenta novamente'; btn.disabled = false;
-      setTimeout(() => { btn.textContent = 'Enviar sugestão'; }, 2500);
+      btn.textContent = 'Erro â tenta novamente'; btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Enviar sugestÃ£o'; }, 2500);
     }
   };
 
-  // Mostrar FAB apenas após login
+  // Mostrar FAB apenas apÃ³s login
   function mostrarFabSugestao() {
     document.getElementById('sugestao-fab').style.display = 'flex';
   }
@@ -2964,8 +2964,8 @@
     const resultEl  = document.getElementById('nota-resultado');
 
     function setBadge(estado) {
-      if (estado === 'aprovado')   { badge.className = 'nota-badge aprovado';  badge.textContent = '✓ Aprovado'; }
-      else if (estado === 'rep')   { badge.className = 'nota-badge reprovado'; badge.textContent = '✗ Reprovado'; }
+      if (estado === 'aprovado')   { badge.className = 'nota-badge aprovado';  badge.textContent = 'â Aprovado'; }
+      else if (estado === 'rep')   { badge.className = 'nota-badge reprovado'; badge.textContent = 'â Reprovado'; }
       else                         { badge.className = 'nota-badge em-curso';  badge.textContent = 'Em curso'; }
     }
     function mostrarFinal(val) {
@@ -2973,11 +2973,11 @@
       resultEl.style.display = 'flex';
     }
     function esconderFinal() {
-      finalEl.textContent = '—';
+      finalEl.textContent = 'â';
       resultEl.style.display = 'none';
     }
 
-    // ── Só Exame ──
+    // ââ SÃ³ Exame ââ
     if (notaModoAtual === 'exame') {
       const ex = parseFloat(document.getElementById('nota-so-exame').value);
       if (isNaN(ex)) { esconderFinal(); setBadge('curso'); return; }
@@ -2988,7 +2988,7 @@
       return;
     }
 
-    // ── Avaliação Contínua ──
+    // ââ AvaliaÃ§Ã£o ContÃ­nua ââ
     const a = parseFloat(document.getElementById('nota-efolio-a').value);
     const b = parseFloat(document.getElementById('nota-efolio-b').value);
     const somaEl      = document.getElementById('nota-soma-limiar');
@@ -2996,7 +2996,7 @@
 
     if (isNaN(a) || isNaN(b)) {
       somaEl.className = 'nota-limiar vazio';
-      somaEl.innerHTML = 'Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span>';
+      somaEl.innerHTML = 'Soma: â &nbsp;<span style="opacity:.65;font-weight:400">mÃ­n. 3,5 para ir ao E-FÃ³lio Global</span>';
       secExameRec.style.display = 'none';
       document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
       document.getElementById('nota-global-limiar').innerHTML = '';
@@ -3008,20 +3008,20 @@
     const somaStr = _notaFmt(soma);
 
     if (soma >= 3.5) {
-      // ✅ Acesso ao E-Fólio Global
+      // â Acesso ao E-FÃ³lio Global
       somaEl.className = 'nota-limiar ok';
-      somaEl.innerHTML = `✓ Soma e-fólios: <strong>${somaStr}</strong> — acesso ao E-Fólio Global`;
+      somaEl.innerHTML = `â Soma e-fÃ³lios: <strong>${somaStr}</strong> â acesso ao E-FÃ³lio Global`;
       secExameRec.style.display = 'none';
 
       const g = parseFloat(document.getElementById('nota-global').value);
       const globalEl = document.getElementById('nota-global-limiar');
 
       if (isNaN(g)) {
-        // mostrar o mínimo necessário no Global para passar
+        // mostrar o mÃ­nimo necessÃ¡rio no Global para passar
         const necTotal  = Math.max(0, 9.5 - soma);
         const necGlobal = Math.max(5.5, necTotal); // tem de ter pelo menos 5,5
         globalEl.className = 'nota-limiar vazio';
-        globalEl.innerHTML = `Precisas de ≥ <strong>${_notaFmt(necGlobal)} val.</strong> no E-Fólio Global para passar`;
+        globalEl.innerHTML = `Precisas de â¥ <strong>${_notaFmt(necGlobal)} val.</strong> no E-FÃ³lio Global para passar`;
         esconderFinal(); setBadge('curso');
         return;
       }
@@ -3033,22 +3033,22 @@
       if (!aprov) {
         if (g < 5.5) {
           globalEl.className = 'nota-limiar nok';
-          globalEl.innerHTML = `✗ E-Fólio Global insuficiente — mínimo obrigatório 5,5 val.`;
+          globalEl.innerHTML = `â E-FÃ³lio Global insuficiente â mÃ­nimo obrigatÃ³rio 5,5 val.`;
         } else {
           globalEl.className = 'nota-limiar nok';
-          globalEl.innerHTML = `✗ Total insuficiente — faltam <strong>${_notaFmt(9.5 - total)} val.</strong>`;
+          globalEl.innerHTML = `â Total insuficiente â faltam <strong>${_notaFmt(9.5 - total)} val.</strong>`;
         }
         setBadge('rep');
       } else {
         globalEl.className = 'nota-limiar ok';
-        globalEl.innerHTML = `✓ E-Fólio Global: ${_notaFmt(g)} val. — condições cumpridas`;
+        globalEl.innerHTML = `â E-FÃ³lio Global: ${_notaFmt(g)} val. â condiÃ§Ãµes cumpridas`;
         setBadge('aprovado');
       }
 
     } else {
-      // ⚠️ Soma insuficiente → Exame obrigatório
+      // â ï¸ Soma insuficiente â Exame obrigatÃ³rio
       somaEl.className = 'nota-limiar nok';
-      somaEl.innerHTML = `✗ Soma e-fólios: <strong>${somaStr}</strong> — abaixo do mínimo (3,5). Exame obrigatório.`;
+      somaEl.innerHTML = `â Soma e-fÃ³lios: <strong>${somaStr}</strong> â abaixo do mÃ­nimo (3,5). Exame obrigatÃ³rio.`;
       secExameRec.style.display = 'block';
       document.getElementById('nota-global-limiar').className = 'nota-limiar vazio';
       document.getElementById('nota-global-limiar').innerHTML = '';
@@ -3103,12 +3103,12 @@
     }
 
     const btn = document.getElementById('nota-btn-save');
-    btn.textContent = '…'; btn.disabled = true;
+    btn.textContent = 'â¦'; btn.disabled = true;
     try {
       await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { [`notas.${ucAtualId}`]: dadosNota });
       utilizadorAtual.notas = utilizadorAtual.notas || {};
       utilizadorAtual.notas[ucAtualId] = dadosNota;
-      btn.textContent = '✓ Guardado'; btn.className = 'nota-btn-save ok';
+      btn.textContent = 'â Guardado'; btn.className = 'nota-btn-save ok';
       setTimeout(() => { btn.textContent = 'Guardar'; btn.className = 'nota-btn-save'; btn.disabled = false; }, 2000);
       atualizarProgresso();
     } catch(err) {
@@ -3147,7 +3147,7 @@
     const pct = Math.min(100, Math.round((ectsTotal / totalCurso) * 100));
     document.getElementById('prog-barra').style.width      = pct + '%';
     document.getElementById('prog-aprovadas').textContent  = aprov.length;
-    document.getElementById('prog-media').textContent      = media !== null ? media.toFixed(1).replace('.', ',') : '—';
+    document.getElementById('prog-media').textContent      = media !== null ? media.toFixed(1).replace('.', ',') : 'â';
     document.getElementById('prog-ects').textContent       = ectsTotal;
     document.getElementById('prog-pct').textContent        = pct + '%';
     document.getElementById('progresso-wrap').style.display = todas.length > 0 ? 'block' : 'none';
@@ -3161,7 +3161,7 @@
     document.getElementById('ecra-docs').style.display = 'block';
     window.bnavAtualizar('ucs');
     document.getElementById('docs-titulo').textContent  = uc.nome;
-    document.getElementById('docs-sub').textContent     = SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
+    document.getElementById('docs-sub').textContent     = SINOPSES[uc.nome] || 'Materiais de estudo disponÃ­veis';
     carregarNotasUC(uc.id);
 
     const lista = document.getElementById('docs-lista');
@@ -3173,26 +3173,29 @@
 
       if (snap.empty) {
         lista.innerHTML = `<div class="empty">
-          <div class="empty-icon">📄</div>
+          <div class="empty-icon">ð</div>
           <h4>Sem documentos</h4>
-          <p>Ainda não há documentos nesta UC.</p>
+          <p>Ainda nÃ£o hÃ¡ documentos nesta UC.</p>
         </div>`;
         return;
       }
 
       lista.innerHTML = '';
+      const hoje = new Date(); hoje.setHours(0,0,0,0);
       snap.docs.forEach(d => {
         const doc_   = { id: d.id, ...d.data() };
+        // Ocultar documentos agendados para data futura
+        if (doc_.dataDisponivel && new Date(doc_.dataDisponivel + 'T00:00:00') > hoje) return;
         docMap[`${uc.id}:${d.id}`] = doc_;
         const lKey   = `${uc.id}_${d.id}`;
         const estado = (utilizadorAtual.leituras || {})[lKey] || '';
-        const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : 'Não lido';
+        const btnLabel = estado === 'lido' ? 'â Lido' : estado === 'lendo' ? 'ð A ler' : 'NÃ£o lido';
         const isLink = doc_.tipo === 'link';
         const el     = document.createElement('div');
         el.className = 'doc-item' + (estado ? ' ' + estado : '');
         el.innerHTML = `
           <div class="doc-icone" style="${isLink?'background:linear-gradient(135deg,#1d4ed8,#2563eb)':''}">
-            <span class="doc-icone-txt">${isLink?'↗':'PDF'}</span>
+            <span class="doc-icone-txt">${isLink?'â':'PDF'}</span>
           </div>
           <div class="doc-info">
             <div class="doc-nome">${esc(doc_.nome)}${isLink?'<span style="font-size:.65rem;color:#1d4ed8;font-weight:700;margin-left:6px;background:#dbeafe;padding:2px 6px;border-radius:6px">Link</span>':''}</div>
@@ -3201,12 +3204,12 @@
           <div class="doc-acoes">
             <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0">
               <span style="font-size:.54rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9ca3af;font-family:'Inter',sans-serif">Progresso</span>
-              <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso">${btnLabel} ▾</button>
+              <button type="button" class="btn-progresso${estado ? ' '+estado : ''}" data-uc="${uc.id}" data-doc="${d.id}" aria-label="Marcar progresso">${btnLabel} â¾</button>
             </div>
-            <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
+            <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">â</button>
             ${isLink
-              ? `<a class="btn-ver" href="${esc(doc_.driveUrl||'')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span>↗</span><span>Abrir</span></a>`
-              : `<button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>`
+              ? `<a class="btn-ver" href="${esc(doc_.driveUrl||'')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span>â</span><span>Abrir</span></a>`
+              : `<button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>ð</span><span>Ver</span></button>`
             }
           </div>`;
         el.querySelector('.doc-favorito').addEventListener('click', () => window.toggleFavorito(`doc:${uc.id}:${d.id}`));
@@ -3235,7 +3238,7 @@
     docEl.classList.remove('lendo', 'lido');
     if (proximo) docEl.classList.add(proximo);
     btn.className = 'btn-progresso' + (proximo ? ' ' + proximo : '');
-    btn.textContent = (proximo === 'lido' ? '✓ Lido' : proximo === 'lendo' ? '📖 A ler' : 'Não lido') + ' ▾';
+    btn.textContent = (proximo === 'lido' ? 'â Lido' : proximo === 'lendo' ? 'ð A ler' : 'NÃ£o lido') + ' â¾';
 
     // Persistir no Firestore
     try {
@@ -3271,7 +3274,7 @@
     });
 
     if (!doc_?.driveUrl) {
-      conteudo.innerHTML = '<p style="color:#f87171;padding:40px;text-align:center">URL do documento não configurado.</p>';
+      conteudo.innerHTML = '<p style="color:#f87171;padding:40px;text-align:center">URL do documento nÃ£o configurado.</p>';
       return;
     }
 
@@ -3281,7 +3284,7 @@
       const pdf = await window.pdfjsLib.getDocument(doc_.driveUrl).promise;
       conteudo.innerHTML = '';
 
-      // Lazy-render: só renderiza páginas quando ficam visíveis (poupa RAM no mobile)
+      // Lazy-render: sÃ³ renderiza pÃ¡ginas quando ficam visÃ­veis (poupa RAM no mobile)
       const renderizando = new Set();
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(async entry => {
@@ -3312,20 +3315,20 @@
         const wrapper = document.createElement('div');
         wrapper.dataset.pnum = i;
         wrapper.style.cssText = 'min-height:300px;display:flex;align-items:center;justify-content:center;';
-        wrapper.innerHTML = `<span style="color:rgba(255,255,255,.25);font-size:.65rem">pág. ${i}</span>`;
+        wrapper.innerHTML = `<span style="color:rgba(255,255,255,.25);font-size:.65rem">pÃ¡g. ${i}</span>`;
         conteudo.appendChild(wrapper);
         obs.observe(wrapper);
 
         if (pdf.numPages > 1) {
           const sep = document.createElement('div');
           sep.className   = 'viewer-pagina-sep';
-          sep.textContent = `· · · ${i} / ${pdf.numPages} · · ·`;
+          sep.textContent = `Â· Â· Â· ${i} / ${pdf.numPages} Â· Â· Â·`;
           conteudo.appendChild(sep);
         }
       }
     } catch(e) {
       conteudo.innerHTML = `<p style="color:#f87171;padding:40px;text-align:center">
-        Não foi possível carregar o PDF.<br/>
+        NÃ£o foi possÃ­vel carregar o PDF.<br/>
         <small style="color:#555;font-size:.74rem">${e.message}</small>
       </p>`;
     }
@@ -3342,7 +3345,7 @@
     window.iniciarDownload(viewerDocAtual.ucId, viewerDocAtual.docId, viewerDocAtual.docNome);
   };
 
-  // --- DOWNLOAD COM CÓDIGO ---
+  // --- DOWNLOAD COM CÃDIGO ---
   window.iniciarDownload = function(ucId, docId, docNome) {
     const chars  = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let codigoDl = 'DL-';
@@ -3352,7 +3355,7 @@
     docPendente = { ucId, docId, docNome, driveUrl, codigoDl };
 
     document.getElementById('modal-codigo-txt').textContent =
-      `${codigoDl}  ·  ${utilizadorAtual.codigo}  ·  ${new Date().toLocaleDateString('pt-PT')}`;
+      `${codigoDl}  Â·  ${utilizadorAtual.codigo}  Â·  ${new Date().toLocaleDateString('pt-PT')}`;
     document.getElementById('modal-dl').classList.add('visivel');
   };
 
@@ -3399,7 +3402,7 @@
       alert('Erro ao registar download. Tenta novamente.');
     } finally {
       btn.disabled = false;
-      btn.textContent = '↓ Descarregar';
+      btn.textContent = 'â Descarregar';
     }
   };
 
@@ -3411,7 +3414,7 @@
     const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const paginas   = pdfDoc.getPages();
     const data      = new Date().toLocaleDateString('pt-PT');
-    const rodape    = `CampusAberto · ${nomeUtilizador} · ${codigoDl} · ${data}`;
+    const rodape    = `CampusAberto Â· ${nomeUtilizador} Â· ${codigoDl} Â· ${data}`;
     const diagonal  = nomeUtilizador;
 
     paginas.forEach(pag => {
@@ -3432,9 +3435,9 @@
   // --- PERFIL ---
   window.abrirPerfil = function() {
     if (!utilizadorAtual) return;
-    document.getElementById('perfil-nome').textContent  = utilizadorAtual.nome  || '—';
-    document.getElementById('perfil-email').textContent = utilizadorAtual.email || auth.currentUser?.email || '—';
-    document.getElementById('perfil-codigo').textContent = utilizadorAtual.codigo || '—';
+    document.getElementById('perfil-nome').textContent  = utilizadorAtual.nome  || 'â';
+    document.getElementById('perfil-email').textContent = utilizadorAtual.email || auth.currentUser?.email || 'â';
+    document.getElementById('perfil-codigo').textContent = utilizadorAtual.codigo || 'â';
     // limpar campos e mensagem
     document.getElementById('perfil-pw-atual').value = '';
     document.getElementById('perfil-pw-nova').value  = '';
@@ -3464,7 +3467,7 @@
       msg.textContent = 'A nova password deve ter pelo menos 6 caracteres.'; msg.className = 'perfil-msg err'; return;
     }
     if (nova !== conf) {
-      msg.textContent = 'As passwords não coincidem.'; msg.className = 'perfil-msg err'; return;
+      msg.textContent = 'As passwords nÃ£o coincidem.'; msg.className = 'perfil-msg err'; return;
     }
 
     btn.disabled = true; btn.textContent = 'A alterar...';
@@ -3482,7 +3485,7 @@
         'auth/wrong-password':      'Password atual incorreta.',
         'auth/invalid-credential':  'Password atual incorreta.',
         'auth/too-many-requests':   'Demasiadas tentativas. Tenta mais tarde.',
-        'auth/requires-recent-login': 'Sessão expirada. Faz login novamente.'
+        'auth/requires-recent-login': 'SessÃ£o expirada. Faz login novamente.'
       };
       msg.textContent = erros[e.code] || 'Erro: ' + e.message;
       msg.className = 'perfil-msg err';
@@ -3491,7 +3494,7 @@
     }
   };
 
-  // --- PRESENÇA ONLINE + HISTÓRICO DE SESSÕES ---
+  // --- PRESENÃA ONLINE + HISTÃRICO DE SESSÃES ---
   let _presencaRef  = null;
   let _sessaoRef    = null;
   let _sessionStart = null;
@@ -3503,7 +3506,7 @@
     _sessaoRef    = doc(db, 'sessoes',   sessionId);
     _sessionStart = Date.now();
 
-    // Registo de sessão (histórico permanente)
+    // Registo de sessÃ£o (histÃ³rico permanente)
     await setDoc(_sessaoRef, {
       uid: user.uid, nome, inicio: serverTimestamp(),
       ultimaAtividade: serverTimestamp(), ativo: true
@@ -3554,15 +3557,15 @@
   // --- AVISO LEGAL ---
   window.AVISO_TEXTO = `Prezados colegas,
 
-Todos os materiais disponibilizados na aplicação/portal Campus Aberto destinam-se exclusivamente à nossa comunidade.
+Todos os materiais disponibilizados na aplicaÃ§Ã£o/portal Campus Aberto destinam-se exclusivamente Ã  nossa comunidade.
 
-Os guias e restantes conteúdos são elaborados por estudantes para estudantes, com o objetivo de facilitar o estudo, a organização e a partilha de conhecimentos. Constituem apenas ferramentas complementares de apoio e orientação, não substituindo, em circunstância alguma, os documentos, materiais, indicações ou esclarecimentos oficiais disponibilizados pelos docentes através do Moodle ou de outros canais institucionais.
+Os guias e restantes conteÃºdos sÃ£o elaborados por estudantes para estudantes, com o objetivo de facilitar o estudo, a organizaÃ§Ã£o e a partilha de conhecimentos. Constituem apenas ferramentas complementares de apoio e orientaÃ§Ã£o, nÃ£o substituindo, em circunstÃ¢ncia alguma, os documentos, materiais, indicaÃ§Ãµes ou esclarecimentos oficiais disponibilizados pelos docentes atravÃ©s do Moodle ou de outros canais institucionais.
 
-Estes conteúdos não devem ser utilizados como fonte única de informação. Cada estudante é responsável por consultar regularmente os canais oficiais, confirmar as informações relevantes junto dos docentes e desenvolver a sua própria autonomia na pesquisa, no estudo e na tomada de decisões académicas.
+Estes conteÃºdos nÃ£o devem ser utilizados como fonte Ãºnica de informaÃ§Ã£o. Cada estudante Ã© responsÃ¡vel por consultar regularmente os canais oficiais, confirmar as informaÃ§Ãµes relevantes junto dos docentes e desenvolver a sua prÃ³pria autonomia na pesquisa, no estudo e na tomada de decisÃµes acadÃ©micas.
 
-Em caso de dúvida, omissão, desatualização ou divergência, prevalecem sempre as informações, orientações e materiais fornecidos pelos docentes através dos canais oficiais.
+Em caso de dÃºvida, omissÃ£o, desatualizaÃ§Ã£o ou divergÃªncia, prevalecem sempre as informaÃ§Ãµes, orientaÃ§Ãµes e materiais fornecidos pelos docentes atravÃ©s dos canais oficiais.
 
-Pedimos também que respeitem o trabalho desenvolvido e que não partilhem os conteúdos do portal fora da nossa comunidade.
+Pedimos tambÃ©m que respeitem o trabalho desenvolvido e que nÃ£o partilhem os conteÃºdos do portal fora da nossa comunidade.
 
 Ao prosseguir, declaro que li e compreendi este aviso.`;
 
@@ -3581,7 +3584,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 
 </script>
 <script>
-  // PWA — Service Worker
+  // PWA â Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
     // Recarrega automaticamente quando um novo SW toma controlo
@@ -3589,7 +3592,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
       window.location.reload();
     });
   }
-  // PWA — Botão de instalação
+  // PWA â BotÃ£o de instalaÃ§Ã£o
   let _installPrompt = null;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
@@ -3618,7 +3621,7 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 <div class="modal-overlay" id="modal-aviso" role="dialog" aria-modal="true">
   <div class="modal" style="max-width:560px">
     <div class="aviso-scroll">
-      <div class="aviso-titulo">ℹ️ Aviso de utilização</div>
+      <div class="aviso-titulo">â¹ï¸ Aviso de utilizaÃ§Ã£o</div>
       <div class="aviso-corpo" id="aviso-corpo-texto"></div>
     </div>
     <div class="aviso-footer">
@@ -3627,35 +3630,35 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   </div>
 </div>
 
-<!-- FAB Sugestão -->
-<button class="sugestao-fab" id="sugestao-fab" onclick="abrirSugestao()" title="Enviar sugestão" aria-label="Enviar sugestão">💡</button>
+<!-- FAB SugestÃ£o -->
+<button class="sugestao-fab" id="sugestao-fab" onclick="abrirSugestao()" title="Enviar sugestÃ£o" aria-label="Enviar sugestÃ£o">ð¡</button>
 
-<!-- Modal Sugestão -->
+<!-- Modal SugestÃ£o -->
 <div class="sugestao-overlay" id="sugestao-overlay" onclick="fecharSugestaoOverlay(event)">
   <div class="sugestao-modal" role="dialog" aria-modal="true">
-    <!-- Formulário -->
+    <!-- FormulÃ¡rio -->
     <div id="sugestao-form-wrap">
-      <div class="sugestao-modal-titulo">💡 Tens uma sugestão?</div>
+      <div class="sugestao-modal-titulo">ð¡ Tens uma sugestÃ£o?</div>
       <div class="sugestao-modal-sub">Escreve o que achas que poderia melhorar a app. Fica registado com o teu nome.</div>
-      <textarea class="sugestao-textarea" id="sugestao-texto" maxlength="500" placeholder="Ex: Seria útil ter um temporizador de pomodoro…" oninput="sugestaoContador()"></textarea>
+      <textarea class="sugestao-textarea" id="sugestao-texto" maxlength="500" placeholder="Ex: Seria Ãºtil ter um temporizador de pomodoroâ¦" oninput="sugestaoContador()"></textarea>
       <div class="sugestao-contador"><span id="sugestao-chars">0</span>/500</div>
       <div class="sugestao-acoes">
         <button class="btn-sugestao-cancelar" onclick="fecharSugestao()">Cancelar</button>
-        <button class="btn-sugestao-enviar" id="btn-sugestao-enviar" onclick="enviarSugestao()">Enviar sugestão</button>
+        <button class="btn-sugestao-enviar" id="btn-sugestao-enviar" onclick="enviarSugestao()">Enviar sugestÃ£o</button>
       </div>
     </div>
-    <!-- Confirmação -->
+    <!-- ConfirmaÃ§Ã£o -->
     <div class="sugestao-ok" id="sugestao-ok">
-      <div class="sugestao-ok-emoji">🙏</div>
-      <div class="sugestao-ok-texto">Obrigado pelo teu contributo!<br>Vamos ter em conta a tua sugestão.</div>
+      <div class="sugestao-ok-emoji">ð</div>
+      <div class="sugestao-ok-texto">Obrigado pelo teu contributo!<br>Vamos ter em conta a tua sugestÃ£o.</div>
     </div>
   </div>
 </div>
 
-<!-- Rodapé discreto -->
+<!-- RodapÃ© discreto -->
 <footer class="app-rodape" id="rodape-app">
-  <button class="app-rodape-aviso" onclick="mostrarAviso(true)" title="Ver aviso de utilização">
-    ℹ️ Conteúdos de uso exclusivo desta comunidade · Campus Aberto
+  <button class="app-rodape-aviso" onclick="mostrarAviso(true)" title="Ver aviso de utilizaÃ§Ã£o">
+    â¹ï¸ ConteÃºdos de uso exclusivo desta comunidade Â· Campus Aberto
   </button>
 </footer>
 
