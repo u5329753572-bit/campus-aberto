@@ -470,6 +470,10 @@
           <input type="number" id="uc-ordem" placeholder="1" min="1"/>
         </div>
       </div>
+      <div class="campo" style="margin-top:12px">
+        <label>Descrição / Sinopse <span style="font-size:.72rem;font-weight:400;color:#9ca3af">(aparece na app como texto introdutório da UC)</span></label>
+        <textarea id="uc-sinopse" placeholder="Breve descrição da UC para os estudantes..." style="min-height:72px"></textarea>
+      </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.82rem;cursor:pointer">
         <input type="checkbox" id="uc-oculta" style="width:16px;height:16px;cursor:pointer"/>
         Ocultar da biblioteca académica
@@ -1075,6 +1079,7 @@
     document.getElementById('uc-semestre').value = u.semestre || '1';
     document.getElementById('uc-ordem').value = u.ordem || '';
     document.getElementById('uc-oculta').checked = !!u.oculta;
+    document.getElementById('uc-sinopse').value = u.sinopse || '';
     window._editandoUCId = id;
     document.getElementById('btn-criar-uc').textContent = 'Guardar alterações';
     document.getElementById('uc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1086,6 +1091,7 @@
     const semestre = parseInt(document.getElementById('uc-semestre').value);
     const ordem    = parseInt(document.getElementById('uc-ordem').value) || 99;
     const oculta   = document.getElementById('uc-oculta').checked;
+    const sinopse  = document.getElementById('uc-sinopse').value.trim();
     const msgEl    = document.getElementById('msg-uc');
     const editId   = window._editandoUCId || null;
 
@@ -1093,18 +1099,19 @@
 
     if (editId) {
       const old = (window._ucsCache || {})[editId] || {};
-      const payload = { nome, ano, semestre, ordem, oculta };
+      const payload = { nome, ano, semestre, ordem, oculta, sinopse };
       if (old.criadoEm) payload.criadoEm = old.criadoEm;
       await setDoc(doc(db, 'ucs', editId), payload);
       window._editandoUCId = null;
       msgEl.textContent = `UC "${nome}" atualizada.`;
     } else {
-      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, criadoEm: serverTimestamp() });
+      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, criadoEm: serverTimestamp() });
       msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
     }
     document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
     document.getElementById('uc-oculta').checked = false;
+    document.getElementById('uc-sinopse').value = '';
     document.getElementById('btn-criar-uc').textContent = 'Criar UC';
     msgEl.className = 'msg-form ok';
     carregarUCs();
