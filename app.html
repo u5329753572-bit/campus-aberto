@@ -2071,7 +2071,7 @@
     if (!banner) return;
     // Verificar se já foi fechado hoje
     const hoje = new Date().toDateString();
-    if (localStorage.getItem('banner-fechado') === hoje) { banner.style.display = 'none'; return; }
+    if (localStorage.getItem(chaveLocal('banner-fechado')) === hoje) { banner.style.display = 'none'; return; }
 
     const agora = new Date();
     const em7dias = new Date(agora.getTime() + 7 * 86400000);
@@ -2106,7 +2106,7 @@
   window.fecharBannerDatas = function() {
     const banner = document.getElementById('banner-datas');
     if (banner) banner.style.display = 'none';
-    localStorage.setItem('banner-fechado', new Date().toDateString());
+    localStorage.setItem(chaveLocal('banner-fechado'), new Date().toDateString());
   };
 
   async function carregarDatas() {
@@ -2466,45 +2466,53 @@
     return r;
   }
 
+  function _citAviso(msg) {
+    const el = document.getElementById('cit-aviso-validacao');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
   window.gerarCitacao = function() {
+    _citAviso('');
     const tipo = _citTipoAtivo;
     let c = '';
     if (tipo === 'livro') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), ed = _getVal('edicao'),
             edit = _getVal('editora'), doi = _getVal('doi');
-      if (!au.length||!ti) { alert('Preenche Autor(es) e Título.'); return; }
+      if (!au.length||!ti) { _citAviso('Preenche Autor(es) e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${ed?` (${ed} ed.)`:''}.${edit?' '+edit+'.':''}${doi?' '+doi:''}`;
     } else if (tipo === 'artigo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), rev = _getVal('revista'),
             vol = _getVal('volume'), num = _getVal('numero'),
             pag = _getVal('paginas'), doi = _getVal('doi');
-      if (!au.length||!ti||!rev) { alert('Preenche Autor(es), Título e Revista.'); return; }
+      if (!au.length||!ti||!rev) { _citAviso('Preenche Autor(es), Título e Revista.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${rev}</em>${vol?`, <em>${vol}</em>`:''}${num?`(${num})`:''}${pag?`, ${pag}`:''}.${doi?' '+doi:''}`;
     } else if (tipo === 'capitulo') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), eds = _getAutores('editores'),
             liv = _normalizarTitulo(_getVal('livro')), pag = _getVal('paginas'),
             edit = _getVal('editora'), doi = _getVal('doi');
-      if (!au.length||!ti||!liv) { alert('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
+      if (!au.length||!ti||!liv) { _citAviso('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. Em ${eds.length?_fmtEditores(eds)+', ':''}<em>${liv}</em>${pag?` (pp. ${pag})`:''}. ${edit}.${doi?' '+doi:''}`;
     } else if (tipo === 'website') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), site = _getVal('site'), url = _getVal('url');
-      if (!au.length||!ti||!url) { alert('Preenche Autor/Organização, Título e URL.'); return; }
+      if (!au.length||!ti||!url) { _citAviso('Preenche Autor/Organização, Título e URL.'); return; }
       c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${site||url}</em>. ${url}`;
     } else if (tipo === 'tese') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), tp = _getVal('tipo_tese'),
             inst = _getVal('instituicao'), url = _getVal('url');
-      if (!au.length||!ti) { alert('Preenche Autor e Título.'); return; }
+      if (!au.length||!ti) { _citAviso('Preenche Autor e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em> [${tp}${inst?', '+inst:''}].${url?' '+url:''}`;
     } else if (tipo === 'relatorio') {
       const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
             ti = _normalizarTitulo(_getVal('titulo')), num = _getVal('numero'),
             org = _getVal('organizacao'), url = _getVal('url');
-      if (!au.length||!ti) { alert('Preenche Autor/Organização e Título.'); return; }
+      if (!au.length||!ti) { _citAviso('Preenche Autor/Organização e Título.'); return; }
       c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${num?` (${num})`:''}. ${org}.${url?' '+url:''}`;
     }
     _citAtual = c;
@@ -2560,9 +2568,13 @@
     const entradas = Object.entries(citacoes).sort((a,b) =>
       _citTxt(a[1].html).toLowerCase().localeCompare(_citTxt(b[1].html).toLowerCase(), 'pt')
     );
+    const _sanitizeCit = html => html
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/&lt;(\/?)em&gt;/g,'<$1em>');
+
     lista.innerHTML = entradas.map(([key, cit]) => `
       <div class="citacoes-item" data-cit-key="${key}">
-        <div class="citacoes-item-texto">${cit.html}</div>
+        <div class="citacoes-item-texto">${_sanitizeCit(cit.html || '')}</div>
         <div class="citacoes-item-acoes">
           <button class="btn-cit-item-copiar" onclick="window._copiarItemCit('${key}')">Copiar</button>
           <button class="btn-cit-item-del" onclick="window._eliminarCit('${key}')">Eliminar</button>
@@ -2807,7 +2819,6 @@
             el.querySelector('.uc-card-abrir').addEventListener('click', () => abrirUC(uc, cor.emoji));
             el.querySelector('.favorito-btn').addEventListener('click', () => window.toggleFavorito(`uc:${uc.id}`));
             grid.appendChild(el);
-            contarDocs(uc);
           });
 
           semDiv.appendChild(grid);
@@ -2816,6 +2827,9 @@
 
         container.appendChild(anoDiv);
       });
+
+      // Await all doc counts before rendering favorites/search
+      await Promise.all(ucsVisiveis.map(uc => contarDocs(uc).catch(e => console.warn('contarDocs:', e))));
 
       renderFavoritos();
       renderRetomar();
@@ -2934,8 +2948,8 @@
       await addDoc(collection(db, 'sugestoes'), {
         texto,
         uid:       utilizadorAtual.uid,
-        nome:      utilizadorAtual.nome || utilizadorAtual.email || 'Anónimo',
-        email:     utilizadorAtual.email || '',
+        nome:      utilizadorAtual.nome || utilizadorAtual.email || auth.currentUser?.email || 'Anónimo',
+        email:     utilizadorAtual.email || auth.currentUser?.email || '',
         timestamp: serverTimestamp(),
         lida:      false
       });
@@ -3511,6 +3525,8 @@
   let _sessaoRef    = null;
   let _sessionStart = null;
   let _presencaInterval = null;
+  let _onlineInterval   = null;
+  let _heartbeatFn      = null;
 
   async function iniciarPresenca(user, nome) {
     const sessionId = user.uid + '_' + Date.now();
@@ -3518,24 +3534,25 @@
     _sessaoRef    = doc(db, 'sessoes',   sessionId);
     _sessionStart = Date.now();
 
-    // Registo de sessão (histórico permanente)
     await setDoc(_sessaoRef, {
       uid: user.uid, nome, inicio: serverTimestamp(),
       ultimaAtividade: serverTimestamp(), ativo: true
     }).catch(() => {});
 
-    const heartbeat = () => {
+    _heartbeatFn = () => {
+      if (!_presencaRef) return;
       setDoc(_presencaRef, { uid: user.uid, nome, ultimaVez: serverTimestamp() }).catch(() => {});
       setDoc(_sessaoRef, { ultimaAtividade: serverTimestamp() }, { merge: true }).catch(() => {});
     };
-    heartbeat();
-    _presencaInterval = setInterval(heartbeat, 2 * 60 * 1000);
+    _heartbeatFn();
+    _presencaInterval = setInterval(_heartbeatFn, 2 * 60 * 1000);
     atualizarContadorOnline();
-    setInterval(atualizarContadorOnline, 3 * 60 * 1000);
+    _onlineInterval = setInterval(atualizarContadorOnline, 3 * 60 * 1000);
   }
 
   async function terminarSessao() {
     if (_presencaInterval) { clearInterval(_presencaInterval); _presencaInterval = null; }
+    if (_onlineInterval)   { clearInterval(_onlineInterval);   _onlineInterval   = null; }
     if (_presencaRef) { deleteDoc(_presencaRef).catch(() => {}); _presencaRef = null; }
     if (_sessaoRef && _sessionStart) {
       const duracao = Math.round((Date.now() - _sessionStart) / 60000);
@@ -3557,7 +3574,14 @@
 
   window.addEventListener('beforeunload', () => { terminarSessao(); });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') terminarSessao();
+    if (document.visibilityState === 'hidden') {
+      if (_presencaInterval) { clearInterval(_presencaInterval); _presencaInterval = null; }
+    } else {
+      if (_heartbeatFn && _presencaRef && !_presencaInterval) {
+        _heartbeatFn();
+        _presencaInterval = setInterval(_heartbeatFn, 2 * 60 * 1000);
+      }
+    }
   });
 
   window.sair = async function() {
