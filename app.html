@@ -3161,7 +3161,7 @@
     document.getElementById('ecra-docs').style.display = 'block';
     window.bnavAtualizar('ucs');
     document.getElementById('docs-titulo').textContent  = uc.nome;
-    document.getElementById('docs-sub').textContent     = SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
+    document.getElementById('docs-sub').textContent     = uc.sinopse || SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
     carregarNotasUC(uc.id);
 
     const lista = document.getElementById('docs-lista');
