@@ -691,6 +691,74 @@
     .doc-item.agendado:hover { transform: none !important; box-shadow: 0 2px 14px rgba(26,58,42,0.065) !important; border-color: rgba(26,58,42,0.065) !important; }
     .doc-agendado-badge { display:inline-flex;align-items:center;gap:5px;background:#f3f4f6;border:1px solid #d1d5db;color:#6b7280;font-size:.72rem;font-weight:600;padding:6px 12px;border-radius:20px;white-space:nowrap;line-height:1.3; }
 
+    /* ── PENSAMENTO DO DIA ────────────────────────── */
+    .pensamento-card {
+      margin: 0 0 32px; display: none;
+      background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%);
+      border-radius: 18px; padding: 28px 32px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(26,58,42,0.18);
+      animation: fadeUp 0.6s ease;
+    }
+    .pensamento-card::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(201,168,76,0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pensamento-interior { position: relative; z-index: 1; }
+    .pensamento-aspas {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; color: var(--ouro);
+      line-height: 0.7; display: block; margin-bottom: 10px; opacity: 0.65;
+    }
+    .pensamento-texto {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: #f0ebe0; font-style: italic;
+      line-height: 1.65; margin-bottom: 12px;
+    }
+    .pensamento-autor {
+      font-size: .74rem; color: var(--ouro-leve);
+      font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    }
+    .pensamento-label {
+      position: absolute; top: 18px; right: 22px;
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .modal-pensamento-overlay {
+      position: fixed; inset: 0; z-index: 9100;
+      background: rgba(7,29,52,0.75);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+    }
+    .modal-pensamento-caixa {
+      background: linear-gradient(155deg, #1a3a2a 0%, #0f2318 100%);
+      border-radius: 24px; padding: 38px 34px 30px;
+      max-width: 420px; width: 90%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      border: 1px solid rgba(201,168,76,0.22);
+      text-align: center; position: relative;
+      animation: fadeUp 0.35s ease;
+    }
+    .modal-pensamento-kicker {
+      font-size: .66rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ouro); margin-bottom: 18px;
+    }
+    .modal-pensamento-caixa .pensamento-aspas { font-size: 4.5rem; text-align: center; }
+    .modal-pensamento-caixa .pensamento-texto { font-size: 1.15rem; text-align: center; }
+    .modal-pensamento-caixa .pensamento-autor { text-align: center; margin-bottom: 26px; }
+    .modal-pensamento-btn {
+      background: var(--ouro); color: var(--verde);
+      border: none; border-radius: 12px;
+      padding: 13px 28px; font-size: .88rem; font-weight: 700;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all .18s; width: 100%;
+    }
+    .modal-pensamento-btn:hover { background: var(--ouro-leve); }
+
     .doc-item {
       background: var(--branco); border-radius: 16px;
       padding: 20px 24px; display: flex;
@@ -1318,6 +1386,16 @@
       </div>
     </div>
 
+    <!-- PENSAMENTO DO DIA -->
+    <div class="pensamento-card" id="pensamento-card">
+      <span class="pensamento-label">💡 Pensamento do dia</span>
+      <div class="pensamento-interior">
+        <span class="pensamento-aspas" aria-hidden="true">"</span>
+        <p class="pensamento-texto" id="pensamento-texto"></p>
+        <p class="pensamento-autor" id="pensamento-autor"></p>
+      </div>
+    </div>
+
     <div id="banner-datas" style="display:none;margin:0 0 36px;border-radius:10px;overflow:hidden"></div>
 
     <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
@@ -1730,6 +1808,17 @@
     <div class="loading">
       <div class="spinner" style="border-color:#333;border-top-color:#c9a84c"></div>
     </div>
+  </div>
+</div>
+
+<!-- MODAL PENSAMENTO DO DIA -->
+<div class="modal-pensamento-overlay" id="modal-pensamento" role="dialog" aria-modal="true" aria-label="Pensamento do dia">
+  <div class="modal-pensamento-caixa">
+    <div class="modal-pensamento-kicker">💡 Pensamento do dia</div>
+    <span class="pensamento-aspas" aria-hidden="true">"</span>
+    <p class="pensamento-texto" id="modal-pensamento-texto"></p>
+    <p class="pensamento-autor" id="modal-pensamento-autor"></p>
+    <button class="modal-pensamento-btn" onclick="document.getElementById('modal-pensamento').style.display='none'">Começar o dia ✨</button>
   </div>
 </div>
 
@@ -2709,6 +2798,7 @@
       iniciarPresenca(user, utilizadorAtual.nome || user.email);
       document.getElementById('rodape-app').style.display = 'block';
       mostrarFabSugestao();
+      mostrarPensamentoDoDia();
       setTimeout(() => window.mostrarAviso(), 1200);
     } catch (err) {
       console.warn('Perfil não carregado:', err);
@@ -2975,6 +3065,108 @@
   // Mostrar FAB apenas após login
   function mostrarFabSugestao() {
     document.getElementById('sugestao-fab').style.display = 'flex';
+  }
+
+  // ── PENSAMENTO DO DIA ─────────────────────────────────────
+  const PENSAMENTOS = [
+    { texto: 'O sucesso é a soma de pequenos esforços repetidos dia após dia.', autor: 'Robert Collier' },
+    { texto: 'A educação é a arma mais poderosa que podes usar para mudar o mundo.', autor: 'Nelson Mandela' },
+    { texto: 'Não é sobre ter tempo. É sobre fazer tempo.', autor: '' },
+    { texto: 'O conhecimento é o único bem que aumenta quando é partilhado.', autor: '' },
+    { texto: 'A dificuldade de hoje é a competência de amanhã.', autor: '' },
+    { texto: 'Estuda não para agradar aos outros, mas para te tornares quem queres ser.', autor: '' },
+    { texto: 'Cada erro é uma lição disfarçada de obstáculo.', autor: '' },
+    { texto: 'A persistência é o caminho do êxito.', autor: 'Charles Chaplin' },
+    { texto: 'O futuro pertence àqueles que acreditam na beleza dos seus sonhos.', autor: 'Eleanor Roosevelt' },
+    { texto: 'Não desistas. O princípio é sempre a parte mais difícil.', autor: '' },
+    { texto: 'Cada página que lês é um passo em frente que ninguém te pode tirar.', autor: '' },
+    { texto: 'A mente que se abre a uma nova ideia jamais volta ao seu tamanho original.', autor: 'Albert Einstein' },
+    { texto: 'O talento sem trabalho é apenas metade do potencial.', autor: '' },
+    { texto: 'Aprender é a única coisa que a mente nunca se cansa, nunca tem medo e nunca se arrepende.', autor: 'Leonardo da Vinci' },
+    { texto: 'Não importa a velocidade a que andas, desde que não pares.', autor: 'Confúcio' },
+    { texto: 'A dedicação de hoje constrói a liberdade de amanhã.', autor: '' },
+    { texto: 'O estudo é a chave que abre portas que ainda não consegues ver.', autor: '' },
+    { texto: 'Cada dia é uma nova oportunidade de aprender algo que ainda não sabes.', autor: '' },
+    { texto: 'A universidade não é apenas um diploma — é a oportunidade de pensar melhor.', autor: '' },
+    { texto: 'Investe em ti mesmo. É o melhor investimento que podes fazer.', autor: 'Warren Buffett' },
+    { texto: 'A educação não é preparação para a vida — a educação é a própria vida.', autor: 'John Dewey' },
+    { texto: 'Quem tem um porquê para viver suporta quase qualquer como.', autor: 'Friedrich Nietzsche' },
+    { texto: 'A curiosidade é o motor de toda a aprendizagem verdadeira.', autor: '' },
+    { texto: 'Não tens de ser ótimo para começar, mas tens de começar para seres ótimo.', autor: 'Zig Ziglar' },
+    { texto: 'O sucesso não é final, o fracasso não é fatal: o que conta é a coragem de continuar.', autor: 'Winston Churchill' },
+    { texto: 'Sê a mudança que queres ver no mundo.', autor: 'Mahatma Gandhi' },
+    { texto: 'A leitura faz o homem completo; a conferência, pronto; a escrita, exato.', autor: 'Francis Bacon' },
+    { texto: 'Estuda como se fosses viver para sempre. Vive como se fosses morrer amanhã.', autor: 'Mahatma Gandhi' },
+    { texto: 'A imaginação é mais importante que o conhecimento.', autor: 'Albert Einstein' },
+    { texto: 'O que sabemos é uma gota; o que ignoramos é um oceano.', autor: 'Isaac Newton' },
+    { texto: 'Não há atalhos para qualquer lugar que valha a pena ir.', autor: 'Beverly Sills' },
+    { texto: 'O único modo de fazer um ótimo trabalho é amar o que fazes.', autor: 'Steve Jobs' },
+    { texto: 'A disciplina é a ponte entre objetivos e realizações.', autor: 'Jim Rohn' },
+    { texto: 'Acredita que podes — e já estás a meio caminho.', autor: 'Theodore Roosevelt' },
+    { texto: 'O conhecimento fala, mas a sabedoria escuta.', autor: 'Jimi Hendrix' },
+    { texto: 'A verdadeira aprendizagem acontece quando questionamos o que já sabemos.', autor: '' },
+    { texto: 'Tudo parece impossível até ser feito.', autor: 'Nelson Mandela' },
+    { texto: 'A mente é tudo. Aquilo em que pensas, tornas-te.', autor: 'Buda' },
+    { texto: 'Não é a força, mas a constância dos esforços que produz a excelência.', autor: '' },
+    { texto: 'Cada livro lido abre uma janela para um mundo que ainda não conhecias.', autor: '' },
+    { texto: 'O fracasso é simplesmente a oportunidade de recomeçar com mais experiência.', autor: 'Henry Ford' },
+    { texto: 'O esforço de hoje é o resultado de amanhã.', autor: '' },
+    { texto: 'Nunca é demasiado tarde para seres o que podias ter sido.', autor: 'George Eliot' },
+    { texto: 'Não procures a perfeição — procura o progresso.', autor: '' },
+    { texto: 'Um livro é um sonho que tens na mão.', autor: 'Neil Gaiman' },
+    { texto: 'O tempo que dedicas a aprender nunca é tempo perdido.', autor: '' },
+    { texto: 'A excelência não é um ato, mas um hábito.', autor: 'Aristóteles' },
+    { texto: 'A educação é o passaporte para o futuro.', autor: 'Malcolm X' },
+    { texto: 'Faz o que podes, com o que tens, onde estás.', autor: 'Theodore Roosevelt' },
+    { texto: 'O segredo do progresso é começar.', autor: 'Mark Twain' },
+    { texto: 'A mente preparada reconhece as oportunidades quando aparecem.', autor: '' },
+    { texto: 'Cada desafio académico é uma prova do teu potencial.', autor: '' },
+    { texto: 'O sucesso académico não é um dom; é uma escolha diária.', autor: '' },
+    { texto: 'Saber pensar é mais valioso do que saber tudo.', autor: '' },
+    { texto: 'A dúvida é o princípio da sabedoria.', autor: 'Aristóteles' },
+    { texto: 'Cada hora de estudo é um tijolo na casa do teu futuro.', autor: '' },
+    { texto: 'O que aprendes hoje define quem serás amanhã.', autor: '' },
+    { texto: 'A sabedoria não é produto da escolaridade, mas da tentativa durante toda a vida de a adquirir.', autor: 'Albert Einstein' },
+    { texto: 'As grandes realizações são apenas os pequenos esforços acumulados.', autor: '' },
+    { texto: 'Aprende mais do que precisas — nunca sabes quando vai ser útil.', autor: '' },
+  ];
+
+  async function getPensamentoDoDia() {
+    const hoje = new Date().toISOString().slice(0, 10);
+    try {
+      const snap = await getDoc(doc(db, 'mensagemDiaria', hoje));
+      if (snap.exists() && snap.data().texto) {
+        return { texto: snap.data().texto, autor: snap.data().autor || '' };
+      }
+    } catch(e) {}
+    const inicio = new Date(new Date().getFullYear(), 0, 0);
+    const diaDoAno = Math.floor((new Date() - inicio) / 86400000);
+    return PENSAMENTOS[diaDoAno % PENSAMENTOS.length];
+  }
+
+  async function mostrarPensamentoDoDia() {
+    const p = await getPensamentoDoDia();
+    const card = document.getElementById('pensamento-card');
+    if (card) {
+      document.getElementById('pensamento-texto').textContent = p.texto;
+      const autorEl = document.getElementById('pensamento-autor');
+      if (p.autor) { autorEl.textContent = '— ' + p.autor; autorEl.style.display = ''; }
+      else { autorEl.style.display = 'none'; }
+      card.style.display = 'block';
+    }
+    const chave = chaveLocal('pensamento-visto');
+    const hoje = new Date().toDateString();
+    if (localStorage.getItem(chave) !== hoje) {
+      const modal = document.getElementById('modal-pensamento');
+      if (modal) {
+        document.getElementById('modal-pensamento-texto').textContent = p.texto;
+        const mAutor = document.getElementById('modal-pensamento-autor');
+        if (p.autor) { mAutor.textContent = '— ' + p.autor; mAutor.style.display = ''; }
+        else { mAutor.style.display = 'none'; }
+        modal.style.display = 'flex';
+        localStorage.setItem(chave, hoje);
+      }
+    }
   }
 
   // --- NOTAS (Regras UAb MPV 2026-2027) ---
