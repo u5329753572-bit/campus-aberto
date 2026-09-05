@@ -708,6 +708,12 @@
       <h3>Mensagens agendadas</h3>
       <div id="pens-lista" style="font-size:.83rem;color:#6b7280">A carregar…</div>
     </div>
+    <div class="form-card" style="margin-top:20px">
+      <h3>📋 Todos os pensamentos automáticos</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin:6px 0 16px">Lista das 59 frases em rotação diária. Clica em <strong>Usar</strong> para carregar no formulário, editar e agendar como override.</p>
+      <input type="text" id="pens-filtro" placeholder="🔍 Filtrar frases..." oninput="window.filtrarPensamentos()" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.84rem;margin-bottom:14px"/>
+      <div id="pens-todos" style="max-height:500px;overflow-y:auto;display:grid;gap:8px"></div>
+    </div>
   </div>
 
   <!-- TAB: SUGESTÕES -->
@@ -1879,11 +1885,111 @@
     carregarSugestoes();
   };
 
+  // ── LISTA DE TODOS OS PENSAMENTOS ────────────────────────────
+  const PENSAMENTOS_ADMIN = [
+    { texto: 'O sucesso é a soma de pequenos esforços repetidos dia após dia.', autor: 'Robert Collier' },
+    { texto: 'A educação é a arma mais poderosa que podes usar para mudar o mundo.', autor: 'Nelson Mandela' },
+    { texto: 'Não é sobre ter tempo. É sobre fazer tempo.', autor: '' },
+    { texto: 'O conhecimento é o único bem que aumenta quando é partilhado.', autor: '' },
+    { texto: 'A dificuldade de hoje é a competência de amanhã.', autor: '' },
+    { texto: 'Estuda não para agradar aos outros, mas para te tornares quem queres ser.', autor: '' },
+    { texto: 'Cada erro é uma lição disfarçada de obstáculo.', autor: '' },
+    { texto: 'A persistência é o caminho do êxito.', autor: 'Charles Chaplin' },
+    { texto: 'O futuro pertence àqueles que acreditam na beleza dos seus sonhos.', autor: 'Eleanor Roosevelt' },
+    { texto: 'Não desistas. O princípio é sempre a parte mais difícil.', autor: '' },
+    { texto: 'Cada página que lês é um passo em frente que ninguém te pode tirar.', autor: '' },
+    { texto: 'A mente que se abre a uma nova ideia jamais volta ao seu tamanho original.', autor: 'Albert Einstein' },
+    { texto: 'O talento sem trabalho é apenas metade do potencial.', autor: '' },
+    { texto: 'Aprender é a única coisa que a mente nunca se cansa, nunca tem medo e nunca se arrepende.', autor: 'Leonardo da Vinci' },
+    { texto: 'Não importa a velocidade a que andas, desde que não pares.', autor: 'Confúcio' },
+    { texto: 'A dedicação de hoje constrói a liberdade de amanhã.', autor: '' },
+    { texto: 'O estudo é a chave que abre portas que ainda não consegues ver.', autor: '' },
+    { texto: 'Cada dia é uma nova oportunidade de aprender algo que ainda não sabes.', autor: '' },
+    { texto: 'A universidade não é apenas um diploma — é a oportunidade de pensar melhor.', autor: '' },
+    { texto: 'Investe em ti mesmo. É o melhor investimento que podes fazer.', autor: 'Warren Buffett' },
+    { texto: 'A educação não é preparação para a vida — a educação é a própria vida.', autor: 'John Dewey' },
+    { texto: 'Quem tem um porquê para viver suporta quase qualquer como.', autor: 'Friedrich Nietzsche' },
+    { texto: 'A curiosidade é o motor de toda a aprendizagem verdadeira.', autor: '' },
+    { texto: 'Não tens de ser ótimo para começar, mas tens de começar para seres ótimo.', autor: 'Zig Ziglar' },
+    { texto: 'O sucesso não é final, o fracasso não é fatal: o que conta é a coragem de continuar.', autor: 'Winston Churchill' },
+    { texto: 'Sê a mudança que queres ver no mundo.', autor: 'Mahatma Gandhi' },
+    { texto: 'A leitura faz o homem completo; a conferência, pronto; a escrita, exato.', autor: 'Francis Bacon' },
+    { texto: 'Estuda como se fosses viver para sempre. Vive como se fosses morrer amanhã.', autor: 'Mahatma Gandhi' },
+    { texto: 'A imaginação é mais importante que o conhecimento.', autor: 'Albert Einstein' },
+    { texto: 'O que sabemos é uma gota; o que ignoramos é um oceano.', autor: 'Isaac Newton' },
+    { texto: 'Não há atalhos para qualquer lugar que valha a pena ir.', autor: 'Beverly Sills' },
+    { texto: 'O único modo de fazer um ótimo trabalho é amar o que fazes.', autor: 'Steve Jobs' },
+    { texto: 'A disciplina é a ponte entre objetivos e realizações.', autor: 'Jim Rohn' },
+    { texto: 'Acredita que podes — e já estás a meio caminho.', autor: 'Theodore Roosevelt' },
+    { texto: 'O conhecimento fala, mas a sabedoria escuta.', autor: 'Jimi Hendrix' },
+    { texto: 'A verdadeira aprendizagem acontece quando questionamos o que já sabemos.', autor: '' },
+    { texto: 'Tudo parece impossível até ser feito.', autor: 'Nelson Mandela' },
+    { texto: 'A mente é tudo. Aquilo em que pensas, tornas-te.', autor: 'Buda' },
+    { texto: 'Não é a força, mas a constância dos esforços que produz a excelência.', autor: '' },
+    { texto: 'Cada livro lido abre uma janela para um mundo que ainda não conhecias.', autor: '' },
+    { texto: 'O fracasso é simplesmente a oportunidade de recomeçar com mais experiência.', autor: 'Henry Ford' },
+    { texto: 'O esforço de hoje é o resultado de amanhã.', autor: '' },
+    { texto: 'Nunca é demasiado tarde para seres o que podias ter sido.', autor: 'George Eliot' },
+    { texto: 'Não procures a perfeição — procura o progresso.', autor: '' },
+    { texto: 'Um livro é um sonho que tens na mão.', autor: 'Neil Gaiman' },
+    { texto: 'O tempo que dedicas a aprender nunca é tempo perdido.', autor: '' },
+    { texto: 'A excelência não é um ato, mas um hábito.', autor: 'Aristóteles' },
+    { texto: 'A educação é o passaporte para o futuro.', autor: 'Malcolm X' },
+    { texto: 'Faz o que podes, com o que tens, onde estás.', autor: 'Theodore Roosevelt' },
+    { texto: 'O segredo do progresso é começar.', autor: 'Mark Twain' },
+    { texto: 'A mente preparada reconhece as oportunidades quando aparecem.', autor: '' },
+    { texto: 'Cada desafio académico é uma prova do teu potencial.', autor: '' },
+    { texto: 'O sucesso académico não é um dom; é uma escolha diária.', autor: '' },
+    { texto: 'Saber pensar é mais valioso do que saber tudo.', autor: '' },
+    { texto: 'A dúvida é o princípio da sabedoria.', autor: 'Aristóteles' },
+    { texto: 'Cada hora de estudo é um tijolo na casa do teu futuro.', autor: '' },
+    { texto: 'O que aprendes hoje define quem serás amanhã.', autor: '' },
+    { texto: 'A sabedoria não é produto da escolaridade, mas da tentativa durante toda a vida de a adquirir.', autor: 'Albert Einstein' },
+    { texto: 'As grandes realizações são apenas os pequenos esforços acumulados.', autor: '' },
+    { texto: 'Aprende mais do que precisas — nunca sabes quando vai ser útil.', autor: '' },
+  ];
+
+  function renderPensamentosAuto(filtro) {
+    const container = document.getElementById('pens-todos');
+    if (!container) return;
+    const lower = (filtro || '').toLowerCase();
+    const lista = lower
+      ? PENSAMENTOS_ADMIN.filter(p => p.texto.toLowerCase().includes(lower) || p.autor.toLowerCase().includes(lower))
+      : PENSAMENTOS_ADMIN;
+    container.innerHTML = lista.length ? lista.map(p => {
+      const idx = PENSAMENTOS_ADMIN.indexOf(p);
+      return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#fafafa;display:flex;gap:12px;align-items:flex-start">'
+        + '<span style="min-width:26px;height:26px;background:var(--verde);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">'+(idx+1)+'</span>'
+        + '<div style="flex:1;min-width:0">'
+        + '<p style="font-style:italic;color:#374151;font-size:.84rem;margin-bottom:3px;line-height:1.5">&#8220;'+p.texto+'&#8221;</p>'
+        + (p.autor ? '<span style="font-size:.72rem;color:#6b7280">— '+p.autor+'</span>' : '')
+        + '</div>'
+        + '<button onclick="window.usarPensamento('+idx+')" style="flex-shrink:0;padding:5px 11px;background:var(--verde);color:#fff;border:none;border-radius:7px;font-size:.73rem;font-weight:600;cursor:pointer;white-space:nowrap">Usar</button>'
+        + '</div>';
+    }).join('') : '<p style="color:#9ca3af;font-size:.83rem">Sem resultados.</p>';
+  }
+
+  window.filtrarPensamentos = function() {
+    renderPensamentosAuto(document.getElementById('pens-filtro')?.value || '');
+  };
+
+  window.usarPensamento = function(idx) {
+    const p = PENSAMENTOS_ADMIN[idx];
+    document.getElementById('pens-texto').value = p.texto;
+    document.getElementById('pens-autor').value = p.autor || '';
+    document.getElementById('pens-data').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('pens-data').focus();
+    const msgEl = document.getElementById('pens-msg');
+    msgEl.style.color = '#6b7280';
+    msgEl.textContent = 'Frase carregada — escolhe uma data e clica Guardar.';
+  };
+
   // ── PENSAMENTO DO DIA ──────────────────────────────────────
   document.querySelector('[onclick="mudarTab(\'pensamento\')"]').addEventListener('click', () => {
     const inp = document.getElementById('pens-data');
     if (!inp.value) inp.value = new Date().toISOString().slice(0, 10);
     carregarMensagensAgendadas();
+    renderPensamentosAuto();
   });
 
   window.guardarMensagemDiaria = async function() {
