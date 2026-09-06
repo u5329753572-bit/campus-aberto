@@ -3072,8 +3072,7 @@
     { texto: 'O sucesso é a soma de pequenos esforços repetidos dia após dia.', autor: '' },
     { texto: 'Aprender é a única coisa que a mente nunca se cansa de fazer.', autor: '' }
   ];
-  let _pensamentosCache = null;
-  async function carregarPensamentos() {
+    async function carregarPensamentos() {
     if (_pensamentosCache) return _pensamentosCache;
     try {
       const r = await fetch('pensamentos.json');
