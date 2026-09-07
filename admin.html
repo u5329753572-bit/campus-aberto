@@ -955,7 +955,7 @@
     if (ordem === 'estado')    lista.sort((a,b) => (a.estado||'').localeCompare(b.estado||''));
     const cnt = document.getElementById('filtro-user-count');
     if (cnt) cnt.textContent = lista.length !== _todosUtilizadores.length ? ` · ${lista.length} de ${_todosUtilizadores.length}` : ` · ${lista.length} total`;
-    renderTabelaTodos(lista);
+    renderTabelaTodos(lista); atualizarCoresNotas(lista);
   };
 
   function renderTabelaTodos(lista) {
@@ -973,7 +973,7 @@
               ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
               ${u.admin ? `<button class="btn-acao" style="background:#fef3c7;color:#92400e" onclick="window.alterarAdmin('${u.id}',false)">★ Admin</button>` : `<button class="btn-acao" style="background:#f1f5f9;color:#475569" onclick="window.alterarAdmin('${u.id}',true)">☆ Admin</button>`}
-              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button><button onclick="abrirNota('${u.id}','${esc(u.nome||'')}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota">📝</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button><button id="nota-btn-${u.id}" onclick="abrirNota('${u.id}','${esc(u.nome||'')}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota">📝</button>
             </td>
           </tr>`).join('');
   }
