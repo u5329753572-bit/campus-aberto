@@ -6949,8 +6949,19 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 </footer>
 
 </body>
-</html>
-];DOCTYPE html>
+</html  const PENSAMENTOS_FALLBACK = [
+    { texto: 'O sucesso é a soma de pequenos esforços repetidos dia após dia.', autor: 'Robert Collier' },
+    { texto: 'A educação é a arma mais poderosa que podes usar para mudar o mundo.', autor: 'Nelson Mandela' }
+  ];
+  let _pensamentosCache = null;
+  async function carregarPensamentos() {
+    if (_pensamentosCache) return _pensamentosCache;
+    try {
+      const r = await fetch('pensamentos.json');
+      _pensamentosCache = await r.json();
+      return _pensamentosCache;
+    } catch(e) { return PENSAMENTOS_FALLBACK; }
+  }DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
@@ -10020,6 +10031,3087 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   }
 
   // ── PENSAMENTO DO DIA ─────────────────────────────────────
+  !DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>CampusAberto · Arquivo de Estudo</title>
+  <link rel="icon" type="image/png" href="logo-cs.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#071d34"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="CampusAberto"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+
+    :root {
+      --verde:      #1a3a2a;
+      --verde-med:  #2d5a3d;
+      --verde-leve: #4a8c5c;
+      --ouro:       #c9a84c;
+      --ouro-leve:  #e8cc7a;
+      --ouro-pale:  #f5e9c8;
+      --creme:      #ece6d9;
+      --branco:     #ffffff;
+      --cinza:      #6b7280;
+      --cinza-leve: #f3f4f6;
+      --texto:      #111827;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #e8e3da;
+      background-image:
+        radial-gradient(ellipse 80% 55% at 10% 0%,  rgba(201,168,76,0.11) 0%, transparent 100%),
+        radial-gradient(ellipse 65% 55% at 90% 100%, rgba(26,58,42,0.08)  0%, transparent 100%);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ─────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #0a1c10 0%, #1a3a2a 55%, #1c3e2c 100%);
+      padding: 0 48px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 36px rgba(0,0,0,0.36);
+      border-bottom: 1px solid rgba(201,168,76,0.26);
+    }
+
+    .header-logo { display: flex; align-items: center; gap: 16px; }
+
+    .header-logo-icon {
+      width: 40px; height: 40px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.24);
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    .header-logo-txt { display: flex; flex-direction: column; }
+    .header-logo-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.12rem; color: var(--branco);
+      line-height: 1.1; letter-spacing: 0.01em;
+    }
+    .header-logo-nome em { font-style: normal; color: var(--ouro); }
+    .header-logo-sub {
+      font-size: 0.6rem; color: rgba(255,255,255,0.3);
+      letter-spacing: 0.16em; text-transform: uppercase; margin-top: 2px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 14px; }
+
+    .user-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 40px;
+      padding: 5px 16px 5px 5px;
+      cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    }
+    .user-chip:hover {
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(201,168,76,0.4);
+    }
+
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-leve));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; color: var(--verde);
+      font-family: 'Playfair Display', serif;
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.35);
+      flex-shrink: 0;
+    }
+
+    .user-info { text-align: left; }
+    .user-nome  { font-size: 0.8rem; font-weight: 600; color: var(--branco); line-height: 1.2; }
+    .user-codigo { font-size: 0.62rem; color: var(--ouro-leve); font-family: monospace; letter-spacing: 0.07em; opacity: 0.75; }
+
+    .btn-sair {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.6); padding: 7px 16px; border-radius: 8px;
+      font-size: 0.75rem; font-family: 'Inter', sans-serif;
+      cursor: pointer; letter-spacing: 0.03em; transition: all 0.2s;
+    }
+    .btn-sair:hover { background: rgba(255,255,255,0.14); color: var(--branco); }
+
+    /* ── MAIN ───────────────────────────────────────── */
+    main { max-width: 1200px; margin: 0 auto; padding: 52px 40px 96px; }
+
+    /* ── WELCOME ────────────────────────────────────── */
+    .welcome-area { display: none; margin-bottom: 52px; animation: fadeUp 0.5s ease; }
+    .welcome-area.visivel { display: block; }
+
+    .welcome-saudacao {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.3rem; color: var(--verde);
+      font-weight: 600; line-height: 1.15; margin-bottom: 8px;
+    }
+    .welcome-sub { font-size: 0.875rem; color: var(--cinza); margin-bottom: 28px; }
+
+    /* ── PAINEL DO ESTUDANTE ────────────────────────── */
+    .welcome-topo { display:grid; grid-template-columns:minmax(0,1fr) 350px; align-items:end; gap:34px; }
+    .pesquisa-global { position:relative; margin-top:24px; z-index:60; }
+    .pesquisa-global-campo {
+      position:relative; display:flex; align-items:center; min-height:58px;
+      background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 20px 3px 3px;
+      box-shadow:0 14px 38px rgba(11,42,74,.09); overflow:hidden;
+    }
+    .pesquisa-global-icone { width:58px; display:grid; place-items:center; color:var(--ouro); flex-shrink:0; }
+    .pesquisa-global-icone svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+    .pesquisa-global input {
+      width:100%; min-height:56px; padding:0 52px 0 0; color:var(--texto); background:transparent;
+      border:0; outline:0; font:500 .9rem/1 'Inter',sans-serif;
+    }
+    .pesquisa-global input::placeholder { color:#8c96a3; font-weight:400; }
+    .pesquisa-atalho {
+      position:absolute; right:15px; padding:5px 7px; color:var(--cinza); background:#f1f3f5;
+      border:1px solid #e3e7eb; border-radius:3px; font-size:.58rem; font-weight:700;
+    }
+    .pesquisa-resultados {
+      display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; max-height:360px;
+      overflow-y:auto; padding:8px; background:#fff; border:1px solid rgba(11,42,74,.1);
+      border-radius:3px 18px 3px 3px; box-shadow:0 24px 60px rgba(7,29,52,.2);
+    }
+    .pesquisa-resultados.visivel { display:block; }
+    .pesquisa-estado { padding:22px; color:var(--cinza); font-size:.8rem; text-align:center; }
+    .pesquisa-item {
+      width:100%; display:grid; grid-template-columns:42px minmax(0,1fr) auto; align-items:center;
+      gap:12px; padding:11px; color:var(--texto); background:transparent; border:0;
+      border-radius:3px 12px 3px 3px; cursor:pointer; text-align:left; font-family:'Inter',sans-serif;
+    }
+    .pesquisa-item:hover,.pesquisa-item:focus-visible { background:#f7f4ed; }
+    .pesquisa-tipo {
+      display:grid; place-items:center; min-height:32px; padding:0 6px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 10px 3px 3px;
+      font-size:.52rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    }
+    .pesquisa-item strong { display:block; margin-bottom:3px; color:var(--verde); font-size:.8rem; }
+    .pesquisa-item small { display:block; color:var(--cinza); font-size:.66rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pesquisa-item-seta { color:var(--ouro); font-size:1rem; }
+
+    .painel-aluno { margin:-20px 0 64px; }
+    .secao-cabecalho-uniforme { display:flex; justify-content:space-between; align-items:end; gap:26px; margin-bottom:18px; }
+    .secao-kicker-uniforme {
+      display:flex; align-items:center; gap:10px; margin-bottom:7px; color:var(--ouro);
+      font-size:.61rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    }
+    .secao-kicker-uniforme::before { content:''; width:25px; height:2px; background:var(--ouro); }
+    .secao-cabecalho-uniforme h2 {
+      color:var(--verde); font-family:'Playfair Display',serif; font-size:clamp(1.65rem,2.7vw,2.25rem);
+      line-height:1.05; letter-spacing:-.025em;
+    }
+    .secao-cabecalho-uniforme p { max-width:390px; color:var(--cinza); font-size:.77rem; line-height:1.6; }
+    .painel-grid { display:grid; grid-template-columns:1.35fr 1fr 1fr; gap:13px; }
+    .painel-card {
+      min-height:222px; display:flex; flex-direction:column; padding:21px; background:#fff;
+      border:1px solid rgba(11,42,74,.08); border-radius:3px 19px 3px 3px;
+      box-shadow:0 11px 30px rgba(11,42,74,.07);
+    }
+    .painel-card.datas { border-top:4px solid var(--ouro); }
+    .painel-card-topo { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+    .painel-card-titulo { display:flex; align-items:center; gap:9px; color:var(--verde); font-size:.76rem; font-weight:700; }
+    .painel-card-icone {
+      display:grid; place-items:center; width:31px; height:31px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 10px 3px 3px; font-size:.8rem;
+    }
+    .painel-card-contador { color:var(--cinza); font-size:.6rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; }
+    .painel-lista { display:flex; flex-direction:column; gap:8px; }
+    .painel-item {
+      width:100%; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:10px;
+      padding:10px; color:var(--texto); background:#f7f8f9; border:0; border-radius:3px 12px 3px 3px;
+      text-align:left; font-family:'Inter',sans-serif; cursor:pointer;
+    }
+    .painel-item:hover { background:#f4efe4; }
+    .painel-item.estatico { cursor:default; }
+    .painel-item.estatico:hover { background:#f7f8f9; }
+    .painel-data-dia { min-width:42px; color:var(--ouro); font:700 1.15rem/1 'Playfair Display',serif; text-align:center; }
+    .painel-data-dia small { display:block; margin-top:3px; color:var(--cinza); font:700 .48rem/1 'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    .painel-item strong { display:block; margin-bottom:3px; color:var(--verde); font-size:.72rem; }
+    .painel-item small { display:block; color:var(--cinza); font-size:.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .painel-item-dias { color:var(--verde-leve); font-size:.57rem; font-weight:700; white-space:nowrap; }
+    .painel-vazio { margin:auto 0; padding:14px 4px; text-align:center; }
+    .painel-vazio strong { display:block; margin-bottom:5px; color:var(--verde); font:600 .85rem/1.2 'Playfair Display',serif; }
+    .painel-vazio p { color:var(--cinza); font-size:.66rem; line-height:1.5; }
+    .retomar-destaque { margin:auto 0 0; }
+    .banner-datas-wrap { padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
+    .banner-datas-wrap.urgente { background:#fee2e2; border-left:4px solid #dc2626; }
+    .banner-datas-wrap.aviso   { background:#fefce8; border-left:4px solid var(--ouro); }
+    .banner-datas-icone { font-size:1.3rem; line-height:1; flex-shrink:0; margin-top:2px; }
+    .banner-datas-corpo { flex:1; }
+    .banner-datas-titulo { font:.75rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .banner-datas-wrap.urgente .banner-datas-titulo { color:#991b1b; }
+    .banner-datas-wrap.aviso   .banner-datas-titulo { color:#92400e; }
+    .banner-datas-lista { list-style:none; display:flex; flex-direction:column; gap:3px; }
+    .banner-datas-lista li { font:.8rem/1.4 'Inter',sans-serif; color:#374151; }
+    .banner-datas-lista li strong { color:#111827; }
+    .banner-datas-fechar { background:none; border:none; cursor:pointer; font-size:1.1rem; color:#9ca3af; padding:0 0 0 8px; flex-shrink:0; line-height:1; }
+    .banner-datas-fechar:hover { color:#374151; }
+    .painel-ver-todas { margin-top:10px; width:100%; padding:9px; background:none; border:1.5px solid var(--ouro); border-radius:3px 10px 3px 3px; color:var(--verde); font:.7rem/1 'Inter',sans-serif; font-weight:600; cursor:pointer; letter-spacing:.03em; transition:all .2s; }
+    .painel-ver-todas:hover { background:var(--ouro-pale); }
+    .painel-item.urgente { background:linear-gradient(135deg,#fff7ed,#fef3c7); border-left:3px solid #f97316; }
+    .painel-item.critico { background:linear-gradient(135deg,#fee2e2,#fff1f2); border-left:3px solid #dc2626; }
+    .painel-item.urgente .painel-item-dias { color:#ea580c; font-size:.68rem; font-weight:800; }
+    .painel-item.critico .painel-item-dias { color:#dc2626; font-size:.68rem; font-weight:800; animation:pulsar-urgencia 1.4s ease-in-out infinite; }
+    .painel-item.urgente .painel-data-dia,
+    .painel-item.critico .painel-data-dia { color:#dc2626; }
+    @keyframes pulsar-urgencia { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+    /* Ecrã de todas as datas */
+    #ecra-datas { display:none; padding:32px 28px 48px; max-width:900px; margin:0 auto; }
+    .datas-header { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
+    .datas-back { background:none; border:none; cursor:pointer; color:var(--verde); font-size:.8rem; font-weight:600; font-family:'Inter',sans-serif; display:flex; align-items:center; gap:6px; padding:0; }
+    .datas-back:hover { opacity:.75; }
+    .datas-header h2 { font:700 1.4rem/1 'Playfair Display',serif; color:var(--verde); margin:0; }
+    .datas-filtros { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+    .datas-filtros select { padding:8px 12px; border:1.5px solid #e0e4ea; border-radius:4px; font:.75rem/1 'Inter',sans-serif; color:var(--verde); background:#fff; cursor:pointer; outline:none; min-width:130px; }
+    .datas-filtros select:focus { border-color:var(--ouro); }
+    .datas-lista-completa { display:flex; flex-direction:column; gap:10px; }
+    .data-item-full { display:grid; grid-template-columns:56px 1fr auto; align-items:center; gap:14px; padding:14px 16px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; border-left:3px solid var(--ouro); }
+    .data-item-full.clickable { cursor:pointer; }
+    .data-item-full.clickable:hover { background:var(--ouro-pale); }
+    .data-item-full-dia { color:var(--ouro); font:700 1.3rem/1 'Playfair Display',serif; text-align:center; }
+    .data-item-full-dia small { display:block; margin-top:3px; color:var(--cinza); font:700 .5rem/1 'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    .data-item-full-info strong { display:block; color:var(--verde); font-size:.8rem; margin-bottom:4px; }
+    .data-item-full-info span { color:var(--cinza); font-size:.65rem; }
+    .data-item-full-tags { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+    .data-tag { padding:3px 8px; border-radius:99px; font:.55rem/1 'Inter',sans-serif; font-weight:700; white-space:nowrap; }
+    .data-tag.dias { background:var(--ouro-pale); color:var(--verde); }
+    .data-tag.tipo { background:#f0f4f8; color:var(--cinza); }
+    .datas-vazio { text-align:center; padding:40px 20px; color:var(--cinza); font-size:.8rem; }
+    .retomar-destaque .painel-item { min-height:116px; grid-template-columns:44px minmax(0,1fr) auto; background:linear-gradient(135deg,#f7f9fb,#fbf1dc); }
+    .retomar-sigla { display:grid; place-items:center; width:42px; height:48px; color:#fff; background:var(--verde); border-radius:3px 12px 3px 3px; font-size:.56rem; font-weight:800; }
+    .favorito-btn {
+      display:grid; place-items:center; width:32px; height:32px; padding:0; color:#fff;
+      background:rgba(7,29,52,.62); border:1px solid rgba(255,255,255,.28); border-radius:50%;
+      cursor:pointer; font-size:1rem; line-height:1; transition:transform .2s ease,background .2s ease,color .2s ease;
+    }
+    .favorito-btn:hover { transform:scale(1.08); background:var(--ouro); }
+    .favorito-btn.ativo { color:#fff; background:var(--ouro); }
+    .uc-card .favorito-btn { position:absolute; top:11px; left:11px; z-index:4; }
+    .doc-favorito { flex-shrink:0; color:var(--verde); background:#f7f4ed; border-color:rgba(11,42,74,.12); }
+    .doc-favorito.ativo { color:#fff; }
+    .doc-acoes { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .ferramenta-favorito { color:var(--verde); background:#f7f4ed; border-color:rgba(11,42,74,.1); }
+    .ferramenta-favorito.ativo { color:#fff; }
+    .arquivo-cabecalho { margin:0 0 28px; }
+
+    /* ── ECOSSISTEMA CAMPUSABERTO ───────────────────── */
+    .ecosistema {
+      position: relative;
+      margin: 0 0 64px;
+      padding: clamp(28px, 4vw, 46px);
+      overflow: hidden;
+      color: var(--branco);
+      background:
+        radial-gradient(circle at 90% 5%, rgba(216,155,44,.24), transparent 28%),
+        linear-gradient(135deg, #071d34 0%, #0b2a4a 58%, #123d67 100%);
+      border-radius: 4px 34px 4px 4px;
+      box-shadow: 0 24px 60px rgba(7,29,52,.18);
+      isolation: isolate;
+    }
+    .ecosistema::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .22;
+      background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(110deg, transparent 8%, #000 70%);
+    }
+    .ecosistema-topo { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 26px; }
+    .ecosistema-kicker {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+      color: var(--ouro-leve); font-size: .64rem; font-weight: 700;
+      letter-spacing: .17em; text-transform: uppercase;
+    }
+    .ecosistema-kicker::before { content: ''; width: 26px; height: 2px; background: var(--ouro); }
+    .ecosistema h2 {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.75rem, 3vw, 2.55rem);
+      line-height: 1.08; font-weight: 600; letter-spacing: -.025em;
+    }
+    .ecosistema-intro { max-width: 380px; color: rgba(255,255,255,.64); font-size: .82rem; line-height: 1.65; }
+    .recursos-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+    .recurso-card {
+      min-height: 208px; position: relative; display: flex; flex-direction: column;
+      padding: 22px; overflow: hidden; color: var(--texto); text-decoration: none;
+      background: rgba(255,255,255,.96); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 3px 20px 3px 3px;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .recurso-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 18px 34px rgba(0,0,0,.2); }
+    .recurso-card:focus-visible { outline-color: var(--ouro-leve); }
+    .recurso-numero {
+      position: absolute; top: 10px; right: 16px; font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; line-height: 1; color: rgba(11,42,74,.055); pointer-events: none;
+    }
+    .recurso-icone {
+      width: 42px; height: 42px; display: grid; place-items: center; margin-bottom: 24px;
+      color: var(--verde); background: var(--ouro-pale); border-radius: 3px 13px 3px 3px;
+    }
+    .recurso-icone svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .recurso-card h3 {
+      max-width: 240px; margin-bottom: 8px; color: var(--verde);
+      font-family: 'Playfair Display', serif; font-size: 1.08rem; line-height: 1.22;
+    }
+    .recurso-card p { color: var(--cinza); font-size: .76rem; line-height: 1.55; }
+    .recurso-link {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-top: auto; padding-top: 18px; color: var(--verde); font-size: .65rem;
+      font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .recurso-link span:last-child {
+      display: grid; place-items: center; width: 25px; height: 25px; color: #fff;
+      background: var(--verde); border-radius: 50%; transition: transform .2s ease, background .2s ease;
+    }
+    .recurso-card:hover .recurso-link span:last-child { transform: translate(2px,-2px); background: var(--ouro); }
+
+    /* ── FERRAMENTAS ────────────────────────────────── */
+    .ferramentas-secao {
+      margin: 0 0 68px; padding: clamp(26px,4vw,42px);
+      background: rgba(255,255,255,.9); border: 1px solid rgba(11,42,74,.08);
+      border-radius: 3px 28px 3px 3px; box-shadow: 0 16px 42px rgba(11,42,74,.08);
+    }
+    .ferramentas-cabecalho {
+      display: flex; justify-content: space-between; align-items: end;
+      gap: 28px; margin-bottom: 24px;
+    }
+    .ferramentas-kicker {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+      color: var(--ouro); font-size: .62rem; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .ferramentas-kicker::before { content:''; width:26px; height:2px; background:var(--ouro); }
+    .ferramentas-cabecalho h2 {
+      color: var(--verde); font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem,3vw,2.55rem); line-height:1.05; letter-spacing:-.03em;
+    }
+    .ferramentas-intro { max-width:420px; color:var(--cinza); font-size:.8rem; line-height:1.65; }
+    .ferramentas-tabs {
+      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;
+      padding-bottom:20px; border-bottom:1px solid rgba(11,42,74,.08);
+    }
+    .ferramenta-tab {
+      min-height:38px; padding:8px 13px; color:var(--verde-leve); background:#f3f5f7;
+      border:1px solid rgba(11,42,74,.08); border-radius:3px; cursor:pointer;
+      font:600 .68rem/1 'Inter',sans-serif; letter-spacing:.025em;
+      transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;
+    }
+    .ferramenta-tab:hover { transform:translateY(-1px); border-color:rgba(216,155,44,.45); }
+    .ferramenta-tab[aria-selected="true"] { color:#fff; background:var(--verde); border-color:var(--verde); }
+    .ferramentas-painel[hidden] { display:none; }
+    .ferramentas-painel { animation:fadeUp .28s ease; }
+    .ferramentas-painel-titulo {
+      display:flex; align-items:center; gap:12px; margin-bottom:16px;
+      color:var(--verde); font-family:'Playfair Display',serif; font-size:1.15rem;
+    }
+    .ferramentas-painel-titulo span {
+      display:grid; place-items:center; width:34px; height:34px; color:var(--verde);
+      background:var(--ouro-pale); border-radius:3px 11px 3px 3px; font:700 .6rem/1 'Inter',sans-serif;
+    }
+    .ferramentas-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .ferramenta-link {
+      min-height:164px; display:flex; flex-direction:column; position:relative; padding:19px;
+      color:var(--texto); text-decoration:none; background:#fff;
+      border:1px solid rgba(11,42,74,.09); border-radius:3px 16px 3px 3px;
+      transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+    }
+    .ferramenta-link:hover {
+      transform:translateY(-4px); border-color:rgba(216,155,44,.48);
+      box-shadow:0 14px 30px rgba(11,42,74,.11);
+    }
+    .ferramenta-link-topo { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .ferramenta-marca {
+      display:grid; place-items:center; min-width:36px; height:30px; padding:0 8px;
+      color:var(--ouro); background:var(--ouro-pale); border-radius:3px 10px 3px 3px;
+      font-size:.56rem; font-weight:800; letter-spacing:.08em;
+    }
+    .ferramenta-seta {
+      display:grid; place-items:center; width:27px; height:27px; color:#fff;
+      background:var(--verde); border-radius:50%; text-decoration:none; transition:transform .2s ease,background .2s ease;
+    }
+    .ferramenta-link:hover .ferramenta-seta { transform:translate(2px,-2px); background:var(--ouro); }
+    .ferramenta-conteudo { display:flex; flex:1; flex-direction:column; color:var(--texto); text-decoration:none; }
+    .ferramenta-link h3 {
+      margin-bottom:7px; color:var(--verde); font-family:'Playfair Display',serif;
+      font-size:1.02rem; line-height:1.22;
+    }
+    .ferramenta-link p { color:var(--cinza); font-size:.73rem; line-height:1.55; }
+    .ferramenta-destino {
+      margin-top:auto; padding-top:15px; color:var(--verde-leve); font-size:.56rem;
+      font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; background: var(--branco);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 4px 28px rgba(26,58,42,0.1);
+      border: 1px solid rgba(201,168,76,0.16);
+    }
+
+    .stat-item {
+      flex: 1; padding: 24px 28px;
+      text-align: center; position: relative;
+    }
+    .stat-item:not(:last-child)::after {
+      content: ''; position: absolute;
+      right: 0; top: 18%; bottom: 18%;
+      width: 1px; background: rgba(201,168,76,0.22);
+    }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--verde); line-height: 1; margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 0.67rem; color: var(--cinza);
+      text-transform: uppercase; letter-spacing: 0.11em; font-weight: 500;
+    }
+
+    /* ── ANO / SEMESTRE ─────────────────────────────── */
+    .ano-secao { margin-bottom: 60px; }
+
+    .ano-titulo {
+      display: flex; align-items: center;
+      gap: 16px; margin-bottom: 32px;
+    }
+    .ano-titulo-badge {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--verde); white-space: nowrap; flex-shrink: 0;
+    }
+    .ano-titulo-label {
+      font-size: 0.6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--verde); background: var(--ouro-pale);
+      border: 1px solid rgba(201,168,76,0.4);
+      padding: 4px 13px; border-radius: 20px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .ano-titulo-linha {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, rgba(201,168,76,0.42), transparent);
+    }
+
+    .semestre-secao { margin-bottom: 32px; }
+    .semestre-titulo {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.64rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.13em;
+      color: #9ca3af; margin-bottom: 18px;
+    }
+    .semestre-titulo::before {
+      content: ''; display: block;
+      width: 22px; height: 2px;
+      background: linear-gradient(to right, var(--ouro), rgba(201,168,76,0.2));
+      border-radius: 1px;
+    }
+
+    /* ── UC CARDS ───────────────────────────────────── */
+    .ucs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .uc-card {
+      background: var(--branco);
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(26,58,42,0.07);
+      box-shadow: 0 2px 18px rgba(26,58,42,0.07);
+      cursor: pointer;
+      transition: transform 0.28s cubic-bezier(.175,.885,.32,1.275),
+                  box-shadow 0.28s ease, border-color 0.28s ease;
+      display: flex; flex-direction: column; position:relative;
+    }
+    .uc-card-abrir {
+      width:100%; height:100%; display:flex; flex:1; flex-direction:column; padding:0;
+      color:inherit; background:transparent; border:0; cursor:pointer; text-align:left; font:inherit;
+    }
+    .uc-card:hover {
+      transform: translateY(-10px) scale(1.015);
+      box-shadow: 0 30px 72px rgba(26,58,42,0.22);
+      border-color: rgba(201,168,76,0.55);
+    }
+    .uc-card:active { transform: translateY(-5px) scale(1.007); }
+
+    .uc-card-banda {
+      height: 140px; position: relative;
+      display: flex; align-items: flex-end;
+      padding: 0 22px 20px; overflow: hidden;
+    }
+
+    /* Decorative large letters */
+    .uc-card-deco {
+      position: absolute; right: -6px; top: -22px;
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem; font-weight: 700;
+      color: rgba(255,255,255,0.055); line-height: 1;
+      user-select: none; pointer-events: none;
+      letter-spacing: -0.06em;
+    }
+
+    /* Decorative circles via pseudo-elements on a child div */
+    .uc-card-circles {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .uc-card-circles::before {
+      content: ''; position: absolute;
+      right: -28px; bottom: -32px;
+      width: 120px; height: 120px;
+      border-radius: 50%; background: rgba(255,255,255,0.07);
+    }
+    .uc-card-circles::after {
+      content: ''; position: absolute;
+      right: 36px; top: -34px;
+      width: 70px; height: 70px;
+      border-radius: 50%; background: rgba(255,255,255,0.05);
+    }
+
+    .uc-card-emoji {
+      font-size: 2.9rem; line-height: 1; z-index: 1; position: relative;
+      filter: drop-shadow(0 3px 10px rgba(0,0,0,0.38));
+    }
+
+    .uc-card-corpo {
+      padding: 20px 22px 22px;
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .uc-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.98rem; font-weight: 600;
+      color: var(--verde); line-height: 1.4;
+      margin-bottom: 5px;
+    }
+    .uc-desc {
+      font-size: .67rem; color: var(--cinza); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; margin-bottom: 12px; flex: 1;
+    }
+    .uc-card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(26,58,42,0.07);
+    }
+    .uc-count {
+      font-size: 0.7rem; color: #9ca3af;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .uc-count::before {
+      content: ''; display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%; background: var(--ouro);
+    }
+    .uc-card-cta {
+      font-size: 0.7rem; color: var(--ouro);
+      font-weight: 700; letter-spacing: 0.04em;
+      transition: letter-spacing 0.2s;
+    }
+    .uc-card:hover .uc-card-cta { letter-spacing: 0.09em; }
+
+    /* ── DOCS SECTION ───────────────────────────────── */
+    .docs-section { display: none; animation: fadeUp 0.3s ease; }
+    .docs-section.visivel { display: block; }
+
+    .docs-header {
+      display: flex; align-items: center;
+      gap: 18px; margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(201,168,76,0.22);
+    }
+
+    .btn-voltar {
+      width: 44px; height: 44px;
+      border-radius: 12px; background: var(--branco);
+      border: 1px solid rgba(26,58,42,0.12);
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.15rem; color: var(--verde);
+      transition: all 0.2s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06); flex-shrink: 0;
+    }
+    .btn-voltar:hover { background: var(--ouro-pale); transform: translateX(-3px); box-shadow: 0 4px 18px rgba(0,0,0,0.09); }
+
+    .docs-titulo-area { flex: 1; }
+    .docs-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem; color: var(--verde); font-weight: 600;
+    }
+    .docs-sub { font-size: 0.78rem; color: var(--cinza); margin-top: 5px; }
+
+    .docs-lista { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── NOTAS POR UC ────────────────────────────────── */
+    .notas-uc-card { background:#f8f6f1; border:1px solid rgba(11,42,74,.1); border-radius:3px 14px 3px 3px; padding:14px 16px; margin-bottom:18px; }
+    .notas-uc-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
+    .notas-campos { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; align-items:end; }
+    .nota-campo label { display:block; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); margin-bottom:5px; }
+    .nota-campo input[type=number] { width:100%; padding:7px 10px; border:1.5px solid #e2e5e9; border-radius:7px; font-size:.88rem; font-family:'Inter',sans-serif; color:var(--verde); background:#fff; box-sizing:border-box; -moz-appearance:textfield; }
+    .nota-campo input[type=number]::-webkit-outer-spin-button,
+    .nota-campo input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+    .nota-campo input[type=number]:focus { outline:none; border-color:var(--ouro); }
+    .nota-final-val { font:700 1.3rem/1 'Playfair Display',serif; color:var(--verde); padding-bottom:2px; display:block; }
+    .nota-rodape { display:flex; align-items:center; justify-content:space-between; margin-top:12px; flex-wrap:wrap; gap:8px; }
+    .nota-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px; font-size:.63rem; font-weight:700; }
+    .nota-badge.aprovado  { background:#dcfce7; color:#166534; }
+    .nota-badge.reprovado { background:#fee2e2; color:#991b1b; }
+    .nota-badge.em-curso  { background:#f1f5f9; color:var(--cinza); }
+    .nota-btn-save { padding:6px 14px; background:var(--verde); color:#fff; border:0; border-radius:6px; font-size:.7rem; font-weight:700; letter-spacing:.02em; cursor:pointer; transition:all .2s; }
+    .nota-btn-save:hover { opacity:.88; }
+    .nota-btn-save.ok { background:#047857; }
+    /* -- modo selector -- */
+    .nota-modo-selector { display:flex; gap:6px; margin-bottom:12px; }
+    .nota-modo-btn { flex:1; padding:7px 10px; border:1.5px solid #e2e5e9; border-radius:8px; font:600 .68rem/1 'Inter',sans-serif; cursor:pointer; background:#fff; color:var(--cinza); transition:all .18s; }
+    .nota-modo-btn.ativo { border-color:var(--verde); background:var(--verde); color:#fff; }
+    /* -- panels -- */
+    .nota-painel { display:none; }
+    .nota-painel.ativo { display:block; }
+    /* -- section title inside card -- */
+    .nota-sec-titulo { font:.6rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); margin:10px 0 7px; }
+    .nota-sec-sub { font-size:.58rem; font-weight:400; text-transform:none; letter-spacing:0; opacity:.72; }
+    /* -- threshold indicator -- */
+    .nota-limiar { display:flex; align-items:center; gap:4px; font-size:.68rem; font-weight:600; padding:6px 10px; border-radius:7px; margin-top:6px; line-height:1.3; }
+    .nota-limiar.ok  { background:#f0fdf4; color:#166534; }
+    .nota-limiar.nok { background:#fff7ed; color:#c2410c; }
+    .nota-limiar.vazio { background:#f8fafc; color:#9ca3af; font-weight:500; }
+    /* -- final result row -- */
+    .nota-resultado { display:flex; align-items:center; justify-content:space-between; background:#eef2f7; border-radius:8px; padding:8px 12px; margin-top:10px; }
+    .nota-resultado-label { font:.6rem/1 'Inter',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--cinza); }
+
+    /* ── PROGRESSO DO CURSO ──────────────────────────── */
+    .progresso-wrap { margin-top:18px; padding:16px 18px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; }
+    .progresso-wrap-titulo { font:700 .65rem/1 'Inter',sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--cinza); margin-bottom:12px; }
+    .progresso-barra-fundo { background:#f0f4f8; border-radius:99px; height:8px; overflow:hidden; margin-bottom:14px; }
+    .progresso-barra-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--verde),#2d648f); transition:width .7s ease; min-width:2px; }
+    .progresso-stats { display:flex; gap:18px; flex-wrap:wrap; }
+    .prog-stat { display:flex; flex-direction:column; gap:1px; }
+    .prog-stat-val { font:700 1.05rem/1 'Playfair Display',serif; color:var(--verde); }
+    .prog-stat-label { font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--cinza); }
+
+    /* ── PROGRESSO DE LEITURA ───────────────────────── */
+    .btn-progresso {
+      border: 1.5px solid rgba(26,58,42,.13); border-radius: 8px;
+      padding: 7px 11px; font-size: .7rem; font-weight: 600;
+      cursor: pointer; background: transparent; color: var(--cinza);
+      font-family: 'Inter', sans-serif; transition: all .18s;
+      white-space: nowrap; flex-shrink: 0; letter-spacing: .02em;
+    }
+    .btn-progresso:hover { border-color: rgba(26,58,42,.3); background: #f7f8f9; }
+    .btn-progresso.lendo { background: #fffbeb; border-color: #f59e0b; color: #b45309; }
+    .btn-progresso.lido  { background: #f0fdf4; border-color: #22c55e; color: #166534; }
+    .doc-item.lendo { border-left: 3.5px solid #f59e0b; }
+    .doc-item.lido  { border-left: 3.5px solid #22c55e; }
+    .doc-item.agendado { border-left: 3.5px solid #d1d5db; background: #f9fafb; cursor: default; pointer-events: none; }
+    .doc-item.agendado:hover { transform: none !important; box-shadow: 0 2px 14px rgba(26,58,42,0.065) !important; border-color: rgba(26,58,42,0.065) !important; }
+    .doc-agendado-badge { display:inline-flex;align-items:center;gap:5px;background:#f3f4f6;border:1px solid #d1d5db;color:#6b7280;font-size:.72rem;font-weight:600;padding:6px 12px;border-radius:20px;white-space:nowrap;line-height:1.3; }
+
+    /* ── PENSAMENTO DO DIA ────────────────────────── */
+    .pensamento-card {
+      margin: 0 0 32px; display: none;
+      background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%);
+      border-radius: 18px; padding: 28px 32px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(26,58,42,0.18);
+      animation: fadeUp 0.6s ease;
+    }
+    .pensamento-card::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(201,168,76,0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pensamento-interior { position: relative; z-index: 1; }
+    .pensamento-aspas {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; color: var(--ouro);
+      line-height: 0.7; display: block; margin-bottom: 10px; opacity: 0.65;
+    }
+    .pensamento-texto {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: #f0ebe0; font-style: italic;
+      line-height: 1.65; margin-bottom: 12px;
+    }
+    .pensamento-autor {
+      font-size: .74rem; color: var(--ouro-leve);
+      font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    }
+    .pensamento-label {
+      position: absolute; top: 18px; right: 22px;
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .modal-pensamento-overlay {
+      position: fixed; inset: 0; z-index: 9100;
+      background: rgba(7,29,52,0.75);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+    }
+    .modal-pensamento-caixa {
+      background: linear-gradient(155deg, #1a3a2a 0%, #0f2318 100%);
+      border-radius: 24px; padding: 38px 34px 30px;
+      max-width: 420px; width: 90%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      border: 1px solid rgba(201,168,76,0.22);
+      text-align: center; position: relative;
+      animation: fadeUp 0.35s ease;
+    }
+    .modal-pensamento-kicker {
+      font-size: .66rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ouro); margin-bottom: 18px;
+    }
+    .modal-pensamento-caixa .pensamento-aspas { font-size: 4.5rem; text-align: center; }
+    .modal-pensamento-caixa .pensamento-texto { font-size: 1.15rem; text-align: center; }
+    .modal-pensamento-caixa .pensamento-autor { text-align: center; margin-bottom: 26px; }
+    .modal-pensamento-btn {
+      background: var(--ouro); color: var(--verde);
+      border: none; border-radius: 12px;
+      padding: 13px 28px; font-size: .88rem; font-weight: 700;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all .18s; width: 100%;
+    }
+    .modal-pensamento-btn:hover { background: var(--ouro-leve); }
+
+    .doc-item {
+      background: var(--branco); border-radius: 16px;
+      padding: 20px 24px; display: flex;
+      align-items: center; gap: 20px;
+      box-shadow: 0 2px 14px rgba(26,58,42,0.065);
+      border: 1px solid rgba(26,58,42,0.065);
+      transition: all 0.22s;
+    }
+    .doc-item:hover {
+      box-shadow: 0 12px 42px rgba(26,58,42,0.14);
+      border-color: rgba(201,168,76,0.36);
+      transform: translateX(5px);
+    }
+
+    .doc-icone {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, #b83232, #e84040);
+      border-radius: 14px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(184,50,50,0.3);
+    }
+    .doc-icone-txt {
+      font-size: 0.65rem; font-weight: 800;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: 0.05em; font-family: 'Inter', sans-serif;
+    }
+
+    .doc-info { flex: 1; min-width: 0; }
+    .doc-nome {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600; font-size: 0.97rem;
+      color: var(--texto); margin-bottom: 5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .doc-meta {
+      font-size: 0.76rem; color: var(--cinza);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .btn-ver {
+      background: var(--verde); color: var(--branco); border: none;
+      border-radius: 10px; padding: 10px 20px;
+      font-size: 0.8rem; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.2s; flex-shrink: 0;
+      white-space: nowrap; letter-spacing: 0.02em;
+      box-shadow: 0 3px 12px rgba(26,58,42,0.24);
+    }
+    .btn-ver:hover { background: var(--verde-med); box-shadow: 0 6px 22px rgba(26,58,42,0.34); transform: translateY(-1px); }
+    .btn-ver:active { transform: scale(0.96); }
+
+    /* ── MODAL ──────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(8,22,14,0.72);
+      backdrop-filter: blur(10px);
+      z-index: 400; display: none;
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.visivel { display: flex; }
+    /* Aviso legal */
+    #modal-aviso { z-index: 500; align-items: flex-end; padding: 0; }
+    #modal-aviso .modal { max-width: 560px; width:100%; border-radius:20px 20px 0 0; max-height:88vh; overflow:hidden; padding:0; display:flex; flex-direction:column; }
+    #modal-aviso .aviso-scroll { overflow-y:auto; flex:1; min-height:0; padding:28px 24px 16px; }
+    #modal-aviso .aviso-footer { padding:12px 24px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid rgba(26,58,42,.08); background:#fff; flex-shrink:0; }
+    @media(min-width:600px){ #modal-aviso { align-items:center; padding:24px; } #modal-aviso .modal { border-radius:24px; max-height:90vh; } #modal-aviso .aviso-footer { padding:16px 24px; } }
+    #modal-aviso .aviso-titulo { font:700 1.15rem/1.2 'Playfair Display',serif; color:var(--verde); margin-bottom:14px; }
+    #modal-aviso .aviso-corpo { font-size:.82rem; line-height:1.7; color:#374151; white-space:pre-line; }
+    #modal-aviso .aviso-corpo strong { color:#071d34; }
+    .app-rodape { text-align:center; padding:24px 20px 40px; border-top:1px solid #e9eff5; margin-top:40px; }
+    .app-rodape-aviso { display:inline-flex; align-items:center; gap:6px; font-size:.72rem; color:#9ca3af; cursor:pointer; background:none; border:none; padding:0; }
+    .app-rodape-aviso:hover { color:#6b7280; }
+
+    .modal {
+      background: var(--branco); border-radius: 24px;
+      padding: 40px; max-width: 430px; width: 100%;
+      box-shadow: 0 56px 130px rgba(0,0,0,0.36);
+      border: 1px solid rgba(201,168,76,0.22);
+      animation: fadeUp 0.28s ease;
+    }
+
+    .modal-icon {
+      width: 58px; height: 58px;
+      background: linear-gradient(135deg, var(--ouro-pale), #fffbf0);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 16px; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.65rem; margin-bottom: 22px;
+      box-shadow: 0 4px 16px rgba(201,168,76,0.2);
+    }
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--verde); margin-bottom: 12px;
+    }
+    .modal p {
+      font-size: 0.85rem; color: var(--cinza);
+      line-height: 1.7; margin-bottom: 16px;
+    }
+    .modal-codigo {
+      background: #f8f5ee; border-radius: 12px;
+      padding: 16px 20px; font-family: 'Courier New', monospace;
+      font-size: 0.88rem; color: var(--verde); font-weight: 700;
+      margin-bottom: 12px;
+      border: 1px solid rgba(201,168,76,0.28);
+      border-left: 4px solid var(--ouro); letter-spacing: 0.04em;
+    }
+    .modal-btns { display: flex; gap: 12px; margin-top: 24px; }
+
+    .btn-cancelar {
+      flex: 1; padding: 12px;
+      background: var(--cinza-leve);
+      border: 1px solid rgba(0,0,0,0.07); border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.86rem;
+      font-weight: 500; cursor: pointer; color: var(--cinza);
+      transition: background 0.2s;
+    }
+    .btn-cancelar:hover { background: #e5e7eb; }
+
+    .btn-confirmar {
+      flex: 2; padding: 12px;
+      background: linear-gradient(135deg, var(--verde), var(--verde-med));
+      border: none; border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.86rem;
+      font-weight: 600; cursor: pointer; color: var(--branco);
+      transition: all 0.2s; letter-spacing: 0.03em;
+      box-shadow: 0 4px 16px rgba(26,58,42,0.28);
+    }
+    .btn-confirmar:hover { opacity: 0.9; box-shadow: 0 6px 22px rgba(26,58,42,0.38); }
+    .btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── EMPTY & LOADING ────────────────────────────── */
+    .empty { text-align: center; padding: 80px 24px; color: var(--cinza); }
+    .empty-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.3; }
+    .empty h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--verde);
+      margin-bottom: 8px; opacity: 0.65;
+    }
+    .empty p { font-size: 0.86rem; }
+
+    .loading { text-align: center; padding: 80px; color: var(--cinza); font-size: 0.88rem; }
+    .spinner {
+      display: inline-block; width: 28px; height: 28px;
+      border: 2px solid rgba(26,58,42,0.1);
+      border-top-color: var(--verde); border-radius: 50%;
+      animation: spin 0.7s linear infinite; margin-bottom: 16px;
+    }
+
+    @keyframes spin   { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+    /* ── PDF VIEWER ─────────────────────────────────── */
+    .viewer-overlay {
+      display: none; position: fixed; inset: 0;
+      background: #1a1a1a; z-index: 300; flex-direction: column;
+    }
+    .viewer-overlay.visivel { display: flex; }
+
+    .viewer-toolbar {
+      background: linear-gradient(135deg, #0a1c10, #1a3a2a);
+      padding: 0 24px; height: 62px;
+      display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+      box-shadow: 0 3px 24px rgba(0,0,0,0.55);
+      border-bottom: 1px solid rgba(201,168,76,0.22);
+    }
+    .viewer-titulo {
+      flex: 1; font-family: 'Playfair Display', serif;
+      font-size: 0.92rem; font-weight: 500;
+      color: rgba(255,255,255,0.88);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .btn-viewer-voltar {
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.75); padding: 8px 16px; border-radius: 8px;
+      font-size: 0.78rem; font-family: 'Inter', sans-serif;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      transition: all 0.2s; letter-spacing: 0.02em;
+    }
+    .btn-viewer-voltar:hover { background: rgba(255,255,255,0.16); color: #fff; }
+
+    .btn-viewer-dl {
+      background: linear-gradient(135deg, var(--ouro), #d4b35a);
+      color: #1a2a0c; border: none;
+      padding: 9px 22px; border-radius: 8px;
+      font-size: 0.8rem; font-family: 'Inter', sans-serif;
+      font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      transition: all 0.2s; letter-spacing: 0.03em;
+      box-shadow: 0 3px 14px rgba(201,168,76,0.42);
+    }
+    .btn-viewer-dl:hover { opacity: 0.92; box-shadow: 0 5px 20px rgba(201,168,76,0.55); }
+    .btn-viewer-dl:active { transform: scale(0.97); }
+
+    .viewer-conteudo {
+      flex: 1; overflow-y: auto;
+      padding: 28px 24px; display: flex;
+      flex-direction: column; align-items: center;
+      gap: 12px; background: #1a1a1a;
+    }
+    .viewer-conteudo canvas {
+      max-width: 100%;
+      box-shadow: 0 6px 40px rgba(0,0,0,0.7); border-radius: 3px;
+    }
+    .viewer-pagina-sep {
+      color: rgba(255,255,255,0.16); font-size: 0.65rem;
+      letter-spacing: 0.14em; user-select: none;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 640px) {
+      header { padding: 0 18px; height: 64px; }
+      main { padding: 32px 18px 68px; }
+      .user-info, .header-logo-sub { display: none; }
+      .user-chip { padding: 4px 10px 4px 4px; }
+      .welcome-saudacao { font-size: 1.6rem; }
+      .stats-bar { flex-direction: column; }
+      .stat-item:not(:last-child)::after { display: none; }
+      .stat-item { padding: 18px 24px; }
+      .btn-ver span:first-child { display: none; }
+      .viewer-toolbar { height: 54px; padding: 0 16px; gap: 10px; }
+      .ucs-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .uc-card-banda { height: 110px; }
+      .uc-card-deco { font-size: 5.5rem; }
+    }
+
+    /* Redesign editorial 2026 */
+    :root { --verde:#0b2a4a; --verde-med:#123d67; --verde-leve:#2d648f; --ouro:#d89b2c; --ouro-leve:#efc66f; --ouro-pale:#fbf1dc; --creme:#f3f0e9; --texto:#182230; }
+    body { background-color:#f1eee7; background-image:linear-gradient(rgba(11,42,74,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(11,42,74,.028) 1px,transparent 1px); background-size:32px 32px; }
+    header { height:76px; padding-inline:clamp(20px,5vw,68px); background:#071d34; border-bottom:3px solid var(--ouro); box-shadow:0 12px 36px rgba(7,29,52,.18); }
+    .header-logo-icon { width:48px; height:48px; padding:2px; border-radius:9px; background:#fff; overflow:hidden; }
+    .header-logo-sub { color:rgba(255,255,255,.52); }
+    .user-chip { border-radius:4px; }
+    .user-avatar { color:#071d34; }
+    .btn-sair,.btn-viewer-voltar,.btn-viewer-dl { border-radius:3px; }
+    main { max-width:1280px; padding-top:clamp(38px,6vw,72px); }
+    .welcome-area { margin-bottom:58px; }
+    .welcome-saudacao { font-size:clamp(2.2rem,4vw,4rem); letter-spacing:-.04em; }
+    .welcome-sub { max-width:620px; line-height:1.65; }
+    .stats-bar { border-radius:4px 22px 4px 4px; box-shadow:0 14px 40px rgba(11,42,74,.08); }
+    .stat-item { text-align:left; }
+    .ano-titulo-badge { font-size:1.55rem; }
+    .ano-titulo-label { border-radius:3px; }
+    .uc-card { border-radius:3px 20px 3px 3px; box-shadow:0 8px 24px rgba(11,42,74,.07); }
+    .uc-card:hover { transform:translateY(-6px); box-shadow:0 22px 50px rgba(11,42,74,.18); }
+    .uc-card-banda { height:112px; align-items:center; padding:22px; }
+    .uc-card-deco { top:-28px; right:8px; font-size:7rem; color:rgba(255,255,255,.09); }
+    .uc-card-emoji { font-size:0; filter:none; }
+    .uc-card-emoji::after { content:'UNIDADE CURRICULAR'; font-size:.6rem; letter-spacing:.16em; font-weight:700; color:rgba(255,255,255,.76); }
+    .uc-card-corpo { padding:22px 24px 24px; }
+    .uc-nome { font-size:1.08rem; }
+    .doc-item { border-radius:4px 18px 4px 4px; }
+    .doc-item:hover { transform:translateX(3px); }
+    .doc-icone { border-radius:3px 12px 3px 3px; background:#a52f35; }
+    .btn-ver,.btn-voltar,.modal,.modal-codigo,.btn-cancelar,.btn-confirmar { border-radius:4px; }
+    .modal { border-top:5px solid var(--ouro); }
+    .viewer-toolbar { background:#071d34; border-bottom:2px solid var(--ouro); }
+    :focus-visible { outline:3px solid rgba(216,155,44,.5); outline-offset:3px; }
+    @media (max-width:1100px) {
+      .ucs-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .welcome-topo { grid-template-columns:minmax(0,1fr) 300px; }
+      .painel-grid { grid-template-columns:1.25fr 1fr; }
+      .painel-card.retomar { grid-column:1 / -1; min-height:auto; }
+    }
+    @media (max-width:820px) {
+      .ucs-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .welcome-topo { grid-template-columns:1fr; gap:18px; }
+      .painel-grid { grid-template-columns:1fr; }
+      .painel-card.retomar { grid-column:auto; }
+      .secao-cabecalho-uniforme { align-items:start; flex-direction:column; gap:8px; }
+      .ecosistema-topo { align-items:start; flex-direction:column; gap:12px; }
+      .recursos-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .recurso-card { min-height:176px; }
+      .ferramentas-cabecalho { align-items:start; flex-direction:column; gap:10px; }
+      .ferramentas-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:640px) {
+      header { height:66px; }
+      .header-logo-icon { width:40px; height:40px; }
+      .header-right { gap:7px; }
+      .btn-sair { padding:7px 10px; }
+      main { padding-inline:16px; }
+      .welcome-area { margin-bottom:48px; }
+      .pesquisa-global-campo { min-height:54px; }
+      .pesquisa-global input { min-height:52px; padding-right:14px; }
+      .pesquisa-atalho { display:none; }
+      .pesquisa-resultados { max-height:330px; }
+      .painel-aluno { margin:0 0 48px; }
+      .painel-grid { gap:10px; }
+      .painel-card { min-height:200px; padding:18px 15px; }
+      .painel-card.retomar { min-height:180px; }
+      .stats-bar { display:grid; grid-template-columns:repeat(2,1fr); }
+      .stat-item { padding:15px 10px; text-align:center; }
+      .stat-val { font-size:1.65rem; }
+      .stat-label { font-size:.54rem; letter-spacing:.05em; }
+      .ucs-grid { grid-template-columns:1fr; }
+      .uc-card-abrir { display:grid; grid-template-columns:96px 1fr; }
+      .uc-card-banda { height:auto; min-height:124px; padding:14px; }
+      .uc-card-emoji::after { writing-mode:vertical-rl; font-size:.52rem; }
+      .doc-item { align-items:flex-start; gap:12px; padding:16px; flex-wrap:wrap; }
+      .doc-info { min-width:calc(100% - 64px); }
+      .doc-acoes { margin-left:64px; width:calc(100% - 64px); }
+      .btn-ver { margin-left:0; width:auto; flex:1; justify-content:center; }
+      .viewer-titulo { display:none; }
+      .modal { padding:28px 22px; }
+      .ecosistema { margin:0 0 48px; padding:26px 18px 20px; border-radius:3px 24px 3px 3px; }
+      .ecosistema h2 { max-width:280px; }
+      .ecosistema-intro { font-size:.78rem; }
+      .recursos-grid { grid-template-columns:1fr; gap:10px; }
+      .recurso-card { min-height:164px; padding:18px; }
+      .recurso-icone { margin-bottom:18px; }
+      .ferramentas-secao { margin:0 0 50px; padding:24px 16px 18px; border-radius:3px 22px 3px 3px; }
+      .ferramentas-intro { font-size:.76rem; }
+      .ferramentas-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+      .ferramenta-tab { width:100%; padding-inline:8px; }
+      .ferramentas-grid { grid-template-columns:1fr; }
+      .ferramenta-link { min-height:150px; }
+    }
+
+    /* ── MODAL PERFIL ───────────────────────────────── */
+    .perfil-info-grid {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .perfil-campo {
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .perfil-campo-label {
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--cinza);
+    }
+    .perfil-campo-valor {
+      font-size: 0.92rem; font-weight: 600; color: var(--verde);
+    }
+    .perfil-campo-valor.mono {
+      font-family: 'Courier New', monospace; font-size: 0.84rem;
+      color: var(--cinza); font-weight: 400;
+    }
+    .perfil-separador {
+      height: 1px; background: rgba(26,58,42,0.08);
+      margin: 8px 0 20px;
+    }
+    .perfil-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem; color: var(--verde); font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .perfil-input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .perfil-input {
+      width: 100%; padding: 11px 14px;
+      border: 1px solid rgba(26,58,42,0.15); border-radius: 8px;
+      font-family: 'Inter', sans-serif; font-size: 0.85rem;
+      color: var(--texto); background: var(--cinza-leve);
+      outline: none; transition: border-color 0.2s;
+    }
+    .perfil-input:focus { border-color: var(--verde); background: #fff; }
+    .perfil-input::placeholder { color: #9ca3af; }
+    .perfil-msg {
+      font-size: 0.78rem; padding: 9px 12px; border-radius: 7px;
+      margin-bottom: 14px; display: none;
+    }
+    .perfil-msg.ok  { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; display: block; }
+    .perfil-msg.err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; display: block; }
+    .btn-confirmar-perfil {
+      width: 100%; padding: 12px;
+      background: linear-gradient(135deg, var(--verde), var(--verde-med));
+      border: none; border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.86rem;
+      font-weight: 600; cursor: pointer; color: var(--branco);
+      transition: all 0.2s; letter-spacing: 0.03em;
+      box-shadow: 0 4px 16px rgba(26,58,42,0.28);
+    }
+    .btn-confirmar-perfil:hover { opacity: 0.9; }
+    .btn-confirmar-perfil:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── FAB SUGESTÃO ───────────────────────────────── */
+    .sugestao-fab {
+      position: fixed; bottom: 80px; right: 16px; z-index: 400;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--ouro); color: #fff; border: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,.22);
+      font-size: 1.3rem; cursor: pointer; display: none;
+      align-items: center; justify-content: center;
+      transition: transform .18s, box-shadow .18s;
+    }
+    .sugestao-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(0,0,0,.28); }
+    @media (max-width:640px) { .sugestao-fab { display: flex; } }
+    @media (min-width:641px) { .sugestao-fab { display: flex; bottom: 24px; } }
+    /* modal overlay */
+    .sugestao-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      z-index: 500; display: none; align-items: flex-end; justify-content: center;
+    }
+    .sugestao-overlay.aberto { display: flex; }
+    .sugestao-modal {
+      background: #fff; border-radius: 18px 18px 0 0;
+      padding: 24px 20px 32px; width: 100%; max-width: 520px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,.18);
+      animation: slideUp .22s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(60px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .sugestao-modal-titulo { font:700 1rem/1 'Playfair Display',serif; color:var(--verde); margin-bottom:4px; }
+    .sugestao-modal-sub { font-size:.75rem; color:var(--cinza); margin-bottom:14px; }
+    .sugestao-textarea {
+      width: 100%; min-height: 110px; border: 1.5px solid #e2e5e9;
+      border-radius: 10px; padding: 10px 12px; font:1rem/1.5 'Inter',sans-serif;
+      color: var(--verde); resize: vertical; box-sizing: border-box;
+      font-size: .88rem;
+    }
+    .sugestao-textarea:focus { outline: none; border-color: var(--ouro); }
+    .sugestao-contador { font-size: .65rem; color: var(--cinza); text-align: right; margin-top: 4px; }
+    .sugestao-acoes { display: flex; gap: 10px; margin-top: 14px; }
+    .btn-sugestao-enviar { flex: 1; padding: 11px; background: var(--verde); color: #fff; border: 0; border-radius: 9px; font: 700 .85rem/1 'Inter',sans-serif; cursor: pointer; }
+    .btn-sugestao-cancelar { padding: 11px 16px; background: #f1f5f9; color: var(--cinza); border: 0; border-radius: 9px; font: 600 .85rem/1 'Inter',sans-serif; cursor: pointer; }
+    .sugestao-ok { display:none; text-align:center; padding: 16px 0 4px; }
+    .sugestao-ok-emoji { font-size: 2rem; }
+    .sugestao-ok-texto { font:.8rem/1.5 'Inter',sans-serif; color:var(--cinza); margin-top:6px; }
+
+    /* ── BOTTOM NAV MOBILE ───────────────────────────── */
+    .bottom-nav { display:none; }
+    @media (max-width:640px) {
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 300;
+        background: #fff;
+        border-top: 1.5px solid rgba(26,58,42,.10);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+      }
+      .bottom-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 4px 5px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #9ca3af;
+        font-size: .56rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        letter-spacing: .02em;
+        gap: 3px;
+        transition: color .18s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .bottom-nav-btn svg {
+        width: 20px; height: 20px;
+        stroke-width: 1.8;
+        transition: transform .18s;
+      }
+      .bottom-nav-btn.ativa { color: var(--verde); }
+      .bottom-nav-btn.ativa svg { transform: translateY(-1px); }
+      main { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+      .nav-notif-badge {
+        position: absolute; top: -4px; right: -5px;
+        background: #ef4444; color: #fff;
+        font-size: .48rem; font-weight: 800;
+        min-width: 14px; height: 14px;
+        border-radius: 7px; padding: 0 3px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Inter', sans-serif;
+        border: 1.5px solid #fff; line-height: 1;
+      }
+    }
+
+    /* ── CITAÇÕES APA7 ────────────────────────────── */
+    #ecra-citacoes { display:none; padding:20px 20px 90px; max-width:720px; margin:0 auto; }
+    .citacoes-header { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+    .citacoes-titulo { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--verde); letter-spacing:-.02em; }
+    .citacoes-card { background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 18px 3px 3px; padding:22px; margin-bottom:20px; box-shadow:0 4px 18px rgba(11,42,74,.06); }
+    .citacoes-tipo-lista { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px; }
+    .citacoes-tipo-btn { padding:7px 14px; border:1.5px solid rgba(11,42,74,.15); border-radius:3px 12px 3px 3px; background:#f6f7f9; color:var(--verde-leve); font:600 .72rem/1 'Inter',sans-serif; cursor:pointer; transition:all .2s; }
+    .citacoes-tipo-btn.ativo { background:var(--verde); color:#fff; border-color:var(--verde); }
+    .citacoes-form { display:grid; gap:12px; }
+    .citacoes-campo { display:flex; flex-direction:column; gap:5px; }
+    .citacoes-campo label { font:600 .72rem/1 'Inter',sans-serif; color:var(--verde); letter-spacing:.02em; text-transform:uppercase; }
+    .citacoes-campo input, .citacoes-campo select { padding:9px 12px; border:1px solid rgba(11,42,74,.18); border-radius:8px; font:400 .85rem/1.4 'Inter',sans-serif; color:var(--verde); background:#fafbfc; outline:none; transition:border-color .2s; width:100%; }
+    .citacoes-campo input:focus, .citacoes-campo select:focus { border-color:var(--ouro); background:#fff; }
+    .citacoes-campo small { font-size:.69rem; color:#6b7280; }
+    .citacoes-aviso-autor { background:#fef3c7; border:1px solid #fbbf24; border-radius:8px; padding:8px 11px; font-size:.72rem; line-height:1.55; color:#92400e; margin-top:4px; }
+    .citacoes-aviso-autor strong { display:block; margin-bottom:2px; }
+    .citacoes-aviso-titulo { background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:7px 11px; font-size:.7rem; line-height:1.5; color:#0369a1; margin-top:4px; }
+    .citacoes-aviso-validacao { background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:10px 12px; font-size:.76rem; color:#991b1b; margin-top:8px; display:none; }
+    .citacoes-aviso-validacao ul { margin:4px 0 0 14px; }
+    .citacoes-autores-lista { display:flex; flex-direction:column; gap:6px; }
+    .citacoes-autor-row { display:flex; gap:6px; align-items:center; }
+    .citacoes-autor-row input { flex:1; }
+    .btn-rem-autor { background:none; border:none; color:#dc2626; font-size:1.1rem; cursor:pointer; padding:4px 8px; border-radius:6px; line-height:1; flex-shrink:0; }
+    .btn-add-autor { background:none; border:1px dashed rgba(11,42,74,.2); color:var(--verde-leve); font:.65rem/1 'Inter',sans-serif; padding:6px 10px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; margin-top:2px; font-weight:600; }
+    .btn-add-autor:hover { border-color:var(--ouro); color:var(--ouro); }
+    .citacoes-preview { background:#fffbeb; border-left:3px solid var(--ouro); padding:14px 16px; border-radius:0 8px 8px 0; font-size:.83rem; line-height:1.9; color:#1c1917; font-family:'Inter',sans-serif; white-space:pre-wrap; word-break:break-word; margin-top:16px; display:none; }
+    .citacoes-preview em { font-style:italic; }
+    .citacoes-acoes { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+    .btn-cit-gerar { background:var(--verde); color:#fff; border:none; border-radius:3px 12px 3px 3px; padding:10px 20px; font:700 .78rem/1 'Inter',sans-serif; cursor:pointer; letter-spacing:.02em; }
+    .btn-cit-copiar { background:#f3f4f6; color:var(--verde); border:1px solid rgba(11,42,74,.15); border-radius:8px; padding:9px 16px; font:600 .75rem/1 'Inter',sans-serif; cursor:pointer; display:none; }
+    .btn-cit-guardar { background:var(--ouro); color:#fff; border:none; border-radius:8px; padding:9px 16px; font:600 .75rem/1 'Inter',sans-serif; cursor:pointer; display:none; }
+    .citacoes-biblio { background:#fff; border:1px solid rgba(11,42,74,.1); border-radius:3px 18px 3px 3px; padding:22px; box-shadow:0 4px 18px rgba(11,42,74,.06); }
+    .citacoes-biblio-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+    .citacoes-biblio-titulo { font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--verde); }
+    .btn-cit-copiar-tudo { background:var(--verde); color:#fff; border:none; border-radius:8px; padding:8px 14px; font:600 .72rem/1 'Inter',sans-serif; cursor:pointer; }
+    .citacoes-biblio-lista { display:flex; flex-direction:column; gap:10px; }
+    .citacoes-item { background:#f8f9fa; border:1px solid rgba(11,42,74,.08); border-radius:10px; padding:12px 14px; }
+    .citacoes-item-texto { font-size:.8rem; line-height:1.8; color:#1c1917; font-family:'Inter',sans-serif; word-break:break-word; }
+    .citacoes-item-texto em { font-style:italic; }
+    .citacoes-item-acoes { display:flex; gap:6px; margin-top:8px; justify-content:flex-end; }
+    .btn-cit-item-copiar, .btn-cit-item-del { padding:5px 10px; border-radius:7px; font:600 .68rem/1 'Inter',sans-serif; cursor:pointer; border:none; }
+    .btn-cit-item-copiar { background:#e5e7eb; color:var(--verde); }
+    .btn-cit-item-del { background:#fee2e2; color:#dc2626; }
+    .citacoes-vazia { color:#9ca3af; font-size:.82rem; text-align:center; padding:28px; font-family:'Inter',sans-serif; }
+    .cta-citacoes { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#fffbeb,#fef9ec); border:1px solid rgba(216,155,44,.3); border-radius:3px 16px 3px 3px; padding:16px 20px; margin-top:20px; cursor:pointer; transition:transform .2s,box-shadow .2s; text-decoration:none; width:100%; }
+    .cta-citacoes:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(216,155,44,.15); }
+    .cta-citacoes-icone { font-size:1.8rem; flex-shrink:0; }
+    .cta-citacoes-corpo { text-align:left; }
+    .cta-citacoes-corpo h4 { font-family:'Playfair Display',serif; color:var(--verde); font-size:.98rem; margin:0 0 3px; }
+    .cta-citacoes-corpo p { font-size:.74rem; color:#6b7280; margin:0; line-height:1.5; }
+    .cta-citacoes-seta { margin-left:auto; font-size:1.2rem; color:var(--ouro); font-weight:700; flex-shrink:0; }
+    /* Destaque APA7 na secção Ferramentas */
+    .apa7-destaque { display:flex; align-items:center; gap:18px; background:linear-gradient(135deg,var(--verde) 0%,#1a4a5e 100%); border-radius:3px 22px 3px 3px; padding:20px 24px; margin-bottom:24px; box-shadow:0 8px 28px rgba(11,42,74,.18); cursor:pointer; border:none; width:100%; text-align:left; transition:transform .18s,box-shadow .18s; }
+    .apa7-destaque:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(11,42,74,.25); }
+    .apa7-destaque-badge { background:var(--ouro); color:#fff; font:800 .65rem/1 'Inter',sans-serif; padding:5px 10px; border-radius:4px 12px 4px 4px; letter-spacing:.06em; flex-shrink:0; }
+    .apa7-destaque-corpo { flex:1; }
+    .apa7-destaque-corpo h3 { font-family:'Playfair Display',serif; color:#fff; font-size:1.05rem; margin:0 0 4px; }
+    .apa7-destaque-corpo p { color:rgba(255,255,255,.75); font-size:.74rem; margin:0; line-height:1.5; }
+    .apa7-destaque-seta { color:var(--ouro); font-size:1.4rem; font-weight:700; flex-shrink:0; }
+    /* Normas UAb no ecrã de citações */
+    .citacoes-normas-bar { display:flex; align-items:center; gap:10px; background:linear-gradient(135deg,#eff6ff,#dbeafe); border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; margin-bottom:20px; }
+    .citacoes-normas-bar span { font-size:.76rem; color:#1e40af; flex:1; line-height:1.45; }
+    .citacoes-normas-bar a { font:700 .72rem/1 'Inter',sans-serif; color:#1d4ed8; white-space:nowrap; text-decoration:none; border-bottom:1px solid #93c5fd; padding-bottom:1px; }
+    .citacoes-normas-bar a:hover { color:#1e3a8a; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo" onclick="window.voltarInicio()" role="button" title="Ir para a página principal" style="cursor:pointer">
+    <div class="header-logo-icon">
+      <img src="logo-cs.png" alt="CS — República das Ciências Sociais"/>
+    </div>
+    <div class="header-logo-txt">
+      <div class="header-logo-nome">Campus<em>Aberto</em></div>
+      <div class="header-logo-sub">República das Ciências Sociais</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="user-chip" onclick="abrirPerfil()" title="Ver perfil" role="button" aria-label="Ver perfil">
+      <div class="user-avatar" id="hdr-avatar">—</div>
+      <div class="user-info">
+        <div class="user-nome"   id="hdr-nome">—</div>
+        <div class="user-codigo" id="hdr-codigo" style="display:none"></div>
+      </div>
+    </div>
+    <div id="online-badge" title="Utilizadores online agora" style="display:none;align-items:center;gap:5px;font-size:.75rem;color:#6b7280;padding:4px 10px;border-radius:20px;background:#f3f4f6">
+      <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+      <span id="online-count">—</span> online
+    </div>
+    <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
+    <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administração">⚙ Admin</a>
+    <button type="button" class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<nav class="bottom-nav" id="bottom-nav" aria-label="Navegação principal">
+  <button type="button" class="bottom-nav-btn ativa" id="bnav-inicio" onclick="window.bnavIr('inicio')" aria-label="Início">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Início
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-ucs" onclick="window.bnavIr('ucs')" aria-label="UCs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    UCs
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-ferramentas" onclick="window.bnavIr('ferramentas')" aria-label="Ferramentas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    Ferramentas
+  </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-datas" onclick="window.bnavIr('datas')" aria-label="Datas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Datas
+  </button>
+</nav>
+
+<main>
+  <div id="loading-inicial" class="loading">
+    <div class="spinner"></div><br/>A carregar...
+  </div>
+
+  <!-- ECRÃ PRINCIPAL: UCs -->
+  <div id="ecra-ucs" style="display:none">
+    <div id="notif-novos-docs" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:12px;padding:12px 16px;margin-bottom:14px;align-items:center;gap:10px;font-size:.82rem;color:#1e40af;font-family:'Inter',sans-serif;flex-wrap:wrap">
+      <span style="font-size:1.1rem">📄</span>
+      <span id="notif-novos-docs-texto" style="flex:1;min-width:120px"></span>
+      <button onclick="window.bnavIr('ucs');document.getElementById('notif-novos-docs').style.display='none'" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0">Ver UCs</button>
+      <button onclick="document.getElementById('notif-novos-docs').style.display='none'" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:1.1rem;padding:0 2px;line-height:1" aria-label="Fechar">×</button>
+    </div>
+    <div class="welcome-area" id="welcome-bar">
+      <div class="welcome-topo">
+        <div>
+          <div class="welcome-saudacao">Olá, <span id="bv-nome">—</span>.</div>
+          <div class="welcome-sub">Encontra o que precisas, acompanha as próximas datas e retoma o teu estudo.</div>
+        </div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-val" id="stat-ucs">—</div>
+            <div class="stat-label">Unidades Curriculares</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" id="stat-docs">—</div>
+            <div class="stat-label">Documentos disponíveis</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pesquisa-global" id="pesquisa-global">
+        <div class="pesquisa-global-campo">
+          <span class="pesquisa-global-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>
+          <label class="sr-only" for="pesquisa-input">Pesquisar no CampusAberto</label>
+          <input type="search" id="pesquisa-input" placeholder="Pesquisar UCs, documentos e ferramentas..." autocomplete="off" aria-controls="pesquisa-resultados" aria-expanded="false"/>
+          <span class="pesquisa-atalho" aria-hidden="true">CTRL K</span>
+        </div>
+        <div class="pesquisa-resultados" id="pesquisa-resultados" role="listbox" aria-label="Resultados da pesquisa"></div>
+      </div>
+    </div>
+
+    <!-- PENSAMENTO DO DIA -->
+    <div class="pensamento-card" id="pensamento-card">
+      <span class="pensamento-label">💡 Pensamento do dia</span>
+      <div class="pensamento-interior">
+        <span class="pensamento-aspas" aria-hidden="true">"</span>
+        <p class="pensamento-texto" id="pensamento-texto"></p>
+        <p class="pensamento-autor" id="pensamento-autor"></p>
+      </div>
+    </div>
+
+    <div id="banner-datas" style="display:none;margin:0 0 36px;border-radius:10px;overflow:hidden"></div>
+
+    <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
+      <div class="secao-cabecalho-uniforme">
+        <div><div class="secao-kicker-uniforme">Visão pessoal</div><h2 id="painel-titulo">O teu painel</h2></div>
+        <p>O essencial para não perder prazos e voltar rapidamente ao que estavas a consultar.</p>
+      </div>
+      <div class="painel-grid">
+        <article class="painel-card datas">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">◷</span>Próximas datas</div><span class="painel-card-contador" id="datas-contador">A carregar</span></div>
+          <div class="painel-lista" id="datas-lista"><div class="painel-vazio"><p>A consultar o calendário...</p></div></div>
+        </article>
+        <article class="painel-card favoritos">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">★</span>Favoritos</div><span class="painel-card-contador" id="favoritos-contador">0 guardados</span></div>
+          <div class="painel-lista" id="favoritos-lista"></div>
+        </article>
+        <article class="painel-card retomar">
+          <div class="painel-card-topo"><div class="painel-card-titulo"><span class="painel-card-icone" aria-hidden="true">↻</span>Continuar a estudar</div><span class="painel-card-contador">Último acesso</span></div>
+          <div class="retomar-destaque" id="retomar-conteudo"></div>
+        </article>
+      </div>
+      <!-- Progresso do curso (aparece quando há notas) -->
+      <div class="progresso-wrap" id="progresso-wrap" style="display:none">
+        <div class="progresso-wrap-titulo">Progresso do curso</div>
+        <div class="progresso-barra-fundo"><div class="progresso-barra-fill" id="prog-barra" style="width:0%"></div></div>
+        <div class="progresso-stats">
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-aprovadas">0</span><span class="prog-stat-label">UCs aprovadas</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-media">—</span><span class="prog-stat-label">Média ponderada</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-ects">0</span><span class="prog-stat-label">ECTS concluídos</span></div>
+          <div class="prog-stat"><span class="prog-stat-val" id="prog-pct">0%</span><span class="prog-stat-label">Do curso completo</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ecosistema" aria-labelledby="ecosistema-titulo">
+      <div class="ecosistema-topo">
+        <div>
+          <div class="ecosistema-kicker">Para além do arquivo</div>
+          <h2 id="ecosistema-titulo">Explora o que temos na nossa comunidade</h2>
+        </div>
+        <p class="ecosistema-intro">Guias, vozes e conversas que prolongam a vida académica para lá dos documentos.</p>
+      </div>
+
+      <div class="recursos-grid">
+        <a class="recurso-card" href="https://guiaestudantesparaestudantes.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Guia de Estudantes para Estudantes numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">01</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          </span>
+          <h3>Guia de Estudantes para Estudantes</h3>
+          <p>Informação prática para orientar o teu percurso académico.</p>
+          <span class="recurso-link"><span>Consultar guia</span><span aria-hidden="true">↗</span></span>
+        </a>
+
+        <a class="recurso-card" href="https://frequenciaberta.pt/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Rádio Frequênciaberta numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">02</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 10a8 8 0 0 1 16 0"/><path d="M5 10h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5Z"/><path d="M19 10h-2a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h2Z"/></svg>
+          </span>
+          <h3>Rádio Frequênciaberta</h3>
+          <p>A rádio da comunidade, feita de vozes, ideias e vida académica.</p>
+          <span class="recurso-link"><span>Ouvir a rádio</span><span aria-hidden="true">↗</span></span>
+        </a>
+
+        <a class="recurso-card" href="https://www.youtube.com/@Campus_aberto" target="_blank" rel="noopener noreferrer" aria-label="Abrir o Podcast Campus Aberto no YouTube numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">03</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="m10 9 5 3-5 3Z"/></svg>
+          </span>
+          <h3>Podcast Campus Aberto</h3>
+          <p>Os temas que estudamos são genuinamente interessantes. O problema nunca foi a matéria, foi a forma como chegou até nós. Entra e subscreve o Canal.</p>
+          <span class="recurso-link"><span>Ver episódios</span><span aria-hidden="true">↗</span></span>
+        </a>
+
+        <a class="recurso-card" href="https://ecosdassociedades.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir a Revista Ecos das Sociedades numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">04</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          <h3>Revista Ecos das Sociedades</h3>
+          <p>Publicação académica da República das Ciências Sociais com artigos, ensaios e reflexões produzidos pelos estudantes.</p>
+          <span class="recurso-link"><span>Ler a revista</span><span aria-hidden="true">↗</span></span>
+        </a>
+
+        <a class="recurso-card" href="https://narrativas-sociais-revisao.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Narrativas Sociais numa nova janela">
+          <span class="recurso-numero" aria-hidden="true">05</span>
+          <span class="recurso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </span>
+          <h3>Narrativas Sociais</h3>
+          <p>O Narrativas Sociais é um espaço dedicado à escrita criativa e à experimentação. Todas as semanas partimos de um tema e desafiamos diferentes formas de o transformar em palavras. Envia os teus textos.</p>
+          <span class="recurso-link"><span>Ler textos</span><span aria-hidden="true">↗</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="ferramentas-secao" aria-labelledby="ferramentas-titulo">
+      <div class="ferramentas-cabecalho">
+        <div>
+          <div class="ferramentas-kicker">Centro de recursos</div>
+          <h2 id="ferramentas-titulo">Ferramentas de apoio</h2>
+        </div>
+        <p class="ferramentas-intro">Links diretos para estudar com mais autonomia: transcrever, resumir, trabalhar PDFs, pesquisar, citar e traduzir.</p>
+      </div>
+
+      <button class="apa7-destaque" onclick="window.abrirCitacoes()" type="button" aria-label="Abrir gerador de citações APA7">
+        <span class="apa7-destaque-badge">APA 7</span>
+        <div class="apa7-destaque-corpo">
+          <h3>Gerador de Citações</h3>
+          <p>Cria referências bibliográficas formatadas automaticamente. Livro, artigo, website, tese e mais — guarda na tua bibliografia pessoal.</p>
+        </div>
+        <span class="apa7-destaque-seta" aria-hidden="true">→</span>
+      </button>
+
+      <div class="ferramentas-tabs" role="tablist" aria-label="Categorias de ferramentas">
+        <button class="ferramenta-tab" id="tab-transcribe" type="button" role="tab" aria-selected="true" aria-controls="ferramentas-painel" data-categoria="transcribe">Transcrição</button>
+        <button class="ferramenta-tab" id="tab-summary" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="summary" tabindex="-1">Resumos</button>
+        <button class="ferramenta-tab" id="tab-pdf" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="pdf" tabindex="-1">PDFs</button>
+        <button class="ferramenta-tab" id="tab-youtube" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="youtube" tabindex="-1">Vídeos</button>
+        <button class="ferramenta-tab" id="tab-articles" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="articles" tabindex="-1">Artigos</button>
+        <button class="ferramenta-tab" id="tab-references" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="references" tabindex="-1">Bibliografia</button>
+        <button class="ferramenta-tab" id="tab-translation" type="button" role="tab" aria-selected="false" aria-controls="ferramentas-painel" data-categoria="translation" tabindex="-1">Tradução</button>
+      </div>
+
+      <div class="ferramentas-painel" id="ferramentas-painel" role="tabpanel" aria-labelledby="tab-transcribe">
+        <div class="ferramentas-painel-titulo" id="ferramentas-painel-titulo"></div>
+        <div class="ferramentas-grid" id="ferramentas-grid"></div>
+      </div>
+    </section>
+
+    <script>
+      window.ferramentasCampus = {
+        transcribe: {
+          titulo: 'Transcrição de vídeos e áudio', codigo: 'TR',
+          items: [
+            ['TurboScribe','Transcreve ficheiros de vídeo e áudio em dezenas de idiomas.','https://turboscribe.ai/'],
+            ['YouTube Auto-Transcript','Permite consultar e copiar as legendas automáticas disponíveis nos vídeos.','https://youtube.com/'],
+            ['Otter.ai','Transcrição automática de gravações, reuniões e conversas em tempo real.','https://otter.ai/']
+          ]
+        },
+        summary: {
+          titulo: 'Resumos e sínteses', codigo: 'RS',
+          items: [
+            ['NotebookLM (Google)','Cria resumos, guias de estudo, perguntas e sínteses a partir das fontes carregadas.','https://notebooklm.google.com/'],
+            ['Mapify','Transforma textos e ideias em mapas mentais e esquemas visuais.','https://mapify.so/'],
+            ['SciSpace','Ajuda a compreender artigos científicos, conceitos complexos e linguagem técnica.','https://scispace.com/'],
+            ['Notion (com templates)','Organiza notas, resumos, disciplinas e projetos académicos num único espaço.','https://notion.so/']
+          ]
+        },
+        pdf: {
+          titulo: 'Processar e pesquisar PDFs', codigo: 'PDF',
+          items: [
+            ['iLovePDF — OCR','Converte documentos digitalizados em texto pesquisável e editável.','https://www.ilovepdf.com/pt/pdf_para_texto'],
+            ['PDF24 Tools','Reúne OCR, compressão, edição, conversão e outras operações com PDF.','https://tools.pdf24.org/pt/'],
+            ['Smallpdf','Converte, comprime e reorganiza documentos PDF através do navegador.','https://smallpdf.com/pt/pdf-para-word']
+          ]
+        },
+        youtube: {
+          titulo: 'Encontrar vídeos educativos', codigo: 'VD',
+          items: [
+            ['Khan Academy','Vídeos e exercícios educativos organizados por áreas de aprendizagem.','https://pt.khanacademy.org/'],
+            ['YouTube Edu','Pesquisa de aulas, explicações e conteúdos educativos em vídeo.','https://www.youtube.com/'],
+            ['CrashCourse','Cursos em vídeo sobre história, ciências, filosofia e outras áreas.','https://www.youtube.com/@crashcourse'],
+            ['TED-Ed','Lições curtas e vídeos educativos animados sobre temas diversos.','https://ed.ted.com/']
+          ]
+        },
+        articles: {
+          titulo: 'Pesquisar artigos científicos', codigo: 'AC',
+          items: [
+            ['Google Scholar','Motor de pesquisa para artigos, teses, livros e literatura académica.','https://scholar.google.com/'],
+            ['SciELO','Biblioteca de revistas e artigos científicos em acesso aberto.','https://scielo.org/'],
+            ['RCAAP','Portal português de teses, dissertações, artigos e repositórios científicos.','https://www.rcaap.pt/'],
+            ['JSTOR','Base de dados académica especialmente relevante para ciências sociais e humanidades.','https://www.jstor.org/'],
+            ['ResearchGate','Rede académica para descobrir publicações e acompanhar investigadores.','https://www.researchgate.net/']
+          ]
+        },
+        references: {
+          titulo: 'Gerir bibliografia e citações', codigo: 'APA',
+          items: [
+            ['Zotero','Guarda, organiza e cita fontes, gerando bibliografias automaticamente.','https://www.zotero.org/'],
+            ['Mendeley','Organiza PDFs, referências, anotações e bibliografias académicas.','https://www.mendeley.com/'],
+            ['CitationMachine','Gera citações em APA, MLA, Chicago e outros estilos.','https://www.citationmachine.net/'],
+            ['MyBib','Cria e organiza bibliografias online a partir de URLs, livros e artigos.','https://www.mybib.com/']
+          ]
+        },
+        translation: {
+          titulo: 'Tradução e dicionários', codigo: 'PT',
+          items: [
+            ['DeepL','Traduz textos e documentos preservando melhor o contexto das frases.','https://www.deepl.com/translator'],
+            ['Linguee','Mostra traduções acompanhadas por exemplos retirados de textos reais.','https://www.linguee.pt/'],
+            ['WordReference','Dicionários bilingues, definições e fóruns sobre uso da língua.','https://www.wordreference.com/'],
+            ['Reverso Context','Apresenta traduções de palavras e expressões em diferentes contextos.','https://context.reverso.net/']
+          ]
+        }
+      };
+
+      function mostrarCategoriaFerramentas(categoria) {
+        const dados = window.ferramentasCampus[categoria];
+        if (!dados) return;
+        const painel = document.getElementById('ferramentas-painel');
+        const titulo = document.getElementById('ferramentas-painel-titulo');
+        const grid = document.getElementById('ferramentas-grid');
+        const ativo = document.querySelector(`.ferramenta-tab[data-categoria="${categoria}"]`);
+
+        document.querySelectorAll('.ferramenta-tab').forEach(tab => {
+          const selecionado = tab === ativo;
+          tab.setAttribute('aria-selected', selecionado ? 'true' : 'false');
+          tab.tabIndex = selecionado ? 0 : -1;
+        });
+        painel.setAttribute('aria-labelledby', ativo.id);
+        titulo.innerHTML = `<span aria-hidden="true">${dados.codigo}</span>${dados.titulo}`;
+        grid.innerHTML = dados.items.map((item, indice) => {
+          const destino = new URL(item[2]).hostname.replace(/^www\./,'');
+          return `<article class="ferramenta-link">
+            <div class="ferramenta-link-topo"><span class="ferramenta-marca">${dados.codigo}</span><span style="display:flex;gap:7px;align-items:center"><button class="favorito-btn ferramenta-favorito" type="button" data-fav-key="tool:${categoria}:${indice}" onclick="window.toggleFavorito('tool:${categoria}:${indice}')" aria-label="Adicionar ${item[0]} aos favoritos">☆</button><a class="ferramenta-seta" href="${item[2]}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${item[0]} numa nova janela">↗</a></span></div>
+            <a class="ferramenta-conteudo" href="${item[2]}" target="_blank" rel="noopener noreferrer"><h3>${item[0]}</h3><p>${item[1]}</p><span class="ferramenta-destino">${destino}</span></a>
+          </article>`;
+        }).join('');
+        if (window.atualizarBotoesFavoritos) window.atualizarBotoesFavoritos();
+      }
+
+      document.querySelectorAll('.ferramenta-tab').forEach(tab => {
+        tab.addEventListener('click', () => mostrarCategoriaFerramentas(tab.dataset.categoria));
+        tab.addEventListener('keydown', event => {
+          if (!['ArrowLeft','ArrowRight'].includes(event.key)) return;
+          event.preventDefault();
+          const tabs = [...document.querySelectorAll('.ferramenta-tab')];
+          const atual = tabs.indexOf(tab);
+          const proximo = event.key === 'ArrowRight' ? (atual + 1) % tabs.length : (atual - 1 + tabs.length) % tabs.length;
+          tabs[proximo].focus();
+          mostrarCategoriaFerramentas(tabs[proximo].dataset.categoria);
+        });
+      });
+      mostrarCategoriaFerramentas('transcribe');
+    </script>
+
+    <section class="secao-cabecalho-uniforme arquivo-cabecalho" aria-labelledby="arquivo-titulo">
+      <div><div class="secao-kicker-uniforme">Biblioteca académica</div><h2 id="arquivo-titulo">Unidades curriculares</h2></div>
+      <p>Consulta os materiais organizados por ano e semestre ou encontra-os diretamente através da pesquisa.</p>
+    </section>
+
+    <div id="ucs-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ECRÃ TODAS AS DATAS -->
+  <div id="ecra-datas">
+    <div class="datas-header">
+      <button type="button" class="datas-back" onclick="fecharEcranDatas()">← Voltar</button>
+      <h2>Calendário académico</h2>
+    </div>
+    <div class="datas-filtros">
+      <select id="filtro-ano" onchange="filtrarDatas()">
+        <option value="">Todos os anos</option>
+        <option value="1">1º Ano</option>
+        <option value="2">2º Ano</option>
+        <option value="3">3º Ano</option>
+      </select>
+      <select id="filtro-semestre" onchange="filtrarDatas()">
+        <option value="">Todos os semestres</option>
+        <option value="1">1º Semestre</option>
+        <option value="2">2º Semestre</option>
+      </select>
+      <select id="filtro-minor" onchange="filtrarDatas()" style="display:none">
+        <option value="">Todos os minors</option>
+        <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
+        <option value="Psicologia">Psicologia</option>
+        <option value="Intervenção Social">Intervenção Social</option>
+        <option value="Sociologia">Sociologia</option>
+      </select>
+      <select id="filtro-uc" onchange="filtrarDatas()">
+        <option value="">Todas as UCs</option>
+      </select>
+      <select id="filtro-epoca" onchange="filtrarDatas()">
+        <option value="">Todas as épocas</option>
+        <option value="Global/Exame">Época Normal (Global/Exame)</option>
+        <option value="Recurso">Época Recurso</option>
+      </select>
+    </div>
+    <div class="datas-lista-completa" id="datas-lista-completa"></div>
+  </div>
+
+  <!-- ECRÃ DOCUMENTOS -->
+  <div id="ecra-docs" style="display:none">
+    <div class="docs-header">
+      <button type="button" class="btn-voltar" onclick="voltarUCs()" title="Voltar" aria-label="Voltar às unidades curriculares">←</button>
+      <div class="docs-titulo-area">
+        <h2 class="docs-titulo" id="docs-titulo">—</h2>
+        <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
+      </div>
+    </div>
+    <!-- Notas desta UC -->
+    <div class="notas-uc-card" id="notas-uc-card">
+      <div class="notas-uc-titulo">📊 As minhas notas</div>
+
+      <!-- Seletor de modalidade -->
+      <div class="nota-modo-selector">
+        <button type="button" class="nota-modo-btn ativo" id="nota-modo-ac" onclick="notaModoSelecionar('continua')">📚 Av. Contínua</button>
+        <button type="button" class="nota-modo-btn" id="nota-modo-ex" onclick="notaModoSelecionar('exame')">📝 Só Exame</button>
+      </div>
+
+      <!-- ── Painel: Avaliação Contínua ── -->
+      <div class="nota-painel ativo" id="nota-painel-continua">
+        <div class="nota-sec-titulo">E-fólios</div>
+        <div class="notas-campos" style="grid-template-columns:1fr 1fr">
+          <div class="nota-campo">
+            <label for="nota-efolio-a">E-fólio A</label>
+            <input type="number" id="nota-efolio-a" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label for="nota-efolio-b">E-fólio B</label>
+            <input type="number" id="nota-efolio-b" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
+        </div>
+        <div class="nota-limiar vazio" id="nota-soma-limiar">Soma: — &nbsp;<span style="opacity:.65;font-weight:400">mín. 3,5 para ir ao E-Fólio Global</span></div>
+
+        <!-- E-Fólio Global (sempre visível em Av. Contínua) -->
+        <div id="nota-sec-global">
+          <div class="nota-sec-titulo">E-Fólio Global <span class="nota-sec-sub">máx. 12 val. · mín. 5,5</span></div>
+          <div class="nota-campo" style="max-width:130px">
+            <label for="nota-global">Nota</label>
+            <input type="number" id="nota-global" min="0" max="12" step="0.1" placeholder="0 – 12" oninput="notaAtualizar()">
+          </div>
+          <div class="nota-limiar vazio" id="nota-global-limiar" style="margin-top:8px"></div>
+        </div>
+
+        <!-- Exame recurso (aparece apenas quando soma < 3,5) -->
+        <div id="nota-sec-exame-rec" style="display:none">
+          <div class="nota-sec-titulo" style="color:#c2410c">⚠️ Exame obrigatório <span class="nota-sec-sub" style="color:inherit">somatório e-fólios &lt; 3,5</span></div>
+          <div class="nota-campo" style="max-width:130px">
+            <label for="nota-exame-rec">Nota do exame</label>
+            <input type="number" id="nota-exame-rec" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Painel: Só Exame ── -->
+      <div class="nota-painel" id="nota-painel-exame">
+        <div class="nota-sec-titulo">Exame <span class="nota-sec-sub">mín. 10 val. (9,5 arredonda para 10)</span></div>
+        <div class="nota-campo" style="max-width:130px">
+          <label for="nota-so-exame">Nota</label>
+          <input type="number" id="nota-so-exame" min="0" max="20" step="0.1" placeholder="0 – 20" oninput="notaAtualizar()">
+        </div>
+      </div>
+
+      <!-- Nota final (partilhada, aparece quando há valor) -->
+      <div class="nota-resultado" id="nota-resultado" style="display:none">
+        <span class="nota-resultado-label">Nota final</span>
+        <span class="nota-final-val" id="nota-final-val">—</span>
+      </div>
+
+      <div class="nota-rodape">
+        <span class="nota-badge em-curso" id="nota-badge">Em curso</span>
+        <button class="nota-btn-save" id="nota-btn-save" onclick="guardarNotaUC()">Guardar</button>
+      </div>
+    </div>
+    <div class="docs-lista" id="docs-lista">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ECRÃ CITAÇÕES APA7 -->
+  <div id="ecra-citacoes" style="display:none">
+    <div class="citacoes-header">
+      <button type="button" class="btn-voltar" onclick="fecharCitacoes()" title="Voltar" aria-label="Voltar às ferramentas">←</button>
+      <div>
+        <div class="citacoes-titulo">Citações APA 7</div>
+        <div style="font-size:.72rem;color:#6b7280;font-family:'Inter',sans-serif">Gerador de referências bibliográficas</div>
+      </div>
+    </div>
+
+    <div class="citacoes-normas-bar">
+      <span>📄 A UAb adota o estilo <strong>APA 7ª edição</strong> para trabalhos académicos.</span>
+      <a href="https://repositorioaberto.uab.pt/entities/publication/73f209d7-a283-46f2-b165-1314483f9d63" target="_blank" rel="noopener noreferrer">Ver normas UAb ↗</a>
+    </div>
+
+    <div class="citacoes-card">
+      <div style="font:600 .7rem/1 'Inter',sans-serif;color:var(--verde);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Tipo de fonte</div>
+      <div class="citacoes-tipo-lista" id="cit-tipos"></div>
+      <div class="citacoes-form" id="cit-form"></div>
+      <div class="citacoes-preview" id="cit-preview"></div>
+      <div class="citacoes-acoes">
+        <button class="btn-cit-gerar" onclick="gerarCitacao()">Gerar citação</button>
+        <button class="btn-cit-copiar" id="btn-cit-copiar" onclick="copiarCitacao()">Copiar</button>
+        <button class="btn-cit-guardar" id="btn-cit-guardar" onclick="guardarCitacao()">Guardar na bibliografia</button>
+      </div>
+    </div>
+
+    <div class="citacoes-biblio">
+      <div class="citacoes-biblio-header">
+        <div class="citacoes-biblio-titulo">A minha bibliografia</div>
+        <button class="btn-cit-copiar-tudo" onclick="copiarTodaCitacoes()">Copiar tudo A–Z</button>
+      </div>
+      <div class="citacoes-biblio-lista" id="cit-biblio-lista">
+        <div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- VIEWER PDF -->
+<div class="viewer-overlay" id="viewer-overlay" role="dialog" aria-modal="true" aria-label="Leitor de PDF">
+  <div class="viewer-toolbar">
+    <button class="btn-viewer-voltar" onclick="window.fecharViewer()">← Lista</button>
+    <span class="viewer-titulo" id="viewer-titulo">—</span>
+    <button class="btn-viewer-dl" onclick="window.iniciarDownloadDoViewer()">↓ Descarregar</button>
+  </div>
+  <div class="viewer-conteudo" id="viewer-conteudo">
+    <div class="loading">
+      <div class="spinner" style="border-color:#333;border-top-color:#c9a84c"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PENSAMENTO DO DIA -->
+<div class="modal-pensamento-overlay" id="modal-pensamento" role="dialog" aria-modal="true" aria-label="Pensamento do dia">
+  <div class="modal-pensamento-caixa">
+    <div class="modal-pensamento-kicker">💡 Pensamento do dia</div>
+    <span class="pensamento-aspas" aria-hidden="true">"</span>
+    <p class="pensamento-texto" id="modal-pensamento-texto"></p>
+    <p class="pensamento-autor" id="modal-pensamento-autor"></p>
+    <button class="modal-pensamento-btn" onclick="document.getElementById('modal-pensamento').style.display='none'">Começar o dia ✨</button>
+  </div>
+</div>
+
+<!-- MODAL DOWNLOAD -->
+<div class="modal-overlay" id="modal-dl" role="dialog" aria-modal="true" aria-labelledby="titulo-download">
+  <div class="modal">
+    <div class="modal-icon">📥</div>
+    <h3 id="titulo-download">Descarregar documento</h3>
+    <p>Este documento ficará associado ao teu registo. O código abaixo identifica este download:</p>
+    <div class="modal-codigo" id="modal-codigo-txt">—</div>
+    <p style="font-size:0.76rem;color:#9ca3af;margin-bottom:0">
+      O código é inserido discretamente no documento. Contém o teu nome e um identificador rastreável associado ao teu registo.
+    </p>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" id="btn-confirmar-dl" onclick="confirmarDownload()">↓ Descarregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PERFIL -->
+<div class="modal-overlay" id="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="titulo-perfil">
+  <div class="modal">
+    <div class="modal-icon">👤</div>
+    <h3 id="titulo-perfil">O teu perfil</h3>
+    <div class="perfil-info-grid">
+      <div class="perfil-campo">
+        <span class="perfil-campo-label">Nome</span>
+        <span class="perfil-campo-valor" id="perfil-nome">—</span>
+      </div>
+      <div class="perfil-campo">
+        <span class="perfil-campo-label">Email</span>
+        <span class="perfil-campo-valor mono" id="perfil-email">—</span>
+      </div>
+      <div class="perfil-campo">
+        <span class="perfil-campo-label">Código de utilizador</span>
+        <span class="perfil-campo-valor mono" id="perfil-codigo">—</span>
+      </div>
+    </div>
+    <div class="perfil-separador"></div>
+    <div class="perfil-section-title">Alterar password</div>
+    <div class="perfil-msg" id="perfil-msg"></div>
+    <div class="perfil-input-group">
+      <input class="perfil-input" type="password" id="perfil-pw-atual" placeholder="Password atual" autocomplete="current-password"/>
+      <input class="perfil-input" type="password" id="perfil-pw-nova" placeholder="Nova password (mín. 6 caracteres)" autocomplete="new-password"/>
+      <input class="perfil-input" type="password" id="perfil-pw-conf" placeholder="Confirmar nova password" autocomplete="new-password"/>
+    </div>
+    <button class="btn-confirmar-perfil" id="btn-alterar-pw" onclick="alterarPassword()">Alterar password</button>
+    <div class="modal-btns" style="margin-top:16px">
+      <button class="btn-cancelar" onclick="fecharPerfil()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, collectionGroup,
+    getDocs, addDoc, serverTimestamp, query, orderBy, where, deleteField
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
+    authDomain: "uab-comunidade.firebaseapp.com",
+    projectId: "uab-comunidade",
+    storageBucket: "uab-comunidade.firebasestorage.app",
+    messagingSenderId: "26751084379",
+    appId: "1:26751084379:web:08763059128d30ea36dc7e"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  const docMap = {};
+
+  const paleta = [
+    { banda: 'linear-gradient(135deg,#071d34,#0b2a4a)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#0b2a4a,#174d78)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#163954,#2d648f)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#2c3449,#465575)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#553c1c,#8a6329)', emoji: 'UC' },
+    { banda: 'linear-gradient(135deg,#263d45,#3f626b)', emoji: 'UC' },
+  ];
+
+  const SINOPSES = {
+    // 1º Ano S1
+    'Demografia': 'Estuda a estrutura, composição e dinâmica das populações humanas — natalidade, mortalidade, migrações e envelhecimento — e o seu impacto nas políticas sociais e na organização das sociedades contemporâneas.',
+    'Introdução às Ciências Sociais': 'Apresenta as principais disciplinas, tradições teóricas e métodos das Ciências Sociais, desenvolvendo a capacidade de análise crítica dos fenómenos que estruturam a vida coletiva e política.',
+    'Introdução ao Direito': 'Explora os fundamentos do sistema jurídico e os conceitos essenciais do direito — norma, fonte, interpretação e principais ramos — indispensáveis para compreender as regras que organizam a vida em sociedade.',
+    'Psicologia Geral': 'Introduz as teorias e conceitos fundamentais da Psicologia enquanto ciência do comportamento e dos processos mentais, cobrindo perceção, memória, aprendizagem, motivação e personalidade.',
+    'Antropologia Geral': 'Aborda a diversidade cultural e biológica da espécie humana, questionando o etnocentrismo e mostrando como diferentes sociedades constroem realidades sociais, simbólicas e organizacionais distintas.',
+    // 1º Ano S2
+    'Estatística para as Ciências Sociais': 'Desenvolve competências de análise quantitativa — distribuições, medidas de tendência central, correlação e testes de hipóteses — aplicadas à interpretação de dados sociais e à produção de evidência empírica.',
+    'Introdução à Ciência Política': 'Explora os conceitos centrais da Ciência Política — poder, Estado, regime, democracia e representação — e as teorias que explicam como as sociedades se organizam e tomam decisões coletivas.',
+    'Política Social': 'Analisa os fundamentos, evolução e instrumentos das políticas públicas em áreas como segurança social, saúde, educação e habitação, examinando o papel do Estado na resposta às desigualdades.',
+    'Sociologia Geral': 'Introduz as grandes correntes do pensamento sociológico — de Durkheim e Weber a Bourdieu e Giddens — e os conceitos que permitem analisar a sociedade com rigor crítico e distância analítica.',
+    'Introdução à Economia': 'Apresenta os princípios fundamentais da análise económica — oferta, procura, mercados, produção e distribuição — e a sua relação com as dinâmicas sociais e institucionais das economias modernas.',
+    // 2º Ano S1
+    'Metodologia das Ciências Sociais: Métodos Qualitativos': 'Aborda as técnicas de investigação qualitativa — entrevista, observação participante e análise de conteúdo — e os fundamentos epistemológicos que as sustentam, preparando para projetos de investigação em profundidade.',
+    'Etnografias': 'Apresenta a etnografia como método de conhecimento, explorando como a observação participante e a escrita etnográfica permitem compreender culturas e contextos sociais a partir de dentro.',
+    'Princípios de Gestão': 'Introduz os conceitos fundamentais da gestão organizacional — planeamento, organização, liderança e controlo — desenvolvendo competências de análise em organizações públicas, privadas e do terceiro setor.',
+    'Antropologia das Religiões': 'Examina o papel da religião nas sociedades humanas, analisando rituais, crenças, mitos e práticas religiosas numa perspetiva comparada, questionando as fronteiras entre sagrado e profano.',
+    'Sociedade Portuguesa Contemporânea': 'Analisa as transformações estruturais da sociedade portuguesa nas últimas décadas — família, trabalho, educação, imigração e cultura — num olhar crítico sobre os paradoxos e desafios do Portugal atual.',
+    'Igualdade, Exclusão Social e Cidadania': 'Problematiza os mecanismos de produção da desigualdade e da exclusão social, examinando os conceitos de cidadania e direitos sociais e as políticas orientadas para a inclusão.',
+    'Justiça, Segurança e Criminalidade': 'Analisa os sistemas de justiça e segurança a partir das Ciências Sociais, questionando as causas sociais do crime, o controlo social e as respostas institucionais à criminalidade.',
+    // 2º Ano S2
+    'Metodologia das Ciências Sociais: Métodos Quantitativos': 'Aprofunda as técnicas de investigação quantitativa — questionários, bases de dados e análise estatística — desenvolvendo a capacidade de produzir e interpretar estudos empíricos com rigor científico.',
+    'Psicologia Social': 'Estuda como os contextos sociais influenciam o pensamento e o comportamento humano, abordando atitudes, preconceito, conformidade, influência social e dinâmicas de grupo.',
+    'História Económica e Social': 'Analisa a evolução das sociedades e economias ao longo do tempo, explorando transformações na produção, trabalho, classes sociais e instituições numa perspetiva histórica sobre os problemas contemporâneos.',
+    'Elites e Movimentos Sociais': 'Examina como as elites se formam e exercem influência, e como os movimentos sociais emergem como resposta às desigualdades, analisando casos históricos e contemporâneos de mobilização coletiva.',
+    'Globalização, Cidadania e Identidades': 'Problematiza os processos de globalização e os seus efeitos sobre as identidades culturais e políticas, examinando como reconfiguram as fronteiras da cidadania e os modos de pertença.',
+    'Ambiente, Saúde e Bem-Estar': 'Analisa as relações entre contextos sociais, ambientais e estados de saúde das populações, abordando os determinantes sociais da saúde e o papel das políticas públicas na promoção do bem-estar.',
+    'Sociedade, Género e Poder': 'Examina as dimensões sociais e políticas do género, analisando como as desigualdades se constroem e contestam nas instituições, no trabalho e no quotidiano, numa perspetiva crítica e feminista.',
+    // 3º Ano — Minor Ciência Política e Administrativa
+    'Introdução ao Direito Administrativo': 'Apresenta os princípios e regras fundamentais do Direito Administrativo — atividade administrativa, atos e contencioso — necessários para compreender e intervir nos contextos da administração pública.',
+    'Introdução ao Direito do Ambiente': 'Examina os instrumentos jurídicos de proteção ambiental e os princípios do Direito do Ambiente, num contexto de crescente urgência ecológica e de regulação das relações entre atividade humana e recursos naturais.',
+    'Política Internacional': 'Analisa as dinâmicas do sistema internacional — conflito, cooperação, organizações e diplomacia — e os fatores que determinam o comportamento dos Estados e outros atores no cenário global.',
+    'Teoria das Relações Internacionais': 'Apresenta os principais paradigmas que explicam as relações entre Estados — realismo, liberalismo, construtivismo — e a sua aplicação a problemas e casos concretos da política mundial.',
+    'Direito da União Europeia': 'Introduz o quadro jurídico e institucional da União Europeia, abordando as fontes do direito europeu, as instituições, o mercado interno e os direitos dos cidadãos europeus.',
+    'Ciência da Administração': 'Estuda as teorias e práticas da administração pública, analisando a organização do Estado, os modelos de gestão pública e as reformas administrativas nas democracias contemporâneas.',
+    'Direito Constitucional Comparado': 'Examina as constituições de diferentes países, comparando sistemas de governo, direitos fundamentais, separação de poderes e regimes democráticos numa perspetiva de direito comparado.',
+    'Organizações Políticas': 'Analisa os partidos políticos, sistemas eleitorais, grupos de interesse e outras organizações que estruturam a competição e a representação política nas democracias.',
+    'Sistemas de Poder': 'Examina as formas de organização e exercício do poder político — autoritarismo, democracia, federalismo — e os mecanismos de legitimação e contestação do poder nas sociedades contemporâneas.',
+    'Teoria Política': 'Explora as grandes tradições do pensamento político — liberalismo, republicanismo, socialismo, comunitarismo — e os conceitos de justiça, liberdade, igualdade e democracia que estruturam o debate político moderno.',
+    // 3º Ano — Minor Psicologia
+    'Psicologia da Arte': 'Explora as relações entre processos psicológicos e a criação e receção da arte, examinando criatividade, perceção estética e o papel da expressão artística no desenvolvimento e bem-estar humano.',
+    'Noções de Psicopatologia': 'Introduz os principais quadros de perturbação mental — ansiedade, depressão, psicose, perturbações da personalidade — numa perspetiva de compreensão clínica e social das condições de saúde mental.',
+    'Psicologia Clínica e da Saúde': 'Aborda a aplicação da Psicologia nos contextos clínicos e de saúde, explorando a promoção da saúde, a doença crónica e a intervenção psicológica em diferentes populações.',
+    'Psicologia Social Aplicada': 'Aplica os conhecimentos da Psicologia Social a contextos organizacionais e comunitários, trabalhando temas como liderança, conflito, comunicação e mudança comportamental.',
+    'Psicologia de Desenvolvimento Humano': 'Estuda as transformações psicológicas ao longo do ciclo de vida — da infância à velhice — analisando os processos cognitivos, emocionais e sociais que marcam cada fase do desenvolvimento.',
+    'Comunicação Intercultural': 'Examina os desafios da comunicação entre pessoas de diferentes culturas, explorando estereótipos, competências interculturais e estratégias de mediação em contextos de crescente diversidade.',
+    'Psicologia da Família': 'Analisa a família como sistema psicossocial, explorando as dinâmicas relacionais, os ciclos de vida familiar, as crises e as intervenções psicológicas no contexto familiar.',
+    'Psicologia Intercultural': 'Examina como a cultura molda os processos psicológicos — cognição, emoção, identidade e valores — e as implicações para a prática psicológica em contextos multiculturais e de diversidade.',
+    'Psicologia Social da Vida Quotidiana': 'Aplica os conceitos da Psicologia Social à análise do quotidiano, examinando como interações, normas e representações sociais estruturam as experiências e práticas do dia a dia.',
+    'Psicologia Comunitária': 'Orientada para a prevenção e promoção do bem-estar, aborda a intervenção psicológica em comunidades, trabalhando capacitação, redes de suporte social e processos de mudança coletiva.',
+    // 3º Ano — Minor Intervenção Social
+    'Desenvolvimento Comunitário': 'Apresenta as teorias e práticas do desenvolvimento comunitário, explorando metodologias de diagnóstico, planeamento e intervenção orientadas para o empowerment das comunidades.',
+    'Intervenção Psico-Social': 'Examina as abordagens que articulam dimensões psicológicas e sociais na intervenção, desenvolvendo competências para apoiar indivíduos e grupos em situação de vulnerabilidade.',
+    'Intervenção Social e Saúde Mental': 'Analisa a relação entre exclusão social e saúde mental, explorando os modelos de intervenção comunitária e as respostas institucionais para pessoas com perturbações mentais.',
+    'Teoria Geral de Serviço Social': 'Apresenta os fundamentos teóricos, éticos e históricos do Serviço Social, examinando os modelos de intervenção e o papel dos profissionais na promoção da justiça e da inclusão social.',
+    'Contextos Organizacionais da Intervenção Social': 'Analisa as organizações do setor social — públicas, privadas e do terceiro setor — e os contextos institucionais em que se desenvolve a intervenção, incluindo gestão de projetos e parcerias.',
+    'Intervenção Social com Grupos': 'Aborda as metodologias de intervenção em contexto grupal, explorando dinâmicas de grupo, facilitação e as especificidades do trabalho social com diferentes populações.',
+    'Intervenção Social com Crianças e Jovens': 'Examina as problemáticas da infância e juventude em risco, as respostas do sistema de proteção e as abordagens de intervenção orientadas para a promoção dos direitos e do bem-estar.',
+    'Intervenção Social e Deficiência': 'Analisa os modelos social e de direitos na abordagem à deficiência, explorando as políticas de inclusão e as práticas de intervenção orientadas para a autonomia e participação plena.',
+    'Intervenção Social e Envelhecimento': 'Examina os desafios do envelhecimento demográfico e as respostas sociais e institucionais, explorando intervenções orientadas para a qualidade de vida e a dignidade dos idosos.',
+    'Metodologia da Intervenção Social': 'Apresenta as metodologias de planeamento, monitorização e avaliação de projetos de intervenção social, desenvolvendo competências para uma prática baseada em evidência e orientada para resultados.',
+    // 3º Ano — Minor Sociologia
+    'Sociologia Urbana': 'Analisa a cidade como espaço social, examinando processos de urbanização, segregação, gentrificação e as formas de vida e organização social que caracterizam os contextos urbanos contemporâneos.',
+    'Sociologia da Comunicação e da Informação': 'Examina o papel dos média e das tecnologias de informação na vida social e cultural, analisando os processos de produção, circulação e consumo de informação nas sociedades contemporâneas.',
+    'Sociologia da Familia': 'Analisa as transformações das estruturas e funções familiares nas sociedades contemporâneas, abordando conjugalidade, parentalidade, género, diversidade familiar e políticas de apoio.',
+    'Sociologia das Migrações': 'Examina os processos migratórios — causas, fluxos, integração e identidade — e os seus efeitos sobre as sociedades de origem e destino, articulando dimensões económicas, políticas e culturais.',
+    'Teorias Sociológicas': 'Apresenta os principais paradigmas e autores da teoria sociológica contemporânea, articulando as tradições clássicas com os debates atuais sobre modernidade, globalização e desigualdade.',
+    'Sociologia da Arte': 'Examina a arte como fenómeno social, analisando campos artísticos, produção e receção das obras, mercado e instituições culturais, e o papel da arte na reprodução e contestação das desigualdades.',
+    'Prática da Sociologia': 'Desenvolve competências para a aplicação das ferramentas sociológicas em contextos profissionais, trabalhando o diagnóstico social, a produção de relatórios e a intervenção baseada em evidência.',
+    'Sociologia da Educação': 'Analisa o sistema educativo como instituição social, examinando as relações entre educação, desigualdade, reprodução social, identidade e as políticas educativas nas sociedades contemporâneas.',
+    'Sociologia da Saúde': 'Examina a saúde e a doença enquanto fenómenos socialmente construídos, analisando os determinantes sociais da saúde, as desigualdades em saúde e o papel das instituições de saúde.',
+    'Sociologia do Trabalho': 'Analisa as transformações do mundo do trabalho — precariedade, automação, globalização e novas formas de organização — e as implicações para as identidades, desigualdades e relações laborais.',
+  };
+
+  let utilizadorAtual = null;
+  let docPendente     = null;
+  let ucAtualId       = null;
+  let notaModoAtual   = 'continua'; // 'continua' | 'exame'
+  let viewerDocAtual  = null;
+  let totalDocs       = 0;
+  const ucsMap        = {};
+  const catalogo      = new Map();
+  let favoritos       = [];
+
+  function esc(valor) {
+    return String(valor ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function normalizar(valor) {
+    return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function chaveLocal(nome) {
+    return `campusaberto:${nome}:${utilizadorAtual?.uid || 'anonimo'}`;
+  }
+
+  function indexarFerramentas() {
+    Object.entries(window.ferramentasCampus || {}).forEach(([categoria, dados]) => {
+      dados.items.forEach((item, indice) => {
+        const key = `tool:${categoria}:${indice}`;
+        catalogo.set(key, { key, tipo:'tool', titulo:item[0], subtitulo:dados.titulo, href:item[2] });
+      });
+    });
+  }
+
+  function carregarPreferencias() {
+    try { favoritos = JSON.parse(localStorage.getItem(chaveLocal('favoritos')) || '[]'); }
+    catch (_) { favoritos = []; }
+    renderFavoritos();
+    renderRetomar();
+    window.atualizarBotoesFavoritos();
+  }
+
+  function guardarFavoritos() {
+    localStorage.setItem(chaveLocal('favoritos'), JSON.stringify(favoritos));
+    renderFavoritos();
+    window.atualizarBotoesFavoritos();
+  }
+
+  window.toggleFavorito = function(key) {
+    const existente = favoritos.findIndex(item => item.key === key);
+    if (existente >= 0) favoritos.splice(existente, 1);
+    else {
+      const item = catalogo.get(key);
+      if (!item) return;
+      favoritos.unshift(item);
+    }
+    guardarFavoritos();
+  };
+
+  window.atualizarBotoesFavoritos = function() {
+    const chaves = new Set(favoritos.map(item => item.key));
+    document.querySelectorAll('[data-fav-key]').forEach(btn => {
+      const ativo = chaves.has(btn.dataset.favKey);
+      btn.classList.toggle('ativo', ativo);
+      btn.textContent = ativo ? '★' : '☆';
+      btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+      const nome = catalogo.get(btn.dataset.favKey)?.titulo || 'este item';
+      btn.setAttribute('aria-label', `${ativo ? 'Remover' : 'Adicionar'} ${nome} ${ativo ? 'dos' : 'aos'} favoritos`);
+    });
+  };
+
+  function renderFavoritos() {
+    const lista = document.getElementById('favoritos-lista');
+    const contador = document.getElementById('favoritos-contador');
+    if (!lista || !contador) return;
+    contador.textContent = favoritos.length === 1 ? '1 guardado' : `${favoritos.length} guardados`;
+    if (!favoritos.length) {
+      lista.innerHTML = `<div class="painel-vazio"><strong>A tua seleção começa aqui</strong><p>Usa a estrela nas UCs, documentos e ferramentas que queres encontrar mais depressa.</p></div>`;
+      return;
+    }
+    const visiveis = window._favoritosExpandidos ? favoritos : favoritos.slice(0,3);
+    let htmlFav = visiveis.map(item => `
+      <button class="painel-item" type="button" data-abrir-item="${esc(item.key)}">
+        <span class="painel-data-dia" style="font-size:.64rem">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
+        <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'CampusAberto')}</small></span>
+        <span class="painel-item-dias">Abrir →</span>
+      </button>`).join('');
+    if (favoritos.length > 3) {
+      if (window._favoritosExpandidos) {
+        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=false;renderFavoritos()">Mostrar menos ↑</button>`;
+      } else {
+        htmlFav += `<button type="button" class="painel-ver-todas" onclick="window._favoritosExpandidos=true;renderFavoritos()">Ver todos os ${favoritos.length} favoritos →</button>`;
+      }
+    }
+    lista.innerHTML = htmlFav;
+    lista.querySelectorAll('[data-abrir-item]').forEach(btn => btn.addEventListener('click', () => abrirItem(btn.dataset.abrirItem)));
+  }
+  window.renderFavoritos = renderFavoritos;
+
+  function guardarRetomar(item) {
+    if (!utilizadorAtual || !item) return;
+    localStorage.setItem(chaveLocal('retomar'), JSON.stringify(item));
+    renderRetomar();
+  }
+
+  function renderRetomar() {
+    const area = document.getElementById('retomar-conteudo');
+    if (!area) return;
+    let item = null;
+    try { item = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null'); } catch (_) {}
+    if (!item) {
+      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não há atividade</strong><p>Quando abrires uma UC ou um documento, poderás retomá-lo aqui.</p></div>`;
+      return;
+    }
+    area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
+      <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
+      <span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
+      <span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar →</span>
+    </button>`;
+    document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
+  }
+
+  async function abrirItem(key, fallback = null) {
+    const item = catalogo.get(key) || favoritos.find(f => f.key === key) || fallback;
+    if (!item) return;
+    if (item.tipo === 'tool') { window.open(item.href, '_blank', 'noopener'); return; }
+    if (item.tipo === 'uc') {
+      const uc = ucsMap[item.id];
+      if (uc) await abrirUC(uc, 'UC');
+      return;
+    }
+    if (item.tipo === 'link') {
+      if (item.href) window.open(item.href, '_blank', 'noopener');
+      return;
+    }
+    if (item.tipo === 'doc') {
+      const uc = ucsMap[item.ucId];
+      if (!docMap[`${item.ucId}:${item.docId}`] && uc) await abrirUC(uc, 'UC');
+      if (docMap[`${item.ucId}:${item.docId}`]) window.abrirViewer(item.ucId, item.docId);
+    }
+  }
+
+  function prepararPesquisa() {
+    const input = document.getElementById('pesquisa-input');
+    const resultados = document.getElementById('pesquisa-resultados');
+    if (!input || !resultados) return;
+    const pesquisar = () => {
+      const termo = normalizar(input.value.trim());
+      if (termo.length < 2) {
+        resultados.classList.remove('visivel');
+        input.setAttribute('aria-expanded','false');
+        return;
+      }
+      const encontrados = [...catalogo.values()].filter(item => normalizar(`${item.titulo} ${item.subtitulo || ''}`).includes(termo)).slice(0,10);
+      resultados.innerHTML = encontrados.length ? encontrados.map(item => `
+        <button class="pesquisa-item" type="button" role="option" data-resultado-key="${esc(item.key)}">
+          <span class="pesquisa-tipo">${item.tipo === 'doc' ? 'PDF' : item.tipo === 'link' ? 'Link' : item.tipo === 'uc' ? 'UC' : 'WEB'}</span>
+          <span><strong>${esc(item.titulo)}</strong><small>${esc(item.subtitulo || '')}</small></span>
+          <span class="pesquisa-item-seta">→</span>
+        </button>`).join('') : `<div class="pesquisa-estado">Não encontrámos resultados para “${esc(input.value.trim())}”.</div>`;
+      resultados.classList.add('visivel');
+      input.setAttribute('aria-expanded','true');
+      resultados.querySelectorAll('[data-resultado-key]').forEach(btn => btn.addEventListener('click', () => {
+        resultados.classList.remove('visivel'); input.value = ''; abrirItem(btn.dataset.resultadoKey);
+      }));
+    };
+    input.addEventListener('input', pesquisar);
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { resultados.classList.remove('visivel'); input.setAttribute('aria-expanded','false'); }
+    });
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); input.focus(); }
+    });
+    document.addEventListener('click', event => {
+      if (!document.getElementById('pesquisa-global').contains(event.target)) resultados.classList.remove('visivel');
+    });
+  }
+
+  let todasAsDatas = [];
+
+  function mostrarBannerDatas() {
+    const banner = document.getElementById('banner-datas');
+    if (!banner) return;
+    // Verificar se já foi fechado hoje
+    const hoje = new Date().toDateString();
+    if (localStorage.getItem(chaveLocal('banner-fechado')) === hoje) { banner.style.display = 'none'; return; }
+
+    const agora = new Date();
+    const em7dias = new Date(agora.getTime() + 7 * 86400000);
+    const proximas = todasAsDatas.filter(d => d.data >= agora && d.data <= em7dias);
+    if (!proximas.length) { banner.style.display = 'none'; return; }
+
+    const temUrgente = proximas.some(d => Math.round((new Date(d.data.getFullYear(),d.data.getMonth(),d.data.getDate()) - new Date(agora.getFullYear(),agora.getMonth(),agora.getDate())) / 86400000) <= 2);
+    const cls = temUrgente ? 'urgente' : 'aviso';
+    const icone = temUrgente ? '🚨' : '📅';
+    const titulo = temUrgente ? 'Atenção — datas muito próximas!' : 'Datas nos próximos 7 dias';
+
+    const hojeCalendario = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+    const itens = proximas.map(d => {
+      const eventoCalendario = new Date(d.data.getFullYear(), d.data.getMonth(), d.data.getDate());
+      const dias = Math.round((eventoCalendario - hojeCalendario) / 86400000);
+      const dataStr = d.data.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
+      const diasStr = dias === 0 ? 'hoje' : dias === 1 ? 'amanhã' : `em ${dias} dias`;
+      return `<li><strong>${esc(d.titulo)}</strong> — ${dataStr} <em>(${diasStr})</em></li>`;
+    }).join('');
+
+    banner.innerHTML = `<div class="banner-datas-wrap ${cls}">
+      <span class="banner-datas-icone">${icone}</span>
+      <div class="banner-datas-corpo">
+        <div class="banner-datas-titulo">${titulo}</div>
+        <ul class="banner-datas-lista">${itens}</ul>
+      </div>
+      <button class="banner-datas-fechar" onclick="fecharBannerDatas()" aria-label="Fechar">✕</button>
+    </div>`;
+    banner.style.display = 'block';
+  }
+
+  window.fecharBannerDatas = function() {
+    const banner = document.getElementById('banner-datas');
+    if (banner) banner.style.display = 'none';
+    localStorage.setItem(chaveLocal('banner-fechado'), new Date().toDateString());
+  };
+
+  async function carregarDatas() {
+    const lista = document.getElementById('datas-lista');
+    const contador = document.getElementById('datas-contador');
+    try {
+      const snap = await getDocs(collection(db, 'datas'));
+      const agora = new Date();
+      todasAsDatas = [];
+      snap.forEach(d => {
+        const item = { id:d.id, ...d.data() };
+        const data = new Date(item.dataIso);
+        if (!Number.isNaN(data.getTime()) && data >= agora) todasAsDatas.push({ ...item, data });
+      });
+      todasAsDatas.sort((a,b) => a.data - b.data);
+      mostrarBannerDatas();
+      const total = todasAsDatas.length;
+      contador.textContent = total === 1 ? '1 data' : `${total} datas`;
+      if (!total) {
+        lista.innerHTML = `<div class="painel-vazio"><strong>Sem datas publicadas</strong><p>As próximas entregas e provas aparecerão aqui quando forem adicionadas.</p></div>`;
+        return;
+      }
+      const renderItem = (item, isFirst) => {
+        const agora2 = new Date();
+        const diffMs = item.data - agora2;
+        const dias = Math.max(0, Math.ceil(diffMs / 86400000));
+        const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
+        const tag = item.link ? 'button' : 'div';
+        const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
+        // Destaque só no item mais urgente
+        let cls = 'painel-item' + (item.link ? '' : ' estatico');
+        if (isFirst) {
+          if (dias <= 1)      cls += ' critico';
+          else if (dias <= 7) cls += ' urgente';
+        }
+        const diasLabel = dias === 0
+          ? `Hoje · ${Math.max(0,Math.ceil(diffMs/3600000))}h`
+          : dias === 1 ? 'Amanhã' : `${dias} dias`;
+        return `<${tag} class="${cls}" ${attrs}>
+          <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small></span>
+          <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
+          <span class="painel-item-dias">${diasLabel}</span>
+        </${tag}>`;
+      };
+      const visiveis = todasAsDatas.slice(0,3);
+      let html = visiveis.map((item, i) => renderItem(item, i === 0)).join('');
+      if (total > 3) {
+        html += `<button type="button" class="painel-ver-todas" onclick="abrirEcranDatas()">Ver todas as ${total} datas →</button>`;
+      }
+      lista.innerHTML = html;
+      lista.querySelectorAll('[data-data-link]').forEach(btn => btn.addEventListener('click', () => window.open(btn.dataset.dataLink,'_blank','noopener')));
+      // Popular filtro de UCs no ecrã de todas as datas
+      const ucsUnicas = [...new Map(todasAsDatas.filter(d => d.ucId && d.ucNome).map(d => [d.ucId, d.ucNome])).entries()];
+      const filtroUc = document.getElementById('filtro-uc');
+      filtroUc.innerHTML = '<option value="">Todas as UCs</option>' + ucsUnicas.map(([id, nome]) => `<option value="${esc(id)}">${esc(nome)}</option>`).join('');
+    } catch(e) {
+      console.warn('Datas não carregadas:', e.message);
+      contador.textContent = 'Indisponível';
+      lista.innerHTML = `<div class="painel-vazio"><strong>Calendário indisponível</strong><p>Não foi possível consultar as próximas datas neste momento.</p></div>`;
+    }
+  }
+
+  // ── BOTTOM NAV ─────────────────────────────────────────
+  window.bnavAtualizar = function(id) {
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('ativa'));
+    const btn = document.getElementById('bnav-' + id);
+    if (btn) btn.classList.add('ativa');
+  };
+
+  window.bnavIr = function(id) {
+    if (id === 'datas') {
+      window.abrirEcranDatas();
+      return;
+    }
+    document.getElementById('ecra-datas').style.display     = 'none';
+    document.getElementById('ecra-docs').style.display      = 'none';
+    document.getElementById('ecra-citacoes').style.display  = 'none';
+    document.getElementById('ecra-ucs').style.display       = 'block';
+    window.bnavAtualizar(id);
+    requestAnimationFrame(() => {
+      if (id === 'ucs') {
+        const el = document.querySelector('.arquivo-cabecalho') || document.getElementById('ucs-grid');
+        if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+      } else if (id === 'ferramentas') {
+        const el = document.querySelector('.ferramentas-secao');
+        if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  };
+
+  window.addEventListener('scroll', function() {
+    if (window.innerWidth > 640) return;
+    const ucsEl  = document.querySelector('.arquivo-cabecalho') || document.getElementById('ucs-grid');
+    const ferrEl = document.querySelector('.ferramentas-secao');
+    if (!ucsEl || !ferrEl) return;
+    const y = window.scrollY + 80;
+    let ativo = 'inicio';
+    if (y >= ucsEl.offsetTop) ativo = 'ucs';
+    if (y >= ferrEl.offsetTop) ativo = 'ferramentas';
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('ativa'));
+    const btn = document.getElementById('bnav-' + ativo);
+    if (btn) btn.classList.add('ativa');
+  }, { passive: true });
+  // ───────────────────────────────────────────────────────
+
+  window.abrirEcranDatas = function() {
+    document.getElementById('ecra-ucs').style.display      = 'none';
+    document.getElementById('ecra-docs').style.display     = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-datas').style.display    = 'block';
+    window.bnavAtualizar('datas');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    filtrarDatas();
+  };
+
+  window.voltarInicio = function() {
+    document.getElementById('viewer-overlay').classList.remove('visivel');
+    document.getElementById('ecra-datas').style.display    = 'none';
+    document.getElementById('ecra-docs').style.display     = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display      = 'block';
+    window.bnavAtualizar('inicio');
+    viewerDocAtual = null;
+  };
+
+  window.fecharEcranDatas = function() {
+    document.getElementById('ecra-datas').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display = 'block';
+    window.bnavAtualizar('inicio');
+  };
+
+  // ── CITAÇÕES APA7 ─────────────────────────────────────────────────────
+  const CIT_TIPOS = {
+    livro: {
+      label: 'Livro',
+      campos: [
+        { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do livro',          tipo:'text',    placeholder:'Título completo', hint:'Em itálico na citação' },
+        { id:'edicao',   label:'Edição (opcional)',        tipo:'text',    placeholder:'2ª' },
+        { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
+        { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    artigo: {
+      label: 'Artigo Científico',
+      campos: [
+        { id:'autores',  label:'Autor(es)',                tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do artigo',         tipo:'text',    placeholder:'Título do artigo' },
+        { id:'revista',  label:'Nome da revista',          tipo:'text',    placeholder:'Journal of Social Sciences', hint:'Em itálico na citação' },
+        { id:'volume',   label:'Volume',                   tipo:'text',    placeholder:'12' },
+        { id:'numero',   label:'Número',                   tipo:'text',    placeholder:'3' },
+        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'doi',      label:'DOI',                      tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    capitulo: {
+      label: 'Capítulo',
+      campos: [
+        { id:'autores',  label:'Autor(es) do capítulo',   tipo:'autores', hint:'Formato: Sobrenome, N. N.' },
+        { id:'ano',      label:'Ano',                      tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título do capítulo',       tipo:'text',    placeholder:'Título do capítulo' },
+        { id:'editores', label:'Editor(es) do livro',      tipo:'autores', hint:'Formato: N. N. Sobrenome (iniciais primeiro)' },
+        { id:'livro',    label:'Título do livro',          tipo:'text',    placeholder:'Título da obra completa', hint:'Em itálico na citação' },
+        { id:'paginas',  label:'Páginas',                  tipo:'text',    placeholder:'45–68' },
+        { id:'editora',  label:'Editora',                  tipo:'text',    placeholder:'Nome da editora' },
+        { id:'doi',      label:'DOI ou URL (opcional)',    tipo:'text',    placeholder:'https://doi.org/...' },
+      ]
+    },
+    website: {
+      label: 'Website',
+      campos: [
+        { id:'autores',  label:'Autor(es) ou Organização',tipo:'autores', hint:'Para organização, escrever o nome completo num campo' },
+        { id:'ano',      label:'Ano (ou s.d. se sem data)',tipo:'text',    placeholder:'2023' },
+        { id:'titulo',   label:'Título da página',         tipo:'text',    placeholder:'Título da página web' },
+        { id:'site',     label:'Nome do site',             tipo:'text',    placeholder:'Nome do website', hint:'Em itálico na citação' },
+        { id:'url',      label:'URL',                      tipo:'text',    placeholder:'https://www.exemplo.com/pagina' },
+      ]
+    },
+    tese: {
+      label: 'Tese',
+      campos: [
+        { id:'autores',    label:'Autor',                  tipo:'autores', hint:'' },
+        { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
+        { id:'titulo',     label:'Título da tese',         tipo:'text',    placeholder:'Título completo da tese', hint:'Em itálico na citação' },
+        { id:'tipo_tese',  label:'Tipo',                   tipo:'select',  opcoes:['Tese de doutoramento','Dissertação de mestrado'] },
+        { id:'instituicao',label:'Instituição',            tipo:'text',    placeholder:'Universidade Aberta' },
+        { id:'url',        label:'URL ou repositório (opcional)', tipo:'text', placeholder:'https://repositorio.uab.pt/...' },
+      ]
+    },
+    relatorio: {
+      label: 'Relatório',
+      campos: [
+        { id:'autores',    label:'Autor(es) ou Organização',tipo:'autores', hint:'' },
+        { id:'ano',        label:'Ano',                    tipo:'text',    placeholder:'2023' },
+        { id:'titulo',     label:'Título do relatório',    tipo:'text',    placeholder:'Título do relatório', hint:'Em itálico na citação' },
+        { id:'numero',     label:'Número (opcional)',       tipo:'text',    placeholder:'No. 42' },
+        { id:'organizacao',label:'Organização/Editora',    tipo:'text',    placeholder:'Nome da organização' },
+        { id:'url',        label:'URL (opcional)',          tipo:'text',    placeholder:'https://...' },
+      ]
+    }
+  };
+
+  let _citTipoAtivo = 'livro';
+  let _citAtual = '';
+
+  window.abrirCitacoes = function() {
+    document.getElementById('ecra-ucs').style.display    = 'none';
+    document.getElementById('ecra-docs').style.display   = 'none';
+    document.getElementById('ecra-datas').style.display  = 'none';
+    document.getElementById('ecra-citacoes').style.display = 'block';
+    window.bnavAtualizar('ferramentas');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!window._citGeradorIniciado) { _iniciarGerador(); window._citGeradorIniciado = true; }
+    _renderBibliografia();
+  };
+
+  window.fecharCitacoes = function() {
+    document.getElementById('ecra-citacoes').style.display = 'none';
+    document.getElementById('ecra-ucs').style.display = 'block';
+    window.bnavAtualizar('ferramentas');
+    requestAnimationFrame(() => {
+      const el = document.querySelector('.ferramentas-secao');
+      if (el) window.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+    });
+  };
+
+  function _iniciarGerador() {
+    const tiposEl = document.getElementById('cit-tipos');
+    tiposEl.innerHTML = Object.entries(CIT_TIPOS).map(([id, t]) =>
+      `<button class="citacoes-tipo-btn${id===_citTipoAtivo?' ativo':''}" onclick="window._selecionarTipoCit('${id}')">${t.label}</button>`
+    ).join('');
+    _renderFormCitacao();
+    _ocultarPreview();
+  }
+
+  window._selecionarTipoCit = function(tipo) {
+    _citTipoAtivo = tipo;
+    document.querySelectorAll('.citacoes-tipo-btn').forEach(b =>
+      b.classList.toggle('ativo', b.textContent === CIT_TIPOS[tipo].label)
+    );
+    _renderFormCitacao();
+    _ocultarPreview();
+  };
+
+  // Converte "Paulo Ferreira da Cunha" → "Cunha, P. F." (autores)
+  // ou → "P. F. Cunha" (editores em capítulos)
+  function _nomeParaAPA7(nome, modoEditor) {
+    nome = nome.trim();
+    if (!nome) return nome;
+    // Se já tem vírgula e não é modo editor, assume já formatado
+    if (nome.includes(',') && !modoEditor) return nome;
+    const PART = new Set(['da','de','do','das','dos','e','van','von','el','al','della','del','den','der','le','la','y','e']);
+    const ps = nome.split(/\s+/);
+    if (ps.length === 1) return ps[0];
+    const apelido = ps[ps.length - 1];
+    const resto = ps.slice(0, -1);
+    const iniciais = resto.filter(p => !PART.has(p.toLowerCase())).map(p => p[0].toUpperCase() + '.').join(' ');
+    if (!iniciais) return apelido;
+    return modoEditor ? `${iniciais} ${apelido}` : `${apelido}, ${iniciais}`;
+  }
+
+  function _renderFormCitacao() {
+    const tipo = CIT_TIPOS[_citTipoAtivo];
+    const form = document.getElementById('cit-form');
+    form.innerHTML = `<div class="citacoes-aviso-validacao" id="cit-aviso-validacao"></div>` +
+    tipo.campos.map(campo => {
+      if (campo.tipo === 'autores') {
+        const isEditor = campo.id === 'editores';
+        const ph = isEditor ? 'Ex: Paulo Ferreira da Cunha' : 'Ex: Paulo Ferreira da Cunha';
+        const nota = `<small>Escreve o nome normalmente — a app formata em APA7 automaticamente.</small>`;
+        return `<div class="citacoes-campo">
+          <label>${campo.label}</label>
+          <div class="citacoes-autores-lista" id="lista-${campo.id}">
+            <div class="citacoes-autor-row">
+              <input type="text" class="autor-input-${campo.id}" placeholder="${ph}" />
+              <button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${campo.id}')" aria-label="Remover">×</button>
+            </div>
+          </div>
+          <button type="button" class="btn-add-autor" onclick="window._addAutorCit('${campo.id}')">+ Adicionar autor</button>
+          ${nota}
+        </div>`;
+      } else if (campo.tipo === 'select') {
+        return `<div class="citacoes-campo">
+          <label for="cit-${campo.id}">${campo.label}</label>
+          <select id="cit-${campo.id}">${campo.opcoes.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>
+        </div>`;
+      } else {
+        const isTitulo = campo.id === 'titulo' || campo.id === 'livro';
+        const avisoTitulo = isTitulo
+          ? `<div class="citacoes-aviso-titulo">ℹ APA7: título em minúsculas (exceto 1ª palavra e nomes próprios).<br>Ex: <em>Teoria geral do direito: Uma síntese crítica</em></div>`
+          : '';
+        return `<div class="citacoes-campo">
+          <label for="cit-${campo.id}">${campo.label}</label>
+          <input type="text" id="cit-${campo.id}" placeholder="${campo.placeholder||''}" />
+          ${campo.hint&&!isTitulo?`<small>${campo.hint}</small>`:''}
+          ${avisoTitulo}
+        </div>`;
+      }
+    }).join('');
+  }
+
+  window._addAutorCit = function(grupo) {
+    const lista = document.getElementById('lista-' + grupo);
+    const row = document.createElement('div');
+    row.className = 'citacoes-autor-row';
+    row.innerHTML = `<input type="text" class="autor-input-${grupo}" placeholder="Ex: Maria de Lurdes Santos" /><button type="button" class="btn-rem-autor" onclick="window._remAutorCit(this,'${grupo}')" aria-label="Remover">×</button>`;
+    lista.appendChild(row);
+  };
+
+  window._remAutorCit = function(btn, grupo) {
+    const rows = document.querySelectorAll(`#lista-${grupo} .citacoes-autor-row`);
+    if (rows.length <= 1) { btn.previousElementSibling.value = ''; return; }
+    btn.parentElement.remove();
+  };
+
+  function _getAutores(grupo) {
+    const isEditor = grupo === 'editores';
+    return [...document.querySelectorAll(`.autor-input-${grupo}`)]
+      .map(i => _nomeParaAPA7(i.value.trim(), isEditor))
+      .filter(Boolean);
+  }
+  function _getVal(id) {
+    const el = document.getElementById('cit-' + id);
+    return el ? el.value.trim() : '';
+  }
+  function _fmtAutores(autores) {
+    if (!autores.length) return '';
+    if (autores.length === 1) return autores[0];
+    if (autores.length <= 20) return autores.slice(0,-1).join(', ') + ', & ' + autores[autores.length-1];
+    return autores.slice(0,19).join(', ') + ', ... ' + autores[autores.length-1];
+  }
+  function _fmtEditores(editores) {
+    if (!editores.length) return '';
+    const lbl = editores.length === 1 ? 'Ed.' : 'Eds.';
+    return editores.length === 1
+      ? `${editores[0]} (${lbl})`
+      : editores.slice(0,-1).join(', ') + ', & ' + editores[editores.length-1] + ` (${lbl})`;
+  }
+  function _citTxt(html) { return html.replace(/<\/?em>/g,''); }
+
+  // Se o título estiver todo (ou maioritariamente) em maiúsculas → converte para sentence case APA7
+  function _normalizarTitulo(t) {
+    if (!t) return t;
+    const alfa = t.replace(/[^a-zA-ZÀ-ɏ]/g, '');
+    if (!alfa.length) return t;
+    const nMaius = (t.match(/[A-ZÀ-ÖØ-Þ]/g) || []).length;
+    if (nMaius / alfa.length < 0.5) return t; // já tem letras minúsculas suficientes
+    // Converte tudo para minúsculas
+    let r = t.toLowerCase();
+    // 1ª letra sempre maiúscula
+    r = r.charAt(0).toUpperCase() + r.slice(1);
+    // Primeira letra após ': ' também maiúscula (subtítulo APA7)
+    r = r.replace(/:\s+([a-zà-þ])/g, (_, c) => ': ' + c.toUpperCase());
+    return r;
+  }
+
+  function _citAviso(msg) {
+    const el = document.getElementById('cit-aviso-validacao');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  window.gerarCitacao = function() {
+    _citAviso('');
+    const tipo = _citTipoAtivo;
+    let c = '';
+    if (tipo === 'livro') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), ed = _getVal('edicao'),
+            edit = _getVal('editora'), doi = _getVal('doi');
+      if (!au.length||!ti) { _citAviso('Preenche Autor(es) e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${ed?` (${ed} ed.)`:''}.${edit?' '+edit+'.':''}${doi?' '+doi:''}`;
+    } else if (tipo === 'artigo') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), rev = _getVal('revista'),
+            vol = _getVal('volume'), num = _getVal('numero'),
+            pag = _getVal('paginas'), doi = _getVal('doi');
+      if (!au.length||!ti||!rev) { _citAviso('Preenche Autor(es), Título e Revista.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${rev}</em>${vol?`, <em>${vol}</em>`:''}${num?`(${num})`:''}${pag?`, ${pag}`:''}.${doi?' '+doi:''}`;
+    } else if (tipo === 'capitulo') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), eds = _getAutores('editores'),
+            liv = _normalizarTitulo(_getVal('livro')), pag = _getVal('paginas'),
+            edit = _getVal('editora'), doi = _getVal('doi');
+      if (!au.length||!ti||!liv) { _citAviso('Preenche Autor(es), Título do capítulo e Título do livro.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. Em ${eds.length?_fmtEditores(eds)+', ':''}<em>${liv}</em>${pag?` (pp. ${pag})`:''}. ${edit}.${doi?' '+doi:''}`;
+    } else if (tipo === 'website') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), site = _getVal('site'), url = _getVal('url');
+      if (!au.length||!ti||!url) { _citAviso('Preenche Autor/Organização, Título e URL.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). ${ti}. <em>${site||url}</em>. ${url}`;
+    } else if (tipo === 'tese') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), tp = _getVal('tipo_tese'),
+            inst = _getVal('instituicao'), url = _getVal('url');
+      if (!au.length||!ti) { _citAviso('Preenche Autor e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em> [${tp}${inst?', '+inst:''}].${url?' '+url:''}`;
+    } else if (tipo === 'relatorio') {
+      const au = _getAutores('autores'), ano = _getVal('ano')||'s.d.',
+            ti = _normalizarTitulo(_getVal('titulo')), num = _getVal('numero'),
+            org = _getVal('organizacao'), url = _getVal('url');
+      if (!au.length||!ti) { _citAviso('Preenche Autor/Organização e Título.'); return; }
+      c = `${_fmtAutores(au)} (${ano}). <em>${ti}</em>${num?` (${num})`:''}. ${org}.${url?' '+url:''}`;
+    }
+    _citAtual = c;
+    const preview = document.getElementById('cit-preview');
+    preview.innerHTML = c;
+    preview.style.display = 'block';
+    document.getElementById('btn-cit-copiar').style.display  = 'inline-flex';
+    document.getElementById('btn-cit-guardar').style.display = 'inline-flex';
+  };
+
+  function _ocultarPreview() {
+    _citAtual = '';
+    document.getElementById('cit-preview').style.display    = 'none';
+    document.getElementById('btn-cit-copiar').style.display = 'none';
+    document.getElementById('btn-cit-guardar').style.display= 'none';
+  }
+
+  window.copiarCitacao = async function() {
+    try {
+      await navigator.clipboard.writeText(_citTxt(_citAtual));
+      const btn = document.getElementById('btn-cit-copiar');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = orig, 1800);
+    } catch(e) { alert('Não foi possível copiar.'); }
+  };
+
+  window.guardarCitacao = async function() {
+    if (!_citAtual || !utilizadorAtual) return;
+    const key = 'cit_' + Date.now();
+    try {
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {
+        [`citacoes.${key}`]: { tipo: _citTipoAtivo, html: _citAtual, ts: Date.now() }
+      });
+      if (!utilizadorAtual.citacoes) utilizadorAtual.citacoes = {};
+      utilizadorAtual.citacoes[key] = { tipo: _citTipoAtivo, html: _citAtual, ts: Date.now() };
+      _renderBibliografia();
+      const btn = document.getElementById('btn-cit-guardar');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Guardado!';
+      setTimeout(() => btn.textContent = orig, 1800);
+    } catch(e) { alert('Erro ao guardar: ' + e.message); }
+  };
+
+  function _renderBibliografia() {
+    const lista = document.getElementById('cit-biblio-lista');
+    if (!lista) return;
+    const citacoes = utilizadorAtual?.citacoes;
+    if (!citacoes || !Object.keys(citacoes).length) {
+      lista.innerHTML = '<div class="citacoes-vazia">Nenhuma citação guardada ainda.</div>';
+      return;
+    }
+    const entradas = Object.entries(citacoes).sort((a,b) =>
+      _citTxt(a[1].html).toLowerCase().localeCompare(_citTxt(b[1].html).toLowerCase(), 'pt')
+    );
+    const _sanitizeCit = html => html
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/&lt;(\/?)em&gt;/g,'<$1em>');
+
+    lista.innerHTML = entradas.map(([key, cit]) => `
+      <div class="citacoes-item" data-cit-key="${key}">
+        <div class="citacoes-item-texto">${_sanitizeCit(cit.html || '')}</div>
+        <div class="citacoes-item-acoes">
+          <button class="btn-cit-item-copiar" onclick="window._copiarItemCit('${key}')">Copiar</button>
+          <button class="btn-cit-item-del" onclick="window._eliminarCit('${key}')">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window._copiarItemCit = async function(key) {
+    const cit = utilizadorAtual?.citacoes?.[key];
+    if (!cit) return;
+    try {
+      await navigator.clipboard.writeText(_citTxt(cit.html));
+      const btn = document.querySelector(`[data-cit-key="${key}"] .btn-cit-item-copiar`);
+      if (btn) { const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,1400); }
+    } catch(e) {}
+  };
+
+  window._eliminarCit = async function(key) {
+    if (!utilizadorAtual) return;
+    if (!confirm('Eliminar esta citação da tua bibliografia?')) return;
+    try {
+      await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {
+        [`citacoes.${key}`]: deleteField()
+      });
+      delete utilizadorAtual.citacoes[key];
+      _renderBibliografia();
+    } catch(e) { alert('Erro: ' + e.message); }
+  };
+
+  window.copiarTodaCitacoes = async function() {
+    const citacoes = utilizadorAtual?.citacoes;
+    if (!citacoes || !Object.keys(citacoes).length) { alert('Não tens citações guardadas.'); return; }
+    const sorted = Object.values(citacoes).sort((a,b) =>
+      _citTxt(a.html).toLowerCase().localeCompare(_citTxt(b.html).toLowerCase(), 'pt')
+    );
+    const texto = sorted.map(c => _citTxt(c.html)).join('\n\n');
+    try {
+      await navigator.clipboard.writeText(texto);
+      const btn = document.querySelector('.btn-cit-copiar-tudo');
+      if (btn) { const o=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=o,1800); }
+    } catch(e) { alert('Erro ao copiar.'); }
+  };
+  // ── FIM CITAÇÕES APA7 ─────────────────────────────────────────────────
+
+  window.filtrarDatas = function() {
+    const ano = document.getElementById('filtro-ano').value;
+    const sem = document.getElementById('filtro-semestre').value;
+    const minor = document.getElementById('filtro-minor').value;
+    const ucId = document.getElementById('filtro-uc').value;
+    const epoca = document.getElementById('filtro-epoca').value;
+    // Mostrar/ocultar filtro de minor
+    document.getElementById('filtro-minor').style.display = ano === '3' ? '' : 'none';
+
+    const agora = new Date();
+    let resultado = todasAsDatas.filter(d => {
+      if (ano && String(d.ano || '') !== ano) return false;
+      if (sem && String(d.semestre || '') !== sem) return false;
+      if (ano === '3' && minor && (d.minor || '') !== minor) return false;
+      if (ucId && d.ucId !== ucId) return false;
+      if (epoca && d.tipo !== epoca) return false;
+      return true;
+    });
+
+    const lista = document.getElementById('datas-lista-completa');
+    if (!resultado.length) {
+      lista.innerHTML = '<div class="datas-vazio">Nenhuma data encontrada para os filtros selecionados.</div>';
+      return;
+    }
+    lista.innerHTML = resultado.map(item => {
+      const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
+      const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
+      const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`;
+      const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
+      const cls = item.link ? 'data-item-full clickable' : 'data-item-full';
+      const onclick = item.link ? `onclick="window.open('${esc(item.link)}','_blank','noopener')"` : '';
+      const notaHtml = item.descricao ? `<span style="display:block;margin-top:5px;font-size:.67rem;color:#92400e;background:#fffbeb;border-left:2px solid var(--ouro);padding:3px 7px;border-radius:0 4px 4px 0">${esc(item.descricao)}</span>` : '';
+      return `<div class="${cls}" ${onclick}>
+        <div class="data-item-full-dia">${item.data.getDate()}<small>${mes}</small></div>
+        <div class="data-item-full-info"><strong>${esc(item.titulo || 'Data académica')}</strong><span>${esc(subtag || item.tipo || '—')}</span>${notaHtml}</div>
+        <div class="data-item-full-tags">
+          <span class="data-tag dias">${diasTexto}</span>
+          <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
+        </div>
+      </div>`;
+    }).join('');
+  };
+
+  // --- AUTH ---
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'index.html'; return; }
+    try {
+      const snap = await getDoc(doc(db, 'utilizadores', user.uid));
+      if (!snap.exists()) {
+        localStorage.setItem('login-msg', 'A tua conta não foi encontrada. Contacta a administração.');
+        await signOut(auth);
+        window.location.href = 'index.html';
+        return;
+      }
+      if (snap.data().estado !== 'ativo') {
+        localStorage.setItem('login-msg', snap.data().estado === 'pendente'
+          ? 'A tua conta está a aguardar ativação. Receberás um email assim que for aprovada.'
+          : 'A tua conta foi suspensa. Contacta a administração.');
+        await signOut(auth);
+        window.location.href = 'index.html';
+        return;
+      }
+      utilizadorAtual = { uid: user.uid, ...snap.data() };
+      utilizadorAtual.codigo ||= 'CS-' + user.uid.slice(0, 7).toUpperCase();
+      const nome   = utilizadorAtual.nome || user.email || '';
+      const partes = nome.trim().split(' ');
+      const iniciais = (partes[0][0] + (partes[partes.length - 1][0] || '')).toUpperCase();
+      document.getElementById('hdr-nome').textContent  = nome;
+      document.getElementById('hdr-avatar').textContent = iniciais;
+      document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
+      document.getElementById('hdr-codigo').style.display = 'block';
+      if (utilizadorAtual.admin) document.getElementById('btn-admin').style.display = '';
+      document.getElementById('bv-nome').textContent   = partes[0];
+      document.getElementById('loading-inicial').style.display = 'none';
+      document.getElementById('ecra-ucs').style.display = 'block';
+      document.getElementById('welcome-bar').classList.add('visivel');
+      indexarFerramentas();
+      carregarPreferencias();
+      prepararPesquisa();
+      carregarDatas();
+      carregarUCs();
+      atualizarProgresso();
+      iniciarPresenca(user, utilizadorAtual.nome || user.email);
+      document.getElementById('rodape-app').style.display = 'block';
+      mostrarFabSugestao();
+      mostrarPensamentoDoDia();
+      setTimeout(() => window.mostrarAviso(), 1200);
+    } catch (err) {
+      console.warn('Perfil não carregado:', err);
+      await signOut(auth);
+      window.location.href = 'index.html';
+    }
+  });
+
+  // --- UCs ---
+  async function carregarUCs() {
+    totalDocs = 0;
+    const container = document.getElementById('ucs-grid');
+    try {
+      const snap = await getDocs(collection(db, 'ucs'));
+      if (snap.empty) {
+        container.innerHTML = `<div class="empty">
+          <div class="empty-icon">📂</div>
+          <h4>Nenhuma UC disponível</h4>
+          <p>Ainda não há Unidades Curriculares criadas.</p>
+        </div>`;
+        document.getElementById('stat-ucs').textContent  = '0';
+        document.getElementById('stat-docs').textContent = '0';
+        return;
+      }
+
+      const ucs = [];
+      snap.forEach(d => ucs.push({ id: d.id, ...d.data() }));
+      ucs.sort((a, b) => {
+        const dA = (a.ano||99)*100 + (a.semestre||99);
+        const dB = (b.ano||99)*100 + (b.semestre||99);
+        if (dA !== dB) return dA - dB;
+        return (a.ordem||99) - (b.ordem||99);
+      });
+
+      ucs.forEach(uc => {
+        ucsMap[uc.id] = uc;
+        catalogo.set(`uc:${uc.id}`, {
+          key:`uc:${uc.id}`, tipo:'uc', id:uc.id, titulo:uc.nome,
+          subtitulo:`${uc.ano || '—'}º Ano · ${uc.semestre || '—'}º Semestre`
+        });
+      });
+
+      const ucsVisiveis = ucs.filter(uc => !uc.oculta);
+      document.getElementById('stat-ucs').textContent  = ucsVisiveis.length;
+      document.getElementById('stat-docs').textContent = '…';
+
+      const grupos = {};
+      ucsVisiveis.forEach(uc => {
+        const a = uc.ano      || 0;
+        const s = uc.semestre || 0;
+        if (!grupos[a])    grupos[a] = {};
+        if (!grupos[a][s]) grupos[a][s] = [];
+        grupos[a][s].push(uc);
+      });
+
+      container.innerHTML = '';
+      let colorIdx = 0;
+
+      Object.keys(grupos).sort((a,b) => Number(a)-Number(b)).forEach(ano => {
+        const anoDiv = document.createElement('div');
+        anoDiv.className = 'ano-secao';
+
+        const anoH = document.createElement('div');
+        anoH.className = 'ano-titulo';
+        anoH.innerHTML = Number(ano) > 0
+          ? `<span class="ano-titulo-badge">${ano}º Ano</span><span class="ano-titulo-label">Ciências Sociais</span><span class="ano-titulo-linha"></span>`
+          : `<span class="ano-titulo-badge">Sem classificação</span><span class="ano-titulo-linha"></span>`;
+        anoDiv.appendChild(anoH);
+
+        Object.keys(grupos[ano]).sort((a,b) => Number(a)-Number(b)).forEach(sem => {
+          const semDiv = document.createElement('div');
+          semDiv.className = 'semestre-secao';
+
+          if (Number(sem) > 0) {
+            const semH = document.createElement('div');
+            semH.className   = 'semestre-titulo';
+            semH.textContent = `${sem}º Semestre`;
+            semDiv.appendChild(semH);
+          }
+
+          const grid = document.createElement('div');
+          grid.className = 'ucs-grid';
+
+          grupos[ano][sem].forEach(uc => {
+            const cor    = paleta[colorIdx % paleta.length];
+            colorIdx++;
+
+            // Iniciais decorativas das primeiras palavras significativas
+            const palavras = uc.nome.split(' ').filter(w => w.length > 2);
+            const deco = palavras.length >= 2
+              ? (palavras[0][0] + palavras[1][0]).toUpperCase()
+              : uc.nome.slice(0, 2).toUpperCase();
+
+            const el = document.createElement('article');
+            el.className = 'uc-card';
+            el.innerHTML = `
+              <button class="favorito-btn" type="button" data-fav-key="uc:${uc.id}" aria-label="Adicionar ${esc(uc.nome)} aos favoritos">☆</button>
+              <button class="uc-card-abrir" type="button" aria-label="Abrir ${esc(uc.nome)}">
+                <span class="uc-card-banda" style="background:${cor.banda}">
+                  <span class="uc-card-circles"></span>
+                  <span class="uc-card-deco">${esc(deco)}</span>
+                  <span class="uc-card-emoji">${cor.emoji}</span>
+                </span>
+                <span class="uc-card-corpo">
+                  <span class="uc-nome">${esc(uc.nome)}</span>
+                  <span class="uc-card-footer">
+                    <span class="uc-count" id="count-${uc.id}">A carregar...</span>
+                    <span class="uc-card-cta">Ver →</span>
+                  </span>
+                </span>
+              </button>`;
+            el.querySelector('.uc-card-abrir').addEventListener('click', () => abrirUC(uc, cor.emoji));
+            el.querySelector('.favorito-btn').addEventListener('click', () => window.toggleFavorito(`uc:${uc.id}`));
+            grid.appendChild(el);
+          });
+
+          semDiv.appendChild(grid);
+          anoDiv.appendChild(semDiv);
+        });
+
+        container.appendChild(anoDiv);
+      });
+
+      // Await all doc counts before rendering favorites/search
+      await Promise.all(ucsVisiveis.map(uc => contarDocs(uc).catch(e => console.warn('contarDocs:', e))));
+
+      renderFavoritos();
+      renderRetomar();
+      window.atualizarBotoesFavoritos();
+      window.verificarNovosDocumentos();
+
+    } catch(e) {
+      container.innerHTML = `<p style="color:#dc2626;font-size:.85rem;padding:20px">Erro ao carregar UCs: ${e.code || e.message}</p>`;
+    }
+  }
+
+  window.verificarNovosDocumentos = async function() {
+    if (!utilizadorAtual?.uid) return;
+    const key = `ca_lastVisit_${utilizadorAtual.uid}`;
+    const prevVisit = localStorage.getItem(key);
+    localStorage.setItem(key, new Date().toISOString());
+    if (!prevVisit) return; // primeira visita — não mostrar
+
+    const prevDate = new Date(prevVisit);
+    const ucIds = Object.keys(ucsMap);
+    if (!ucIds.length) return;
+
+    try {
+      const novos = [];
+      await Promise.all(ucIds.map(async ucId => {
+        const ucNome = ucsMap[ucId]?.nome || ucId;
+        const snap = await getDocs(query(
+          collection(db, 'ucs', ucId, 'documentos'),
+          where('criadoEm', '>', prevDate)
+        ));
+        snap.forEach(d => novos.push({ nome: d.data().nome || '—', ucNome }));
+      }));
+      const total = novos.length;
+      if (total === 0) return;
+
+      // Banner
+      const banner = document.getElementById('notif-novos-docs');
+      const texto  = document.getElementById('notif-novos-docs-texto');
+      if (banner && texto) {
+        const visiveis = novos.slice(0, 3);
+        const lista = visiveis.map(n => `"${n.nome}" (${n.ucNome})`).join(', ');
+        const extra = total > 3 ? ` e mais ${total - 3}` : '';
+        texto.textContent = `📄 Novo${total > 1 ? 's' : ''} desde a tua última visita: ${lista}${extra}.`;
+        banner.style.display = 'flex';
+      }
+
+      // Badge na bottom nav (mobile)
+      const btn = document.getElementById('bnav-ucs');
+      if (btn && !btn.querySelector('.nav-notif-badge')) {
+        const svg = btn.querySelector('svg');
+        if (svg) {
+          const wrapper = document.createElement('span');
+          wrapper.style.cssText = 'position:relative;display:inline-block;line-height:0';
+          svg.parentNode.insertBefore(wrapper, svg);
+          wrapper.appendChild(svg);
+          const badge = document.createElement('span');
+          badge.className = 'nav-notif-badge';
+          badge.textContent = total > 9 ? '9+' : String(total);
+          wrapper.appendChild(badge);
+        }
+      }
+    } catch(e) { console.warn('verificarNovosDocumentos:', e); }
+  };
+
+  async function contarDocs(uc) {
+    try {
+    const snap = await getDocs(collection(db, 'ucs', uc.id, 'documentos'));
+    snap.forEach(d => {
+      const doc_ = { id:d.id, ucId:uc.id, ucNome:uc.nome, ...d.data() };
+      docMap[`${uc.id}:${d.id}`] = doc_;
+      catalogo.set(`doc:${uc.id}:${d.id}`, {
+        key:`doc:${uc.id}:${d.id}`,
+        tipo: doc_.tipo === 'link' ? 'link' : 'doc',
+        ucId:uc.id, docId:d.id,
+        href: doc_.tipo === 'link' ? (doc_.driveUrl || '') : undefined,
+        titulo:doc_.nome, subtitulo:uc.nome
+      });
+    });
+    const el   = document.getElementById('count-' + uc.id);
+    if (el) el.textContent = snap.size === 1 ? '1 documento' : `${snap.size} documentos`;
+    totalDocs += snap.size;
+    const statEl = document.getElementById('stat-docs');
+    if (statEl) statEl.textContent = totalDocs;
+    window.atualizarBotoesFavoritos();
+    } catch(e) {
+      const el = document.getElementById('count-' + uc.id);
+      if (el) el.textContent = 'Erro';
+      console.warn('contarDocs:', uc.nome, e);
+    }
+  }
+
+  // --- SUGESTÕES ---
+  window.abrirSugestao = function() {
+    if (!utilizadorAtual) return;
+    document.getElementById('sugestao-texto').value = '';
+    document.getElementById('sugestao-chars').textContent = '0';
+    document.getElementById('sugestao-form-wrap').style.display = 'block';
+    document.getElementById('sugestao-ok').style.display = 'none';
+    document.getElementById('sugestao-overlay').classList.add('aberto');
+    setTimeout(() => document.getElementById('sugestao-texto').focus(), 200);
+  };
+
+  window.fecharSugestao = function() {
+    document.getElementById('sugestao-overlay').classList.remove('aberto');
+  };
+
+  window.fecharSugestaoOverlay = function(e) {
+    if (e.target === document.getElementById('sugestao-overlay')) window.fecharSugestao();
+  };
+
+  window.sugestaoContador = function() {
+    const len = document.getElementById('sugestao-texto').value.length;
+    document.getElementById('sugestao-chars').textContent = len;
+  };
+
+  window.enviarSugestao = async function() {
+    const texto = document.getElementById('sugestao-texto').value.trim();
+    if (!texto) { document.getElementById('sugestao-texto').focus(); return; }
+    const btn = document.getElementById('btn-sugestao-enviar');
+    btn.textContent = '…'; btn.disabled = true;
+    try {
+      await addDoc(collection(db, 'sugestoes'), {
+        texto,
+        uid:       utilizadorAtual.uid,
+        nome:      utilizadorAtual.nome || utilizadorAtual.email || auth.currentUser?.email || 'Anónimo',
+        email:     utilizadorAtual.email || auth.currentUser?.email || '',
+        timestamp: serverTimestamp(),
+        lida:      false
+      });
+      document.getElementById('sugestao-form-wrap').style.display = 'none';
+      document.getElementById('sugestao-ok').style.display = 'block';
+      setTimeout(() => window.fecharSugestao(), 2400);
+    } catch(err) {
+      btn.textContent = 'Erro — tenta novamente'; btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Enviar sugestão'; }, 2500);
+    }
+  };
+
+  // Mostrar FAB apenas após login
+  function mostrarFabSugestao() {
+    document.getElementById('sugestao-fab').style.display = 'flex';
+  }
+
+  // ── PENSAMENTO DO DIA ─────────────────────────────────────
+  const PENSAMENTOS_FALLBACK = [
+  ];
+    async function carregarPensamentos() {
+    if (_pensamentosCache) return _pensamentosCache;
+    try {
+      const r = await fetch('pensamentos.json');
+      _pensamentosCache = await r.json();
+      return _pensamentosCache;
+    } catch(e) { return PENSAMENTOS_FALLBACK; }
+  }
+
   async function getPensamentoDoDia() {
     const hoje = new Date().toISOString().slice(0, 10);
     const diaDoAno = () => Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
@@ -10038,8 +13130,9 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
         return frases[diaDoAno() % frases.length];
       }
     } catch(e) {}
-    // 3. Fallback local
-    return PENSAMENTOS[diaDoAno() % PENSAMENTOS.length];
+    // 3. Fallback JSON externo
+    const frases = await carregarPensamentos();
+    return frases[diaDoAno() % frases.length];
   }
 
   async function mostrarPensamentoDoDia() {
