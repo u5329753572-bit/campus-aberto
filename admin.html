@@ -1095,7 +1095,7 @@
             <td id="uc-docs-${u.id}">—</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarUC('${u.id}')">Editar</button>
-              <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button><button onclick="abrirNota('${u.id}','${esc(u.nome)}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota sobre o utilizador">📝</button>
             </td>
           </tr>`).join('');
 
@@ -2116,6 +2116,47 @@
       }).join('');
     } catch(e){ listaEl.textContent='Erro: '+e.message; }
   }
+
+  // --- NOTAS DE ADMIN ---
+  let _notaUid = null;
+  async function abrirNota(uid, nome) {
+    _notaUid = uid;
+    document.getElementById('modal-nota-nome').textContent = nome;
+    document.getElementById('modal-nota').style.display = 'flex';
+    try {
+      const snap = await getDoc(doc(db, 'utilizadores', uid));
+      document.getElementById('modal-nota-text').value = snap.exists() ? (snap.data().notaAdmin || '') : '';
+    } catch(e) { document.getElementById('modal-nota-text').value = ''; }
+    document.getElementById('modal-nota-text').focus();
+  }
+  async function guardarNota() {
+    if (!_notaUid) return;
+    const texto = document.getElementById('modal-nota-text').value.trim();
+    try {
+      await updateDoc(doc(db, 'utilizadores', _notaUid), { notaAdmin: texto });
+    } catch(e) { console.error('Erro ao guardar nota:', e); }
+    document.getElementById('modal-nota').style.display = 'none';
+    _notaUid = null;
+  }
+  function fecharNota() {
+    document.getElementById('modal-nota').style.display = 'none';
+    _notaUid = null;
+  }
+  window.abrirNota = abrirNota;
+  window.guardarNota = guardarNota;
+  window.fecharNota = fecharNota;
 </script>
+
+<div id="modal-nota" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:14px;padding:28px;width:420px;max-width:92vw;box-shadow:0 24px 64px rgba(0,0,0,0.25)">
+    <h3 style="margin:0 0 6px;font-family:inherit;color:#1e3a5f">📝 Nota do admin</h3>
+    <p style="margin:0 0 14px;font-size:0.9rem;color:#6b7280">Sobre: <strong id="modal-nota-nome"></strong></p>
+    <textarea id="modal-nota-text" rows="5" placeholder="Escreve aqui a tua nota..." style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px;font-family:inherit;resize:vertical;box-sizing:border-box;font-size:0.95rem"></textarea>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button onclick="fecharNota()" style="padding:8px 18px;border:1.5px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-family:inherit">Cancelar</button>
+      <button onclick="guardarNota()" style="padding:8px 18px;border:none;border-radius:8px;background:#1e3a5f;color:white;cursor:pointer;font-family:inherit;font-weight:600">Guardar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
