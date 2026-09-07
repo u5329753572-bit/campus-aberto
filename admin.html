@@ -2138,7 +2138,16 @@
     document.getElementById('modal-nota').style.display = 'none';
     _notaUid = null;
   }
-  function fecharNota() {
+  async function atualizarCoresNotas(lista) {
+  for (const u of lista) {
+    try {
+      const snap = await getDoc(doc(db, 'admin_notas', u.id));
+      const btn = document.getElementById('nota-btn-' + u.id);
+      if (btn) btn.style.background = (snap.exists() && snap.data().texto) ? '#f59e0b' : '#6b7280';
+    } catch(e) {}
+  }
+}
+function fecharNota() {
     document.getElementById('modal-nota').style.display = 'none';
     _notaUid = null;
   }
