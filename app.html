@@ -3474,7 +3474,7 @@
       <div class="spinner" style="border-color:#333;border-top-color:#c9a84c"></div>
       <br/><span style="color:#666;font-size:.83rem">A carregar PDF...</span>
     </div>`;
-    overlay.classList.add('visivel');
+    overlay.classList.add('visivel'); history.pushState({viewer:true},'');
     viewerDocAtual = { ucId, docId, docNome };
     guardarRetomar(catalogo.get(`doc:${ucId}:${docId}`) || {
       key:`doc:${ucId}:${docId}`, tipo:'doc', ucId, docId, titulo:docNome,
@@ -3542,11 +3542,15 @@
     }
   };
 
-  window.fecharViewer = function() {
+  window.fecharViewer = function(dePopstate) {
     document.getElementById('viewer-overlay').classList.remove('visivel');
     document.getElementById('viewer-conteudo').innerHTML = '';
     viewerDocAtual = null;
+    if (!dePopstate) history.back();
   };
+  window.addEventListener('popstate', function() {
+    if (document.getElementById('viewer-overlay').classList.contains('visivel')) fecharViewer(true);
+  });
 
   window.iniciarDownloadDoViewer = function() {
     if (!viewerDocAtual) return;
