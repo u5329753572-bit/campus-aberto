@@ -1055,8 +1055,7 @@
   };
 
   window.alterarAdmin = async function(uid, tornarAdmin) {
-    const acao = tornarAdmin ? 'Dar privilégios de administrador' : 'Remover privilégios de administrador';
-    if (!confirm(acao + '?')) return;
+    if (!confirm(tornarAdmin ? 'Tens a certeza que queres promover a Administrador?' : 'Tens a certeza que queres remover os privilégios de Administrador?')) return;
     await updateDoc(doc(db, 'utilizadores', uid), { admin: tornarAdmin });
     carregarUtilizadores();
   };
