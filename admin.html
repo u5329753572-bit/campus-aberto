@@ -552,7 +552,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Documentos carregados</span></div>
       <table>
-        <thead><tr><th>UC</th><th>Nome</th><th>Descrição</th><th style="text-align:center">↓ Downloads</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Nome</th><th>Descrição</th><th style="text-align:center">↓ Downloads</th><th>Ações</th></tr></thead>
         <tbody id="tbody-docs"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -634,7 +634,7 @@
     <div class="tabela-wrap">
       <div class="tabela-header"><span>Datas publicadas</span></div>
       <table>
-        <thead><tr><th>Data</th><th>Tipo</th><th>Ano/Sem</th><th>Minor</th><th>UC</th><th>Título</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Data</th><th>Tipo</th><th>Ano/Sem</th><th>Minor</th><th>Título</th><th>Ações</th></tr></thead>
         <tbody id="tbody-datas"><tr><td colspan="7" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
@@ -1315,7 +1315,8 @@
 
     tb.innerHTML = rows.length === 0
       ? '<tr><td colspan="6" class="empty-msg">Nenhum documento carregado</td></tr>'
-      : rows.map(r => {
+      : rows.map((r,_i) => {
+          const _ucH=(_i===0||rows[_i-1].ucNome!==r.ucNome)?'<tr style="background:#dce8f5;border-top:2px solid #c5d8ee"><td colspan="4" style="padding:8px 14px;font-weight:700;color:#1e3a5f;font-size:.88rem">'+esc(r.ucNome)+'</td></tr>':'';
           const n = dlCounts[r.id] || 0;
           const dlBadge = n > 0
             ? `<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:.72rem;padding:3px 10px;border-radius:20px">${n} ↓</span>`
@@ -1327,9 +1328,8 @@
           const agendadoBadge = (r.dataDisponivel && new Date(r.dataDisponivel + 'T00:00:00') > hoje)
             ? `<span style="background:#fef3c7;color:#92400e;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:4px">🕐 ${new Date(r.dataDisponivel + 'T00:00:00').toLocaleDateString('pt-PT')}</span>`
             : '';
-          return `
+          return _ucH+`
           <tr>
-            <td>${esc(r.ucNome)}</td>
             <td>${esc(r.nome)} ${tipoBadge}${agendadoBadge}</td>
             <td>${esc(r.descricao || '—')}</td>
             <td style="text-align:center">${dlBadge}</td>
