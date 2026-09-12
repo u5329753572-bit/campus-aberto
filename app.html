@@ -3559,6 +3559,11 @@
 
   // --- DOWNLOAD COM CÓDIGO ---
   window.iniciarDownload = function(ucId, docId, docNome) {
+    const _doc = docMap[`${ucId}:${docId}`];
+    if (_doc && _doc.dataDisponivel && new Date(_doc.dataDisponivel + 'T00:00:00') > new Date()) {
+      alert('Este documento ainda n\u00e3o est\u00e1 dispon\u00edvel. Fica acess\u00edvel a partir de ' + new Date(_doc.dataDisponivel + 'T00:00:00').toLocaleDateString('pt-PT') + '.');
+      return;
+    }
     const chars  = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let codigoDl = 'DL-';
     for (let i = 0; i < 8; i++) codigoDl += chars[Math.floor(Math.random() * chars.length)];
