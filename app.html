@@ -1357,45 +1357,6 @@
       <button onclick="window.bnavIr('ucs');document.getElementById('notif-novos-docs').style.display='none'" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0">Ver UCs</button>
       <button onclick="document.getElementById('notif-novos-docs').style.display='none'" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:1.1rem;padding:0 2px;line-height:1" aria-label="Fechar">×</button>
     </div>
-<div id="yt-novidades" style="padding:12px 16px 4px;display:none">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-    <h3 style="margin:0;font-size:1rem;color:#1e3a5f;font-weight:700">📺 Últimos Vídeos</h3>
-    <span style="font-size:0.75rem;color:#6b7280">@Campus_aberto</span>
-  </div>
-  <div id="yt-cards" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none"></div>
-</div>
-<style>
-#yt-cards::-webkit-scrollbar{display:none}
-.yt-card{flex:0 0 160px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;text-decoration:none;color:inherit;display:block}
-.yt-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.yt-card-info{padding:8px}
-.yt-card-title{font-size:.78rem;font-weight:600;color:#1e3a5f;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.yt-card-date{font-size:.7rem;color:#9ca3af;margin-top:4px}
-</style>
-<script>
-(function(){
-  async function carregarVideosYoutube(){
-    try{
-      const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCLQUbb8FGUZfH-OOfxjvtwQ'));
-      const d=await r.json();
-      if(!d.items||!d.items.length)return;
-      const container=document.getElementById('yt-cards');
-      const section=document.getElementById('yt-novidades');
-      if(!container||!section)return;
-      container.innerHTML=d.items.slice(0,8).map(v=>{
-        const dt=new Date(v.pubDate);
-        const dtStr=dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
-        const vid=v.link.split('v=')[1]||(v.link.split('/').pop());
-        const thumb=v.thumbnail||('https://i.ytimg.com/vi/'+vid+'/hqdefault.jpg');
-        return '<a class="yt-card" href="'+v.link+'" target="_blank" rel="noopener"><img src="'+thumb+'" loading="lazy" alt=""><div class="yt-card-info"><div class="yt-card-title">'+v.title+'</div><div class="yt-card-date">'+dtStr+'</div></div></a>';
-      }).join('');
-      section.style.display='block';
-    }catch(e){console.warn('YouTube feed error',e);}
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',carregarVideosYoutube);}
-  else{setTimeout(carregarVideosYoutube,500);}
-})();
-</script>
     <div class="welcome-area" id="welcome-bar">
       <div class="welcome-topo">
         <div>
