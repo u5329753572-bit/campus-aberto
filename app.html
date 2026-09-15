@@ -2814,63 +2814,68 @@
   if (!el) return;
   if (!uc.timeline || !uc.timeline.length) { el.style.display='none'; return; }
   const today = new Date();
-  const cols = {tema:'#2563eb',efolio:'#d97706',pausa:'#9ca3af',revisao:'#059669'};
-  const bgL = {tema:'#dbeafe',efolio:'#fef3c7',pausa:'#f3f4f6',revisao:'#d1fae5'};
-  const tcL = {tema:'#1e40af',efolio:'#92400e',pausa:'#374151',revisao:'#065f46'};
-  function d(str){return new Date(str+'T00:00:00');}
-  function fmt(str){return new Date(str+'T00:00:00').toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit'});}
-  function fmtLong(str){return new Date(str+'T00:00:00').toLocaleDateString('pt-PT',{day:'2-digit',month:'short'});}
+  const cols  = {tema:'#0b2a4a', efolio:'#d89b2c', pausa:'#8fa3b1', revisao:'#1a6b4a'};
+  const txtC  = {tema:'#ffffff', efolio:'#3a1e00', pausa:'#ffffff', revisao:'#ffffff'};
+  const subC  = {tema:'rgba(255,255,255,0.72)', efolio:'rgba(40,20,0,0.62)', pausa:'rgba(255,255,255,0.72)', revisao:'rgba(255,255,255,0.72)'};
+  function d(s){return new Date(s+'T00:00:00');}
+  function fmt(s){const dt=new Date(s+'T00:00:00');return dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit'});}
   const start=d(uc.timeline[0].ini), end=d(uc.timeline[uc.timeline.length-1].fim);
   const total=end-start;
-  function pct(str){return Math.max(0,Math.min(100,(d(str)-start)/total*100));}
-  function wPct(item){return Math.max(0.5,pct(item.fim)-pct(item.ini));}
+  function pct(s){return Math.max(0,Math.min(100,(d(s)-start)/total*100));}
+  function wPct(item){return Math.max(1, pct(item.fim)-pct(item.ini));}
+
   let segsHtml='';
   uc.timeline.forEach((item,i)=>{
     const w=wPct(item);
-    const col=cols[item.tipo]||'#888780';
+    const col=cols[item.tipo]||'#0b2a4a';
+    const tc=txtC[item.tipo]||'#ffffff';
+    const sc=subC[item.tipo]||'rgba(255,255,255,0.7)';
     const past=today>d(item.fim);
     const active=today>=d(item.ini)&&today<=d(item.fim);
-    const op=past?0.75:1;
-    segsHtml+=`<div data-tl-idx="${i}" style="flex:0 0 ${w}%;min-width:2px;background:${col};opacity:${op};cursor:${item.subs&&item.subs.length?'pointer':'default'};display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity .15s" title="${item.label}" onclick="window._tlClick(${i})">
-      ${w>8?`<span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.95);padding:0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none">${item.label.replace(/^Tema \d+ — /,'Tema ').replace(/^Revisoes .*/,'Revisoes')}</span>`:''}
-    </div>`;
+    const op=past?0.72:1;
+    const dateRange = item.ini && item.fim ? fmt(item.ini)+' → '+fmt(item.fim) : (item.ini ? fmt(item.ini) : '');
+    const shortLabel = item.label && item.label.length>22 ? item.label.slice(0,21)+'…' : (item.label||'');
+    segsHtml+=`<div data-tl-idx="${i}" title="${item.label||''} (${dateRange})" style="flex:0 0 ${w}%;min-width:${w<4?'4px':'0'};background:${col};opacity:${op};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 5px;cursor:pointer;overflow:hidden;transition:opacity .15s;position:relative;${active?'outline:2px solid rgba(255,255,255,0.6);outline-offset:-2px;':''}" onmouseenter="this.style.opacity=${Math.min(1,op+0.18)}" onmouseleave="this.style.opacity=${op}" onclick="window._tlClick(${i})"><span style="font-size:10.5px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;text-align:center;">${shortLabel}</span><span style="font-size:9px;color:${sc};white-space:nowrap;margin-top:1px;display:block;text-align:center;">${dateRange}</span></div>`;
   });
-  const shown=new Set(uc.timeline.map(i=>i.tipo));
-  const legendDefs=[{tipo:'tema',label:'Tema'},{tipo:'efolio',label:'E-Folio'},{tipo:'pausa',label:'Pausa'},{tipo:'revisao',label:'Revisoes'}];
-  const legendHtml=legendDefs.filter(l=>shown.has(l.tipo)).map(l=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#6b7280"><span style="width:10px;height:10px;border-radius:2px;background:${cols[l.tipo]};display:inline-block"></span>${l.label}</span>`).join('');
+
+  const todayPct=Math.max(0,Math.min(100,(today-start)/total*100));
+  const todayLine=today>=start&&today<=end?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.9);pointer-events:none;z-index:2;"></div>`:'';
+
+  const legendItems=['tema','efolio','pausa','revisao'];
+  const legendLabels={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisão'};
+  const legendHtml=legendItems.map(t=>`<span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:11px;color:#555;"><span style="width:10px;height:10px;border-radius:2px;background:${cols[t]};display:inline-block;"></span>${legendLabels[t]}</span>`).join('');
+
   el.style.display='block';
-  el.innerHTML=`<div style="padding:14px 16px 12px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <span style="font-size:0.78rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.05em">Plano da UC</span>
-      <span style="font-size:11px;font-weight:500;color:#2563eb;background:#dbeafe;border-radius:4px;padding:2px 7px">Hoje: ${today.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})}</span>
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+      <span style="font-size:12px;font-weight:600;color:#555;letter-spacing:.05em;text-transform:uppercase;">Plano da UC</span>
+      <span style="font-size:11px;color:#999;">Hoje: ${today.toLocaleDateString('pt-PT')}</span>
     </div>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-      <div id="tl-bar" style="display:flex;height:36px;border-radius:8px;overflow:hidden;gap:1px;min-width:280px">${segsHtml}</div>
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af;margin-top:4px;min-width:280px">
-        <span>${fmt(uc.timeline[0].ini)}</span>
-        <span>${fmt(uc.timeline[Math.floor(uc.timeline.length/2)].ini)}</span>
-        <span>${fmt(uc.timeline[uc.timeline.length-1].fim)}</span>
-      </div>
+    <div style="position:relative;border-radius:8px;overflow:hidden;">
+      <div style="display:flex;height:52px;width:100%;">${segsHtml}</div>
+      ${todayLine}
     </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">${legendHtml}</div>
-    <div id="tl-detail" style="display:none;margin-top:12px;border-radius:8px;background:#f9fafb;border:1px solid #e5e7eb;padding:12px"></div>
-  </div>`;
+    <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#aaa;margin-top:3px;">
+      <span>${fmt(uc.timeline[0].ini)}</span>
+      <span>${fmt(uc.timeline[Math.floor(uc.timeline.length/2)].ini)}</span>
+      <span>${fmt(uc.timeline[uc.timeline.length-1].fim)}</span>
+    </div>
+    <div style="margin-top:8px;">${legendHtml}</div>
+    <div id="tl-detail-panel" style="display:none;margin-top:10px;padding:10px 14px;background:#f0f4f8;border-radius:8px;border-left:3px solid #0b2a4a;font-size:13px;"></div>
+  `;
+
   window._tlData=uc.timeline;
   window._tlActive=-1;
   window._tlClick=function(idx){
-    const item=window._tlData[idx];
-    if(!item||!item.subs||!item.subs.length)return;
-    const detail=document.getElementById('tl-detail');
-    const bar=document.getElementById('tl-bar');
-    if(window._tlActive===idx){detail.style.display='none';window._tlActive=-1;if(bar)bar.querySelectorAll('[data-tl-idx]').forEach(s=>s.style.outline='none');return;}
+    const panel=document.getElementById('tl-detail-panel');
+    if(!panel)return;
+    if(window._tlActive===idx){panel.style.display='none';window._tlActive=-1;return;}
     window._tlActive=idx;
-    if(bar){bar.querySelectorAll('[data-tl-idx]').forEach(s=>s.style.outline='none');const seg=bar.querySelector('[data-tl-idx="'+idx+'"]');if(seg)seg.style.outline='2px solid #1e3a5f';}
-    const col=cols[item.tipo]||'#888780';
-    const bg=bgL[item.tipo]||'#f3f4f6';
-    const tc=tcL[item.tipo]||'#374151';
-    const subsHtml=item.subs.map(sub=>{const isVid=sub.startsWith('Video')||sub.startsWith('V\u00eddeo');return `<div style="font-size:0.8rem;color:${isVid?'#2563eb':'#374151'};font-style:${isVid?'italic':'normal'};padding:3px 0;border-bottom:1px solid #f3f4f6;line-height:1.4">${sub}</div>`;}).join('');
-    detail.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:0.75rem;font-weight:600;padding:2px 8px;border-radius:4px;background:${bg};color:${tc}">${item.label}</span><span style="font-size:11px;color:#9ca3af">${fmtLong(item.ini)} - ${fmtLong(item.fim)}</span></div><div>${subsHtml}</div>`;
-    detail.style.display='block';
+    const item=window._tlData[idx];
+    const dr=item.ini&&item.fim?fmt(item.ini)+' → '+fmt(item.fim):'';
+    const subsHtml=item.subs&&item.subs.length?'<ul style="margin:6px 0 0 16px;padding:0;color:#444;">'+item.subs.map(s=>'<li style="margin:2px 0;">'+s+'</li>').join('')+'</ul>':'';
+    panel.style.display='block';
+    panel.innerHTML='<strong style="color:#0b2a4a;">'+item.label+'</strong>'+(dr?'<span style="color:#888;margin-left:8px;font-size:12px;">'+dr+'</span>':'')+subsHtml;
   };
 }
 async function carregarUCs() {
