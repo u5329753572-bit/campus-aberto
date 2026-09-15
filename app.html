@@ -1688,6 +1688,7 @@
         <div class="docs-sub"   id="docs-sub">Materiais de estudo</div>
       </div>
     </div>
+    <div id="uc-timeline" style="display:none;margin:0 0 12px"></div>
     <!-- Notas desta UC -->
     <div class="notas-uc-card" id="notas-uc-card">
       <div class="notas-uc-titulo">📊 As minhas notas</div>
@@ -2808,7 +2809,75 @@
   });
 
   // --- UCs ---
-  async function carregarUCs() {
+  function renderTimeline(uc) {
+  const el = document.getElementById('uc-timeline');
+  if (!el) return;
+  if (!uc.timeline || !uc.timeline.length) { el.style.display='none'; return; }
+  const today = new Date();
+  const colors = {tema:'#378add',efolio:'#ba7517',pausa:'#888780',revisao:'#0f6e56'};
+  const bgLight = {tema:'#e6f1fb',efolio:'#faeeda',pausa:'#f1efe8',revisao:'#e1f5ee'};
+  const tcLight = {tema:'#0c447c',efolio:'#633806',pausa:'#2c2c2a',revisao:'#04342c'};
+  function fmt(d){return new Date(d+'T00:00:00').toLocaleDateString('pt-PT',{day:'2-digit',month:'short'});}
+  function st(item){const s=new Date(item.ini+'T00:00:00'),f=new Date(item.fim+'T00:00:00');if(today>f)return'done';if(today>=s)return'active';return'upcoming';}
+  let html='<div style="padding:14px 16px 4px"><div style="font-size:0.8rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Plano da UC</div>';
+  uc.timeline.forEach((item,i)=>{
+    const status=st(item);
+    const col=colors[item.tipo]||'#888780';
+    const bg=bgLight[item.tipo]||'#f1efe8';
+    const tc=tcLight[item.tipo]||'#2c2c2a';
+    const isLast=i===uc.timeline.length-1;
+    const isDone=status==='done';
+    const isActive=status==='active';
+    const dotColor=isDone?'#b4b2a9':isActive?col:'#d1d5db';
+    const dotShadow=isActive?'box-shadow:0 0 0 3px '+col+'33':'';
+    const titleColor=isDone?'#9ca3af':isActive?'#111827':'#6b7280';
+    const titleWeight=isActive?'font-weight:600':'';
+    const pctDone=isDone?100:isActive?Math.round((today-new Date(item.ini+'T00:00:00'))/(new Date(item.fim+'T00:00:00')-new Date(item.ini+'T00:00:00'))*100):0;
+    const hasSubs=item.subs&&item.subs.length>0;
+    const idx='tl-'+i;
+    let inner='';
+    if(item.tipo==='efolio'){
+      inner=`<div onclick="window._tlToggle('${idx}')" style="cursor:${hasSubs?'pointer':'default'}">
+        <span style="display:inline-block;font-size:0.72rem;font-weight:600;padding:2px 8px;border-radius:4px;background:${bg};color:${tc}">${item.label}</span>
+        ${hasSubs?'<span style="font-size:11px;color:#9ca3af;margin-left:4px">▾</span>':''}
+      </div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:1px">${fmt(item.ini)} – ${fmt(item.fim)}</div>`;
+    } else {
+      inner=`<div onclick="window._tlToggle('${idx}')" style="cursor:${hasSubs?'pointer':'default'};display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div>
+          <div style="font-size:0.8rem;${titleWeight};color:${titleColor};line-height:1.4">${item.label}</div>
+          <div style="font-size:11px;color:#9ca3af;margin-top:1px">${fmt(item.ini)} – ${fmt(item.fim)}</div>
+          ${isActive?`<div style="margin-top:5px;height:3px;background:#f3f4f6;border-radius:2px;overflow:hidden"><div style="width:${pctDone}%;height:100%;background:${col};border-radius:2px"></div></div>`:''}
+        </div>
+        ${hasSubs?`<span style="font-size:11px;color:#9ca3af;margin-top:3px;flex-shrink:0" id="${idx}-chev">▾</span>`:''}
+      </div>`;
+    }
+    const subsHtml=hasSubs?item.subs.map(sub=>`<div style="font-size:0.75rem;color:${sub.startsWith('Vídeo')||sub.startsWith('Video')?'#2563eb':'#6b7280'};padding:2px 0;font-style:${sub.startsWith('Vídeo')||sub.startsWith('Video')?'italic':'normal'}">${sub}</div>`).join(''):'';
+    html+=`<div style="display:flex;align-items:stretch;margin-bottom:2px">
+      <div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0">
+        <div style="width:9px;height:9px;border-radius:50%;background:${dotColor};${dotShadow};margin-top:4px;flex-shrink:0;z-index:1"></div>
+        ${!isLast?`<div style="width:1px;flex:1;background:#e5e7eb;margin-top:2px"></div>`:''}
+      </div>
+      <div style="flex:1;padding:0 0 10px 10px">
+        ${inner}
+        ${hasSubs?`<div id="${idx}" style="overflow:hidden;max-height:0;transition:max-height .2s ease"><div style="border-left:2px solid #e5e7eb;padding-left:8px;margin-top:6px;display:flex;flex-direction:column;gap:1px">${subsHtml}</div></div>`:''}
+      </div>
+    </div>`;
+  });
+  html+='</div>';
+  el.innerHTML=html;
+  el.style.display='block';
+  window._tlToggle=function(id){
+    const body=document.getElementById(id);
+    const chev=document.getElementById(id+'-chev');
+    if(!body)return;
+    const open=body.style.maxHeight!=='0px'&&body.style.maxHeight!=='';
+    body.style.maxHeight=open?'0px':'500px';
+    if(chev)chev.textContent=open?'▾':'▴';
+  };
+}
+
+async function carregarUCs() {
     totalDocs = 0;
     const container = document.getElementById('ucs-grid');
     try {
@@ -2841,7 +2910,7 @@
         });
       });
 
-      const ucsVisiveis = ucs.filter(uc => !uc.oculta);
+      const ucsVisiveis = ucs.filter(uc => !uc.oculta || (uc.adminOnly && utilizadorAtual && utilizadorAtual.admin));
       document.getElementById('stat-ucs').textContent  = ucsVisiveis.length;
       document.getElementById('stat-docs').textContent = '…';
 
@@ -3353,6 +3422,7 @@
     document.getElementById('docs-titulo').textContent  = uc.nome;
     document.getElementById('docs-sub').textContent     = uc.sinopse || SINOPSES[uc.nome] || 'Materiais de estudo disponíveis';
     carregarNotasUC(uc.id);
+    renderTimeline(uc);
 
     const lista = document.getElementById('docs-lista');
     lista.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
