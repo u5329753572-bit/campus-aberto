@@ -2302,47 +2302,26 @@ window.abrirNota = abrirNota;
   };
 
     function parsePUCText(text) {
-    var entries=[], yr=new Date().getFullYear();
-    function iso(d,m,y){return (y||yr)+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
-    var wr1=new RegExp('(\\d+)[\\u00aaa]\\s+Semana\\s+(\\d{1,2})\\s+a\\s+(\\d{1,2})\\/(\\d{1,2})','gi');
-    var weekMap={}, wm;
-    while((wm=wr1.exec(text))!==null){
-      var wn=parseInt(wm[1]),d1=parseInt(wm[2]),d2=parseInt(wm[3]),mo=parseInt(wm[4]);
-      weekMap[wn]={ini:iso(d1,mo,mo>=9?yr:yr+1),fim:iso(d2,mo,mo>=9?yr:yr+1)};
-    }
-    var tRe=new RegExp('Tema\\s+(\\d+)\\s*[:\\u2013-]\\s*([^\\n\\r]+)','gi');
-    var temas=[], tm;
-    while((tm=tRe.exec(text))!==null){
-      var n=parseInt(tm[1]);
-      temas.push({tipo:'tema',label:'Tema '+n+': '+tm[2].trim().replace(/\s+/g,' '),n:n,ini:'',fim:'',subs:[]});
-    }
-    var wkeys=Object.keys(weekMap).map(Number).sort(function(a,b){return a-b;});
-    if(wkeys.length&&temas.length){
-      var wpp=Math.ceil(wkeys.length/temas.length);
-      temas.forEach(function(t,i){
-        var sW=wkeys[i*wpp]!==undefined?wkeys[i*wpp]:wkeys[0];
-        var eW=wkeys[Math.min((i+1)*wpp-1,wkeys.length-1)];
-        if(weekMap[sW])t.ini=weekMap[sW].ini;
-        if(weekMap[eW])t.fim=weekMap[eW].fim;
-      });
-    }
-    temas.forEach(function(t){delete t.n;entries.push(t);});
-    var pRe=new RegExp('[Pp]ausa\\s+[Ll]etiva[\\s\\S]*?(\\d{1,2})[\\/](\\d{1,2})[\\s\\S]*?(\\d{1,2})[\\/](\\d{1,2})','i');
-    var pm2=pRe.exec(text);
-    if(pm2){
-      var pd1=parseInt(pm2[1]),pm1=parseInt(pm2[2]),pd2=parseInt(pm2[3]),pm22=parseInt(pm2[4]);
-      entries.push({tipo:'pausa',label:'Pausa Letiva',ini:iso(pd1,pm1,pm1>=9?yr:yr+1),fim:iso(pd2,pm22,pm22>=9?yr:yr+1),subs:[]});
-    }
-    var eRe=new RegExp('(?:E[\\-\\s]?f[o\\xf3]lio|Avalia[c\\xE7][a\\xE3]o\\s+Sumativa)\\s+([A-Z])[\\s\\S]*?(\\d{1,2})\\/(\\d{1,2})','gi');
-    var seen={}, em2;
-    while((em2=eRe.exec(text))!==null){
-      var l=em2[1];
-      if(seen[l])continue; seen[l]=true;
-      var ed=parseInt(em2[2]),emo=parseInt(em2[3]);
-      entries.push({tipo:'efolio',label:'E-f\xf3lio '+l,ini:iso(ed,emo,emo>=9?yr:yr+1),fim:iso(ed+3,emo,emo>=9?yr:yr+1),subs:[]});
-    }
-    return entries;
-  }
+  var entries=[], yr=new Date().getFullYear();
+  function iso(d,m,y){return (y||yr)+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+  var moN={jan:1,fev:2,mar:3,abr:4,mai:5,jun:6,jul:7,ago:8,set:9,out:10,nov:11,dez:12};
+  function pM(s){var n=parseInt(s);if(!isNaN(n))return n;return moN[(s||'').toLowerCase().slice(0,3)]||0;}
+  var wr=new RegExp('(\\d+)[\\u00aa\\u00ba?]\\s*[Ss]emana\\s+(\\d{1,2})\\s+a\\s+(\\d{1,2})\\s*[\\/\\s]\\s*(\\w+)','gm'),weekMap={},wm;
+  while((wm=wr.exec(text))!==null){var wn=parseInt(wm[1]),d1=parseInt(wm[2]),d2=parseInt(wm[3]),mo=pM(wm[4]);if(mo>0){var y1=mo>=9?yr:yr+1;weekMap[wn]={ini:iso(d1,mo,y1),fim:iso(d2,mo,y1)};}}
+  var temas=[],seenT={},tm;
+  var tRe1=new RegExp('TEMA\\s+(\\d+)\\s*[:\u2013\\-]\\s*([^\\n]{3,})','gi');
+  while((tm=tRe1.exec(text))!==null){var n=parseInt(tm[1]);if(!seenT[n]){seenT[n]=true;temas.push({tipo:'tema',label:'Tema '+n+': '+tm[2].trim().replace(/\s+/g,' ').slice(0,120),n:n,ini:'',fim:'',subs:[]});}}
+  if(!temas.length){var tRe2=new RegExp('TEMA\\s+(\\d+)\\s+(.+?)(?=\\s*TEMA\\s+\\d|$|\\n)','gim');while((tm=tRe2.exec(text))!==null){var n=parseInt(tm[1]);if(!seenT[n]){seenT[n]=true;var lbl=tm[2].trim().replace(/\s+/g,' ').slice(0,120);temas.push({tipo:'tema',label:'Tema '+n+': '+lbl,n:n,ini:'',fim:'',subs:[]});}}}
+  if(!temas.length){var tRe3=new RegExp('Tema\\s+(\\d+)\\s*[:\u2013\\-]?\\s*([^\\n\\r]{3,})','gi');while((tm=tRe3.exec(text))!==null){var n=parseInt(tm[1]);if(!seenT[n]){seenT[n]=true;temas.push({tipo:'tema',label:'Tema '+n+': '+tm[2].trim().slice(0,120),n:n,ini:'',fim:'',subs:[]});}}}
+  temas.sort(function(a,b){return a.n-b.n;});
+  var wkeys=Object.keys(weekMap).map(Number).sort(function(a,b){return a-b;});
+  if(wkeys.length&&temas.length){var wpp=Math.ceil(wkeys.length/temas.length);temas.forEach(function(t,i){var sW=wkeys[i*wpp]!==undefined?wkeys[i*wpp]:wkeys[0];var eW=wkeys[Math.min((i+1)*wpp-1,wkeys.length-1)];if(weekMap[sW])t.ini=weekMap[sW].ini;if(weekMap[eW])t.fim=weekMap[eW].fim;});}
+  temas.forEach(function(t){delete t.n;entries.push(t);});
+  var pRe=new RegExp('[Pp]ausa\\s+[Ll]etiva[\\s\\S]*?(\\d{1,2})[\/](\\d{1,2})[\\s\\S]*?(\\d{1,2})[\/](\\d{1,2})','i');var pm2=pRe.exec(text);if(pm2){var pd1=parseInt(pm2[1]),pm1=parseInt(pm2[2]),pd2=parseInt(pm2[3]),pm22=parseInt(pm2[4]);entries.push({tipo:'pausa',label:'Pausa Letiva',ini:iso(pd1,pm1,pm1>=9?yr:yr+1),fim:iso(pd2,pm22,pm22>=9?yr:yr+1),subs:[]});}
+  var eRe=new RegExp('(?:E[\\-\\s?]f[o\xf3]lio|Avalia[c\xE7][a\xE3]o\\s+Sumativa)\\s+([A-Za-z])[^a-z\\d][\\s\\S]*?(\\d{1,2})[\/](\\w+)','g');var seenE={},em2;
+  while((em2=eRe.exec(text))!==null){var l=em2[1];if(l<'A'||l>'Z')continue;if(seenE[l])continue;seenE[l]=true;var ed=parseInt(em2[2]),emo=pM(em2[3]);if(emo>0)entries.push({tipo:'efolio',label:'E-fólio '+l,ini:iso(ed,emo,emo>=9?yr:yr+1),fim:iso(ed+3,emo,emo>=9?yr:yr+1),subs:[]});}
+  return entries;
+}
 
   function renderEntradasTL(){
     const cont=document.getElementById('tl-entries');
