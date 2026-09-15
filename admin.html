@@ -2285,8 +2285,7 @@ window.abrirNota = abrirNota;
       for(let i=1;i<=pdf.numPages;i++){
         const page = await pdf.getPage(i);
         const tc = await page.getTextContent();
-        fullText += tc.items.map(it=>it.str).join(' ') + '
-';
+        fullText += tc.items.map(it=>it.str).join(' ') + '\n';
       }
       status.textContent = 'A analisar estrutura do PUC...';
       const entradas = parsePUCText(fullText);
