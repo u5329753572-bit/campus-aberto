@@ -2150,6 +2150,55 @@ function fecharNota() {
     alert('Erro ao enviar email: ' + (e.message || e.code));
   }
 };
+
+  window.abrirTimelineUC = async function(ucId, ucNome) {
+    window._tlUcId = ucId;
+    window._tlEntradas = [];
+    document.getElementById('tl-uc-nome').textContent = ucNome;
+    document.getElementById('tl-status').textContent = '';
+    const pdfInput = document.getElementById('tl-pdf-file');
+    if(pdfInput) pdfInput.value = '';
+    document.getElementById('tl-entries-wrap').style.display = 'none';
+    document.getElementById('tl-no-entries').style.display = 'block';
+    document.getElementById('tl-modal').style.display = 'block';
+    try {
+      const snap = await getDoc(doc(db, 'ucs', ucId));
+      if(snap.exists() && snap.data().timeline && snap.data().timeline.length) {
+        window._tlEntradas = snap.data().timeline.map(e => ({...e, subs:[...(e.subs||[])]}));
+        if(window._renderEntradasTL) window._renderEntradasTL();
+        document.getElementById('tl-entries-wrap').style.display = 'block';
+        document.getElementById('tl-no-entries').style.display = 'none';
+        document.getElementById('tl-status').textContent = 'Timeline existente carregada.';
+      }
+    } catch(e) { console.warn('Erro ao carregar timeline:', e); }
+  };
+
+  window.guardarTimelineTL = async function() {
+    if(!window._tlUcId) { alert('Erro: UC n\u00e3o identificada.'); return; }
+    const cont = document.getElementById('tl-entries');
+    const entryDivs = cont ? Array.from(cont.children) : [];
+    const entries = Array.from(window._tlEntradas||[]).map((e, i) => {
+      const div = entryDivs[i];
+      if(!div) return e;
+      const sel = div.querySelector('select');
+      const allInputs = Array.from(div.querySelectorAll('input'));
+      const ta = div.querySelector('textarea');
+      return {
+        tipo: sel ? sel.value : e.tipo,
+        label: allInputs[0] ? allInputs[0].value : e.label,
+        ini: allInputs[1] ? allInputs[1].value : e.ini,
+        fim: allInputs[2] ? allInputs[2].value : e.fim,
+        subs: ta ? ta.value.split('\n').map(s=>s.trim()).filter(s=>s.length>0) : (e.subs||[])
+      };
+    });
+    try {
+      await updateDoc(doc(db, 'ucs', window._tlUcId), { timeline: entries });
+      alert('Timeline guardada com sucesso!');
+      window.fecharTLModal();
+    } catch(err) {
+      alert('Erro ao guardar: ' + (err.message||err));
+    }
+  };
 window.abrirNota = abrirNota;
   window.guardarNota = guardarNota;
   window.fecharNota = fecharNota;
@@ -2209,27 +2258,7 @@ window.abrirNota = abrirNota;
   const tlColors={tema:'#2563eb',efolio:'#d97706',pausa:'#9ca3af',revisao:'#059669'};
   const tlNames={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisões'};
 
-  window.abrirTimelineUC = async function(ucId, ucNome) {
-    _tlUcId = ucId;
-    _tlEntradas = [];
-    document.getElementById('tl-uc-nome').textContent = ucNome;
-    document.getElementById('tl-status').textContent = '';
-    document.getElementById('tl-pdf-file').value = '';
-    document.getElementById('tl-entries-wrap').style.display = 'none';
-    document.getElementById('tl-no-entries').style.display = 'block';
-    document.getElementById('tl-modal').style.display = 'block';
-    // Load existing timeline
-    try {
-      const snap = await getDoc(doc(db,'ucs',ucId));
-      if(snap.exists() && snap.data().timeline && snap.data().timeline.length) {
-        _tlEntradas = snap.data().timeline.map(e=>({...e, subs:[...(e.subs||[])]}));
-        renderEntradasTL();
-        document.getElementById('tl-entries-wrap').style.display='block';
-        document.getElementById('tl-no-entries').style.display='none';
-        document.getElementById('tl-status').textContent='Timeline existente carregada.';
-      }
-    } catch(e){ console.warn('Erro ao carregar timeline:',e); }
-  };
+
 
   window.fecharTLModal = function() {
     document.getElementById('tl-modal').style.display='none';
@@ -2405,6 +2434,7 @@ window.abrirNota = abrirNota;
       </div>
     `).join('');
   }
+  window._renderEntradasTL = renderEntradasTL;
 
   window._tlUpdateEntrada=function(i,field,val){
     if(field==='subs') _tlEntradas[i].subs=val.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
@@ -2421,32 +2451,6 @@ window.abrirNota = abrirNota;
     document.getElementById('tl-no-entries').style.display='none';
   };
 
-  window.guardarTimelineTL=async function(){
-    if(!_tlUcId){alert('Erro: UC não identificada.');return;}
-    // Collect current form values (user might not have triggered onchange)
-    const entryDivs=document.getElementById('tl-entries').querySelectorAll('[style*="border-left"]');
-    const entries=_tlEntradas.map((e,i)=>{
-      const div=entryDivs[i];
-      if(!div) return e;
-      const sel=div.querySelector('select');
-      const inputs=div.querySelectorAll('input');
-      const ta=div.querySelector('textarea');
-      return {
-        tipo:sel?sel.value:e.tipo,
-        label:inputs[0]?inputs[0].value:e.label,
-        ini:inputs[1]?inputs[1].value:e.ini,
-        fim:inputs[2]?inputs[2].value:e.fim,
-        subs:ta?ta.value.split('\n').map(s=>s.trim()).filter(s=>s.length>0):(e.subs||[])
-      };
-    });
-    try{
-      await updateDoc(doc(db,'ucs',_tlUcId),{timeline:entries});
-      alert('Timeline guardada com sucesso!');
-      window.fecharTLModal();
-    }catch(err){
-      alert('Erro ao guardar: '+(err.message||err));
-    }
-  };
 })();
 </script>
 </body>
