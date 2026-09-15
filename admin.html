@@ -2301,113 +2301,46 @@ window.abrirNota = abrirNota;
     }
   };
 
-  function parsePUCText(text) {
-    const entries = [];
-    const yr = new Date().getFullYear();
-    function iso(d,m,y){return `${y||yr}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
-    const mmap={jan:1,fev:2,mar:3,abr:4,mai:5,jun:6,jul:7,ago:8,set:9,out:10,nov:11,dez:12};
-
-    // --- Parse week blocks to build weekMap {weekNum -> {ini,fim}} ---
-    const weekMap={};
-    // "1ª Semana 14 a 18/09" style
-    const wr1=/(d+)[ªa]s+Semanas+(d{1,2})s+as+(d{1,2})/(d{1,2})/gi;
-    let wm;
+    function parsePUCText(text) {
+    var entries=[], yr=new Date().getFullYear();
+    function iso(d,m,y){return (y||yr)+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+    var wr1=new RegExp('(\\d+)[\\u00aaa]\\s+Semana\\s+(\\d{1,2})\\s+a\\s+(\\d{1,2})\\/(\\d{1,2})','gi');
+    var weekMap={}, wm;
     while((wm=wr1.exec(text))!==null){
-      const [,wn,d1,d2,m]=wm;
-      const mn=parseInt(m);
-      const yn = mn<8 ? yr+1 : yr;
-      // d2 might be less than d1 if crossing month boundary, approximate
-      weekMap[parseInt(wn)]={ini:iso(parseInt(d1),mn,yn),fim:iso(parseInt(d2),mn,yn)};
+      var wn=parseInt(wm[1]),d1=parseInt(wm[2]),d2=parseInt(wm[3]),mo=parseInt(wm[4]);
+      weekMap[wn]={ini:iso(d1,mo,mo>=9?yr:yr+1),fim:iso(d2,mo,mo>=9?yr:yr+1)};
     }
-    // "28 a 02 / out" style (cross-month)
-    const wr2=/(d+)[ªa]s+Semanas+(d{1,2})s+as+(d{1,2})s*/s*(w{3,})/gi;
-    while((wm=wr2.exec(text))!==null){
-      const [,wn,d1,d2,ms]=wm;
-      const mn=mmap[ms.toLowerCase().slice(0,3)];
-      if(mn && !weekMap[parseInt(wn)]) {
-        const prevMon = mn===1?12:mn-1;
-        const yn = mn<8?yr+1:yr;
-        const prevYn = prevMon===12?yn-1:yn;
-        weekMap[parseInt(wn)]={ini:iso(parseInt(d1),prevMon,prevYn),fim:iso(parseInt(d2),mn,yn)};
-      }
+    var tRe=new RegExp('Tema\\s+(\\d+)\\s*[:\\u2013-]\\s*([^\\n\\r]+)','gi');
+    var temas=[], tm;
+    while((tm=tRe.exec(text))!==null){
+      var n=parseInt(tm[1]);
+      temas.push({tipo:'tema',label:'Tema '+n+': '+tm[2].trim().replace(/\s+/g,' '),n:n,ini:'',fim:'',subs:[]});
     }
-
-    // --- Build tema->weeks mapping from weekly blocks ---
-    // Split text by week headings
-    const temaWeekMap={}; // temaNum -> {firstWeek, lastWeek}
-    const weekBlockRe=/(d+)[ªa]s+Semanas+[ds/a]+/gi;
-    let lastWnum=0, lastWpos=0;
-    const weekPositions=[]; // [{num, pos}]
-    let wbm;
-    while((wbm=weekBlockRe.exec(text))!==null) {
-      weekPositions.push({num:parseInt(wbm[1]),pos:wbm.index});
-    }
-    weekPositions.forEach(({num,pos},i)=>{
-      const nextPos = i+1 < weekPositions.length ? weekPositions[i+1].pos : pos+2000;
-      const block = text.slice(pos, nextPos);
-      const tms = [...block.matchAll(/Temas+(d+)/gi)].map(m=>parseInt(m[1]));
-      tms.forEach(tn=>{
-        if(!temaWeekMap[tn]) temaWeekMap[tn]={first:num,last:num};
-        else { temaWeekMap[tn].first=Math.min(temaWeekMap[tn].first,num); temaWeekMap[tn].last=Math.max(temaWeekMap[tn].last,num); }
+    var wkeys=Object.keys(weekMap).map(Number).sort(function(a,b){return a-b;});
+    if(wkeys.length&&temas.length){
+      var wpp=Math.ceil(wkeys.length/temas.length);
+      temas.forEach(function(t,i){
+        var sW=wkeys[i*wpp]!==undefined?wkeys[i*wpp]:wkeys[0];
+        var eW=wkeys[Math.min((i+1)*wpp-1,wkeys.length-1)];
+        if(weekMap[sW])t.ini=weekMap[sW].ini;
+        if(weekMap[eW])t.fim=weekMap[eW].fim;
       });
-    });
-
-    // --- Extract temas from Roteiro section ---
-    const rotStart=text.indexOf('Roteiro de conteúdos');
-    const rotEnd=text.search(/Estrutura de ensino|4./);
-    const rotSection=rotStart!==-1?text.slice(rotStart,rotEnd!==-1&&rotEnd>rotStart?rotEnd:rotStart+3000):'';
-    
-    // Find TEMA blocks in roteiro
-    const temaBlockRe=/TEMAs+(d+)([sS]*?)(?=TEMAs+d+|$)/gi;
-    let tm;
-    while((tm=temaBlockRe.exec(rotSection))!==null){
-      const num=parseInt(tm[1]);
-      const block=tm[2];
-      const lines=block.split(/
-|s{3,}/).map(l=>l.trim()).filter(l=>l.length>2);
-      const subs=lines.filter(l=>/^d+.d+/.test(l));
-      const titles=lines.filter(l=>!/^d+.d+/.test(l)&&l.length>5&&!l.match(/^TEMA/i));
-      const title=titles.slice(0,3).join(' ').trim().replace(/s+/g,' ').slice(0,120);
-      const wInfo=temaWeekMap[num];
-      const ini=wInfo&&weekMap[wInfo.first]?weekMap[wInfo.first].ini:'';
-      const fim=wInfo&&weekMap[wInfo.last]?weekMap[wInfo.last].fim:'';
-      entries.push({tipo:'tema',label:`Tema ${num} — ${title}`,ini,fim,subs});
     }
-
-    // --- Extract Avaliação Sumativa A & B from calendário ---
-    const calIdx=text.indexOf('Calendário de avaliação contínua');
-    if(calIdx!==-1){
-      const cal=text.slice(calIdx,calIdx+3000);
-      // Find pairs: spec date (às Xh) and submit date (até às)
-      const specRe=/(d{1,2})/(d{1,2})s*(àss*d+h/gi;
-      const subRe=/(d{1,2})/(d{1,2})s*(até às/gi;
-      const specs=[]; let sm;
-      while((sm=specRe.exec(cal))!==null) specs.push({d:parseInt(sm[1]),m:parseInt(sm[2])});
-      const subs=[]; let sbm;
-      while((sbm=subRe.exec(cal))!==null) subs.push({d:parseInt(sbm[1]),m:parseInt(sbm[2])});
-      const labels=['Avaliação Sumativa A','Avaliação Sumativa B'];
-      for(let i=0;i<Math.min(specs.length,subs.length,2);i++){
-        const yn=specs[i].m<8?yr+1:yr;
-        const ynf=subs[i].m<8?yr+1:yr;
-        entries.push({tipo:'efolio',label:labels[i]||'E-Fólio '+(i+1),
-          ini:iso(specs[i].d,specs[i].m,yn),
-          fim:iso(subs[i].d,subs[i].m,ynf),
-          subs:[`Especificação: ${specs[i].d}/${specs[i].m}`,`Entrega até: ${subs[i].d}/${subs[i].m} às 23h55`,'4 valores']
-        });
-      }
+    temas.forEach(function(t){delete t.n;entries.push(t);});
+    var pRe=new RegExp('[Pp]ausa\\s+[Ll]etiva[\\s\\S]*?(\\d{1,2})[\\/](\\d{1,2})[\\s\\S]*?(\\d{1,2})[\\/](\\d{1,2})','i');
+    var pm2=pRe.exec(text);
+    if(pm2){
+      var pd1=parseInt(pm2[1]),pm1=parseInt(pm2[2]),pd2=parseInt(pm2[3]),pm22=parseInt(pm2[4]);
+      entries.push({tipo:'pausa',label:'Pausa Letiva',ini:iso(pd1,pm1,pm1>=9?yr:yr+1),fim:iso(pd2,pm22,pm22>=9?yr:yr+1),subs:[]});
     }
-
-    // --- Pausa Letiva ---
-    const pausaRe=/(d{1,2})/(d{1,2})(?:/(d{2,4}))?s+as+(d{1,2})/(d{1,2})(?:/(d{2,4}))?s+Pausas+Letiva/i;
-    const pm=text.match(pausaRe);
-    if(pm){
-      const y1=pm[3]?parseInt(pm[3])+(pm[3].length===2?2000:0):yr;
-      const y2=pm[6]?parseInt(pm[6])+(pm[6].length===2?2000:0):(parseInt(pm[5])<parseInt(pm[2])?yr+1:yr);
-      entries.push({tipo:'pausa',label:'Pausa Letiva',ini:iso(parseInt(pm[1]),parseInt(pm[2]),y1),fim:iso(parseInt(pm[4]),parseInt(pm[5]),y2),subs:[]});
+    var eRe=new RegExp('(?:E[\\-\\s]?f[o\\xf3]lio|Avalia[c\\xE7][a\\xE3]o\\s+Sumativa)\\s+([A-Z])[\\s\\S]*?(\\d{1,2})\\/(\\d{1,2})','gi');
+    var seen={}, em2;
+    while((em2=eRe.exec(text))!==null){
+      var l=em2[1];
+      if(seen[l])continue; seen[l]=true;
+      var ed=parseInt(em2[2]),emo=parseInt(em2[3]);
+      entries.push({tipo:'efolio',label:'E-f\xf3lio '+l,ini:iso(ed,emo,emo>=9?yr:yr+1),fim:iso(ed+3,emo,emo>=9?yr:yr+1),subs:[]});
     }
-
-    // Sort by ini date
-    entries.sort((a,b)=>(!a.ini?1:!b.ini?-1:a.ini.localeCompare(b.ini)));
     return entries;
   }
 
