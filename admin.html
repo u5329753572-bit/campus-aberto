@@ -743,7 +743,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
+  import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
@@ -973,7 +973,7 @@
               ${u.estado !== 'ativo'    ? `<button class="btn-acao btn-ativar" onclick="window.alterarEstado('${u.id}','ativo')">Ativar</button>` : ''}
               ${u.estado !== 'suspenso' ? `<button class="btn-acao btn-suspender" onclick="window.alterarEstado('${u.id}','suspenso')">Suspender</button>` : ''}
               ${u.admin ? `<button class="btn-acao" style="background:#fef3c7;color:#92400e" onclick="window.alterarAdmin('${u.id}',false)">★ Admin</button>` : `<button class="btn-acao" style="background:#f1f5f9;color:#475569" onclick="window.alterarAdmin('${u.id}',true)">☆ Admin</button>`}
-              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button><button id="nota-btn-${u.id}" onclick="abrirNota('${u.id}','${esc(u.nome||'')}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota">📝</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUser('${u.id}')">Remover</button><button id="nota-btn-${u.id}" onclick="abrirNota('${u.id}','${esc(u.nome||'')}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota">📝</button><button onclick="window.enviarResetPassword('${u.email}','${u.nome||''}')" style="background:#3b82f6;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Enviar reset de password">🔑</button>
             </td>
           </tr>`).join('');
   }
@@ -2141,7 +2141,16 @@ function fecharNota() {
     document.getElementById('modal-nota').style.display = 'none';
     _notaUid = null;
   }
-  window.abrirNota = abrirNota;
+  window.enviarResetPassword = async function(email, nome) {
+  if (!confirm('Enviar email de recuperação de password para ' + email + '?')) return;
+  try {
+    await sendPasswordResetEmail(getAuth(), email);
+    alert('Email de recuperação enviado para ' + email + '.');
+  } catch(e) {
+    alert('Erro ao enviar email: ' + (e.message || e.code));
+  }
+};
+window.abrirNota = abrirNota;
   window.guardarNota = guardarNota;
   window.fecharNota = fecharNota;
 </script>
