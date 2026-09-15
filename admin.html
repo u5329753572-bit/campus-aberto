@@ -1094,7 +1094,7 @@
             <td id="uc-docs-${u.id}">—</td>
             <td class="acoes">
               <button class="btn-acao" style="background:#e0f2fe;color:#0369a1" onclick="window.editarUC('${u.id}')">Editar</button>
-              <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button><button onclick="abrirNota('${u.id}','${esc(u.nome)}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota sobre o utilizador">📝</button>
+              <button class="btn-acao btn-remover" onclick="window.removerUC('${u.id}')">Remover</button><button onclick="abrirNota('${u.id}','${esc(u.nome)}')" style="background:#6b7280;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Nota sobre o utilizador">📝</button><button onclick="window.abrirTimelineUC('${u.id}','${esc(u.nome)}')" style="background:#8b5cf6;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;margin-left:4px" title="Importar/Editar Timeline PUC">📅</button>
             </td>
           </tr>`).join('');
 
@@ -2166,5 +2166,288 @@ window.abrirNota = abrirNota;
     </div>
   </div>
 </div>
+
+<!-- MODAL TIMELINE IMPORT -->
+<div id="tl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;overflow-y:auto">
+<div style="background:#fff;max-width:900px;margin:32px auto;border-radius:12px;padding:24px;position:relative">
+  <h2 style="margin:0 0 4px;font-size:1.2rem;color:#1e3a5f">📅 Timeline — <span id="tl-uc-nome"></span></h2>
+  <p style="margin:0 0 16px;font-size:0.8rem;color:#6b7280">Importa o PDF do PUC para gerar automaticamente a timeline desta UC.</p>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+    <label style="font-size:0.85rem;font-weight:600">📄 PDF do PUC:</label>
+    <input type="file" id="tl-pdf-file" accept=".pdf" style="font-size:0.8rem">
+    <button onclick="window.processarPDFTL()" style="background:#2563eb;color:white;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:0.85rem">Processar</button>
+    <span id="tl-status" style="font-size:0.8rem;color:#6b7280"></span>
+  </div>
+  <div id="tl-entries-wrap" style="display:none">
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <strong style="font-size:0.85rem;color:#374151;align-self:center">Entradas:</strong>
+      <button onclick="window.adicionarEntradaTL('tema')" style="background:#2563eb;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Tema</button>
+      <button onclick="window.adicionarEntradaTL('efolio')" style="background:#d97706;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+E-Fólio</button>
+      <button onclick="window.adicionarEntradaTL('pausa')" style="background:#9ca3af;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Pausa</button>
+      <button onclick="window.adicionarEntradaTL('revisao')" style="background:#059669;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Revisões</button>
+    </div>
+    <div id="tl-entries"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="window.fecharTLModal()" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db;padding:8px 18px;border-radius:6px;cursor:pointer">Fechar</button>
+      <button onclick="window.guardarTimelineTL()" style="background:#16a34a;color:white;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:600">💾 Guardar Timeline</button>
+    </div>
+  </div>
+  <div id="tl-no-entries" style="text-align:center;padding:24px;color:#9ca3af;font-size:0.85rem">
+    Faz upload do PUC para importar automaticamente, ou adiciona entradas manualmente.<br>
+    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button onclick="window.adicionarEntradaTL('tema');document.getElementById('tl-entries-wrap').style.display='block';document.getElementById('tl-no-entries').style.display='none'" style="background:#2563eb;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Tema</button>
+      <button onclick="window.adicionarEntradaTL('efolio');document.getElementById('tl-entries-wrap').style.display='block';document.getElementById('tl-no-entries').style.display='none'" style="background:#d97706;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+E-Fólio</button>
+      <button onclick="window.adicionarEntradaTL('pausa');document.getElementById('tl-entries-wrap').style.display='block';document.getElementById('tl-no-entries').style.display='none'" style="background:#9ca3af;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Pausa</button>
+    </div>
+  </div>
+  <button onclick="window.fecharTLModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9ca3af">×</button>
+</div></div>
+
+<script>
+(function(){
+  let _tlUcId='', _tlEntradas=[];
+  const tlColors={tema:'#2563eb',efolio:'#d97706',pausa:'#9ca3af',revisao:'#059669'};
+  const tlNames={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisões'};
+
+  window.abrirTimelineUC = async function(ucId, ucNome) {
+    _tlUcId = ucId;
+    _tlEntradas = [];
+    document.getElementById('tl-uc-nome').textContent = ucNome;
+    document.getElementById('tl-status').textContent = '';
+    document.getElementById('tl-pdf-file').value = '';
+    document.getElementById('tl-entries-wrap').style.display = 'none';
+    document.getElementById('tl-no-entries').style.display = 'block';
+    document.getElementById('tl-modal').style.display = 'block';
+    // Load existing timeline
+    try {
+      const snap = await getDoc(doc(db,'ucs',ucId));
+      if(snap.exists() && snap.data().timeline && snap.data().timeline.length) {
+        _tlEntradas = snap.data().timeline.map(e=>({...e, subs:[...(e.subs||[])]}));
+        renderEntradasTL();
+        document.getElementById('tl-entries-wrap').style.display='block';
+        document.getElementById('tl-no-entries').style.display='none';
+        document.getElementById('tl-status').textContent='Timeline existente carregada.';
+      }
+    } catch(e){ console.warn('Erro ao carregar timeline:',e); }
+  };
+
+  window.fecharTLModal = function() {
+    document.getElementById('tl-modal').style.display='none';
+  };
+
+  window.processarPDFTL = async function() {
+    const file = document.getElementById('tl-pdf-file').files[0];
+    if(!file){ alert('Seleciona um ficheiro PDF.'); return; }
+    const status = document.getElementById('tl-status');
+    status.textContent = 'A extrair texto do PDF...';
+    try {
+      if(!window.pdfjsLib) {
+        await new Promise((res,rej) => {
+          const s=document.createElement('script');
+          s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+          s.onload=res; s.onerror=rej;
+          document.head.appendChild(s);
+        });
+        pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+      const arr = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({data:arr}).promise;
+      let fullText = '';
+      for(let i=1;i<=pdf.numPages;i++){
+        const page = await pdf.getPage(i);
+        const tc = await page.getTextContent();
+        fullText += tc.items.map(it=>it.str).join(' ') + '
+';
+      }
+      status.textContent = 'A analisar estrutura do PUC...';
+      const entradas = parsePUCText(fullText);
+      if(entradas.length === 0){ status.textContent = 'Não foi possível detetar entradas automaticamente. Adiciona manualmente.'; return; }
+      _tlEntradas = entradas;
+      renderEntradasTL();
+      document.getElementById('tl-entries-wrap').style.display='block';
+      document.getElementById('tl-no-entries').style.display='none';
+      status.textContent = entradas.length + ' entradas detetadas. Revê as datas e guarda.';
+    } catch(e) {
+      status.textContent = 'Erro: ' + (e.message||e);
+      console.error(e);
+    }
+  };
+
+  function parsePUCText(text) {
+    const entries = [];
+    const yr = new Date().getFullYear();
+    function iso(d,m,y){return `${y||yr}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+    const mmap={jan:1,fev:2,mar:3,abr:4,mai:5,jun:6,jul:7,ago:8,set:9,out:10,nov:11,dez:12};
+
+    // --- Parse week blocks to build weekMap {weekNum -> {ini,fim}} ---
+    const weekMap={};
+    // "1ª Semana 14 a 18/09" style
+    const wr1=/(d+)[ªa]s+Semanas+(d{1,2})s+as+(d{1,2})/(d{1,2})/gi;
+    let wm;
+    while((wm=wr1.exec(text))!==null){
+      const [,wn,d1,d2,m]=wm;
+      const mn=parseInt(m);
+      const yn = mn<8 ? yr+1 : yr;
+      // d2 might be less than d1 if crossing month boundary, approximate
+      weekMap[parseInt(wn)]={ini:iso(parseInt(d1),mn,yn),fim:iso(parseInt(d2),mn,yn)};
+    }
+    // "28 a 02 / out" style (cross-month)
+    const wr2=/(d+)[ªa]s+Semanas+(d{1,2})s+as+(d{1,2})s*/s*(w{3,})/gi;
+    while((wm=wr2.exec(text))!==null){
+      const [,wn,d1,d2,ms]=wm;
+      const mn=mmap[ms.toLowerCase().slice(0,3)];
+      if(mn && !weekMap[parseInt(wn)]) {
+        const prevMon = mn===1?12:mn-1;
+        const yn = mn<8?yr+1:yr;
+        const prevYn = prevMon===12?yn-1:yn;
+        weekMap[parseInt(wn)]={ini:iso(parseInt(d1),prevMon,prevYn),fim:iso(parseInt(d2),mn,yn)};
+      }
+    }
+
+    // --- Build tema->weeks mapping from weekly blocks ---
+    // Split text by week headings
+    const temaWeekMap={}; // temaNum -> {firstWeek, lastWeek}
+    const weekBlockRe=/(d+)[ªa]s+Semanas+[ds/a]+/gi;
+    let lastWnum=0, lastWpos=0;
+    const weekPositions=[]; // [{num, pos}]
+    let wbm;
+    while((wbm=weekBlockRe.exec(text))!==null) {
+      weekPositions.push({num:parseInt(wbm[1]),pos:wbm.index});
+    }
+    weekPositions.forEach(({num,pos},i)=>{
+      const nextPos = i+1 < weekPositions.length ? weekPositions[i+1].pos : pos+2000;
+      const block = text.slice(pos, nextPos);
+      const tms = [...block.matchAll(/Temas+(d+)/gi)].map(m=>parseInt(m[1]));
+      tms.forEach(tn=>{
+        if(!temaWeekMap[tn]) temaWeekMap[tn]={first:num,last:num};
+        else { temaWeekMap[tn].first=Math.min(temaWeekMap[tn].first,num); temaWeekMap[tn].last=Math.max(temaWeekMap[tn].last,num); }
+      });
+    });
+
+    // --- Extract temas from Roteiro section ---
+    const rotStart=text.indexOf('Roteiro de conteúdos');
+    const rotEnd=text.search(/Estrutura de ensino|4./);
+    const rotSection=rotStart!==-1?text.slice(rotStart,rotEnd!==-1&&rotEnd>rotStart?rotEnd:rotStart+3000):'';
+    
+    // Find TEMA blocks in roteiro
+    const temaBlockRe=/TEMAs+(d+)([sS]*?)(?=TEMAs+d+|$)/gi;
+    let tm;
+    while((tm=temaBlockRe.exec(rotSection))!==null){
+      const num=parseInt(tm[1]);
+      const block=tm[2];
+      const lines=block.split(/
+|s{3,}/).map(l=>l.trim()).filter(l=>l.length>2);
+      const subs=lines.filter(l=>/^d+.d+/.test(l));
+      const titles=lines.filter(l=>!/^d+.d+/.test(l)&&l.length>5&&!l.match(/^TEMA/i));
+      const title=titles.slice(0,3).join(' ').trim().replace(/s+/g,' ').slice(0,120);
+      const wInfo=temaWeekMap[num];
+      const ini=wInfo&&weekMap[wInfo.first]?weekMap[wInfo.first].ini:'';
+      const fim=wInfo&&weekMap[wInfo.last]?weekMap[wInfo.last].fim:'';
+      entries.push({tipo:'tema',label:`Tema ${num} — ${title}`,ini,fim,subs});
+    }
+
+    // --- Extract Avaliação Sumativa A & B from calendário ---
+    const calIdx=text.indexOf('Calendário de avaliação contínua');
+    if(calIdx!==-1){
+      const cal=text.slice(calIdx,calIdx+3000);
+      // Find pairs: spec date (às Xh) and submit date (até às)
+      const specRe=/(d{1,2})/(d{1,2})s*(àss*d+h/gi;
+      const subRe=/(d{1,2})/(d{1,2})s*(até às/gi;
+      const specs=[]; let sm;
+      while((sm=specRe.exec(cal))!==null) specs.push({d:parseInt(sm[1]),m:parseInt(sm[2])});
+      const subs=[]; let sbm;
+      while((sbm=subRe.exec(cal))!==null) subs.push({d:parseInt(sbm[1]),m:parseInt(sbm[2])});
+      const labels=['Avaliação Sumativa A','Avaliação Sumativa B'];
+      for(let i=0;i<Math.min(specs.length,subs.length,2);i++){
+        const yn=specs[i].m<8?yr+1:yr;
+        const ynf=subs[i].m<8?yr+1:yr;
+        entries.push({tipo:'efolio',label:labels[i]||'E-Fólio '+(i+1),
+          ini:iso(specs[i].d,specs[i].m,yn),
+          fim:iso(subs[i].d,subs[i].m,ynf),
+          subs:[`Especificação: ${specs[i].d}/${specs[i].m}`,`Entrega até: ${subs[i].d}/${subs[i].m} às 23h55`,'4 valores']
+        });
+      }
+    }
+
+    // --- Pausa Letiva ---
+    const pausaRe=/(d{1,2})/(d{1,2})(?:/(d{2,4}))?s+as+(d{1,2})/(d{1,2})(?:/(d{2,4}))?s+Pausas+Letiva/i;
+    const pm=text.match(pausaRe);
+    if(pm){
+      const y1=pm[3]?parseInt(pm[3])+(pm[3].length===2?2000:0):yr;
+      const y2=pm[6]?parseInt(pm[6])+(pm[6].length===2?2000:0):(parseInt(pm[5])<parseInt(pm[2])?yr+1:yr);
+      entries.push({tipo:'pausa',label:'Pausa Letiva',ini:iso(parseInt(pm[1]),parseInt(pm[2]),y1),fim:iso(parseInt(pm[4]),parseInt(pm[5]),y2),subs:[]});
+    }
+
+    // Sort by ini date
+    entries.sort((a,b)=>(!a.ini?1:!b.ini?-1:a.ini.localeCompare(b.ini)));
+    return entries;
+  }
+
+  function renderEntradasTL(){
+    const cont=document.getElementById('tl-entries');
+    if(!_tlEntradas.length){cont.innerHTML='<p style="color:#9ca3af;font-size:0.85rem">Sem entradas.</p>';return;}
+    const colors=tlColors, names=tlNames;
+    cont.innerHTML=_tlEntradas.map((e,i)=>`
+      <div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:8px;border-left:4px solid ${colors[e.tipo]||'#888'}">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+          <select onchange="window._tlUpdateEntrada(${i},'tipo',this.value)" style="font-size:0.8rem;border:1px solid #d1d5db;border-radius:4px;padding:2px 4px">
+            ${['tema','efolio','pausa','revisao'].map(t=>`<option value="${t}" ${e.tipo===t?'selected':''}>${names[t]}</option>`).join('')}
+          </select>
+          <input value="${e.label||''}" onchange="window._tlUpdateEntrada(${i},'label',this.value)" style="flex:1;min-width:200px;font-size:0.85rem;font-weight:600;border:1px solid #d1d5db;border-radius:4px;padding:4px 8px" placeholder="Título">
+          <label style="font-size:0.8rem;color:#6b7280">De:</label>
+          <input type="date" value="${e.ini||''}" onchange="window._tlUpdateEntrada(${i},'ini',this.value)" style="font-size:0.8rem;border:1px solid #d1d5db;border-radius:4px;padding:4px">
+          <label style="font-size:0.8rem;color:#6b7280">Até:</label>
+          <input type="date" value="${e.fim||''}" onchange="window._tlUpdateEntrada(${i},'fim',this.value)" style="font-size:0.8rem;border:1px solid #d1d5db;border-radius:4px;padding:4px">
+          <button onclick="window._tlRemoveEntrada(${i})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:0.8rem">✕</button>
+        </div>
+        <div style="font-size:0.8rem;color:#6b7280;margin-bottom:4px">Subtópicos (um por linha):</div>
+        <textarea onchange="window._tlUpdateEntrada(${i},'subs',this.value)" style="width:100%;box-sizing:border-box;font-size:0.8rem;border:1px solid #e5e7eb;border-radius:4px;padding:6px;min-height:60px;resize:vertical">${(e.subs||[]).join('\n')}</textarea>
+      </div>
+    `).join('');
+  }
+
+  window._tlUpdateEntrada=function(i,field,val){
+    if(field==='subs') _tlEntradas[i].subs=val.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+    else _tlEntradas[i][field]=val;
+  };
+  window._tlRemoveEntrada=function(i){
+    _tlEntradas.splice(i,1);
+    renderEntradasTL();
+  };
+  window.adicionarEntradaTL=function(tipo){
+    _tlEntradas.push({tipo,label:'',ini:'',fim:'',subs:[]});
+    renderEntradasTL();
+    document.getElementById('tl-entries-wrap').style.display='block';
+    document.getElementById('tl-no-entries').style.display='none';
+  };
+
+  window.guardarTimelineTL=async function(){
+    if(!_tlUcId){alert('Erro: UC não identificada.');return;}
+    // Collect current form values (user might not have triggered onchange)
+    const entryDivs=document.getElementById('tl-entries').querySelectorAll('[style*="border-left"]');
+    const entries=_tlEntradas.map((e,i)=>{
+      const div=entryDivs[i];
+      if(!div) return e;
+      const sel=div.querySelector('select');
+      const inputs=div.querySelectorAll('input');
+      const ta=div.querySelector('textarea');
+      return {
+        tipo:sel?sel.value:e.tipo,
+        label:inputs[0]?inputs[0].value:e.label,
+        ini:inputs[1]?inputs[1].value:e.ini,
+        fim:inputs[2]?inputs[2].value:e.fim,
+        subs:ta?ta.value.split('\n').map(s=>s.trim()).filter(s=>s.length>0):(e.subs||[])
+      };
+    });
+    try{
+      await updateDoc(doc(db,'ucs',_tlUcId),{timeline:entries});
+      alert('Timeline guardada com sucesso!');
+      window.fecharTLModal();
+    }catch(err){
+      alert('Erro ao guardar: '+(err.message||err));
+    }
+  };
+})();
+</script>
 </body>
 </html>
