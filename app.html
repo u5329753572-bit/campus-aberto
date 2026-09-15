@@ -2814,7 +2814,7 @@
   if (!el) return;
   if (!uc.timeline || !uc.timeline.length) { el.style.display='none'; return; }
   const today = new Date();
-  const cols = {tema:'#378add',efolio:'#ba7517',pausa:'#888780',revisao:'#0f6e56'};
+  const cols = {tema:'#2563eb',efolio:'#d97706',pausa:'#9ca3af',revisao:'#059669'};
   const bgL = {tema:'#dbeafe',efolio:'#fef3c7',pausa:'#f3f4f6',revisao:'#d1fae5'};
   const tcL = {tema:'#1e40af',efolio:'#92400e',pausa:'#374151',revisao:'#065f46'};
   function d(str){return new Date(str+'T00:00:00');}
@@ -2830,7 +2830,7 @@
     const col=cols[item.tipo]||'#888780';
     const past=today>d(item.fim);
     const active=today>=d(item.ini)&&today<=d(item.fim);
-    const op=past?0.45:active?1:0.75;
+    const op=past?0.75:1;
     segsHtml+=`<div data-tl-idx="${i}" style="flex:0 0 ${w}%;min-width:2px;background:${col};opacity:${op};cursor:${item.subs&&item.subs.length?'pointer':'default'};display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity .15s" title="${item.label}" onclick="window._tlClick(${i})">
       ${w>8?`<span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.95);padding:0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none">${item.label.replace(/^Tema \d+ — /,'Tema ').replace(/^Revisoes .*/,'Revisoes')}</span>`:''}
     </div>`;
