@@ -1342,6 +1342,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     Datas
   </button>
+  <button type="button" class="bottom-nav-btn" id="bnav-cronograma" onclick="window.bnavIr('cronograma')" aria-label="Cronograma"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="7" x2="14" y2="7" stroke-width="2"/><line x1="4" y1="12" x2="18" y2="12" stroke-width="2"/><line x1="4" y1="17" x2="10" y2="17" stroke-width="2"/></svg>
+    Cronograma
+  </button>
 </nav>
 
 <main>
@@ -2280,9 +2283,11 @@
       window.abrirEcranDatas();
       return;
     }
+    if (id === 'cronograma') { window.abrirCronograma(); return; }
     document.getElementById('ecra-datas').style.display     = 'none';
     document.getElementById('ecra-docs').style.display      = 'none';
     document.getElementById('ecra-citacoes').style.display  = 'none';
+    document.getElementById('ecra-cronograma').style.display = 'none';
     document.getElementById('ecra-ucs').style.display       = 'block';
     window.bnavAtualizar(id);
     requestAnimationFrame(() => {
@@ -2315,6 +2320,7 @@
 
   window.abrirEcranDatas = function() {
     document.getElementById('ecra-ucs').style.display      = 'none';
+    document.getElementById('ecra-cronograma').style.display = 'none';
     document.getElementById('ecra-docs').style.display     = 'none';
     document.getElementById('ecra-citacoes').style.display = 'none';
     document.getElementById('ecra-datas').style.display    = 'block';
@@ -2907,6 +2913,7 @@ async function carregarUCs() {
         if (dA !== dB) return dA - dB;
         return (a.ordem||99) - (b.ordem||99);
       });
+      window._ucsList = ucs;
 
       ucs.forEach(uc => {
         ucsMap[uc.id] = uc;
@@ -3992,6 +3999,91 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
     chev.style.transform=open?'':'rotate(180deg)';
   });
 })();
+</script>
+<div id="ecra-cronograma" style="display:none;padding:16px 0 80px;"><div style="padding:0 16px 12px;border-bottom:1px solid rgba(11,42,74,.08);"><h2 style="font:700 1rem/1 'Inter',sans-serif;color:#0b2a4a;margin:0 0 12px;">📅 Cronograma</h2><div style="display:flex;gap:6px;"><button id="cron-tab-1" onclick="window.renderCronograma(1)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">1º Ano</button><button id="cron-tab-2" onclick="window.renderCronograma(2)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">2º Ano</button><button id="cron-tab-3" onclick="window.renderCronograma(3)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">3º Ano</button></div></div><div id="cron-gantt" style="padding:12px 16px;"></div></div>
+<script>
+window.abrirCronograma = function() {
+  ['ecra-ucs','ecra-datas','ecra-docs','ecra-citacoes'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.getElementById('ecra-cronograma').style.display = 'block';
+  window.bnavAtualizar('cronograma');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (!window._cronAno) window._cronAno = 1;
+  window.renderCronograma(window._cronAno);
+};
+window.renderCronograma = function(ano) {
+  window._cronAno = ano;
+  [1,2,3].forEach(function(a) {
+    var btn = document.getElementById('cron-tab-' + a);
+    if (!btn) return;
+    btn.style.background = a === ano ? '#0b2a4a' : 'transparent';
+    btn.style.color = a === ano ? '#fff' : '#0b2a4a';
+  });
+  var ct = document.getElementById('cron-gantt');
+  if (!ct) return;
+  var ucs = (window._ucsList || []).filter(function(u) { return Number(u.ano) === ano && !u.oculta; });
+  ucs.sort(function(a,b) { return (Number(a.ordem)||99) - (Number(b.ordem)||99); });
+  var ad = [];
+  ucs.forEach(function(u) {
+    (u.timeline || []).forEach(function(e) {
+      if (e.ini && e.ini.length >= 10) ad.push(new Date(e.ini));
+      if (e.fim && e.fim.length >= 10) ad.push(new Date(e.fim));
+    });
+  });
+  if (!ad.length) {
+    ct.innerHTML = '<p style="color:#888;padding:20px;text-align:center;font-size:.82rem;">Sem dados de timeline para ' + ano + 'º Ano.<br><small>Importa as timelines no admin.</small></p>';
+    return;
+  }
+  var mn = new Date(Math.min.apply(null, ad));
+  var mx = new Date(Math.max.apply(null, ad));
+  mn = new Date(mn.getFullYear(), mn.getMonth(), 1);
+  mx = new Date(mx.getFullYear(), mx.getMonth() + 1, 1);
+  var tot = mx - mn;
+  function pct(ds) { return Math.max(0, Math.min(100, ((new Date(ds) - mn) / tot * 100))); }
+  var COLS = {tema:'#2c5f8a', efolio:'#e07b39', pausa:'#c8d0d8', revisao:'#4a8a5c', exame:'#c0392b'};
+  var tp = (new Date() - mn) / tot * 100;
+  var mos = [];
+  var cc = new Date(mn.getFullYear(), mn.getMonth(), 1);
+  while (cc < mx) {
+    mos.push({l: cc.toLocaleString('pt-PT', {month:'short'}), p: (cc - mn) / tot * 100});
+    cc.setMonth(cc.getMonth() + 1);
+  }
+  var h = '<div style="overflow-x:auto;"><div style="min-width:480px;">';
+  h += '<div style="display:flex;margin-bottom:6px;"><div style="min-width:110px;width:110px;"></div><div style="position:relative;flex:1;height:16px;">';
+  mos.forEach(function(m) {
+    h += '<div style="position:absolute;left:' + m.p.toFixed(1) + '%;transform:translateX(-50%);font-size:.58rem;color:#aaa;white-space:nowrap;">' + m.l + '</div>';
+  });
+  h += '</div></div>';
+  ucs.forEach(function(u) {
+    var nm = (u.nome || '').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    h += '<div style="display:flex;align-items:center;margin-bottom:5px;">';
+    h += '<div style="min-width:110px;width:110px;font-size:.67rem;font-weight:600;color:#0b2a4a;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + nm + '">' + nm + '</div>';
+    h += '<div style="position:relative;flex:1;height:16px;background:#eceff2;border-radius:4px;">';
+    (u.timeline || []).forEach(function(e) {
+      if (!e.ini || !e.fim || e.ini.length < 10 || e.fim.length < 10) return;
+      var l = pct(e.ini), r = pct(e.fim), w = r - l;
+      if (w < 0.2) return;
+      var col = COLS[e.tipo] || '#999';
+      var op = e.tipo === 'pausa' ? '0.4' : '0.85';
+      var lb = ((e.label || e.tipo) + ' | ' + e.ini + ' a ' + e.fim).replace(/"/g,'&quot;').replace(/</g,'&lt;');
+      h += '<div style="position:absolute;left:' + l.toFixed(2) + '%;width:' + w.toFixed(2) + '%;height:100%;background:' + col + ';opacity:' + op + ';border-radius:2px;" title="' + lb + '"></div>';
+    });
+    if (tp >= 0 && tp <= 100) h += '<div style="position:absolute;left:' + tp.toFixed(2) + '%;top:-3px;height:calc(100% + 6px);width:2px;background:#e74c3c;z-index:3;border-radius:1px;" title="Hoje"></div>';
+    h += '</div></div>';
+  });
+  h += '</div></div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;padding-top:8px;border-top:1px solid #e8ecf0;">';
+  [{k:'t',l:'Temas',c:'#2c5f8a'},{k:'e',l:'e-Fólios',c:'#e07b39'},{k:'r',l:'Revisão',c:'#4a8a5c'},{k:'p',l:'Pausas',c:'#c8d0d8'},{k:'h',l:'Hoje',c:'#e74c3c'}].forEach(function(it) {
+    h += '<div style="display:flex;align-items:center;gap:4px;font-size:.63rem;color:#666;">';
+    if (it.k === 'h') h += '<div style="width:2px;height:10px;background:' + it.c + ';border-radius:1px;"></div>';
+    else h += '<div style="width:10px;height:7px;background:' + it.c + ';border-radius:2px;opacity:.85;"></div>';
+    h += it.l + '</div>';
+  });
+  h += '</div>';
+  ct.innerHTML = h;
+};
 </script>
 </body>
 </html>
