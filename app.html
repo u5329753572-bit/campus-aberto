@@ -2841,7 +2841,7 @@
   });
 
   const todayPct=Math.max(0,Math.min(100,(today-start)/total*100));
-  const todayLine=today>=start&&today<=end?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.9);pointer-events:none;z-index:2;"></div>`:'';
+  const todayLine=today>=start&&today<=end?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:3px;background:#ff6c2f;pointer-events:none;z-index:5;box-shadow:0 0 8px rgba(255,108,47,.7);"><span style="position:absolute;top:4px;left:5px;background:#ff6c2f;color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.5;letter-spacing:.03em;">HOJE</span></div>`:'';
 
   const legendItems=['tema','efolio','pausa','revisao'];
   const legendLabels={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisão'};
