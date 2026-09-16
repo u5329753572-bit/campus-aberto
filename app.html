@@ -2874,7 +2874,7 @@
     window._tlActive=idx;
     const item=window._tlData[idx];
     const dr=item.ini&&item.fim?fmt(item.ini)+' → '+fmt(item.fim):'';
-    const subsHtml=item.subs&&item.subs.length?'<ul style="margin:6px 0 0 16px;padding:0;color:#444;">'+item.subs.map(s=>'<li style="margin:2px 0;">'+s+'</li>').join('')+'</ul>':'';
+    const subsHtml=item.subs&&item.subs.length?'<table style="width:100%;border-collapse:collapse;margin-top:10px;">'+'<thead><tr><th style="text-align:left;padding:5px 0;font-size:.68rem;font-weight:700;color:#b07c2a;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid rgba(200,169,106,.6);">Subtemas</th></tr></thead>'+'<tbody>'+item.subs.map((s,i)=>'<tr style="border-bottom:1px solid rgba(200,169,106,.15);"><td style="padding:5px 2px;font-size:.82rem;color:#333;">'+(i+1)+' &mdash; '+s+'</td></tr>').join('')+'</tbody></table>':'';
     panel.style.display='block';
     panel.innerHTML='<strong style="color:#0b2a4a;">'+item.label+'</strong>'+(dr?'<span style="color:#888;margin-left:8px;font-size:12px;">'+dr+'</span>':'')+subsHtml;
   };
