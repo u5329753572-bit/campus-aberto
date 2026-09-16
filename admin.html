@@ -2228,7 +2228,7 @@ window.abrirNota = abrirNota;
 
 <!-- MODAL TIMELINE IMPORT -->
 <div id="tl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;overflow-y:auto">
-<div style="background:#fff;max-width:900px;margin:32px auto;border-radius:12px;padding:24px;position:relative">
+<div style="background:#fff;max-width:900px;margin:32px auto;border-radius:12px;padding:24px;position:relative;max-height:90vh;overflow-y:auto">
   <h2 style="margin:0 0 4px;font-size:1.2rem;color:#1e3a5f">📅 Timeline — <span id="tl-uc-nome"></span></h2>
   <p style="margin:0 0 16px;font-size:0.8rem;color:#6b7280">Importa o PDF do PUC para gerar automaticamente a timeline desta UC.</p>
   <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
@@ -2445,6 +2445,8 @@ window.abrirNota = abrirNota;
     renderEntradasTL();
     document.getElementById('tl-entries-wrap').style.display='block';
     document.getElementById('tl-no-entries').style.display='none';
+    var _lastE=document.getElementById('tl-entries').lastElementChild;
+    if(_lastE){setTimeout(function(){_lastE.scrollIntoView({behavior:'smooth',block:'nearest'});var _inp=_lastE.querySelector('input');if(_inp)_inp.focus();},50);}
   };
 
 })();
