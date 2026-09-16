@@ -1994,7 +1994,19 @@
   };
 
   let utilizadorAtual = null;
-  let docPendente     = null;
+
+  window._saveProgresso = async function(key, valor) {
+    if (!utilizadorAtual) return;
+    try { await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), {['progresso.' + key]: valor}); }
+    catch(err) { console.error('saveProgresso:', err); }
+  };
+  window._getProgresso = async function() {
+    if (!utilizadorAtual) return {};
+    try {
+      const snap = await getDoc(doc(db, 'utilizadores', utilizadorAtual.uid));
+      return snap.exists() ? (snap.data().progresso || {}) : {};
+    } catch(err) { return {}; }
+  };  let docPendente     = null;
   let ucAtualId       = null;
   let notaModoAtual   = 'continua'; // 'continua' | 'exame'
   let viewerDocAtual  = null;
@@ -4007,24 +4019,48 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 <script>
 window.abrirCronograma = function() {
   ['ecra-ucs','ecra-datas','ecra-docs','ecra-citacoes'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.getElementById('ecra-cronograma').style.display = 'block';
   window.bnavAtualizar('cronograma');
-  window.scrollTo({top:0, behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
   if (!window._cronAno) window._cronAno = 1;
-  window.renderCronograma(window._cronAno);
+  var loader = window._getProgresso ? window._getProgresso() : Promise.resolve({});
+  loader.then(function(prog) {
+    window._cronProg = prog || {};
+    window.renderCronograma(window._cronAno);
+  });
+};
+window._cronKey = function(ucNome, label) {
+  return (ucNome + '__' + label).replace(/[^a-z0-9A-Z]/g, '_').slice(0, 80);
 };
 window._cronClose = function() {
   var el = document.getElementById('cron-modal-overlay');
   if (el) el.remove();
+};
+window._setProgresso = function(key, valor, btn) {
+  window._cronProg = window._cronProg || {};
+  window._cronProg[key] = valor;
+  if (window._saveProgresso) window._saveProgresso(key, valor);
+  // update popup button states
+  var modal = btn ? btn.closest('.cron-modal-inner') : null;
+  if (modal) {
+    modal.querySelectorAll('.cron-status-btn').forEach(function(b) {
+      var active = b.getAttribute('data-val') === valor;
+      b.style.background = active ? b.getAttribute('data-col') : '#f0f4f8';
+      b.style.color = active ? '#fff' : '#0b2a4a';
+      b.style.fontWeight = active ? '700' : '400';
+    });
+  }
+  window.renderCronograma(window._cronAno);
 };
 window._cronPopup = function(ei) {
   var item = (window._cronEntries || [])[Number(ei)];
   if (!item) return;
   var uc = item.uc;
   var e = item.e;
+  var key = window._cronKey(uc.nome, e.label);
+  var prog = (window._cronProg || {})[key] || 'nao_iniciado';
   var fmt = function(s) {
     if (!s) return '';
     var d = new Date(s);
@@ -4042,29 +4078,42 @@ window._cronPopup = function(ei) {
   } else {
     subsHtml = '<p style="font:.75rem/1.5 Inter,sans-serif;color:#aaa;margin:8px 0 0;font-style:italic;">Sem subtemas registados.</p>';
   }
+  var statusCols = {nao_iniciado:'#90a4ae',em_curso:'#f0a500',concluido:'#27ae60'};
+  var statusLbls = {nao_iniciado:'Não iniciado',em_curso:'Em curso',concluido:'Concluído'};
+  var btnsHtml = '<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">';
+  ['nao_iniciado','em_curso','concluido'].forEach(function(v) {
+    var active = prog === v;
+    btnsHtml += '<button class="cron-status-btn" data-val="'+v+'" data-key="'+key+'" data-col="'+statusCols[v]+'" onclick="window._setProgresso(this.dataset.key,this.dataset.val,this)" style="flex:1;min-width:90px;padding:8px 6px;border:1.5px solid '+(active?statusCols[v]:'rgba(11,42,74,.2)')+';border-radius:8px;background:'+(active?statusCols[v]:'#f0f4f8')+';color:'+(active?'#fff':'#0b2a4a')+';font:'+(active?'700':'400')+' .72rem/1 Inter,sans-serif;cursor:pointer;">'+statusLbls[v]+'</button>';
+  });
+  btnsHtml += '</div>';
   window._cronClose();
   var overlay = document.createElement('div');
   overlay.id = 'cron-modal-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
   overlay.addEventListener('click', function(ev) { if (ev.target === overlay) overlay.remove(); });
   var modal = document.createElement('div');
+  modal.className = 'cron-modal-inner';
   modal.style.cssText = 'background:#fff;border-radius:14px;padding:22px 24px 24px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.25);';
   modal.innerHTML =
-    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">'+
     '<div><p style="font:.62rem/1 Inter,sans-serif;color:#5b8db8;margin:0 0 5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;">'+uc.nome+'</p>'+
     '<h3 style="font:700 .95rem/1.3 Inter,sans-serif;color:#0b2a4a;margin:0;">'+e.label+'</h3></div>'+
     '<button onclick="window._cronClose()" style="background:none;border:none;font:600 1.4rem/1 Inter,sans-serif;color:#bbb;cursor:pointer;flex-shrink:0;padding:0;line-height:1;">×</button>'+
     '</div>'+
-    '<p style="font:.68rem/1 Inter,sans-serif;color:#888;margin:0 0 16px;">'+fmt(e.ini)+' – '+fmt(e.fim)+'</p>'+
-    '<div style="border-top:1px solid rgba(11,42,74,.1);padding-top:14px;">'+
+    '<p style="font:.68rem/1 Inter,sans-serif;color:#888;margin:0 0 4px;">'+fmt(e.ini)+' – '+fmt(e.fim)+'</p>'+
+    '<div style="border-top:1px solid rgba(11,42,74,.1);padding-top:12px;margin-top:10px;">'+
     '<p style="font:700 .7rem/1 Inter,sans-serif;color:#0b2a4a;margin:0 0 2px;text-transform:uppercase;letter-spacing:.05em;">Subtemas</p>'+
-    subsHtml+'</div>';
+    subsHtml+'</div>'+
+    '<div style="border-top:1px solid rgba(11,42,74,.1);padding-top:12px;margin-top:14px;">'+
+    '<p style="font:700 .7rem/1 Inter,sans-serif;color:#0b2a4a;margin:0;text-transform:uppercase;letter-spacing:.05em;">Progresso</p>'+
+    btnsHtml+'</div>';
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 };
 window.renderCronograma = function(ano) {
   window._cronAno = ano;
   window._cronEntries = [];
+  var prog = window._cronProg || {};
   [1,2,3].forEach(function(a) {
     var btn = document.getElementById('cron-tab-'+a);
     if (!btn) return;
@@ -4089,6 +4138,7 @@ window.renderCronograma = function(ano) {
   var DW=16, C1=130, C2=115;
   var COLORS={tema:'#5b8db8',efolio:'#e07b39',pausa:'#c8d0d8',revisao:'#4a8a5c',exame:'#c0392b'};
   var LBLS={tema:'Temas',efolio:'E-fólio',pausa:'Pausa Letiva',revisao:'Revisão',exame:'Exame'};
+  var PROG_COL={nao_iniciado:'transparent',em_curso:'#f0a500',concluido:'#27ae60'};
   var MNS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   var todayMs=(function(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();})();
   var tdPx=Math.round((todayMs-rS.getTime())/86400000)*DW;
@@ -4127,8 +4177,11 @@ window.renderCronograma = function(ano) {
       var col=COLORS[e.tipo]||'#999';
       var lbl=e.label||e.tipo;
       var isLight=e.tipo==='pausa';
+      var pstatus=isTema?(prog[window._cronKey?window._cronKey(entry.ucNome,lbl):'']||'nao_iniciado'):'nao_iniciado';
+      var pcolor=PROG_COL[pstatus]||'transparent';
+      var borderStyle=pstatus!=='nao_iniciado'?'border-bottom:3px solid '+pcolor+';':'';
       if(isTema){
-        bars+='<div data-ei="'+eIdx+'" onclick="window._cronPopup(this.dataset.ei)" style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);">';
+        bars+='<div data-ei="'+eIdx+'" onclick="window._cronPopup(this.dataset.ei)" style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);'+borderStyle+'">';
       } else {
         bars+='<div style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;">';
       }
@@ -4147,11 +4200,25 @@ window.renderCronograma = function(ano) {
     tl.forEach(function(e){
       var eIdx=window._cronEntries.length;
       window._cronEntries.push({uc:uc,e:e});
-      if(e.tipo==='tema') temasE.push({e:e,idx:eIdx});
-      else avalsE.push({e:e,idx:eIdx});
+      if(e.tipo==='tema') temasE.push({e:e,idx:eIdx,ucNome:uc.nome});
+      else avalsE.push({e:e,idx:eIdx,ucNome:uc.nome});
     });
+    // progress for UC header
+    var total=temasE.length;
+    var done=temasE.filter(function(t){return (prog[window._cronKey?window._cronKey(uc.nome,t.e.label):'']||'')===('concluido');}).length;
+    var inProgress=temasE.filter(function(t){return (prog[window._cronKey?window._cronKey(uc.nome,t.e.label):'']||'')===('em_curso');}).length;
+    var pct=total>0?Math.round(done/total*100):0;
+    var pBar='';
+    if(total>0){
+      var pw=Math.round(pct);
+      pBar='<div style="display:flex;align-items:center;gap:6px;margin-left:auto;padding-right:10px;">'+
+        '<div style="width:60px;height:5px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;">'+
+        '<div style="width:'+pw+'%;height:100%;background:'+(pct===100?'#27ae60':'#f0a500')+';border-radius:3px;"></div></div>'+
+        '<span style="font:.62rem/1 Inter,sans-serif;color:rgba(255,255,255,.9);white-space:nowrap;">'+done+'/'+total+'</span>'+
+        '</div>';
+    }
     rows+='<div style="display:flex;background:#1a3a5c;border-bottom:1px solid rgba(255,255,255,.12);">';
-    rows+='<div style="min-width:'+(C1+C2)+'px;flex-shrink:0;padding:6px 10px;font:700 .7rem/1.3 Inter,sans-serif;color:#fff;">'+(idx+1)+'. '+uc.nome+'</div>';
+    rows+='<div style="min-width:'+(C1+C2)+'px;flex-shrink:0;padding:6px 10px;font:700 .7rem/1.3 Inter,sans-serif;color:#fff;display:flex;align-items:center;">'+(idx+1)+'. '+uc.nome+pBar+'</div>';
     rows+='<div style="width:'+tlW+'px;flex-shrink:0;min-height:24px;position:relative;background:rgba(255,255,255,.05);">'+tdL+'</div></div>';
     if(temasE.length>0)rows+=mkRow('Temas de Estudo',temasE,'#f0f6fc',true);
     if(avalsE.length>0)rows+=mkRow('Avaliações & Pausas',avalsE,'#fafbfd',false);
@@ -4159,6 +4226,8 @@ window.renderCronograma = function(ano) {
   var leg='<div style="display:flex;gap:14px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:1px solid rgba(11,42,74,.1);margin-bottom:8px;">';
   Object.keys(COLORS).forEach(function(t){leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:14px;height:10px;background:'+COLORS[t]+';border-radius:2px;flex-shrink:0;"></span>'+LBLS[t]+'</span>';});
   if(showTd)leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:2px;height:12px;background:#e74c3c;"></span>Hoje</span>';
+  leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:14px;height:4px;background:#f0a500;border-radius:2px;"></span>Em curso</span>';
+  leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:14px;height:4px;background:#27ae60;border-radius:2px;"></span>Concluído</span>';
   leg+='</div>';
   ct.innerHTML=leg+'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(11,42,74,.15);border-radius:4px;"><div style="display:inline-block;min-width:100%;">'+mH+dH+rows+'</div></div>';
 };
