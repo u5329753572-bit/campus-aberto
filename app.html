@@ -2829,7 +2829,7 @@
   let segsHtml='';
   uc.timeline.forEach((item,i)=>{
     const w=wPct(item);
-    const col=cols[item.tipo]||'#0b2a4a';
+    const _aC={tema:'#1e40af',efolio:'#b45309',pausa:'#64748b',revisao:'#065f46'};const col=active?(_aC[item.tipo]||cols[item.tipo]||'#0b2a4a'):cols[item.tipo]||'#0b2a4a';
     const tc=txtC[item.tipo]||'#ffffff';
     const sc=subC[item.tipo]||'rgba(255,255,255,0.7)';
     const past=today>d(item.fim);
@@ -2837,11 +2837,11 @@
     const op=past?0.72:1;
     const dateRange = item.ini && item.fim ? fmt(item.ini)+' → '+fmt(item.fim) : (item.ini ? fmt(item.ini) : '');
     const shortLabel = item.label && item.label.length>22 ? item.label.slice(0,21)+'…' : (item.label||'');
-    segsHtml+=`<div data-tl-idx="${i}" title="${item.label||''} (${dateRange})" style="flex:0 0 ${w}%;min-width:${w<4?'4px':'0'};background:${col};opacity:${op};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 5px;cursor:pointer;overflow:hidden;transition:opacity .15s;position:relative;${active?'outline:2px solid rgba(255,255,255,0.6);outline-offset:-2px;':''}" onmouseenter="this.style.opacity=${Math.min(1,op+0.18)}" onmouseleave="this.style.opacity=${op}" onclick="window._tlClick(${i})"><span style="font-size:10.5px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;text-align:center;">${shortLabel}</span><span style="font-size:9px;color:${sc};white-space:nowrap;margin-top:1px;display:block;text-align:center;">${dateRange}</span><span style="font-size:8px;color:${sc};margin-top:2px;display:block;text-align:center;opacity:0.8;">▾ detalhes</span></div>`;
+    segsHtml+=`<div data-tl-idx="${i}" title="${item.label||''} (${dateRange})" style="flex:0 0 ${w}%;min-width:${w<4?'4px':'0'};background:${col};opacity:${op};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 5px;cursor:pointer;overflow:hidden;transition:opacity .15s;position:relative;${active?'outline:2px solid rgba(255,108,47,0.9);outline-offset:-2px;':''}" onmouseenter="this.style.opacity=${Math.min(1,op+0.18)}" onmouseleave="this.style.opacity=${op}" onclick="window._tlClick(${i})"><span style="font-size:10.5px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;text-align:center;">${shortLabel}</span><span style="font-size:9px;color:${sc};white-space:nowrap;margin-top:1px;display:block;text-align:center;">${dateRange}</span><span style="font-size:8px;color:${sc};margin-top:2px;display:block;text-align:center;opacity:0.8;">▾ detalhes</span></div>`;
   });
 
   const todayPct=Math.max(0,Math.min(100,(today-start)/total*100));
-  const todayLine=today>=start&&today<=end?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:3px;background:#ff6c2f;pointer-events:none;z-index:5;box-shadow:0 0 8px rgba(255,108,47,.7);"><span style="position:absolute;top:4px;left:5px;background:#ff6c2f;color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.5;letter-spacing:.03em;">HOJE</span></div>`:'';
+  const todayLine=today>=start&&today<=end?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:3px;background:#ff6c2f;pointer-events:none;z-index:5;box-shadow:0 0 8px rgba(255,108,47,.7);"></div>`:'';
 
   const legendItems=['tema','efolio','pausa','revisao'];
   const legendLabels={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisão'};
