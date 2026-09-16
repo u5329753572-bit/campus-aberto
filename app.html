@@ -1178,7 +1178,7 @@
     .sugestao-ok-texto { font:.8rem/1.5 'Inter',sans-serif; color:var(--cinza); margin-top:6px; }
 
     /* ── BOTTOM NAV MOBILE ───────────────────────────── */
-    .bottom-nav { display:none; }
+    .bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; z-index:300; background:#fff; border-top:1.5px solid rgba(26,58,42,.10); padding-bottom:env(safe-area-inset-bottom,0px); box-shadow:0 -4px 20px rgba(0,0,0,.08); }
     @media (max-width:640px) {
       .bottom-nav {
         display: flex;
