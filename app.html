@@ -2828,7 +2828,7 @@
 
   let segsHtml='';
   uc.timeline.forEach((item,i)=>{
-    const w=wPct(item);
+    const w=100/uc.timeline.length;
     const col=cols[item.tipo]||'#0b2a4a';
     const tc=txtC[item.tipo]||'#ffffff';
     const sc=subC[item.tipo]||'rgba(255,255,255,0.7)';
@@ -2858,7 +2858,7 @@
       ${todayLine}
     </div>
     <div style="position:relative;height:18px;margin-top:3px;font-size:10px;color:#aaa;">
-      ${uc.timeline.map(item=>`<span style="position:absolute;left:${pct(item.ini)}%;transform:translateX(-50%);white-space:nowrap;">${fmt(item.ini)}</span>`).join('')}
+      ${uc.timeline.map((item,i)=>`<span style="position:absolute;left:${i*100/uc.timeline.length}%;transform:translateX(-50%);white-space:nowrap;">${fmt(item.ini)}</span>`).join('')}
     </div>
     <div style="margin-top:8px;">${legendHtml}</div>
     <div style="margin-top:5px;font-size:11px;color:#bbb;display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Clique num segmento para ver os detalhes</div>
