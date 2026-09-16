@@ -4093,7 +4093,7 @@ window.renderCronograma = function(ano) {
       summaryBars += '<div style="position:absolute;top:5px;bottom:5px;left:'+l+'%;width:'+w+'%;background:'+(COLORS[e.tipo]||'#999')+';border-radius:3px;opacity:.8;" title="'+(e.label||e.tipo)+'"></div>';
     });
     rowsHtml += '<div style="display:flex;border-bottom:1px solid rgba(11,42,74,.1);">';
-    rowsHtml += '<div style="min-width:'+COL+'px;max-width:'+COL+'px;background:#0b2a4a;color:#fff;padding:6px 8px;font:600 .68rem/1.3 Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;user-select:none;" onclick="window._cronToggle(''+uid+'')">';
+    rowsHtml += '<div style="min-width:'+COL+'px;max-width:'+COL+'px;background:#0b2a4a;color:#fff;padding:6px 8px;font:600 .68rem/1.3 Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;user-select:none;" data-uid="'+uid+'" onclick="window._cronToggle(this.dataset.uid)">';
     rowsHtml += '<span id="arr-'+uid+'" style="font-size:.65rem;min-width:10px;">\u25B6</span>';
     rowsHtml += uc.nome+(uc.semestre?' S'+uc.semestre:'');
     rowsHtml += '</div>';
