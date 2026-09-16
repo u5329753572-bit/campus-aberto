@@ -2837,7 +2837,7 @@
     const op=past?0.72:1;
     const dateRange = item.ini && item.fim ? fmt(item.ini)+' → '+fmt(item.fim) : (item.ini ? fmt(item.ini) : '');
     const shortLabel = item.label && item.label.length>22 ? item.label.slice(0,21)+'…' : (item.label||'');
-    segsHtml+=`<div data-tl-idx="${i}" title="${item.label||''} (${dateRange})" style="flex:0 0 ${w}%;min-width:${w<4?'4px':'0'};background:${active?({tema:'#1e40af',efolio:'#b45309',pausa:'#64748b',revisao:'#065f46'}[item.tipo]||col):col};opacity:${op};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 5px;cursor:pointer;overflow:hidden;transition:opacity .15s;position:relative;${active?'outline:2px solid rgba(255,108,47,0.9);outline-offset:-2px;':''}" onmouseenter="this.style.opacity=${Math.min(1,op+0.18)}" onmouseleave="this.style.opacity=${op}" onclick="window._tlClick(${i})"><span style="font-size:10.5px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;text-align:center;">${shortLabel}</span><span style="font-size:9px;color:${sc};white-space:nowrap;margin-top:1px;display:block;text-align:center;">${dateRange}</span><span style="font-size:8px;color:${sc};margin-top:2px;display:block;text-align:center;opacity:0.8;">▾ detalhes</span></div>`;
+    segsHtml+=`<div data-tl-idx="${i}" title="${item.label||''} (${dateRange})" style="flex:0 0 ${w}%;min-width:${w<4?'4px':'0'};background:${active?'#f97316':col};opacity:${op};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 5px;cursor:pointer;overflow:hidden;transition:opacity .15s;position:relative;${active?'outline:2px solid rgba(255,108,47,0.9);outline-offset:-2px;':''}" onmouseenter="this.style.opacity=${Math.min(1,op+0.18)}" onmouseleave="this.style.opacity=${op}" onclick="window._tlClick(${i})"><span style="font-size:10.5px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;text-align:center;">${shortLabel}</span><span style="font-size:9px;color:${sc};white-space:nowrap;margin-top:1px;display:block;text-align:center;">${dateRange}</span><span style="font-size:8px;color:${sc};margin-top:2px;display:block;text-align:center;opacity:0.8;">▾ detalhes</span></div>`;
   });
 
   const todayPct=Math.max(0,Math.min(100,(today-start)/total*100));
@@ -2857,10 +2857,8 @@
       <div style="display:flex;height:52px;width:100%;">${segsHtml}</div>
       ${todayLine}
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#aaa;margin-top:3px;">
-      <span>${fmt(uc.timeline[0].ini)}</span>
-      <span>${fmt(uc.timeline[Math.floor(uc.timeline.length/2)].ini)}</span>
-      <span>${fmt(uc.timeline[uc.timeline.length-1].fim)}</span>
+    <div style="position:relative;height:18px;margin-top:3px;font-size:10px;color:#aaa;">
+      ${uc.timeline.map(item=>`<span style="position:absolute;left:${pct(item.ini)}%;transform:translateX(-50%);white-space:nowrap;">${fmt(item.ini)}</span>`).join('')}
     </div>
     <div style="margin-top:8px;">${legendHtml}</div>
     <div style="margin-top:5px;font-size:11px;color:#bbb;display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Clique num segmento para ver os detalhes</div>
@@ -2876,7 +2874,7 @@
     window._tlActive=idx;
     const item=window._tlData[idx];
     const dr=item.ini&&item.fim?fmt(item.ini)+' → '+fmt(item.fim):'';
-    const subsHtml=item.subs&&item.subs.length?'<table style="width:100%;border-collapse:collapse;margin-top:10px;">'+'<thead><tr><th style="text-align:left;padding:5px 0;font-size:.68rem;font-weight:700;color:#b07c2a;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid rgba(200,169,106,.6);">Subtemas</th></tr></thead>'+'<tbody>'+item.subs.map((s,i)=>'<tr style="border-bottom:1px solid rgba(200,169,106,.15);"><td style="padding:5px 2px;font-size:.82rem;color:#333;">'+(i+1)+' &mdash; '+s+'</td></tr>').join('')+'</tbody></table>':'';
+    const subsHtml=item.subs&&item.subs.length?'<table style="width:100%;border-collapse:collapse;margin-top:10px;">'+'<thead><tr><th style="text-align:left;padding:5px 0;font-size:.68rem;font-weight:700;color:#b07c2a;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid rgba(200,169,106,.6);">Subtemas</th></tr></thead>'+'<tbody>'+item.subs.map((s,i)=>'<tr style="border-bottom:1px solid rgba(200,169,106,.15);"><td style="padding:5px 2px;font-size:.82rem;color:#333;">'+s+'</td></tr>').join('')+'</tbody></table>':'';
     panel.style.display='block';
     panel.innerHTML='<strong style="color:#0b2a4a;">'+item.label+'</strong>'+(dr?'<span style="color:#888;margin-left:8px;font-size:12px;">'+dr+'</span>':'')+subsHtml;
   };
