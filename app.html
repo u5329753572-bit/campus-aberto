@@ -2821,7 +2821,7 @@
   const subC  = {tema:'rgba(255,255,255,0.72)', efolio:'rgba(40,20,0,0.62)', pausa:'rgba(255,255,255,0.72)', revisao:'rgba(255,255,255,0.72)'};
   function d(s){return new Date(s+'T00:00:00');}
   function fmt(s){const dt=new Date(s+'T00:00:00');return dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit'});}
-  const start=d(uc.timeline[0].ini), end=d(uc.timeline[uc.timeline.length-1].fim);
+  const _allInis=uc.timeline.map(x=>d(x.ini).getTime()).filter(v=>!isNaN(v));const _allFims=uc.timeline.map(x=>d(x.fim).getTime()).filter(v=>!isNaN(v));const start=_allInis.length?Math.min(..._allInis):NaN;const end=_allFims.length?Math.max(..._allFims):NaN;
   const total=end-start;
   function pct(s){return Math.max(0,Math.min(100,(d(s)-start)/total*100));}
   function wPct(item){return Math.max(1, pct(item.fim)-pct(item.ini));}
