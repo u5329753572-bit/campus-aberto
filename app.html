@@ -3961,5 +3961,33 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   </button>
 </footer>
 
+
+<script>
+(function(){
+  var card=document.getElementById('notas-uc-card');
+  if(!card)return;
+  var titulo=card.querySelector('.notas-uc-titulo');
+  if(!titulo)return;
+  // Wrap children after titulo in a collapsible div
+  var body=document.createElement('div');
+  body.id='notas-body';
+  body.style.display='none';
+  var children=Array.from(card.children);
+  var after=false;
+  children.forEach(function(el){if(after)body.appendChild(el);if(el===titulo)after=true;});
+  card.appendChild(body);
+  // Make titulo clickable
+  titulo.style.cssText+='cursor:pointer;display:flex;justify-content:space-between;align-items:center;';
+  var chev=document.createElement('span');
+  chev.textContent='\u25BE';
+  chev.style.cssText='font-size:13px;transition:transform .25s;opacity:.5;margin-left:8px;';
+  titulo.appendChild(chev);
+  titulo.addEventListener('click',function(){
+    var open=body.style.display!=='none';
+    body.style.display=open?'none':'block';
+    chev.style.transform=open?'':'rotate(180deg)';
+  });
+})();
+</script>
 </body>
 </html>
