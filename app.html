@@ -4016,8 +4016,55 @@ window.abrirCronograma = function() {
   if (!window._cronAno) window._cronAno = 1;
   window.renderCronograma(window._cronAno);
 };
+window._cronClose = function() {
+  var el = document.getElementById('cron-modal-overlay');
+  if (el) el.remove();
+};
+window._cronPopup = function(ei) {
+  var item = (window._cronEntries || [])[Number(ei)];
+  if (!item) return;
+  var uc = item.uc;
+  var e = item.e;
+  var fmt = function(s) {
+    if (!s) return '';
+    var d = new Date(s);
+    return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+  };
+  var subsHtml = '';
+  var subs = e.subs || [];
+  if (subs.length) {
+    subsHtml = '<ul style="margin:8px 0 0;padding:0 0 0 18px;">';
+    subs.forEach(function(sub) {
+      var t = typeof sub === 'string' ? sub : (sub.label||sub.nome||sub.titulo||JSON.stringify(sub));
+      subsHtml += '<li style="font:.78rem/1.6 Inter,sans-serif;color:#0b2a4a;">'+t+'</li>';
+    });
+    subsHtml += '</ul>';
+  } else {
+    subsHtml = '<p style="font:.75rem/1.5 Inter,sans-serif;color:#aaa;margin:8px 0 0;font-style:italic;">Sem subtemas registados.</p>';
+  }
+  window._cronClose();
+  var overlay = document.createElement('div');
+  overlay.id = 'cron-modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  overlay.addEventListener('click', function(ev) { if (ev.target === overlay) overlay.remove(); });
+  var modal = document.createElement('div');
+  modal.style.cssText = 'background:#fff;border-radius:14px;padding:22px 24px 24px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.25);';
+  modal.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;">'+
+    '<div><p style="font:.62rem/1 Inter,sans-serif;color:#5b8db8;margin:0 0 5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;">'+uc.nome+'</p>'+
+    '<h3 style="font:700 .95rem/1.3 Inter,sans-serif;color:#0b2a4a;margin:0;">'+e.label+'</h3></div>'+
+    '<button onclick="window._cronClose()" style="background:none;border:none;font:600 1.4rem/1 Inter,sans-serif;color:#bbb;cursor:pointer;flex-shrink:0;padding:0;line-height:1;">×</button>'+
+    '</div>'+
+    '<p style="font:.68rem/1 Inter,sans-serif;color:#888;margin:0 0 16px;">'+fmt(e.ini)+' – '+fmt(e.fim)+'</p>'+
+    '<div style="border-top:1px solid rgba(11,42,74,.1);padding-top:14px;">'+
+    '<p style="font:700 .7rem/1 Inter,sans-serif;color:#0b2a4a;margin:0 0 2px;text-transform:uppercase;letter-spacing:.05em;">Subtemas</p>'+
+    subsHtml+'</div>';
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+};
 window.renderCronograma = function(ano) {
   window._cronAno = ano;
+  window._cronEntries = [];
   [1,2,3].forEach(function(a) {
     var btn = document.getElementById('cron-tab-'+a);
     if (!btn) return;
@@ -4050,22 +4097,18 @@ window.renderCronograma = function(ano) {
   function lx(s){return Math.round((new Date(s).getTime()-rS.getTime())/86400000)*DW;}
   function wx(s,f){return Math.max(Math.round((new Date(f).getTime()-new Date(s).getTime())/86400000)+1,1)*DW;}
   var tdL=showTd?'<div style="position:absolute;top:0;bottom:0;left:'+tdPx+'px;width:2px;background:#e74c3c;opacity:.75;z-index:5;pointer-events:none;"></div>':'';
-
-  // Month header
   var mH='<div style="display:flex;background:#0b2a4a;">';
   mH+='<div style="min-width:'+(C1+C2)+'px;flex-shrink:0;"></div>';
   var cur=new Date(rS);
   while(cur<=rE){
     var mS2=new Date(cur.getFullYear(),cur.getMonth(),1);
     var mE2=new Date(cur.getFullYear(),cur.getMonth()+1,0);
-    var mAS=(mS2<rS?rS:mS2), mAE=(mE2>rE?rE:mE2);
+    var mAS=(mS2<rS?rS:mS2),mAE=(mE2>rE?rE:mE2);
     var mD=Math.round((mAE.getTime()-mAS.getTime())/86400000)+1;
     mH+='<div style="min-width:'+(mD*DW)+'px;max-width:'+(mD*DW)+'px;text-align:center;font:700 .62rem/26px Inter,sans-serif;color:#fff;border-right:1px solid rgba(255,255,255,.2);box-sizing:border-box;overflow:hidden;">'+MNS[cur.getMonth()].toUpperCase()+' '+cur.getFullYear()+'</div>';
     cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
   }
   mH+='</div>';
-
-  // Day header
   var dH='<div style="display:flex;border-bottom:2px solid #0b2a4a;">';
   dH+='<div style="min-width:'+C1+'px;flex-shrink:0;background:#e8eef4;border-right:1px solid rgba(11,42,74,.15);padding:0 8px;font:700 .6rem/22px Inter,sans-serif;color:#0b2a4a;">Unidade Curricular</div>';
   dH+='<div style="min-width:'+C2+'px;flex-shrink:0;background:#e8eef4;border-right:1px solid rgba(11,42,74,.2);padding:0 8px;font:700 .6rem/22px Inter,sans-serif;color:#0b2a4a;">Componente</div>';
@@ -4076,16 +4119,20 @@ window.renderCronograma = function(ano) {
     dd.setDate(dd.getDate()+1);
   }
   dH+='</div>';
-
-  // UC rows
-  function mkRow(label,entries,bg){
+  function mkRow(label,entries,bg,isTema){
     var bars='';
-    entries.forEach(function(e){
+    entries.forEach(function(entry){
+      var e=entry.e,eIdx=entry.idx;
       var l=lx(e.ini),w=wx(e.ini,e.fim);
       var col=COLORS[e.tipo]||'#999';
       var lbl=e.label||e.tipo;
-      bars+='<div style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;">';
-      bars+='<span style="font:.57rem/1 Inter,sans-serif;color:'+(e.tipo==='pausa'?'#444':'#fff')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+lbl+'</span></div>';
+      var isLight=e.tipo==='pausa';
+      if(isTema){
+        bars+='<div data-ei="'+eIdx+'" onclick="window._cronPopup(this.dataset.ei)" style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);">';
+      } else {
+        bars+='<div style="position:absolute;top:4px;bottom:4px;left:'+l+'px;width:'+w+'px;background:'+col+';border-radius:3px;display:flex;align-items:center;padding:0 5px;overflow:hidden;">';
+      }
+      bars+='<span style="font:.57rem/1 Inter,sans-serif;color:'+(isLight?'#444':'#fff')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+lbl+'</span></div>';
     });
     return '<div style="display:flex;border-bottom:1px solid rgba(11,42,74,.08);">'+
       '<div style="min-width:'+C1+'px;flex-shrink:0;background:'+bg+';border-right:1px solid rgba(11,42,74,.1);"></div>'+
@@ -4093,29 +4140,27 @@ window.renderCronograma = function(ano) {
       '<div style="width:'+tlW+'px;flex-shrink:0;min-height:30px;position:relative;background:'+bg+';">'+bars+tdL+'</div>'+
       '</div>';
   }
-
   var rows='';
   ucs.forEach(function(uc,idx){
     var tl=(uc.timeline||[]).filter(function(e){return e.ini&&e.fim;});
-    var temas=tl.filter(function(e){return e.tipo==='tema';});
-    var avals=tl.filter(function(e){return e.tipo!=='tema';});
+    var temasE=[],avalsE=[];
+    tl.forEach(function(e){
+      var eIdx=window._cronEntries.length;
+      window._cronEntries.push({uc:uc,e:e});
+      if(e.tipo==='tema') temasE.push({e:e,idx:eIdx});
+      else avalsE.push({e:e,idx:eIdx});
+    });
     rows+='<div style="display:flex;background:#1a3a5c;border-bottom:1px solid rgba(255,255,255,.12);">';
     rows+='<div style="min-width:'+(C1+C2)+'px;flex-shrink:0;padding:6px 10px;font:700 .7rem/1.3 Inter,sans-serif;color:#fff;">'+(idx+1)+'. '+uc.nome+'</div>';
     rows+='<div style="width:'+tlW+'px;flex-shrink:0;min-height:24px;position:relative;background:rgba(255,255,255,.05);">'+tdL+'</div></div>';
-    if(temas.length>0)rows+=mkRow('Temas de Estudo',temas,'#f0f6fc');
-    if(avals.length>0)rows+=mkRow('Avaliações & Pausas',avals,'#fafbfd');
+    if(temasE.length>0)rows+=mkRow('Temas de Estudo',temasE,'#f0f6fc',true);
+    if(avalsE.length>0)rows+=mkRow('Avaliações & Pausas',avalsE,'#fafbfd',false);
   });
-
-  // Legend
   var leg='<div style="display:flex;gap:14px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:1px solid rgba(11,42,74,.1);margin-bottom:8px;">';
-  Object.keys(COLORS).forEach(function(t){
-    leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:14px;height:10px;background:'+COLORS[t]+';border-radius:2px;flex-shrink:0;"></span>'+LBLS[t]+'</span>';
-  });
+  Object.keys(COLORS).forEach(function(t){leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:14px;height:10px;background:'+COLORS[t]+';border-radius:2px;flex-shrink:0;"></span>'+LBLS[t]+'</span>';});
   if(showTd)leg+='<span style="display:inline-flex;align-items:center;gap:5px;font:.65rem/1 Inter,sans-serif;color:#0b2a4a;"><span style="display:inline-block;width:2px;height:12px;background:#e74c3c;"></span>Hoje</span>';
   leg+='</div>';
-
-  ct.innerHTML=leg+'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(11,42,74,.15);border-radius:4px;">'+
-    '<div style="display:inline-block;min-width:100%;">'+mH+dH+rows+'</div></div>';
+  ct.innerHTML=leg+'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(11,42,74,.15);border-radius:4px;"><div style="display:inline-block;min-width:100%;">'+mH+dH+rows+'</div></div>';
 };
 </script>
 <style>#cron-desk-btn{display:block;}@media(max-width:640px){#cron-desk-btn{display:none;}}</style>
