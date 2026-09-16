@@ -2193,6 +2193,7 @@ function fecharNota() {
     });
     try {
       var _dI=entries.filter(function(e){return e.ini&&e.fim;});var _uT=entries.filter(function(e){return e.tipo==='tema'&&(!e.ini||!e.fim);});if(_uT.length>0&&_dI.length>0){var _aI=_dI.map(function(e){return new Date(e.ini+'T00:00:00').getTime();}).filter(function(v){return !isNaN(v);});var _aF=_dI.map(function(e){return new Date(e.fim+'T00:00:00').getTime();}).filter(function(v){return !isNaN(v);});if(_aI.length&&_aF.length){var _rS=Math.min.apply(null,_aI),_rE=Math.max.apply(null,_aF),_tot=_rE-_rS;var _allT=entries.filter(function(e){return e.tipo==='tema';});var _nT=_allT.length;function _fmt(ts){var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}_allT.forEach(function(t,i){if(!t.ini||!t.fim){t.ini=_fmt(_rS+Math.floor(i*_tot/_nT));t.fim=_fmt(_rS+Math.floor((i+1)*_tot/_nT)-86400000);}}); }}
+      if(_uT.length>0&&_dI.length===0){var _now=new Date(),_yr=_now.getMonth()>=8?_now.getFullYear():_now.getFullYear()-1;var _rS3=new Date(_yr+'-09-01T00:00:00').getTime(),_rE3=new Date((_yr+1)+'-07-31T00:00:00').getTime();var _tot3=_rE3-_rS3,_nT3=_uT.length;function _fmt3(ts){var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}_uT.forEach(function(t,i){if(!t.ini||!t.fim){t.ini=_fmt3(_rS3+Math.floor(i*_tot3/_nT3));t.fim=_fmt3(_rS3+Math.floor((i+1)*_tot3/_nT3)-86400000);}});}
       await updateDoc(doc(db, 'ucs', window._tlUcId), { timeline: entries });
       alert('Timeline guardada com sucesso!');
       window.fecharTLModal();
@@ -2265,7 +2266,7 @@ window.abrirNota = abrirNota;
 
 <script>
 (function(){
-  let _tlUcId='', _tlEntradas=[];
+  let _tlUcId='';
   const tlColors={tema:'#2563eb',efolio:'#d97706',pausa:'#9ca3af',revisao:'#059669'};
   const tlNames={tema:'Tema',efolio:'E-Fólio',pausa:'Pausa',revisao:'Revisões'};
 
@@ -2301,7 +2302,7 @@ window.abrirNota = abrirNota;
       status.textContent = 'A analisar estrutura do PUC...';
       const entradas = parsePUCText(fullText);
       if(entradas.length === 0){ status.textContent = 'Não foi possível detetar entradas automaticamente. Adiciona manualmente.'; return; }
-      _tlEntradas = entradas;
+      window._tlEntradas = entradas;
       renderEntradasTL();
       document.getElementById('tl-entries-wrap').style.display='block';
       document.getElementById('tl-no-entries').style.display='none';
@@ -2410,9 +2411,9 @@ window.abrirNota = abrirNota;
 
   function renderEntradasTL(){
     const cont=document.getElementById('tl-entries');
-    if(!_tlEntradas.length){cont.innerHTML='<p style="color:#9ca3af;font-size:0.85rem">Sem entradas.</p>';return;}
+    if(!(window._tlEntradas||[]).length){cont.innerHTML='<p style="color:#9ca3af;font-size:0.85rem">Sem entradas.</p>';return;}
     const colors=tlColors, names=tlNames;
-    cont.innerHTML=_tlEntradas.map((e,i)=>`
+    cont.innerHTML=(window._tlEntradas||[]).map((e,i)=>`
       <div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:8px;border-left:4px solid ${colors[e.tipo]||'#888'}">
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
           <select onchange="window._tlUpdateEntrada(${i},'tipo',this.value)" style="font-size:0.8rem;border:1px solid #d1d5db;border-radius:4px;padding:2px 4px">
@@ -2433,15 +2434,15 @@ window.abrirNota = abrirNota;
   window._renderEntradasTL = renderEntradasTL;
 
   window._tlUpdateEntrada=function(i,field,val){
-    if(field==='subs') _tlEntradas[i].subs=val.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
-    else _tlEntradas[i][field]=val;
+    if(field==='subs') window._tlEntradas[i].subs=val.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+    else window._tlEntradas[i][field]=val;
   };
   window._tlRemoveEntrada=function(i){
-    _tlEntradas.splice(i,1);
+    window._tlEntradas.splice(i,1);
     renderEntradasTL();
   };
   window.adicionarEntradaTL=function(tipo){
-    _tlEntradas.push({tipo,label:'',ini:'',fim:'',subs:[]});
+    (window._tlEntradas||(window._tlEntradas=[])).push({tipo,label:'',ini:'',fim:'',subs:[]});
     renderEntradasTL();
     document.getElementById('tl-entries-wrap').style.display='block';
     document.getElementById('tl-no-entries').style.display='none';
