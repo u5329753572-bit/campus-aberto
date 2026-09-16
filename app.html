@@ -1806,6 +1806,7 @@
       </div>
     </div>
   </div>
+<div id="ecra-cronograma" style="display:none;padding:16px 0 80px;"><div style="padding:0 16px 12px;border-bottom:1px solid rgba(11,42,74,.08);"><h2 style="font:700 1rem/1 'Inter',sans-serif;color:#0b2a4a;margin:0 0 12px;">📅 Cronograma</h2><div style="display:flex;gap:6px;"><button id="cron-tab-1" onclick="window.renderCronograma(1)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">1º Ano</button><button id="cron-tab-2" onclick="window.renderCronograma(2)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">2º Ano</button><button id="cron-tab-3" onclick="window.renderCronograma(3)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">3º Ano</button></div></div><div id="cron-gantt" style="padding:12px 16px;"></div></div>
 </main>
 
 <!-- VIEWER PDF -->
@@ -4003,7 +4004,6 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   });
 })();
 </script>
-<div id="ecra-cronograma" style="display:none;padding:16px 0 80px;"><div style="padding:0 16px 12px;border-bottom:1px solid rgba(11,42,74,.08);"><h2 style="font:700 1rem/1 'Inter',sans-serif;color:#0b2a4a;margin:0 0 12px;">📅 Cronograma</h2><div style="display:flex;gap:6px;"><button id="cron-tab-1" onclick="window.renderCronograma(1)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">1º Ano</button><button id="cron-tab-2" onclick="window.renderCronograma(2)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">2º Ano</button><button id="cron-tab-3" onclick="window.renderCronograma(3)" style="padding:6px 14px;border-radius:20px;border:1.5px solid #0b2a4a;background:transparent;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;color:#0b2a4a;">3º Ano</button></div></div><div id="cron-gantt" style="padding:12px 16px;"></div></div>
 <script>
 window.abrirCronograma = function() {
   ['ecra-ucs','ecra-datas','ecra-docs','ecra-citacoes'].forEach(function(id) {
