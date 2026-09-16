@@ -1178,7 +1178,7 @@
     .sugestao-ok-texto { font:.8rem/1.5 'Inter',sans-serif; color:var(--cinza); margin-top:6px; }
 
     /* ── BOTTOM NAV MOBILE ───────────────────────────── */
-    .bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; z-index:300; background:#fff; border-top:1.5px solid rgba(26,58,42,.10); padding-bottom:env(safe-area-inset-bottom,0px); box-shadow:0 -4px 20px rgba(0,0,0,.08); }
+    .bottom-nav { display:none; }
     @media (max-width:640px) {
       .bottom-nav {
         display: flex;
@@ -1638,6 +1638,9 @@
     <section class="secao-cabecalho-uniforme arquivo-cabecalho" aria-labelledby="arquivo-titulo">
       <div><div class="secao-kicker-uniforme">Biblioteca académica</div><h2 id="arquivo-titulo">Unidades curriculares</h2></div>
       <p>Consulta os materiais organizados por ano e semestre ou encontra-os diretamente através da pesquisa.</p>
+    <div id="cron-desk-btn">
+      <button type="button" onclick="window.bnavIr('cronograma')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#0b2a4a;color:#fff;border:none;border-radius:8px;font:600 .75rem/1 'Inter',sans-serif;cursor:pointer;margin-top:10px;">📅 Ver Cronograma</button>
+    </div>
     </section>
 
     <div id="ucs-grid">
@@ -4085,5 +4088,6 @@ window.renderCronograma = function(ano) {
   ct.innerHTML = h;
 };
 </script>
+<style>#cron-desk-btn{display:block;}@media(max-width:640px){#cron-desk-btn{display:none;}}</style>
 </body>
 </html>
