@@ -2225,7 +2225,9 @@
       const renderItem = (item, isFirst) => {
         const agora2 = new Date();
         const diffMs = item.data - agora2;
-        const dias = Math.max(0, Math.ceil(diffMs / 86400000));
+        const hojeD=new Date(agora2.getFullYear(),agora2.getMonth(),agora2.getDate());
+        const evtD=new Date(item.data.getFullYear(),item.data.getMonth(),item.data.getDate());
+        const dias=Math.max(0,Math.round((evtD-hojeD)/86400000));
         const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
         const tag = item.link ? 'button' : 'div';
         const attrs = item.link ? `type="button" data-data-link="${esc(item.link)}"` : '';
