@@ -4035,7 +4035,7 @@ window.renderCronograma = function(ano) {
   var ct = document.getElementById('cron-gantt');
   if (!ct) return;
   var ucs = (window._ucsList || []).filter(function(u) {
-    return Number(u.ano) === ano && u.oculta === false;
+    return Number(u.ano) === ano && u.oculta === false && (u.timeline||[]).length > 0;
   });
   ucs.sort(function(a,b) { return (Number(a.ordem)||99) - (Number(b.ordem)||99); });
   if (!ucs.length) {
