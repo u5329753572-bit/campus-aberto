@@ -2192,6 +2192,7 @@ function fecharNota() {
       };
     });
     try {
+      var _dI=entries.filter(function(e){return e.ini&&e.fim;});var _uT=entries.filter(function(e){return e.tipo==='tema'&&(!e.ini||!e.fim);});if(_uT.length>0&&_dI.length>0){var _aI=_dI.map(function(e){return new Date(e.ini+'T00:00:00').getTime();}).filter(function(v){return !isNaN(v);});var _aF=_dI.map(function(e){return new Date(e.fim+'T00:00:00').getTime();}).filter(function(v){return !isNaN(v);});if(_aI.length&&_aF.length){var _rS=Math.min.apply(null,_aI),_rE=Math.max.apply(null,_aF),_tot=_rE-_rS;var _allT=entries.filter(function(e){return e.tipo==='tema';});var _nT=_allT.length;function _fmt(ts){var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}_allT.forEach(function(t,i){if(!t.ini||!t.fim){t.ini=_fmt(_rS+Math.floor(i*_tot/_nT));t.fim=_fmt(_rS+Math.floor((i+1)*_tot/_nT)-86400000);}}); }}
       await updateDoc(doc(db, 'ucs', window._tlUcId), { timeline: entries });
       alert('Timeline guardada com sucesso!');
       window.fecharTLModal();
