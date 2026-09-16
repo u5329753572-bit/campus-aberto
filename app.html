@@ -2876,7 +2876,7 @@
     const dr=item.ini&&item.fim?fmt(item.ini)+' → '+fmt(item.fim):'';
     const subsHtml=item.subs&&item.subs.length?'<table style="width:100%;border-collapse:collapse;margin-top:10px;">'+'<thead><tr><th style="text-align:left;padding:5px 0;font-size:.68rem;font-weight:700;color:#b07c2a;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid rgba(200,169,106,.6);">Subtemas</th></tr></thead>'+'<tbody>'+item.subs.map((s,i)=>'<tr style="border-bottom:1px solid rgba(200,169,106,.15);"><td style="padding:5px 2px;font-size:.82rem;color:#333;">'+s+'</td></tr>').join('')+'</tbody></table>':'';
     panel.style.display='block';
-    var _lbl=(item.label||item.nome||'');var _tN=item.tipo==='tema'?'Tema '+(window._tlData.slice(0,idx).filter(function(x){return x.tipo==='tema';}).length+1)+': ':'';panel.innerHTML='<strong style="color:#0b2a4a;">'+_tN+_lbl+'</strong>'+(dr?'<span style="color:#888;margin-left:8px;font-size:12px;">'+dr+'</span>':'')+subsHtml;
+    var _lbl=(item.label||item.nome||'');panel.innerHTML='<strong style="color:#0b2a4a;">'+_lbl+'</strong>'+(dr?'<span style="color:#888;margin-left:8px;font-size:12px;">'+dr+'</span>':'')+subsHtml;
   };
 }
 async function carregarUCs() {
