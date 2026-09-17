@@ -2758,6 +2758,18 @@
     const minor = document.getElementById('filtro-minor').value;
     const ucId = document.getElementById('filtro-uc').value;
     const epoca = document.getElementById('filtro-epoca').value;
+    // Atualizar opcoes de UCs conforme ano/semestre
+        const ucsFiltradas = [...new Map(
+          todasAsDatas.filter(d => d.ucId && d.ucNome
+            && (!ano || String(d.ano||'') === ano)
+            && (!sem || String(d.semestre||'') === sem))
+          .map(d => [d.ucId, d.ucNome])
+        ).entries()];
+        const _filtroUcEl = document.getElementById('filtro-uc');
+        const _ucIdAtual = _filtroUcEl.value;
+        _filtroUcEl.innerHTML = '<option value="">Todas as UCs</option>'
+          + ucsFiltradas.map(([id, nome]) => '<option value="' + esc(id) + '"' + (_ucIdAtual && esc(id) === _ucIdAtual ? ' selected' : '') + '>' + esc(nome) + '</option>').join('');
+        
     // Mostrar/ocultar filtro de minor
     document.getElementById('filtro-minor').style.display = ano === '3' ? '' : 'none';
 
