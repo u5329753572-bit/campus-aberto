@@ -2745,13 +2745,14 @@
 
   window._addGcal = function(btn) {
     var t=btn.dataset.gcalTitle||"";var d=btn.dataset.gcalDate||"";var det=btn.dataset.gcalDetails||"";
-    var y=parseInt(d.slice(0,4)),m=parseInt(d.slice(4,6))-1,dy=parseInt(d.slice(6,8));
-    var end=new Date(y,m,dy+1);
-    var endS=end.getFullYear()+('0'+(end.getMonth()+1)).slice(-2)+('0'+end.getDate()).slice(-2);
-    var url="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(t)+"&dates="+d+"/"+endS+"&details="+encodeURIComponent(det);
-    window.open(url,"_blank","noopener");
-  };
-  window.filtrarDatas = function() {
+    var iso=btn.dataset.gcalIso||"";
+    var url;var p=function(n){return('0'+n).slice(-2);};
+    if(iso){var dt=new Date(iso);var h=dt.getHours(),mi=dt.getMinutes();
+      if(h!==0||mi!==0){var ts=function(x){return x.getUTCFullYear()+""+p(x.getUTCMonth()+1)+""+p(x.getUTCDate())+"T"+p(x.getUTCHours())+p(x.getUTCMinutes())+"00Z";};var endDt=new Date(dt.getTime()+3600000);url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+ts(dt)+'/'+ts(endDt)+'&details='+encodeURIComponent(det);}
+      else{var y2=parseInt(d.slice(0,4)),m2=parseInt(d.slice(4,6))-1,dy2=parseInt(d.slice(6,8));var end2=new Date(y2,m2,dy2+1);var endS2=end2.getFullYear()+p(end2.getMonth()+1)+p(end2.getDate());url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+d+'/'+endS2+'&details='+encodeURIComponent(det);}}
+    else{var y=parseInt(d.slice(0,4)),m=parseInt(d.slice(4,6))-1,dy=parseInt(d.slice(6,8));var end=new Date(y,m,dy+1);var endS=end.getFullYear()+p(end.getMonth()+1)+p(end.getDate());url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+d+'/'+endS+'&details='+encodeURIComponent(det);}
+    window.open(url,'_blank','noopener');
+  };  window.filtrarDatas = function() {
     const ano = document.getElementById('filtro-ano').value;
     const sem = document.getElementById('filtro-semestre').value;
     const minor = document.getElementById('filtro-minor').value;
@@ -2790,7 +2791,7 @@
           <span class="data-tag dias">${diasTexto}</span>
           <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
         </div>
-        <button class="data-gcal-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();window._addGcal(this)" data-gcal-title="${esc(item.titulo||'')}" data-gcal-date="${item.data.getFullYear()}${('0'+(item.data.getMonth()+1)).slice(-2)}${('0'+item.data.getDate()).slice(-2)}" data-gcal-details="${esc(subtag||item.tipo||'')}">&#x1F5D3;</button>
+        <button class="data-gcal-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();window._addGcal(this)" data-gcal-title="${esc(item.titulo||'')}" data-gcal-date="${item.data.getFullYear()}${('0'+(item.data.getMonth()+1)).slice(-2)}${('0'+item.data.getDate()).slice(-2)}" data-gcal-details="${esc(subtag||item.tipo||'')}" data-gcal-iso="${item.dataIso||''}">&#x1F5D3;</button>
       </div>`;
     }).join('');
   };
