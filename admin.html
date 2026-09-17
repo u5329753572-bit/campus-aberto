@@ -444,6 +444,8 @@
   <div class="tab-content" id="tab-ucs">
     <h2 class="secao-titulo">Unidades Curriculares</h2>
 
+    <button type="button" onclick="window._admMostrarPrompt()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:linear-gradient(135deg,#1a3a2a,#2d5a3d);color:#fff;border:none;border-radius:10px;font:600 .78rem/1 'Inter',sans-serif;cursor:pointer;letter-spacing:.03em;box-shadow:0 3px 14px rgba(26,58,42,.28);margin-bottom:20px"><span>🤖</span> Prompt para Claude</button>
+
     <div class="form-card">
       <h3>➕ Adicionar UC</h3>
       <div class="form-row">
@@ -2462,6 +2464,39 @@ window.mostrarImportJsonTL=function(){var p=document.getElementById('tl-import-j
 window.processarJsonTL=function(){try{var txt=document.getElementById('tl-json-input').value.trim();var data=JSON.parse(txt);if(!Array.isArray(data))throw new Error('Deve ser um array JSON.');var valid=data.filter(function(e){return e.tipo&&(e.nome||e.label);}).map(function(e){return {tipo:e.tipo,label:e.label||e.nome,ini:e.ini||'',fim:e.fim||'',subs:(e.subs||[])};});if(!valid.length)throw new Error('Nenhuma entrada v\u00e1lida. Cada item precisa de tipo e nome.');window._tlEntradas=valid;if(window._renderEntradasTL)window._renderEntradasTL();document.getElementById('tl-import-json-panel').style.display='none';var st=document.getElementById('tl-status');if(st)st.textContent=valid.length+' entradas importadas com sucesso.';}catch(e){alert('Erro ao importar JSON: '+e.message);}};
 
 })();
+
+  window._admMostrarPrompt = function() {
+    var linhas = ["Sou estudante da Universidade Aberta (UAb). Preciso de ajuda para preencher","os dados de uma UC na minha aplicacao CampusAberto (base de dados Firestore).","","Cada UC tem o seguinte formato JSON:","","{","  \"id\": \"identificador-kebab-case\",","  \"nome\": \"Nome completo da Unidade Curricular\",","  \"ano\": 1,","  \"semestre\": 1,","  \"ordem\": 1,","  \"oculta\": false,","  \"minor\": false,","  \"sinopse\": \"Texto descritivo da UC (2-3 paragrafos)\",","  \"bib\": \"Referencia bibliografica principal\",","  \"timeline\": [","    {","      \"ini\": \"YYYY-MM-DD\",","      \"fim\": \"YYYY-MM-DD\",","      \"tipo\": \"avaliacao\",","      \"label\": \"Nome do evento\",","      \"subs\": [\"sub-item 1\", \"sub-item 2\"]","    }","  ]","}","","Tipos possiveis na timeline: avaliacao, conteudo, sessao, outro.","","Por favor preenche o JSON completo para a seguinte UC:","[ESCREVE AQUI O NOME DA UC]"];
+    document.getElementById('adm-prompt-texto').value = linhas.join('\n');
+    document.getElementById('adm-btn-copiar').textContent = '📋 Copiar';
+    document.getElementById('adm-modal-prompt').classList.add('visivel');
+  };
+  window._admFecharPrompt = function() {
+    document.getElementById('adm-modal-prompt').classList.remove('visivel');
+  };
+  window._admCopiarPrompt = function() {
+    var ta = document.getElementById('adm-prompt-texto');
+    ta.select();
+    document.execCommand('copy');
+    var btn = document.getElementById('adm-btn-copiar');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(function(){ btn.textContent = '📋 Copiar'; }, 2000);
+  };
 </script>
+
+
+<!-- MODAL PROMPT IA -->
+<div class="modal-overlay" id="adm-modal-prompt" onclick="if(event.target===this)window._admFecharPrompt()">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-icon">🤖</div>
+    <h3>Prompt para Claude</h3>
+    <p>Copia este prompt e cola no Claude.ai para obter ajuda a preencher os dados de uma UC.</p>
+    <textarea id="adm-prompt-texto" style="width:100%;height:260px;font-family:monospace;font-size:0.78rem;border:1px solid rgba(201,168,76,0.3);border-radius:10px;padding:14px;resize:vertical;line-height:1.5;color:#1a3a2a;background:#f8f5ee;outline:none;margin-top:8px"></textarea>
+    <div class="modal-btns" style="margin-top:16px">
+      <button class="btn-cancelar" onclick="window._admFecharPrompt()">Fechar</button>
+      <button class="btn-confirmar" id="adm-btn-copiar" onclick="window._admCopiarPrompt()">📋 Copiar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
