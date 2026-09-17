@@ -261,6 +261,7 @@
     .data-tag { padding:3px 8px; border-radius:99px; font:.55rem/1 'Inter',sans-serif; font-weight:700; white-space:nowrap; }
     .data-tag.dias { background:var(--ouro-pale); color:var(--verde); }
     .data-tag.tipo { background:#f0f4f8; color:var(--cinza); }
+    .data-gcal-btn { background:none; border:1px solid rgba(11,42,74,.15); border-radius:6px; padding:3px 7px; font:.7rem/1 Inter,sans-serif; color:#5b8db8; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-top:2px; }
     .datas-vazio { text-align:center; padding:40px 20px; color:var(--cinza); font-size:.8rem; }
     .retomar-destaque .painel-item { min-height:116px; grid-template-columns:44px minmax(0,1fr) auto; background:linear-gradient(135deg,#f7f9fb,#fbf1dc); }
     .retomar-sigla { display:grid; place-items:center; width:42px; height:48px; color:#fff; background:var(--verde); border-radius:3px 12px 3px 3px; font-size:.56rem; font-weight:800; }
@@ -2742,6 +2743,14 @@
   };
   // ── FIM CITAÇÕES APA7 ─────────────────────────────────────────────────
 
+  window._addGcal = function(btn) {
+    var t=btn.dataset.gcalTitle||"";var d=btn.dataset.gcalDate||"";var det=btn.dataset.gcalDetails||"";
+    var y=parseInt(d.slice(0,4)),m=parseInt(d.slice(4,6))-1,dy=parseInt(d.slice(6,8));
+    var end=new Date(y,m,dy+1);
+    var endS=end.getFullYear()+('0'+(end.getMonth()+1)).slice(-2)+('0'+end.getDate()).slice(-2);
+    var url="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(t)+"&dates="+d+"/"+endS+"&details="+encodeURIComponent(det);
+    window.open(url,"_blank","noopener");
+  };
   window.filtrarDatas = function() {
     const ano = document.getElementById('filtro-ano').value;
     const sem = document.getElementById('filtro-semestre').value;
@@ -2781,6 +2790,7 @@
           <span class="data-tag dias">${diasTexto}</span>
           <span class="data-tag tipo">${esc(item.tipo || '—')}</span>
         </div>
+        <button class="data-gcal-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();window._addGcal(this)" data-gcal-title="${esc(item.titulo||'')}" data-gcal-date="${item.data.getFullYear()}${('0'+(item.data.getMonth()+1)).slice(-2)}${('0'+item.data.getDate()).slice(-2)}" data-gcal-details="${esc(subtag||item.tipo||'')}">&#x1F5D3;</button>
       </div>`;
     }).join('');
   };
