@@ -444,8 +444,6 @@
   <div class="tab-content" id="tab-ucs">
     <h2 class="secao-titulo">Unidades Curriculares</h2>
 
-    <button type="button" onclick="window._admMostrarPrompt()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:linear-gradient(135deg,#1a3a2a,#2d5a3d);color:#fff;border:none;border-radius:10px;font:600 .78rem/1 'Inter',sans-serif;cursor:pointer;letter-spacing:.03em;box-shadow:0 3px 14px rgba(26,58,42,.28);margin-bottom:20px"><span>🤖</span> Prompt para Claude</button>
-
     <div class="form-card">
       <h3>➕ Adicionar UC</h3>
       <div class="form-row">
@@ -2253,6 +2251,7 @@ window.abrirNota = abrirNota;
       <button onclick="window.adicionarEntradaTL('efolio')" style="background:#d97706;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+E-Fólio</button>
       <button onclick="window.adicionarEntradaTL('pausa')" style="background:#9ca3af;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Pausa</button>
       <button onclick="window.adicionarEntradaTL('revisao')" style="background:#059669;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem">+Revisões</button>
+      <button onclick="window._admMostrarPrompt()" style="background:#1a3a2a;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem;margin-left:8px">🤖 Prompt IA</button>
     </div>
     <div id="tl-entries"></div>
     <div id="tl-import-json-panel" style="display:none;margin-top:16px;border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#f9fafb;"><p style="margin:0 0 8px;font-size:.875rem;color:#374151;font-weight:600;">&#128203; Importar JSON</p><p style="margin:0 0 10px;font-size:.8rem;color:#6b7280;">Cola o array JSON gerado pelo Claude / ChatGPT:</p><textarea id="tl-json-input" style="width:100%;height:150px;font-size:.75rem;font-family:monospace;border:1px solid #d1d5db;border-radius:6px;padding:8px;box-sizing:border-box;" placeholder='[{"tipo":"tema","nome":"Tema 1","ini":"2026-09-14","fim":"2026-10-12","subs":["Subtema 1.1"]}]'></textarea><div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end"><button onclick="document.getElementById('tl-import-json-panel').style.display='none'" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;">Cancelar</button><button onclick="window.processarJsonTL()" style="background:#7c3aed;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;">Importar</button></div></div>
