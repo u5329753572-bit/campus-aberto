@@ -2246,7 +2246,9 @@
       snap.forEach(d => {
         const item = { id:d.id, ...d.data() };
         const data = new Date(item.dataIso);
-        if (!Number.isNaN(data.getTime()) && data >= agora) todasAsDatas.push({ ...item, data });
+        if (!Number.isNaN(data.getTime()) && data >= agora) const _hh=data.getHours(),_mm=data.getMinutes();
+        const horaComp=item.hora||(item.dataIso&&item.dataIso.indexOf('T')>-1&&(_hh||_mm)?String(_hh).padStart(2,'0')+':'+String(_mm).padStart(2,'0'):null);
+        todasAsDatas.push({ ...item, data, hora:horaComp });
       });
       todasAsDatas.sort((a,b) => a.data - b.data);
       mostrarBannerDatas();
