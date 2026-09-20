@@ -576,8 +576,8 @@
     const tel   = document.getElementById('reg-tel').value.trim();
     const senha = document.getElementById('reg-pass').value;
     if (!nome || !email || !tel || !senha) { mostrarMsg('msg-registo', 'Preenche todos os campos obrigatórios.', 'erro'); return; }
-    if (!email.endsWith('@estudante.uab.pt')) {
-      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt são aceites.', 'erro'); return;
+    if (!/^\d{7}@estudante\.uab\.pt$/.test(email)) {
+      mostrarMsg('msg-registo', 'O email deve ter o formato 1234567@estudante.uab.pt.', 'erro'); return;
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
     // Verificar telemovel duplicado
