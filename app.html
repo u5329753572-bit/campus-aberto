@@ -210,7 +210,7 @@
     .painel-item.estatico:hover { background:#f7f8f9; }
     .painel-data-dia { min-width:42px; color:var(--ouro); font:700 1.15rem/1 'Playfair Display',serif; text-align:center; }
     .painel-data-dia small { display:block; margin-top:3px; color:var(--cinza); font:700 .48rem/1 'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
-    .data-item-full-dia .data-hora { display:block; margin-top:4px; color:var(--verde); font:700 .6rem/1 'Inter',sans-serif; }
+    .data-item-full-dia .data-hora, .painel-data-dia .data-hora { display:block; margin-top:4px; color:var(--verde); font:700 .6rem/1 'Inter',sans-serif; }
     .painel-item strong { display:block; margin-bottom:3px; color:var(--verde); font-size:.72rem; }
     .painel-item small { display:block; color:var(--cinza); font-size:.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .painel-item-dias { color:var(--verde-leve); font-size:.57rem; font-weight:700; white-space:nowrap; }
@@ -2275,7 +2275,7 @@
           ? `Hoje · ${Math.max(0,Math.ceil(diffMs/3600000))}h`
           : dias === 1 ? 'Amanhã' : `${dias} dias`;
         return `<${tag} class="${cls}" ${attrs}>
-          <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small></span>
+          <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small>${item.hora ? '<span class="data-hora">'+item.hora+'</span>' : ''}</span>
           <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
           <span class="painel-item-dias">${diasLabel}</span>
         </${tag}>`;
