@@ -580,10 +580,11 @@
       mostrarMsg('msg-registo', 'O email deve ter o formato 1234567@estudante.uab.pt.', 'erro'); return;
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
-    // Verificar telemovel duplicado
-        const telQ = query(collection(db, 'utilizadores'), where('tel', '==', tel));
-    const telSnap = await getDocs(telQ);
-    if (!telSnap.empty) { mostrarMsg('msg-registo', 'Este número de telemóvel já está registado.', 'erro'); return; }
+    try {
+          const telQ = query(collection(db, 'utilizadores'), where('tel', '==', tel));
+          const telSnap = await getDocs(telQ);
+          if (!telSnap.empty) { mostrarMsg('msg-registo', 'Este número de telemóvel já está registado.', 'erro'); return; }
+        } catch(_) {}
     setLoading('btn-registo', true);
     let credUser = null;
     try {
