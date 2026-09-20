@@ -496,7 +496,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -576,10 +576,14 @@
     const tel   = document.getElementById('reg-tel').value.trim();
     const senha = document.getElementById('reg-pass').value;
     if (!nome || !email || !tel || !senha) { mostrarMsg('msg-registo', 'Preenche todos os campos obrigatórios.', 'erro'); return; }
-    if (!email.endsWith('@estudante.uab.pt') && !email.endsWith('@uab.pt')) {
-      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt ou @uab.pt são aceites.', 'erro'); return;
+    if (!email.endsWith('@estudante.uab.pt')) {
+      mostrarMsg('msg-registo', 'Apenas emails @estudante.uab.pt são aceites.', 'erro'); return;
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
+    // Verificar telemovel duplicado
+        const telQ = query(collection(db, 'utilizadores'), where('tel', '==', tel));
+    const telSnap = await getDocs(telQ);
+    if (!telSnap.empty) { mostrarMsg('msg-registo', 'Este número de telemóvel já está registado.', 'erro'); return; }
     setLoading('btn-registo', true);
     let credUser = null;
     try {
