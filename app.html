@@ -1294,6 +1294,15 @@
     .citacoes-normas-bar span { font-size:.76rem; color:#1e40af; flex:1; line-height:1.45; }
     .citacoes-normas-bar a { font:700 .72rem/1 'Inter',sans-serif; color:#1d4ed8; white-space:nowrap; text-decoration:none; border-bottom:1px solid #93c5fd; padding-bottom:1px; }
     .citacoes-normas-bar a:hover { color:#1e3a8a; }
+
+    /* ── MOBILE OVERFLOW FIX ─────────────────────────── */
+    html, body { overflow-x: hidden; }
+    @media (max-width:640px) {
+      header { padding: 0 12px; }
+      .header-logo-sub { display: none; }
+      .pensamento-card { padding: 20px 16px; }
+      .bottom-nav-btn { font-size:.52rem; }
+    }
   </style>
 </head>
 <body>
