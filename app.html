@@ -2121,25 +2121,41 @@
 
   function guardarRetomar(item) {
     if (!utilizadorAtual || !item) return;
-    localStorage.setItem(chaveLocal('retomar'), JSON.stringify(item));
+    let lista = [];
+    try {
+      const raw = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null');
+      lista = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    } catch(_) {}
+    lista = lista.filter(function(i) { return i.key !== item.key; });
+    lista.unshift(item);
+    lista = lista.slice(0, 3);
+    localStorage.setItem(chaveLocal('retomar'), JSON.stringify(lista));
     renderRetomar();
   }
 
   function renderRetomar() {
     const area = document.getElementById('retomar-conteudo');
     if (!area) return;
-    let item = null;
-    try { item = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null'); } catch (_) {}
-    if (!item) {
-      area.innerHTML = `<div class="painel-vazio"><strong>Ainda não há atividade</strong><p>Quando abrires uma UC ou um documento, poderás retomá-lo aqui.</p></div>`;
+    let lista = [];
+    try {
+      const raw = JSON.parse(localStorage.getItem(chaveLocal('retomar')) || 'null');
+      lista = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    } catch (_) {}
+    if (!lista.length) {
+      area.innerHTML = '<div class="painel-vazio"><strong>Ainda n\u00e3o h\u00e1 atividade</strong><p>Quando abrires uma UC ou um documento, poder\u00e1s retom\u00e1-lo aqui.</p></div>';
       return;
     }
-    area.innerHTML = `<button class="painel-item" type="button" id="btn-retomar">
-      <span class="retomar-sigla">${item.tipo === 'doc' ? 'PDF' : 'UC'}</span>
-      <span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.titulo)}</strong><small>${esc(item.subtitulo || 'Último conteúdo consultado')}</small></span>
-      <span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar →</span>
-    </button>`;
-    document.getElementById('btn-retomar').addEventListener('click', () => abrirItem(item.key, item));
+    area.innerHTML = lista.map(function(it, idx) {
+      return '<button class="painel-item" type="button" data-ri="' + idx + '">' +
+        '<span class="retomar-sigla">' + (it.tipo === 'doc' ? 'PDF' : 'UC') + '</span>' +
+        '<span style="min-width:0;overflow:hidden"><strong style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(it.titulo) + '</strong><small>' + esc(it.subtitulo || '\u00daltimo conte\u00fado consultado') + '</small></span>' +
+        '<span class="painel-item-dias" style="flex-shrink:0;white-space:nowrap">Continuar \u2192</span>' +
+      '</button>';
+    }).join('');
+    lista.forEach(function(it, idx) {
+      const btn = area.querySelector('[data-ri="' + idx + '"]');
+      if (btn) btn.addEventListener('click', function() { abrirItem(it.key, it); });
+    });
   }
 
   async function abrirItem(key, fallback = null) {
