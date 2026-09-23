@@ -250,6 +250,9 @@
     .datas-filtros { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
     .datas-filtros select { padding:8px 12px; border:1.5px solid #e0e4ea; border-radius:4px; font:.75rem/1 'Inter',sans-serif; color:var(--verde); background:#fff; cursor:pointer; outline:none; min-width:130px; }
     .datas-filtros select:focus { border-color:var(--ouro); }
+    .datas-filtros input[type="search"] { padding:8px 12px; border:1.5px solid #e0e4ea; border-radius:4px; font:.75rem/1 'Inter',sans-serif; color:var(--verde); background:#fff; outline:none; min-width:200px; flex:1; }
+    .datas-filtros input[type="search"]:focus { border-color:var(--ouro); }
+    .datas-filtros input[type="search"]::placeholder { color:#aab0bb; }
     .datas-lista-completa { display:flex; flex-direction:column; gap:10px; }
     .data-item-full { display:grid; grid-template-columns:56px 1fr auto; align-items:center; gap:14px; padding:14px 16px; background:#fff; border:1px solid rgba(11,42,74,.08); border-radius:3px 14px 3px 3px; border-left:3px solid var(--ouro); }
     .data-item-full.clickable { cursor:pointer; }
@@ -1687,11 +1690,15 @@
       <select id="filtro-uc" onchange="filtrarDatas()">
         <option value="">Todas as UCs</option>
       </select>
-      <select id="filtro-epoca" onchange="filtrarDatas()">
-        <option value="">Todas as épocas</option>
-        <option value="Global/Exame">Época Normal (Global/Exame)</option>
-        <option value="Recurso">Época Recurso</option>
+      <select id="filtro-tipo" onchange="filtrarDatas()">
+        <option value="">Todas as categorias</option>
+        <option value="Global/Exame">Global/Exame</option>
+        <option value="E-fólio">E-fólio</option>
+        <option value="Recurso">Recurso</option>
+        <option value="Prazo académico">Prazo académico</option>
+        <option value="Outro">Outro</option>
       </select>
+      <input type="search" id="filtro-texto" placeholder="Pesquisar datas..." oninput="filtrarDatas()">
     </div>
     <div class="datas-lista-completa" id="datas-lista-completa"></div>
   </div>
@@ -2795,7 +2802,8 @@
     const sem = document.getElementById('filtro-semestre').value;
     const minor = document.getElementById('filtro-minor').value;
     const ucId = document.getElementById('filtro-uc').value;
-    const epoca = document.getElementById('filtro-epoca').value;
+    const tipo = document.getElementById('filtro-tipo').value;
+    const texto = (document.getElementById('filtro-texto').value || '').toLowerCase().trim();
     // Atualizar opcoes de UCs conforme ano/semestre
         const ucsFiltradas = [...new Map(
           todasAsDatas.filter(d => d.ucId && d.ucNome
@@ -2817,7 +2825,8 @@
       if (sem && String(d.semestre || '') !== sem) return false;
       if (ano === '3' && minor && (d.minor || '') !== minor) return false;
       if (ucId && d.ucId !== ucId) return false;
-      if (epoca && d.tipo !== epoca) return false;
+      if (tipo && d.tipo !== tipo) return false;
+      if (texto) { const hay = [(d.titulo||''),(d.ucNome||''),(d.descricao||''),(d.tipo||'')].join(' ').toLowerCase(); if (!hay.includes(texto)) return false; }
       return true;
     });
 
