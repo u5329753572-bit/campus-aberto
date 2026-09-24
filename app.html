@@ -2061,16 +2061,35 @@
     });
   }
 
-  function carregarPreferencias() {
-    try { favoritos = JSON.parse(localStorage.getItem(chaveLocal('favoritos')) || '[]'); }
-    catch (_) { favoritos = []; }
+  async function carregarPreferencias() {
+    // Fonte primaria: Firestore (sincronizado entre perfis e dispositivos)
+    if (utilizadorAtual && Array.isArray(utilizadorAtual.favoritos)) {
+      favoritos = utilizadorAtual.favoritos;
+    } else {
+      // Fallback / migracao: tenta localStorage (dados antigos)
+      try { favoritos = JSON.parse(localStorage.getItem(chaveLocal('favoritos')) || '[]'); }
+      catch (_) { favoritos = []; }
+      // Se havia favoritos locais, migra-os para Firestore e apaga o registo local
+      if (favoritos.length > 0 && utilizadorAtual) {
+        try {
+          await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { favoritos });
+          utilizadorAtual.favoritos = favoritos;
+          localStorage.removeItem(chaveLocal('favoritos'));
+        } catch (e) { console.warn('Migracao de favoritos para Firestore:', e); }
+      }
+    }
     renderFavoritos();
     renderRetomar();
     window.atualizarBotoesFavoritos();
   }
 
-  function guardarFavoritos() {
-    localStorage.setItem(chaveLocal('favoritos'), JSON.stringify(favoritos));
+  async function guardarFavoritos() {
+    if (utilizadorAtual) {
+      try {
+        await updateDoc(doc(db, 'utilizadores', utilizadorAtual.uid), { favoritos });
+        utilizadorAtual.favoritos = favoritos;
+      } catch (e) { console.warn('Erro ao guardar favoritos:', e); }
+    }
     renderFavoritos();
     window.atualizarBotoesFavoritos();
   }
