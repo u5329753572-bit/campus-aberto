@@ -3005,7 +3005,7 @@ async function carregarUCs() {
         ucsMap[uc.id] = uc;
         catalogo.set(`uc:${uc.id}`, {
           key:`uc:${uc.id}`, tipo:'uc', id:uc.id, titulo:uc.nome,
-          subtitulo:`${uc.ano || '—'}º Ano · ${uc.semestre || '—'}º Semestre`
+          subtitulo:(uc.ano > 0 ? uc.ano+'º Ano' : 'Geral') + (uc.semestre > 0 ? ' · '+uc.semestre+'º Semestre' : '')
         });
       });
 
@@ -3033,7 +3033,7 @@ async function carregarUCs() {
         anoH.className = 'ano-titulo';
         anoH.innerHTML = Number(ano) > 0
           ? `<span class="ano-titulo-badge">${ano}º Ano</span><span class="ano-titulo-label">Ciências Sociais</span><span class="ano-titulo-linha"></span>`
-          : `<span class="ano-titulo-badge">Sem classificação</span><span class="ano-titulo-linha"></span>`;
+          : `<span class="ano-titulo-badge">Geral</span><span class="ano-titulo-label">Todos os anos</span><span class="ano-titulo-linha"></span>`;
         anoDiv.appendChild(anoH);
 
         Object.keys(grupos[ano]).sort((a,b) => Number(a)-Number(b)).forEach(sem => {
