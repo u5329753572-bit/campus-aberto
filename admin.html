@@ -454,6 +454,7 @@
         <div class="campo" style="max-width:130px">
           <label>Ano</label>
           <select id="uc-ano">
+            <option value="0">Geral (todos os anos)</option>
             <option value="1">1º Ano</option>
             <option value="2">2º Ano</option>
             <option value="3">3º Ano</option>
@@ -462,6 +463,7 @@
         <div class="campo" style="max-width:150px">
           <label>Semestre</label>
           <select id="uc-semestre">
+            <option value="0">Geral (ambos os semestres)</option>
             <option value="1">1º Semestre</option>
             <option value="2">2º Semestre</option>
           </select>
@@ -1126,8 +1128,8 @@
     const u = (window._ucsCache || {})[id];
     if (!u) return;
     document.getElementById('uc-nome').value = u.nome || '';
-    document.getElementById('uc-ano').value = u.ano || '1';
-    document.getElementById('uc-semestre').value = u.semestre || '1';
+    document.getElementById('uc-ano').value = (u.ano != null) ? String(u.ano) : '1';
+    document.getElementById('uc-semestre').value = (u.semestre != null) ? String(u.semestre) : '1';
     document.getElementById('uc-ordem').value = u.ordem || '';
     document.getElementById('uc-oculta').checked = !!u.oculta;
     document.getElementById('uc-sinopse').value = u.sinopse || '';
@@ -1159,7 +1161,9 @@
       msgEl.textContent = `UC "${nome}" atualizada.`;
     } else {
       await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, bib, criadoEm: serverTimestamp() });
-      msgEl.textContent = `UC "${nome}" criada (${ano}º Ano · ${semestre}º Semestre).`;
+      const anoLabel = ano > 0 ? `${ano}º Ano` : 'Geral';
+      const semLabel = semestre > 0 ? `${semestre}º Semestre` : 'Ambos os semestres';
+      msgEl.textContent = `UC "${nome}" criada (${anoLabel} · ${semLabel}).`;
     }
     document.getElementById('uc-nome').value  = '';
     document.getElementById('uc-ordem').value = '';
