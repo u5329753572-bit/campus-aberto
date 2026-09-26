@@ -2837,7 +2837,8 @@
         const ucsFiltradas = [...new Map(
           todasAsDatas.filter(d => d.ucId && d.ucNome
             && (!ano || String(d.ano||'') === ano)
-            && (!sem || String(d.semestre||'') === sem))
+            && (!sem || String(d.semestre||'') === sem)
+            && (!minor || (d.minor || '') === minor))
           .map(d => [d.ucId, d.ucNome])
         ).entries()];
         const _filtroUcEl = document.getElementById('filtro-uc');
