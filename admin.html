@@ -1534,7 +1534,11 @@
     const tb   = document.getElementById('tbody-dl');
     const filtroTipo = document.getElementById('filtro-evento-tipo')?.value || '';
     const q    = query(collection(db, 'eventos'), orderBy('data', 'desc'));
-    const snap = await getDocs(q);
+    let snap;
+    try { snap = await getDocs(q); } catch(e) {
+      console.error('carregarEventos:', e);
+      tb.innerHTML = '<tr><td colspan="7" class="empty-msg">Erro ao carregar eventos: ' + e.message + '</td></tr>'; return;
+    }
     const docs = filtroTipo ? snap.docs.filter(d => d.data().tipo === filtroTipo) : snap.docs;
 
     if (docs.length === 0) { tb.innerHTML = '<tr><td colspan="7" class="empty-msg">Sem eventos registados</td></tr>'; return; }
@@ -1555,6 +1559,8 @@
       tb.appendChild(tr);
     });
   }
+
+  window.carregarEventos = carregarEventos;
 
   window.importarTodasDatas = async function() {
     if (!confirm('Vai criar todas as datas (1º+2º+3º Ano). Continuar?')) return;
