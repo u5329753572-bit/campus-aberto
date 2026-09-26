@@ -46,7 +46,7 @@ const cfg = {
   projectId: "uab-comunidade"
 };
 
-const fbApp = initializeApp(cfg, 'import3ano');
+const fbApp = getApps().length ? getApps()[0] : initializeApp(cfg);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 
@@ -125,14 +125,14 @@ const DATAS_PDF = [
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Teoria Geral de Serviço Social",       ano:3, semestre:1, minor:"Intervenção", descricao:"3.ª semana 28/09–02/10; PUC chama atenção para 21/09–25/09" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Intervenção Social e Saúde Mental",    ano:3, semestre:1, minor:"Intervenção", descricao:"28/09–02/10" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Noções de Psicopatologia",             ano:3, semestre:1, minor:"Psicologia", descricao:"28/09–02/10" },
-  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Psicologia Clínica e da Saúde",       ano:3, semestre:1, minor:"Psicologia", descricao:"28/09–02/10 ou data enviada na altura" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Psicologia Clínica e da Saúde",        ano:3, semestre:1, minor:"Psicologia", descricao:"28/09–02/10 ou data enviada na altura" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-04T23:59:00", ucNome:"Psicologia da Arte",                   ano:3, semestre:1, minor:"Psicologia", descricao:"3.ª semana 28/09–04/10" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-06T23:59:00", ucNome:"Psicologia do Desenvolvimento Humano", ano:3, semestre:1, minor:"Psicologia", descricao:"06/10 (expressamente indicado)" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-05T23:59:00", ucNome:"Psicologia Social Aplicada",           ano:3, semestre:1, minor:"Psicologia" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia Urbana",                    ano:3, semestre:1, minor:"Sociologia" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Teorias Sociológicas",                  ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia da Comunicação e da Informação", ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
-];;
+];
 
 // Normaliza nome para correspondência (lowercase, sem acentos, sem pontuação extra)
 const norm = s => s.toLowerCase()
