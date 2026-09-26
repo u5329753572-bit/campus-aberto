@@ -2205,7 +2205,7 @@
       return;
     }
     if (item.tipo === 'link') {
-      if (item.href) window.open(item.href, '_blank', 'noopener');
+      if (item.href) { registarEvento('clique_link', { ucId: item.ucId||'', ucNome: item.subtitulo||'', docId: item.docId||'', docNome: item.titulo||'' }); window.open(item.href, '_blank', 'noopener'); }
       return;
     }
     if (item.tipo === 'doc') {
@@ -3630,7 +3630,7 @@ async function carregarUCs() {
             </div>
             <button type="button" class="favorito-btn doc-favorito" data-fav-key="doc:${uc.id}:${d.id}" aria-label="Adicionar ${esc(doc_.nome)} aos favoritos">☆</button>
             ${isLink
-              ? `<a class="btn-ver" href="${esc(doc_.driveUrl||'')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span>↗</span><span>Abrir</span></a>`
+              ? `<a class="btn-ver" href="${esc(doc_.driveUrl||'')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none" onclick="window.registarCliqueLink('${esc(uc.id)}','${esc(d.id)}')"><span>↗</span><span>Abrir</span></a>`
               : `<button type="button" class="btn-ver" onclick="window.abrirViewer('${uc.id}','${d.id}')"><span>👁</span><span>Ver</span></button>`
             }
           </div>`;
@@ -3690,6 +3690,7 @@ async function carregarUCs() {
     </div>`;
     overlay.classList.add('visivel'); history.pushState({viewer:true},'');
     viewerDocAtual = { ucId, docId, docNome };
+    registarEvento('abertura', { ucId, ucNome: ucsMap[ucId]?.nome||'', docId, docNome });
     guardarRetomar(catalogo.get(`doc:${ucId}:${docId}`) || {
       key:`doc:${ucId}:${docId}`, tipo:'doc', ucId, docId, titulo:docNome,
       subtitulo:ucsMap[ucId]?.nome || 'Documento'
@@ -3772,6 +3773,20 @@ async function carregarUCs() {
   };
 
   // --- DOWNLOAD COM CÓDIGO ---
+  async function registarEvento(tipo, dados) {
+    try {
+      await addDoc(collection(db, 'eventos'), {
+        tipo, uid: utilizadorAtual?.uid||'', nome: utilizadorAtual?.nome||'',
+        email: utilizadorAtual?.email||'', codigoUser: utilizadorAtual?.codigo||'',
+        data: serverTimestamp(), ...dados
+      });
+    } catch(e) { console.warn('registarEvento:', e); }
+  }
+  window.registarCliqueLink = function(ucId, docId) {
+    const doc_ = docMap[`${ucId}:${docId}`];
+    registarEvento('clique_link', { ucId, ucNome: ucsMap[ucId]?.nome||'', docId, docNome: doc_?.nome||'' });
+  };
+
   window.iniciarDownload = function(ucId, docId, docNome) {
     const _doc = docMap[`${ucId}:${docId}`];
     if (_doc && _doc.dataDisponivel && new Date(_doc.dataDisponivel + 'T00:00:00') > new Date()) {
@@ -3802,7 +3817,8 @@ async function carregarUCs() {
     btn.textContent = 'A registar...';
 
     try {
-      await addDoc(collection(db, 'downloads'), {
+      await addDoc(collection(db, 'eventos'), {
+        tipo:       'download',
         uid:        utilizadorAtual.uid,
         nome:       utilizadorAtual.nome,
         email:      utilizadorAtual.email,
