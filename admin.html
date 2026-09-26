@@ -453,7 +453,7 @@
         </div>
         <div class="campo" style="max-width:130px">
           <label>Ano</label>
-          <select id="uc-ano">
+          <select id="uc-ano" onchange="toggleMinorUC()">
             <option value="0">Geral (todos os anos)</option>
             <option value="1">1º Ano</option>
             <option value="2">2º Ano</option>
@@ -472,6 +472,16 @@
           <label>Ordem</label>
           <input type="number" id="uc-ordem" placeholder="1" min="1"/>
         </div>
+      </div>
+      <div class="campo" id="campo-minor-uc" style="display:none;margin-top:0">
+        <label>Minor</label>
+        <select id="uc-minor">
+          <option value="">— Seleciona o minor —</option>
+          <option value="Ciência Política e Administrativa">Ciência Política e Administrativa</option>
+          <option value="Psicologia">Psicologia</option>
+          <option value="Intervenção Social">Intervenção Social</option>
+          <option value="Sociologia">Sociologia</option>
+        </select>
       </div>
       <div class="campo" style="margin-top:12px">
         <label>Descrição / Sinopse <span style="font-size:.72rem;font-weight:400;color:#9ca3af">(aparece na app como texto introdutório da UC)</span></label>
@@ -1134,6 +1144,8 @@
     document.getElementById('uc-oculta').checked = !!u.oculta;
     document.getElementById('uc-sinopse').value = u.sinopse || '';
     document.getElementById('uc-bib').value = u.bib || '';
+    document.getElementById('uc-minor').value = u.minor || '';
+    toggleMinorUC();
     window._editandoUCId = id;
     document.getElementById('btn-criar-uc').textContent = 'Guardar alterações';
     document.getElementById('uc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1147,6 +1159,7 @@
     const oculta   = document.getElementById('uc-oculta').checked;
     const sinopse  = document.getElementById('uc-sinopse').value.trim();
     const bib      = document.getElementById('uc-bib').value.trim();
+    const minor    = ano === 3 ? document.getElementById('uc-minor').value.trim() : '';
     const msgEl    = document.getElementById('msg-uc');
     const editId   = window._editandoUCId || null;
 
@@ -1154,13 +1167,13 @@
 
     if (editId) {
       const old = (window._ucsCache || {})[editId] || {};
-      const payload = { nome, ano, semestre, ordem, oculta, sinopse, bib };
+      const payload = { nome, ano, semestre, ordem, oculta, sinopse, bib, minor };
       if (old.criadoEm) payload.criadoEm = old.criadoEm;
       await setDoc(doc(db, 'ucs', editId), payload);
       window._editandoUCId = null;
       msgEl.textContent = `UC "${nome}" atualizada.`;
     } else {
-      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, bib, criadoEm: serverTimestamp() });
+      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, bib, minor, criadoEm: serverTimestamp() });
       const anoLabel = ano > 0 ? `${ano}º Ano` : 'Geral';
       const semLabel = semestre > 0 ? `${semestre}º Semestre` : 'Ambos os semestres';
       msgEl.textContent = `UC "${nome}" criada (${anoLabel} · ${semLabel}).`;
@@ -1169,6 +1182,8 @@
     document.getElementById('uc-ordem').value = '';
     document.getElementById('uc-oculta').checked = false;
     document.getElementById('uc-sinopse').value = '';
+    document.getElementById('uc-minor').value = '';
+    toggleMinorUC();
     document.getElementById('btn-criar-uc').textContent = 'Criar UC';
     msgEl.className = 'msg-form ok';
     carregarUCs();
@@ -1415,6 +1430,12 @@
       tb.innerHTML = `<tr><td colspan="5" class="empty-msg">Não foi possível carregar as datas: ${esc(e.message)}</td></tr>`;
     }
   }
+
+  window.toggleMinorUC = function() {
+    const ano = document.getElementById('uc-ano').value;
+    document.getElementById('campo-minor-uc').style.display = ano === '3' ? '' : 'none';
+    if (ano !== '3') document.getElementById('uc-minor').value = '';
+  };
 
   window.toggleMinorData = function() {
     const ano = document.getElementById('data-ano').value;
