@@ -2830,7 +2830,6 @@
     const ano = document.getElementById('filtro-ano').value;
     const sem = document.getElementById('filtro-semestre').value;
     const minor = document.getElementById('filtro-minor').value;
-    const ucId = document.getElementById('filtro-uc').value;
     const tipo = document.getElementById('filtro-tipo').value;
     const texto = (document.getElementById('filtro-texto').value || '').toLowerCase().trim();
     // Atualizar opcoes de UCs conforme ano/semestre
@@ -2845,6 +2844,7 @@
         _filtroUcEl.innerHTML = '<option value="">Todas as UCs</option>'
           + ucsFiltradas.map(([id, nome]) => '<option value="' + esc(id) + '"' + (_ucIdAtual && esc(id) === _ucIdAtual ? ' selected' : '') + '>' + esc(nome) + '</option>').join('');
         
+    const ucId = _filtroUcEl.value;
     // Mostrar/ocultar filtro de minor
     document.getElementById('filtro-minor').style.display = ano === '3' ? '' : 'none';
 
