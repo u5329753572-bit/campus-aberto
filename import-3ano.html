@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>Importar Datas 3.º Ano · CampusAberto</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f8fafc; color: #1e293b; }
+  h1 { color: #0b2a4a; font-size: 1.4rem; }
+  #estado { padding: 12px 16px; border-radius: 8px; background: #e0f2fe; color: #075985; margin: 16px 0; font-size: .9rem; }
+  #estado.err { background: #fee2e2; color: #b91c1c; }
+  #estado.ok  { background: #dcfce7; color: #166534; }
+  button { padding: 10px 22px; border: none; border-radius: 6px; background: #0b2a4a; color: #fff; font-size: .9rem; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  table { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: 20px; }
+  th { background: #0b2a4a; color: #fff; padding: 8px; text-align: left; }
+  td { padding: 7px 8px; border-bottom: 1px solid #e2e8f0; }
+  tr.added { background: #f0fdf4; }
+  tr.skip  { background: #fff7ed; color: #78350f; }
+  tr.err   { background: #fef2f2; color: #b91c1c; }
+  .badge { display:inline-block; padding:2px 7px; border-radius:99px; font-size:.7rem; font-weight:700; }
+  .badge.added { background:#dcfce7; color:#166534; }
+  .badge.skip  { background:#fef3c7; color:#92400e; }
+  .badge.err   { background:#fee2e2; color:#b91c1c; }
+  #log { margin-top: 16px; font-size: .78rem; color: #64748b; white-space: pre-wrap; max-height: 200px; overflow-y: auto; background: #f1f5f9; padding: 10px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<h1>📅 Importar Datas do 3.º Ano — 2026/2027</h1>
+<div id="estado">A verificar autenticação…</div>
+<button id="btn" onclick="importar()" disabled>Importar datas em falta</button>
+<div id="log"></div>
+<table id="tabela" style="display:none">
+  <thead><tr><th>UC</th><th>Título</th><th>Tipo</th><th>Data</th><th>Estado</th></tr></thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const cfg = {
+  apiKey: "AIzaSyBr_65cDdW0n5JI2f8LFBnkQsmFTYcW6ak",
+  authDomain: "uab-comunidade.firebaseapp.com",
+  projectId: "uab-comunidade"
+};
+
+const fbApp = initializeApp(cfg, 'import3ano');
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
+
+const log = s => { document.getElementById('log').textContent += s + '\n'; };
+const estado = (msg, cls='') => { const el=document.getElementById('estado'); el.textContent=msg; el.className=cls; };
+
+// ── Datas a importar extraídas do PDF de 24/09/2026 ──────────────────────────
+// Campos: titulo, tipo, dataIso, ucNome, ano, semestre, minor, descricao
+// ucNome é usado para correspondência com as UCs do Firestore (match parcial)
+const DATAS_PDF = [
+  // ── E-fólio A ───────────────────────────────────────────────────────────────
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-08T23:59:00", ucNome:"Direito da União Europeia",                         ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-23T23:55:00", ucNome:"Introdução ao Direito Administrativo",              ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-19T23:59:00", ucNome:"Introdução ao Direito do Ambiente",                 ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-01T23:59:00", ucNome:"Política Internacional",                            ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-19T23:59:00", ucNome:"Teoria das Relações Internacionais",                ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-23T23:59:00", ucNome:"Desenvolvimento Comunitário",                       ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:55:00", ucNome:"Contextos Organizacionais de Intervenção Social",   ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-25T23:59:00", ucNome:"Teoria Geral de Serviço Social",                   ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:59:00", ucNome:"Intervenção Social e Saúde Mental",                 ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:59:00", ucNome:"Noções de Psicopatologia",                          ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:59:00", ucNome:"Psicologia Clínica e da Saúde",                     ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-01T23:59:00", ucNome:"Psicologia da Arte",                                ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-06T23:59:00", ucNome:"Psicologia do Desenvolvimento Humano",              ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-30T23:59:00", ucNome:"Psicologia Social Aplicada",                        ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-25T23:55:00", ucNome:"Sociologia Urbana",                                 ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-30T23:59:00", ucNome:"Teorias Sociológicas",                              ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-10-16T23:55:00", ucNome:"Sociologia da Comunicação e da Informação",         ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:59:00", ucNome:"Sociologia da Família",                             ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio A", tipo:"E-fólio", dataIso:"2026-11-02T23:59:00", ucNome:"Sociologia das Migrações",                          ano:3, semestre:1, minor:"Sociologia" },
+  // ── E-fólio B ───────────────────────────────────────────────────────────────
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-29T23:59:00", ucNome:"Direito da União Europeia",                         ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2027-01-11T23:59:00", ucNome:"Introdução ao Direito Administrativo",              ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-08T23:59:00", ucNome:"Introdução ao Direito do Ambiente",                 ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-29T23:59:00", ucNome:"Política Internacional",                            ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-23T23:59:00", ucNome:"Teoria das Relações Internacionais",                ano:3, semestre:1, minor:"CPA" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-27T23:59:00", ucNome:"Desenvolvimento Comunitário",                       ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-03T23:55:00", ucNome:"Contextos Organizacionais de Intervenção Social",   ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-29T23:59:00", ucNome:"Teoria Geral de Serviço Social",                   ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-17T23:59:00", ucNome:"Intervenção Social e Saúde Mental",                 ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-30T23:59:00", ucNome:"Noções de Psicopatologia",                          ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-30T23:59:00", ucNome:"Psicologia Clínica e da Saúde",                     ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-06T23:59:00", ucNome:"Psicologia da Arte",                                ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-11T23:59:00", ucNome:"Psicologia do Desenvolvimento Humano",              ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-18T23:59:00", ucNome:"Psicologia Social Aplicada",                        ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-22T23:55:00", ucNome:"Sociologia Urbana",                                 ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-27T23:59:00", ucNome:"Teorias Sociológicas",                              ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-27T23:55:00", ucNome:"Sociologia da Comunicação e da Informação",         ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-12-02T23:59:00", ucNome:"Sociologia da Família",                             ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"E-fólio B", tipo:"E-fólio", dataIso:"2026-11-30T23:59:00", ucNome:"Sociologia das Migrações",                          ano:3, semestre:1, minor:"Sociologia" },
+  // ── Provas finais / Recurso ─────────────────────────────────────────────────
+  { titulo:"E-fólio Global", tipo:"Global/Exame", dataIso:"2027-01-12T00:00:00", ucNome:"Desenvolvimento Comunitário",              ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"E-fólio Global e Exame", tipo:"Global/Exame", dataIso:"2027-01-25T10:00:00", ucNome:"Contextos Organizacionais de Intervenção Social", ano:3, semestre:1, minor:"Intervenção", descricao:"A confirmar" },
+  { titulo:"Provas Finais", tipo:"Global/Exame", dataIso:"2027-01-19T00:00:00", ucNome:"Intervenção Social e Saúde Mental",         ano:3, semestre:1, minor:"Intervenção", descricao:"A confirmar" },
+  { titulo:"P-fólio e Exame", tipo:"Global/Exame", dataIso:"2027-01-11T00:00:00", ucNome:"Noções de Psicopatologia",                ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"Provas Finais", tipo:"Global/Exame", dataIso:"2027-01-19T00:00:00", ucNome:"Psicologia Clínica e da Saúde",             ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"Provas Finais (Normal)", tipo:"Global/Exame", dataIso:"2027-01-15T00:00:00", ucNome:"Psicologia do Desenvolvimento Humano", ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"Provas Finais (Normal)", tipo:"Global/Exame", dataIso:"2027-01-13T16:00:00", ucNome:"Psicologia Social Aplicada",       ano:3, semestre:1, minor:"Psicologia", descricao:"A confirmar" },
+  { titulo:"Recurso", tipo:"Recurso", dataIso:"2027-02-16T16:00:00", ucNome:"Psicologia Social Aplicada",                           ano:3, semestre:1, minor:"Psicologia", descricao:"A confirmar" },
+  { titulo:"Provas Finais (Normal)", tipo:"Global/Exame", dataIso:"2027-01-12T16:00:00", ucNome:"Sociologia Urbana",                ano:3, semestre:1, minor:"Sociologia", descricao:"A confirmar" },
+  { titulo:"Recurso", tipo:"Recurso", dataIso:"2027-02-15T16:00:00", ucNome:"Sociologia Urbana",                                    ano:3, semestre:1, minor:"Sociologia", descricao:"A confirmar" },
+  // ── Sessões síncronas (futuras a partir de 27/09/2026) ─────────────────────
+  { titulo:"Sessão Síncrona", tipo:"Outro", dataIso:"2026-10-07T18:00:00", ucNome:"Sociologia da Família",                          ano:3, semestre:1, minor:"Sociologia", descricao:"Hora de Portugal" },
+  { titulo:"Sessão Síncrona", tipo:"Outro", dataIso:"2026-11-02T18:30:00", ucNome:"Psicologia do Desenvolvimento Humano",           ano:3, semestre:1, minor:"Psicologia", descricao:"Teams" },
+  { titulo:"Sessão Síncrona", tipo:"Outro", dataIso:"2026-11-30T18:30:00", ucNome:"Psicologia do Desenvolvimento Humano",           ano:3, semestre:1, minor:"Psicologia", descricao:"Teams" },
+  { titulo:"Sessão Síncrona", tipo:"Outro", dataIso:"2027-01-04T18:30:00", ucNome:"Intervenção Social e Saúde Mental",              ano:3, semestre:1, minor:"Intervenção" },
+  { titulo:"Sessão Síncrona (preparação provas)", tipo:"Outro", dataIso:"2027-01-07T18:00:00", ucNome:"Psicologia Social Aplicada", ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"Sessão Síncrona", tipo:"Outro", dataIso:"2027-01-07T18:30:00", ucNome:"Psicologia do Desenvolvimento Humano",           ano:3, semestre:1, minor:"Psicologia", descricao:"Teams" },
+  // ── Prazos académicos (escolha de modalidade) ───────────────────────────────
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-04T23:59:00", ucNome:"Direito da União Europeia",          ano:3, semestre:1, minor:"CPA", descricao:"Até ao final da 3.ª semana (28/09–04/10)" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Introdução ao Direito do Ambiente",   ano:3, semestre:1, minor:"CPA" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-04T23:59:00", ucNome:"Política Internacional",              ano:3, semestre:1, minor:"CPA", descricao:"28/09–04/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-05T23:59:00", ucNome:"Teoria das Relações Internacionais",  ano:3, semestre:1, minor:"CPA", descricao:"Dispositivo encerrado em 05/10 (PUC indica também 28/09–04/10 como 3.ª semana)" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Contextos Organizacionais de Intervenção Social", ano:3, semestre:1, minor:"Intervenção", descricao:"28/09–02/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Desenvolvimento Comunitário",          ano:3, semestre:1, minor:"Intervenção", descricao:"28/09–02/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Teoria Geral de Serviço Social",       ano:3, semestre:1, minor:"Intervenção", descricao:"3.ª semana 28/09–02/10; PUC chama atenção para 21/09–25/09" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Intervenção Social e Saúde Mental",    ano:3, semestre:1, minor:"Intervenção", descricao:"28/09–02/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Noções de Psicopatologia",             ano:3, semestre:1, minor:"Psicologia", descricao:"28/09–02/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Psicologia Clínica e da Saúde",       ano:3, semestre:1, minor:"Psicologia", descricao:"28/09–02/10 ou data enviada na altura" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-04T23:59:00", ucNome:"Psicologia da Arte",                   ano:3, semestre:1, minor:"Psicologia", descricao:"3.ª semana 28/09–04/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-06T23:59:00", ucNome:"Psicologia do Desenvolvimento Humano", ano:3, semestre:1, minor:"Psicologia", descricao:"06/10 (expressamente indicado)" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-05T23:59:00", ucNome:"Psicologia Social Aplicada",           ano:3, semestre:1, minor:"Psicologia" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia Urbana",                    ano:3, semestre:1, minor:"Sociologia" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Teorias Sociológicas",                  ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
+  { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia da Comunicação e da Informação", ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
+];
