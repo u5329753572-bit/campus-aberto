@@ -684,12 +684,12 @@
   </div>
 
   <div class="tab-content" id="tab-downloads">
-    <h2 class="secao-titulo">Histórico de Downloads</h2>
+    <h2 class="secao-titulo">Histórico de Actividade</h2>
     <div class="tabela-wrap">
-      <div class="tabela-header"><span>Todos os downloads registados</span></div>
+      <div class="tabela-header" style="display:flex;align-items:center;gap:12px"><span>Todos os eventos registados</span><select id="filtro-evento-tipo" style="margin-left:auto;padding:4px 8px;border-radius:6px;border:1px solid #ccc;font-size:.85rem" onchange="carregarEventos()"><option value="">Todos os tipos</option><option value="abertura">Abertura</option><option value="download">Download</option><option value="clique_link">Clique Link</option></select></div>
       <table>
-        <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>Código User</th><th>Código DL</th><th>Documento</th></tr></thead>
-        <tbody id="tbody-dl"><tr><td colspan="6" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
+        <thead><tr><th>Data</th><th>Nome</th><th>Email</th><th>Código User</th><th>Tipo</th><th>Código DL</th><th>Documento</th></tr></thead>
+        <tbody id="tbody-dl"><tr><td colspan="7" class="empty-msg"><span class="spinner"></span></td></tr></tbody>
       </table>
     </div>
   </div>
@@ -951,7 +951,7 @@
 
   async function carregarTudo() {
     await carregarUCs();
-    await Promise.all([carregarUtilizadores(), carregarDocs(), carregarDatasAdmin(), carregarDownloads(), carregarSugestoes()]);
+    await Promise.all([carregarUtilizadores(), carregarDocs(), carregarDatasAdmin(), carregarEventos(), carregarSugestoes()]);
   }
 
   // --- UTILIZADORES ---
@@ -1529,16 +1529,18 @@
     document.getElementById('data-titulo').scrollIntoView({behavior:'smooth', block:'center'});
   };
 
-  // --- DOWNLOADS ---
-  async function carregarDownloads() {
+  // --- EVENTOS ---
+  async function carregarEventos() {
     const tb   = document.getElementById('tbody-dl');
-    const q    = query(collection(db, 'downloads'), orderBy('data', 'desc'));
+    const filtroTipo = document.getElementById('filtro-evento-tipo')?.value || '';
+    const q    = query(collection(db, 'eventos'), orderBy('data', 'desc'));
     const snap = await getDocs(q);
+    const docs = filtroTipo ? snap.docs.filter(d => d.data().tipo === filtroTipo) : snap.docs;
 
-    if (snap.empty) { tb.innerHTML = '<tr><td colspan="6" class="empty-msg">Sem downloads registados</td></tr>'; return; }
+    if (docs.length === 0) { tb.innerHTML = '<tr><td colspan="7" class="empty-msg">Sem eventos registados</td></tr>'; return; }
 
     tb.innerHTML = '';
-    snap.forEach(d => {
+    docs.forEach(d => {
       const dl = d.data();
       const data = dl.data?.toDate ? dl.data.toDate().toLocaleString('pt-PT') : '—';
       const tr = document.createElement('tr');
@@ -1547,7 +1549,8 @@
         <td>${esc(dl.nome)}</td>
         <td>${esc(dl.email)}</td>
         <td><span class="log-codigo">${esc(dl.codigoUser || '—')}</span></td>
-        <td><span class="log-codigo">${esc(dl.codigoDl)}</span></td>
+        <td><span class="log-codigo" style="font-size:.8rem;text-transform:uppercase">${esc(dl.tipo||'download')}</span></td>
+        <td><span class="log-codigo">${esc(dl.codigoDl||'—')}</span></td>
         <td>${esc(dl.docNome)}</td>`;
       tb.appendChild(tr);
     });
