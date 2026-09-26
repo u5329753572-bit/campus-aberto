@@ -495,6 +495,32 @@
         <input type="checkbox" id="uc-oculta" style="width:16px;height:16px;cursor:pointer"/>
         Ocultar da biblioteca académica
       </label>
+      <div class="form-row" style="margin-top:12px">
+        <div class="campo">
+          <label>Modelo de Avaliação</label>
+          <select id="uc-modelo" onchange="toggleModeloUC()">
+            <option value="mpv">MPV — Modelo Antigo</option>
+            <option value="novo">Modelo Pedagógico Atualizado</option>
+          </select>
+        </div>
+        <div class="campo" id="campo-tipo-novo" style="display:none">
+          <label>Tipologia</label>
+          <select id="uc-tipo-novo" onchange="toggleModeloUC()">
+            <option value="1">Tipo 1</option>
+            <option value="2">Tipo 2</option>
+            <option value="3">Tipo 3</option>
+            <option value="4">Tipo 4</option>
+          </select>
+        </div>
+        <div class="campo" id="campo-max-sincrona" style="display:none;max-width:160px">
+          <label>Valor máx. Síncrona</label>
+          <select id="uc-max-sincrona">
+            <option value="12">12 valores</option>
+            <option value="13">13 valores</option>
+            <option value="14">14 valores</option>
+          </select>
+        </div>
+      </div>
       <button class="btn-primario" id="btn-criar-uc" onclick="criarUC()">Criar UC</button>
       <div class="msg-form" id="msg-uc"></div>
     </div>
@@ -1146,9 +1172,20 @@
     document.getElementById('uc-bib').value = u.bib || '';
     document.getElementById('uc-minor').value = u.minor || '';
     toggleMinorUC();
+    document.getElementById('uc-modelo').value = u.modeloAvaliacao || 'mpv';
+    document.getElementById('uc-tipo-novo').value = u.tipoNovo || '1';
+    document.getElementById('uc-max-sincrona').value = String(u.maxSincrona || 12);
+    window.toggleModeloUC();
     window._editandoUCId = id;
     document.getElementById('btn-criar-uc').textContent = 'Guardar alterações';
     document.getElementById('uc-nome').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  window.toggleModeloUC = function() {
+    const modelo = document.getElementById('uc-modelo').value;
+    const tipo   = document.getElementById('uc-tipo-novo').value;
+    document.getElementById('campo-tipo-novo').style.display    = modelo === 'novo' ? '' : 'none';
+    document.getElementById('campo-max-sincrona').style.display = (modelo === 'novo' && (tipo === '1' || tipo === '4')) ? '' : 'none';
   };
 
   window.criarUC = async function() {
@@ -1160,6 +1197,9 @@
     const sinopse  = document.getElementById('uc-sinopse').value.trim();
     const bib      = document.getElementById('uc-bib').value.trim();
     const minor    = ano === 3 ? document.getElementById('uc-minor').value.trim() : '';
+    const modeloAvaliacao = document.getElementById('uc-modelo').value;
+    const tipoNovo        = modeloAvaliacao === 'novo' ? document.getElementById('uc-tipo-novo').value : null;
+    const maxSincrona     = (modeloAvaliacao === 'novo' && (tipoNovo === '1' || tipoNovo === '4')) ? parseInt(document.getElementById('uc-max-sincrona').value) : null;
     const msgEl    = document.getElementById('msg-uc');
     const editId   = window._editandoUCId || null;
 
@@ -1167,13 +1207,13 @@
 
     if (editId) {
       const old = (window._ucsCache || {})[editId] || {};
-      const payload = { nome, ano, semestre, ordem, oculta, sinopse, bib, minor };
+      const payload = { nome, ano, semestre, ordem, oculta, sinopse, bib, minor, modeloAvaliacao, tipoNovo, maxSincrona };
       if (old.criadoEm) payload.criadoEm = old.criadoEm;
       await setDoc(doc(db, 'ucs', editId), payload);
       window._editandoUCId = null;
       msgEl.textContent = `UC "${nome}" atualizada.`;
     } else {
-      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, bib, minor, criadoEm: serverTimestamp() });
+      await addDoc(collection(db, 'ucs'), { nome, ano, semestre, ordem, oculta, sinopse, bib, minor, modeloAvaliacao, tipoNovo, maxSincrona, criadoEm: serverTimestamp() });
       const anoLabel = ano > 0 ? `${ano}º Ano` : 'Geral';
       const semLabel = semestre > 0 ? `${semestre}º Semestre` : 'Ambos os semestres';
       msgEl.textContent = `UC "${nome}" criada (${anoLabel} · ${semLabel}).`;
@@ -1184,6 +1224,8 @@
     document.getElementById('uc-sinopse').value = '';
     document.getElementById('uc-minor').value = '';
     toggleMinorUC();
+    document.getElementById('uc-modelo').value = 'mpv';
+    window.toggleModeloUC();
     document.getElementById('btn-criar-uc').textContent = 'Criar UC';
     msgEl.className = 'msg-form ok';
     carregarUCs();
