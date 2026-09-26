@@ -1731,9 +1731,10 @@
     <!-- Notas desta UC -->
     <div class="notas-uc-card" id="notas-uc-card">
       <div class="notas-uc-titulo">📊 As minhas notas</div>
+      <div id="nota-modelo-info" style="font-size:.73rem;color:#6b7280;padding:3px 8px;background:#f3f4f6;border-radius:4px;display:none;margin-bottom:8px"></div>
 
       <!-- Seletor de modalidade -->
-      <div class="nota-modo-selector">
+      <div class="nota-modo-selector" id="nota-modos-mpv">
         <button type="button" class="nota-modo-btn ativo" id="nota-modo-ac" onclick="notaModoSelecionar('continua')">📚 Av. Contínua</button>
         <button type="button" class="nota-modo-btn" id="nota-modo-ex" onclick="notaModoSelecionar('exame')">📝 Só Exame</button>
       </div>
@@ -1782,6 +1783,95 @@
         </div>
       </div>
 
+
+      <!-- Bloco Tipo 1 -->
+      <div id="nota-bloco-tipo1" style="display:none">
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button type="button" class="nota-modo-btn ativo" id="nota-t1-btn-normal" onclick="window.notaNovoModo('1','normal')">ð Época Normal</button>
+          <button type="button" class="nota-modo-btn" id="nota-t1-btn-recurso" onclick="window.notaNovoModo('1','recurso')">ð Época Recurso</button>
+        </div>
+        <div id="nota-t1-normal">
+          <div class="nota-campo">
+            <label>Assíncronas <span id="nota-t1n-async-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t1n-async" min="0" max="10" step="0.1" placeholder="0–10" oninput="window.notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label>Síncrona <span id="nota-t1n-sinc-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t1n-sinc" min="0" max="12" step="0.1" placeholder="0–12" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+        <div id="nota-t1-recurso" style="display:none">
+          <div class="nota-campo">
+            <label>Assíncronas <span id="nota-t1r-async-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t1r-async" min="0" max="10" step="0.1" placeholder="0–10" oninput="window.notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label>Síncrona <span id="nota-t1r-sinc-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t1r-sinc" min="0" max="12" step="0.1" placeholder="0–12" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+      </div>
+      <!-- Bloco Tipo 2 -->
+      <div id="nota-bloco-tipo2" style="display:none">
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button type="button" class="nota-modo-btn ativo" id="nota-t2-btn-normal" onclick="window.notaNovoModo('2','normal')">ð Época Normal</button>
+          <button type="button" class="nota-modo-btn" id="nota-t2-btn-recurso" onclick="window.notaNovoModo('2','recurso')">ð Época Recurso</button>
+        </div>
+        <div id="nota-t2-normal">
+          <div class="nota-campo">
+            <label>Assíncronas <span style="font-size:.8em;color:#888">(total pond., mín. 40% cada, regra N–1)</span></label>
+            <input type="number" id="nota-t2-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+        <div id="nota-t2-recurso" style="display:none">
+          <div class="nota-campo">
+            <label>Discussão Online <span style="font-size:.8em;color:#888">(0–20, mín. 10)</span></label>
+            <input type="number" id="nota-t2-disc" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+      </div>
+      <!-- Bloco Tipo 3 -->
+      <div id="nota-bloco-tipo3" style="display:none">
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button type="button" class="nota-modo-btn ativo" id="nota-t3-btn-normal" onclick="window.notaNovoModo('3','normal')">ð Época Normal</button>
+          <button type="button" class="nota-modo-btn" id="nota-t3-btn-recurso" onclick="window.notaNovoModo('3','recurso')">ð Época Recurso</button>
+        </div>
+        <div id="nota-t3-normal">
+          <div class="nota-campo">
+            <label>Assíncronas <span style="font-size:.8em;color:#888">(total pond., mín. 40% cada, regra N–1)</span></label>
+            <input type="number" id="nota-t3-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+        <div id="nota-t3-recurso" style="display:none">
+          <div class="nota-campo">
+            <label>Prova Final Síncrona <span style="font-size:.8em;color:#888">(0–20, mín. 10)</span></label>
+            <input type="number" id="nota-t3-prova" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+      </div>
+      <!-- Bloco Tipo 4 -->
+      <div id="nota-bloco-tipo4" style="display:none">
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button type="button" class="nota-modo-btn ativo" id="nota-t4-btn-normal" onclick="window.notaNovoModo('4','normal')">ð Época Normal</button>
+          <button type="button" class="nota-modo-btn" id="nota-t4-btn-recurso" onclick="window.notaNovoModo('4','recurso')">ð Época Recurso</button>
+        </div>
+        <div id="nota-t4-normal">
+          <div class="nota-campo">
+            <label>Assíncronas <span style="font-size:.8em;color:#888">(total, mín. 10)</span></label>
+            <input type="number" id="nota-t4n-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+        <div id="nota-t4-recurso" style="display:none">
+          <div class="nota-campo">
+            <label>Assíncronas <span id="nota-t4r-async-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t4r-async" min="0" max="10" step="0.1" placeholder="0–10" oninput="window.notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label>Síncrona <span id="nota-t4r-sinc-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t4r-sinc" min="0" max="12" step="0.1" placeholder="0–12" oninput="window.notaAtualizar()">
+          </div>
+        </div>
+      </div>
       <!-- Nota final (partilhada, aparece quando há valor) -->
       <div class="nota-resultado" id="nota-resultado" style="display:none">
         <span class="nota-resultado-label">Nota final</span>
@@ -3344,6 +3434,65 @@ async function carregarUCs() {
 
   // --- NOTAS (Regras UAb MPV 2026-2027) ---
 
+  window.notaConfigurarModelo = function(uc) {
+    const modelo = uc.modeloAvaliacao || 'mpv';
+    const tipo   = String(uc.tipoNovo || '');
+    const maxS   = parseInt(uc.maxSincrona) || 12;
+    window._notaModelo  = modelo;
+    window._notaTipo    = tipo;
+    window._notaMaxS    = maxS;
+    window._notaSubModo = 'normal';
+    const isNovo = modelo === 'novo';
+    const mpvModos=document.getElementById('nota-modos-mpv');
+    const pCont=document.getElementById('nota-painel-continua');
+    const pExame=document.getElementById('nota-painel-exame');
+    if(mpvModos) mpvModos.style.display=isNovo?'none':'';
+    if(isNovo){if(pCont)pCont.classList.remove('ativo');if(pExame)pExame.classList.remove('ativo');}
+    ['1','2','3','4'].forEach(t=>{
+      const el=document.getElementById('nota-bloco-tipo'+t);
+      if(el) el.style.display=(isNovo&&tipo===t)?'':'none';
+    });
+    const info=document.getElementById('nota-modelo-info');
+    if(info){info.textContent=isNovo?('Modelo Atualizado — Tipo '+tipo):'Modelo MPV';info.style.display='';}
+    if(isNovo&&(tipo==='1'||tipo==='4')){
+      const maxA=20-maxS,minA=maxA/2,minS_=maxS/2;
+      if(tipo==='1'){
+        ['nota-t1n-async','nota-t1r-async'].forEach(id=>{const el=document.getElementById(id);if(el){el.max=maxA;el.placeholder='0'+String.fromCharCode(8211)+maxA;}});
+        ['nota-t1n-sinc','nota-t1r-sinc'].forEach(id=>{const el=document.getElementById(id);if(el){el.max=maxS;el.placeholder='0'+String.fromCharCode(8211)+maxS;}});
+        ['nota-t1n-async-max','nota-t1r-async-max'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='(0'+String.fromCharCode(8211)+maxA+', mín. '+minA+')';});
+        ['nota-t1n-sinc-max','nota-t1r-sinc-max'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='(0'+String.fromCharCode(8211)+maxS+', mín. '+minS_+')';});
+      }else{
+        const e1=document.getElementById('nota-t4r-async');if(e1){e1.max=maxA;e1.placeholder='0'+String.fromCharCode(8211)+maxA;}
+        const e2=document.getElementById('nota-t4r-sinc');if(e2){e2.max=maxS;e2.placeholder='0'+String.fromCharCode(8211)+maxS;}
+        const e3=document.getElementById('nota-t4r-async-max');if(e3)e3.textContent='(0'+String.fromCharCode(8211)+maxA+', mín. '+minA+')';
+        const e4=document.getElementById('nota-t4r-sinc-max');if(e4)e4.textContent='(0'+String.fromCharCode(8211)+maxS+', mín. '+minS_+')';
+      }
+    }
+    ['1','2','3','4'].forEach(t=>{
+      const pN=document.getElementById('nota-t'+t+'-normal');if(pN)pN.style.display='';
+      const pR=document.getElementById('nota-t'+t+'-recurso');if(pR)pR.style.display='none';
+      const bN=document.getElementById('nota-t'+t+'-btn-normal');if(bN)bN.classList.add('ativo');
+      const bR=document.getElementById('nota-t'+t+'-btn-recurso');if(bR)bR.classList.remove('ativo');
+    });
+    const rs=document.getElementById('nota-resultado');if(rs)rs.style.display='none';
+    const fv=document.getElementById('nota-final-val');if(fv)fv.textContent=String.fromCharCode(8212);
+    const bg=document.getElementById('nota-badge');if(bg){bg.className='nota-badge em-curso';bg.textContent='Em curso';}
+    if(!isNovo) notaModoSelecionar(notaModoAtual||'continua');
+  };
+
+  window.notaNovoModo = function(tipo,modo){
+    window._notaSubModo=modo;
+    const pN=document.getElementById('nota-t'+tipo+'-normal');
+    const pR=document.getElementById('nota-t'+tipo+'-recurso');
+    const bN=document.getElementById('nota-t'+tipo+'-btn-normal');
+    const bR=document.getElementById('nota-t'+tipo+'-btn-recurso');
+    if(pN)pN.style.display=modo==='normal'?'':'none';
+    if(pR)pR.style.display=modo==='recurso'?'':'none';
+    if(bN)bN.classList.toggle('ativo',modo==='normal');
+    if(bR)bR.classList.toggle('ativo',modo==='recurso');
+    window.notaAtualizar();
+  };
+
   window.notaModoSelecionar = function(modo) {
     notaModoAtual = modo;
     document.getElementById('nota-modo-ac').classList.toggle('ativo', modo === 'continua');
@@ -3356,6 +3505,7 @@ async function carregarUCs() {
   function _notaFmt(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
 
   window.notaAtualizar = function notaAtualizar() {
+    if((window._notaModelo||'mpv')!=='mpv'){window.notaAtualizar_novo();return;}
     const badge     = document.getElementById('nota-badge');
     const finalEl   = document.getElementById('nota-final-val');
     const resultEl  = document.getElementById('nota-resultado');
@@ -3464,6 +3614,7 @@ async function carregarUCs() {
 
   window.guardarNotaUC = async function() {
     if (!ucAtualId) return;
+    if((window._notaModelo||'mpv')!=='mpv'){await window.guardarNotaUC_novo();return;}
     const modo = notaModoAtual;
     const ects = (ucsMap[ucAtualId]?.ects) || 6;
     let dadosNota = { modo, ects, final: null, aprovado: false };
@@ -3519,6 +3670,63 @@ async function carregarUCs() {
     }
   };
 
+  window.notaAtualizar_novo = function(){
+    const tipo=window._notaTipo||'';
+    const maxS=window._notaMaxS||12;
+    const subModo=window._notaSubModo||'normal';
+    const badge=document.getElementById('nota-badge');
+    const finalEl=document.getElementById('nota-final-val');
+    const res=document.getElementById('nota-resultado');
+    function setBadge(st){badge.className='nota-badge '+st;badge.textContent=st==='aprovado'?'Aprovado':st==='reprovado'?'Reprovado':'Em curso';}
+    function setResult(val,ok){finalEl.textContent=_notaFmt(val)+' val.';res.style.display='';setBadge(ok?'aprovado':'reprovado');}
+    function empty(){res.style.display='none';finalEl.textContent=String.fromCharCode(8212);setBadge('em-curso');}
+    function gv(id){return parseFloat(document.getElementById(id).value);}
+    if(tipo==='1'){
+      const maxA=20-maxS,minA=maxA/2,minS_=maxS/2;
+      const pf=subModo==='normal'?'nota-t1n-':'nota-t1r-';
+      const va=gv(pf+'async'),vs=gv(pf+'sinc');
+      if(isNaN(va)&&isNaN(vs)){empty();return;}
+      const tot=(isNaN(va)?0:va)+(isNaN(vs)?0:vs);
+      setResult(tot,!isNaN(va)&&va>=minA&&!isNaN(vs)&&vs>=minS_&&tot>=9.5);
+    }else if(tipo==='2'){
+      if(subModo==='normal'){const va=gv('nota-t2-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
+      else{const vd=gv('nota-t2-disc');if(isNaN(vd)){empty();return;}setResult(vd,vd>=10);}
+    }else if(tipo==='3'){
+      if(subModo==='normal'){const va=gv('nota-t3-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
+      else{const vp=gv('nota-t3-prova');if(isNaN(vp)){empty();return;}setResult(vp,vp>=10);}
+    }else if(tipo==='4'){
+      if(subModo==='normal'){const va=gv('nota-t4n-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
+      else{const maxA=20-maxS,minA=maxA/2,minS_=maxS/2;
+        const va=gv('nota-t4r-async'),vs=gv('nota-t4r-sinc');
+        if(isNaN(va)&&isNaN(vs)){empty();return;}
+        const tot=(isNaN(va)?0:va)+(isNaN(vs)?0:vs);
+        setResult(tot,!isNaN(va)&&va>=minA&&!isNaN(vs)&&vs>=minS_&&tot>=9.5);}
+    }else empty();
+  };
+
+  window.guardarNotaUC_novo = async function(){
+    const btn=document.getElementById('nota-btn-save');if(!btn)return;
+    btn.disabled=true;
+    const res=document.getElementById('nota-resultado');
+    if(!res||res.style.display==='none'){btn.disabled=false;return;}
+    const finalEl=document.getElementById('nota-final-val');
+    const badge=document.getElementById('nota-badge');
+    const final_=parseFloat((finalEl?.textContent||'').replace(' val.',''))||null;
+    const aprovado=badge?.classList.contains('aprovado')||false;
+    const tipo=window._notaTipo||'';
+    const subModo=window._notaSubModo||'normal';
+    const ects=(ucsMap[ucAtualId]?.ects)||6;
+    const dadosNota={modo:'tipo'+tipo+'_'+subModo,ects,final:final_,aprovado};
+    try{
+      await updateDoc(doc(db,'utilizadores',utilizadorAtual.uid),{[`notas.${ucAtualId}`]:dadosNota});
+      utilizadorAtual.notas=utilizadorAtual.notas||{};
+      utilizadorAtual.notas[ucAtualId]=dadosNota;
+      btn.textContent=String.fromCharCode(10003)+' Guardado';
+    }catch(e){console.error(e);}
+    btn.disabled=false;
+    setTimeout(()=>{btn.textContent='Guardar';},2000);
+  };
+
   function carregarNotasUC(ucId) {
     const nota = (utilizadorAtual.notas || {})[ucId] || {};
     // Restaurar modo
@@ -3558,6 +3766,7 @@ async function carregarUCs() {
   // --- DOCUMENTOS ---
   async function abrirUC(uc, emoji) {
     ucAtualId = uc.id;
+    window.notaConfigurarModelo(uc);
     guardarRetomar(catalogo.get(`uc:${uc.id}`));
     document.getElementById('ecra-ucs').style.display  = 'none';
     document.getElementById('ecra-docs').style.display = 'block';
