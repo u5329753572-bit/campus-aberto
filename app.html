@@ -494,6 +494,7 @@
     }
 
     .semestre-secao { margin-bottom: 32px; }
+    .minor-titulo { display:block; font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#1e3a5f; margin:24px 0 8px; padding-bottom:5px; border-bottom:2px solid #d4a81f; }
     .semestre-titulo {
       display: flex; align-items: center; gap: 12px;
       font-size: 0.64rem; font-weight: 700;
@@ -3110,10 +3111,23 @@ async function carregarUCs() {
               </button>`;
             el.querySelector('.uc-card-abrir').addEventListener('click', () => abrirUC(uc, cor.emoji));
             el.querySelector('.favorito-btn').addEventListener('click', () => window.toggleFavorito(`uc:${uc.id}`));
-            grid.appendChild(el);
+            el.dataset.minor = uc.minor || ''; grid.appendChild(el);
           });
 
           semDiv.appendChild(grid);
+          if (Number(ano) === 3) {
+            const _mOrd = ['Ciência Política e Administrativa','Intervenção Social','Psicologia','Sociologia',''];
+            const _els = Array.from(grid.querySelectorAll('.uc-card'));
+            if (_els.some(c => c.dataset.minor)) {
+              const _por = {};
+              _els.forEach(c => { const m = c.dataset.minor; if (!_por[m]) _por[m] = []; _por[m].push(c); });
+              semDiv.removeChild(grid);
+              _mOrd.filter(m => _por[m] && _por[m].length).forEach(m => {
+                if (m) { const mH = document.createElement('div'); mH.className = 'minor-titulo'; mH.textContent = m; semDiv.appendChild(mH); }
+                const mg = document.createElement('div'); mg.className = 'ucs-grid'; _por[m].forEach(c => mg.appendChild(c)); semDiv.appendChild(mg);
+              });
+            }
+          }
           anoDiv.appendChild(semDiv);
         });
 
