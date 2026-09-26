@@ -132,4 +132,129 @@ const DATAS_PDF = [
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia Urbana",                    ano:3, semestre:1, minor:"Sociologia" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Teorias Sociológicas",                  ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
   { titulo:"Prazo: escolha modalidade de avaliação", tipo:"Prazo académico", dataIso:"2026-10-02T23:59:00", ucNome:"Sociologia da Comunicação e da Informação", ano:3, semestre:1, minor:"Sociologia", descricao:"28/09–02/10" },
-];
+];;
+
+// Normaliza nome para correspondência (lowercase, sem acentos, sem pontuação extra)
+const norm = s => s.toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g,'')
+  .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+
+// Encontra a melhor UC por nome parcial
+function findUC(ucs, nomePDF) {
+  const n = norm(nomePDF);
+  // Exact match first
+  let best = ucs.find(u => norm(u.nome) === n);
+  if (best) return best;
+  // Partial: nome da UC contém as palavras-chave principais
+  const words = n.split(' ').filter(w => w.length > 3);
+  const scored = ucs.map(u => {
+    const un = norm(u.nome);
+    const score = words.filter(w => un.includes(w)).length;
+    return { u, score };
+  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
+  return scored[0]?.u || null;
+}
+
+// Verifica duplicado: mesma ucId + título + data (até ao minuto)
+function isDuplicate(existentes, candidato) {
+  const dataMin = candidato.dataIso.slice(0,16);
+  return existentes.some(e =>
+    e.ucId === candidato.ucId &&
+    e.titulo === candidato.titulo &&
+    (e.dataIso || '').slice(0,16) === dataMin
+  );
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    estado('Não estás autenticada. Inicia sessão na app e volta aqui.', 'err');
+    return;
+  }
+  estado(`Autenticada como ${user.email}. Pronto para importar.`, 'ok');
+  log(`✓ Utilizadora: ${user.email}`);
+  document.getElementById('btn').disabled = false;
+
+  window.importar = async function() {
+    document.getElementById('btn').disabled = true;
+    estado('A carregar UCs e datas existentes…');
+    document.getElementById('tabela').style.display = '';
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+
+    try {
+      // 1. Ler UCs do Firestore
+      const ucsSnap = await getDocs(collection(db, 'ucs'));
+      const ucs = [];
+      ucsSnap.forEach(d => ucs.push({ id: d.id, nome: d.data().nome || '' }));
+      log(`✓ ${ucs.length} UCs carregadas`);
+
+      // 2. Ler datas existentes
+      const datasSnap = await getDocs(collection(db, 'datas'));
+      const existentes = [];
+      datasSnap.forEach(d => existentes.push({ id: d.id, ...d.data() }));
+      log(`✓ ${existentes.length} datas existentes`);
+
+      // 3. Processar cada data do PDF
+      let added = 0, skipped = 0, errors = 0;
+      for (const d of DATAS_PDF) {
+        const uc = findUC(ucs, d.ucNome);
+        const candidato = {
+          titulo: d.titulo,
+          tipo: d.tipo,
+          dataIso: d.dataIso,
+          ucId: uc?.id || '',
+          ucNome: uc?.nome || d.ucNome,
+          link: '',
+          descricao: d.descricao || '',
+          ano: d.ano,
+          semestre: d.semestre,
+          minor: d.minor
+        };
+
+        const dataFmt = new Date(d.dataIso).toLocaleDateString('pt-PT', { day:'2-digit', month:'short', year:'numeric' });
+        const ucLabel = uc ? uc.nome : `⚠ ${d.ucNome}`;
+        let statusBadge, rowCls;
+
+        if (isDuplicate(existentes, candidato)) {
+          statusBadge = '<span class="badge skip">Já existe</span>';
+          rowCls = 'skip';
+          skipped++;
+          log(`↩ SKIP: ${d.titulo} – ${d.ucNome} (${d.dataIso.slice(0,10)})`);
+        } else {
+          try {
+            candidato.criadoEm = serverTimestamp();
+            await addDoc(collection(db, 'datas'), candidato);
+            existentes.push(candidato); // evitar dups na mesma execução
+            statusBadge = '<span class="badge added">Adicionada</span>';
+            rowCls = 'added';
+            added++;
+            log(`✓ ADD: ${d.titulo} – ${d.ucNome} (${d.dataIso.slice(0,10)})`);
+          } catch(e) {
+            statusBadge = `<span class="badge err">Erro: ${e.message.slice(0,30)}</span>`;
+            rowCls = 'err';
+            errors++;
+            log(`✗ ERR: ${d.titulo} – ${e.message}`);
+          }
+        }
+
+        tbody.innerHTML += `<tr class="${rowCls}">
+          <td>${ucLabel}</td>
+          <td>${d.titulo}</td>
+          <td>${d.tipo}</td>
+          <td>${dataFmt}</td>
+          <td>${statusBadge}</td>
+        </tr>`;
+      }
+
+      estado(`Concluído: ${added} adicionadas, ${skipped} já existiam, ${errors} erros.`, added > 0 ? 'ok' : '');
+      log(`\nRESUMO: ${added} adicionadas | ${skipped} ignoradas | ${errors} erros`);
+    } catch(e) {
+      estado('Erro: ' + e.message, 'err');
+      log('✗ ERRO GERAL: ' + e.message);
+      document.getElementById('btn').disabled = false;
+    }
+  };
+});
+</script>
+</body>
+</html>
