@@ -1,4 +1,4 @@
-const CACHE = 'campusaberto-v9';
+const CACHE = 'campusaberto-v10';
 const STATIC = ['./logo-cs.png', './manifest.json'];
 
 self.addEventListener('install', e => {
