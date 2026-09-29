@@ -1011,8 +1011,8 @@
     .user-avatar { color:#071d34; }
     .btn-sair,.btn-viewer-voltar,.btn-viewer-dl { border-radius:3px; }
     @media (max-width:640px) { #btn-instalar { display:none!important; } }
-    #install-card { display:none; margin:0 0 24px; padding:16px 18px; background:linear-gradient(135deg,#f59e0b,#d97706); border-radius:14px; flex-direction:row; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(217,119,6,.2); }
-    #install-card.visivel { display:flex; }
+    #install-card { display:flex; margin:0 0 24px; padding:16px 18px; background:linear-gradient(135deg,#f59e0b,#d97706); border-radius:14px; flex-direction:row; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(217,119,6,.2); }
+    #install-card.oculto { display:none!important; }
     #install-card-btn { background:#071d34; color:#f0a500; font-weight:700; border:none; padding:9px 18px; border-radius:8px; font-size:.85rem; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; }
     main { max-width:1280px; padding-top:clamp(38px,6vw,72px); }
     .welcome-area { margin-bottom:58px; }
@@ -1437,7 +1437,7 @@
         <div style="font-weight:700;color:#fff;font-size:.95rem;margin-bottom:4px">Instala o CampusAberto</div>
         <div id="install-card-sub" style="font-size:.78rem;color:rgba(255,255,255,.9);line-height:1.4"></div>
       </div>
-      <button id="install-card-btn" onclick="instalarApp()">⬇ Instalar</button>
+      <button id="install-card-btn" onclick="instalarApp()" style="display:none">⬇ Instalar</button>
     </div>
 
     <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
@@ -4289,25 +4289,26 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
       sub.innerHTML = 'Toca nos <strong>⋮ três pontos</strong> do browser e depois em <strong>Adicionar ao ecrã inicial</strong>.';
       if (btn) btn.style.display = 'none';
     }
-    card.classList.add('visivel');
+    // card already visible by default
   }
   function _hideInstallCard() {
     const card = document.getElementById('install-card');
-    if (card) card.classList.remove('visivel');
+    if (card) card.classList.add('oculto');
     const btn = document.getElementById('btn-instalar');
     if (btn) btn.style.display = 'none';
   }
-  // Mostrar card no mobile se não estiver em modo standalone (já instalado)
+  // Ocultar card em desktop e quando já está instalado como PWA
   const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (!_isStandalone && /android|iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  const _isMobileDevice = /android|iphone|ipad|ipod/i.test(navigator.userAgent) || window.innerWidth <= 900;
+  if (_isStandalone || !_isMobileDevice) {
+    document.getElementById('install-card')?.classList.add('oculto');
+  } else {
+    // Mobile, não instalado — mostrar instruções adequadas
     const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const _isSafariOnly = _isIOS && /^((?!chrome|crios|android).)*safari/i.test(navigator.userAgent);
-    if (_isSafariOnly) {
-      _showInstallCard('ios');
-    } else if (_isIOS) {
+    if (_isIOS || _isSafariOnly) {
       _showInstallCard('ios');
     } else {
-      // Android — mostrar instruções genéricas; substituído por botão se beforeinstallprompt disparar
       _showInstallCard('android');
     }
   }
