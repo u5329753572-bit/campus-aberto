@@ -1,4 +1,4 @@
-const CACHE = 'campusaberto-v6';
+const CACHE = 'campusaberto-v7';
 const ASSETS = ['./app.html', './logo-cs.png', './manifest.json'];
 
 self.addEventListener('install', e => {
