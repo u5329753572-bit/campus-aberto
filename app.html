@@ -4567,7 +4567,7 @@ window.renderCronograma = function(ano) {
       var e=entry.e,eIdx=entry.idx;
       var l=lx(e.ini),w=wx(e.ini,e.fim);
       var col=COLORS[e.tipo]||'#999';
-      if((e.tipo==='efolio'||e.tipo==='avaliacao')&&/avalia/i.test(e.label||'')) col=COLORS.avaliacao||'#dc2626';
+      if(/avalia/i.test(e.label||'')) col=COLORS.avaliacao||'#dc2626';
       var lbl=e.label||e.tipo;
       var isLight=e.tipo==='pausa';
       var pstatus=isTema?(prog[window._cronKey?window._cronKey(entry.ucNome,lbl):'']||'nao_iniciado'):'nao_iniciado';
