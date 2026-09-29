@@ -1010,6 +1010,10 @@
     .user-chip { border-radius:4px; }
     .user-avatar { color:#071d34; }
     .btn-sair,.btn-viewer-voltar,.btn-viewer-dl { border-radius:3px; }
+    @media (max-width:640px) { #btn-instalar { display:none!important; } }
+    #install-card { display:none; margin:0 0 24px; padding:16px 18px; background:linear-gradient(135deg,#f59e0b,#d97706); border-radius:14px; flex-direction:row; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(217,119,6,.2); }
+    #install-card.visivel { display:flex; }
+    #install-card-btn { background:#071d34; color:#f0a500; font-weight:700; border:none; padding:9px 18px; border-radius:8px; font-size:.85rem; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; }
     main { max-width:1280px; padding-top:clamp(38px,6vw,72px); }
     .welcome-area { margin-bottom:58px; }
     .welcome-saudacao { font-size:clamp(2.2rem,4vw,4rem); letter-spacing:-.04em; }
@@ -1425,6 +1429,16 @@
     </div>
 
     <div id="banner-datas" style="display:none;margin:0 0 36px;border-radius:10px;overflow:hidden"></div>
+
+    <!-- Card de instalação PWA (aparece quando instalável ou iOS) -->
+    <div id="install-card">
+      <span style="font-size:2rem;flex-shrink:0">📲</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;color:#fff;font-size:.95rem;margin-bottom:4px">Instala o CampusAberto</div>
+        <div id="install-card-sub" style="font-size:.78rem;color:rgba(255,255,255,.9);line-height:1.4"></div>
+      </div>
+      <button id="install-card-btn" onclick="instalarApp()">⬇ Instalar</button>
+    </div>
 
     <section class="painel-aluno" id="painel-aluno" aria-labelledby="painel-titulo">
       <div class="secao-cabecalho-uniforme">
@@ -4260,23 +4274,49 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
   }
   // PWA — Botão de instalação
   let _installPrompt = null;
+  function _showInstallCard(mode) {
+    const card = document.getElementById('install-card');
+    const sub  = document.getElementById('install-card-sub');
+    const btn  = document.getElementById('install-card-btn');
+    if (!card) return;
+    if (mode === 'prompt') {
+      sub.textContent = 'Adiciona ao ecrã inicial para acesso rápido, sem abrir o browser.';
+      if (btn) btn.style.display = '';
+    } else if (mode === 'ios') {
+      sub.innerHTML = 'Toca em <strong>⬆ Partilhar</strong> e depois em <strong>Adicionar ao ecrã inicial</strong>.';
+      if (btn) btn.style.display = 'none';
+    }
+    card.classList.add('visivel');
+  }
+  function _hideInstallCard() {
+    const card = document.getElementById('install-card');
+    if (card) card.classList.remove('visivel');
+    const btn = document.getElementById('btn-instalar');
+    if (btn) btn.style.display = 'none';
+  }
+  const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (!_isStandalone) {
+    const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const _isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (_isIOS && _isSafari) _showInstallCard('ios');
+  }
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     _installPrompt = e;
     const btn = document.getElementById('btn-instalar');
     if (btn) btn.style.display = '';
+    _showInstallCard('prompt');
   });
   window.instalarApp = async function() {
     if (!_installPrompt) return;
     const result = await _installPrompt.prompt();
     if (result?.outcome === 'accepted') {
-      document.getElementById('btn-instalar').style.display = 'none';
+      _hideInstallCard();
       _installPrompt = null;
     }
   };
   window.addEventListener('appinstalled', () => {
-    const btn = document.getElementById('btn-instalar');
-    if (btn) btn.style.display = 'none';
+    _hideInstallCard();
     _installPrompt = null;
   });
 
