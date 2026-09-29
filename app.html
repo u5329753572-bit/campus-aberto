@@ -4285,6 +4285,9 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
     } else if (mode === 'ios') {
       sub.innerHTML = 'Toca em <strong>⬆ Partilhar</strong> e depois em <strong>Adicionar ao ecrã inicial</strong>.';
       if (btn) btn.style.display = 'none';
+    } else if (mode === 'android') {
+      sub.innerHTML = 'Toca nos <strong>⋮ três pontos</strong> do browser e depois em <strong>Adicionar ao ecrã inicial</strong>.';
+      if (btn) btn.style.display = 'none';
     }
     card.classList.add('visivel');
   }
@@ -4294,18 +4297,26 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
     const btn = document.getElementById('btn-instalar');
     if (btn) btn.style.display = 'none';
   }
+  // Mostrar card no mobile se não estiver em modo standalone (já instalado)
   const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (!_isStandalone) {
+  if (!_isStandalone && /android|iphone|ipad|ipod/i.test(navigator.userAgent)) {
     const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const _isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (_isIOS && _isSafari) _showInstallCard('ios');
+    const _isSafariOnly = _isIOS && /^((?!chrome|crios|android).)*safari/i.test(navigator.userAgent);
+    if (_isSafariOnly) {
+      _showInstallCard('ios');
+    } else if (_isIOS) {
+      _showInstallCard('ios');
+    } else {
+      // Android — mostrar instruções genéricas; substituído por botão se beforeinstallprompt disparar
+      _showInstallCard('android');
+    }
   }
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     _installPrompt = e;
     const btn = document.getElementById('btn-instalar');
     if (btn) btn.style.display = '';
-    _showInstallCard('prompt');
+    _showInstallCard('prompt'); // upgrade: agora temos botão real
   });
   window.instalarApp = async function() {
     if (!_installPrompt) return;
