@@ -471,7 +471,7 @@
       </div>
       <div class="field">
         <label for="reg-email">Email</label>
-        <input type="email" id="reg-email" placeholder="xxxx@estudante.uab.pt" autocomplete="email" required/>
+        <input type="email" id="reg-email" placeholder="xxxxxx@estudante.uab.pt" autocomplete="email" required/>
       </div>
       <div class="field">
         <label for="reg-tel">Telemóvel</label>
@@ -576,8 +576,8 @@
     const tel   = document.getElementById('reg-tel').value.trim();
     const senha = document.getElementById('reg-pass').value;
     if (!nome || !email || !tel || !senha) { mostrarMsg('msg-registo', 'Preenche todos os campos obrigatórios.', 'erro'); return; }
-    if (!/^\d{7}@estudante\.uab\.pt$/.test(email)) {
-      mostrarMsg('msg-registo', 'O email deve ter o formato 1234567@estudante.uab.pt.', 'erro'); return;
+    if (!/^\d{5,7}@estudante\.uab\.pt$/.test(email)) {
+      mostrarMsg('msg-registo', 'O email deve ter o formato 123456@estudante.uab.pt ou 1234567@estudante.uab.pt.', 'erro'); return;
     }
     if (senha.length < 8) { mostrarMsg('msg-registo', 'A password deve ter pelo menos 8 caracteres.', 'erro'); return; }
     try {
