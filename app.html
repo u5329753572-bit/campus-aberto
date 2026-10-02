@@ -661,6 +661,15 @@
     .nota-btn-save { padding:6px 14px; background:var(--verde); color:#fff; border:0; border-radius:6px; font-size:.7rem; font-weight:700; letter-spacing:.02em; cursor:pointer; transition:all .2s; }
     .nota-btn-save:hover { opacity:.88; }
     .nota-btn-save.ok { background:#047857; }
+    /* -- atividades T2/T3 -- */
+    .nota-ativ-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+    .nota-ativ-lbl { width:2.2em; font-size:.75rem; font-weight:700; color:var(--cinza); text-transform:uppercase; }
+    .nota-ativ-row input[type=number] { width:80px; padding:5px 8px; border:1.5px solid #e2e5e9; border-radius:7px; font-size:.88rem; font-family:'Inter',sans-serif; color:var(--verde); background:#fff; -moz-appearance:textfield; }
+    .nota-ativ-row input[type=number]::-webkit-outer-spin-button,
+    .nota-ativ-row input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+    .nota-ativ-info { font-size:.9rem; min-width:1.2em; }
+    .nota-ativ-ctrl { padding:2px 9px; border:1.5px solid #d1d5db; border-radius:6px; background:#f8fafc; font-size:.85rem; font-weight:700; cursor:pointer; color:#374151; }
+    .nota-ativ-ctrl:hover { background:#e5e7eb; }
     /* -- modo selector -- */
     .nota-modo-selector { display:flex; gap:6px; margin-bottom:12px; }
     .nota-modo-btn { flex:1; padding:7px 10px; border:1.5px solid #e2e5e9; border-radius:8px; font:600 .68rem/1 'Inter',sans-serif; cursor:pointer; background:#fff; color:var(--cinza); transition:all .18s; }
@@ -1833,8 +1842,18 @@
         </div>
         <div id="nota-t2-normal">
           <div class="nota-campo">
-            <label>Assíncronas <span style="font-size:.8em;color:#888">(total pond., mín. 40% cada, regra N–1)</span></label>
-            <input type="number" id="nota-t2-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+            <label>Atividades Assíncronas <span style="font-size:.8em;color:#888">— regra N–1 (mín. 40% em N–1 atividades)</span></label>
+            <div id="nota-t2-ativs">
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A1</span><input type="number" class="nota-t2-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t2-inf0"></span></div>
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A2</span><input type="number" class="nota-t2-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t2-inf1"></span></div>
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A3</span><input type="number" class="nota-t2-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t2-inf2"></span></div>
+              <div class="nota-ativ-row" id="nota-t2-row3" style="display:none"><span class="nota-ativ-lbl">A4</span><input type="number" class="nota-t2-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t2-inf3"></span></div>
+            </div>
+            <div style="margin-top:.5em;display:flex;gap:.5em;align-items:center">
+              <button type="button" class="nota-ativ-ctrl" onclick="window.notaSetNAtiv('2',-1)">–</button>
+              <span id="nota-t2-n-label" style="font-size:.85em;color:#555">3 atividades</span>
+              <button type="button" class="nota-ativ-ctrl" onclick="window.notaSetNAtiv('2',+1)">+</button>
+            </div>
           </div>
         </div>
         <div id="nota-t2-recurso" style="display:none">
@@ -1852,8 +1871,18 @@
         </div>
         <div id="nota-t3-normal">
           <div class="nota-campo">
-            <label>Assíncronas <span style="font-size:.8em;color:#888">(total pond., mín. 40% cada, regra N–1)</span></label>
-            <input type="number" id="nota-t3-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+            <label>Atividades Assíncronas <span style="font-size:.8em;color:#888">— regra N–1 (mín. 40% em N–1 atividades)</span></label>
+            <div id="nota-t3-ativs">
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A1</span><input type="number" class="nota-t3-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t3-inf0"></span></div>
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A2</span><input type="number" class="nota-t3-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t3-inf1"></span></div>
+              <div class="nota-ativ-row"><span class="nota-ativ-lbl">A3</span><input type="number" class="nota-t3-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t3-inf2"></span></div>
+              <div class="nota-ativ-row" id="nota-t3-row3" style="display:none"><span class="nota-ativ-lbl">A4</span><input type="number" class="nota-t3-ativ" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()"><span class="nota-ativ-info" id="nota-t3-inf3"></span></div>
+            </div>
+            <div style="margin-top:.5em;display:flex;gap:.5em;align-items:center">
+              <button type="button" class="nota-ativ-ctrl" onclick="window.notaSetNAtiv('3',-1)">–</button>
+              <span id="nota-t3-n-label" style="font-size:.85em;color:#555">3 atividades</span>
+              <button type="button" class="nota-ativ-ctrl" onclick="window.notaSetNAtiv('3',+1)">+</button>
+            </div>
           </div>
         </div>
         <div id="nota-t3-recurso" style="display:none">
@@ -1871,8 +1900,12 @@
         </div>
         <div id="nota-t4-normal">
           <div class="nota-campo">
-            <label>Assíncronas <span style="font-size:.8em;color:#888">(total, mín. 10)</span></label>
-            <input type="number" id="nota-t4n-async" min="0" max="20" step="0.1" placeholder="0–20" oninput="window.notaAtualizar()">
+            <label>Assíncrona <span id="nota-t4n-async-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t4n-async" min="0" max="10" step="0.1" placeholder="0–8" oninput="window.notaAtualizar()">
+          </div>
+          <div class="nota-campo">
+            <label>Síncrona <span id="nota-t4n-sinc-max" style="font-size:.8em;color:#888"></span></label>
+            <input type="number" id="nota-t4n-sinc" min="0" max="14" step="0.1" placeholder="0–12" oninput="window.notaAtualizar()">
           </div>
         </div>
         <div id="nota-t4-recurso" style="display:none">
@@ -3484,6 +3517,10 @@ async function carregarUCs() {
         const e1=document.getElementById('nota-t4r-async');if(e1){e1.max=maxA;e1.placeholder='0'+String.fromCharCode(8211)+maxA;}
         const e2=document.getElementById('nota-t4r-sinc');if(e2){e2.max=maxS;e2.placeholder='0'+String.fromCharCode(8211)+maxS;}
         const e3=document.getElementById('nota-t4r-async-max');if(e3)e3.textContent='(0'+String.fromCharCode(8211)+maxA+', mín. '+minA+')';
+        const e1n=document.getElementById('nota-t4n-async');if(e1n){e1n.max=maxA;e1n.placeholder='0'+String.fromCharCode(8211)+maxA;}
+        const e2n=document.getElementById('nota-t4n-sinc');if(e2n){e2n.max=maxS;e2n.placeholder='0'+String.fromCharCode(8211)+maxS;}
+        const e3n=document.getElementById('nota-t4n-async-max');if(e3n)e3n.textContent='(0'+String.fromCharCode(8211)+maxA+', mín. '+minA+')';
+        const e4n=document.getElementById('nota-t4n-sinc-max');if(e4n)e4n.textContent='(0'+String.fromCharCode(8211)+maxS+', mín. '+minS_+')';
         const e4=document.getElementById('nota-t4r-sinc-max');if(e4)e4.textContent='(0'+String.fromCharCode(8211)+maxS+', mín. '+minS_+')';
       }
     }
@@ -3707,14 +3744,28 @@ async function carregarUCs() {
       if(isNaN(va)&&isNaN(vs)){empty();return;}
       const tot=(isNaN(va)?0:va)+(isNaN(vs)?0:vs);
       setResult(tot,!isNaN(va)&&va>=minA&&!isNaN(vs)&&vs>=minS_&&tot>=9.5);
-    }else if(tipo==='2'){
-      if(subModo==='normal'){const va=gv('nota-t2-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
-      else{const vd=gv('nota-t2-disc');if(isNaN(vd)){empty();return;}setResult(vd,vd>=10);}
-    }else if(tipo==='3'){
-      if(subModo==='normal'){const va=gv('nota-t3-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
-      else{const vp=gv('nota-t3-prova');if(isNaN(vp)){empty();return;}setResult(vp,vp>=10);}
+    }else if(tipo==='2'||tipo==='3'){
+      if(subModo==='normal'){
+        const N=window['_notaNAtiv'+tipo]||3;
+        const rows=document.querySelectorAll('.nota-t'+tipo+'-ativ');
+        const vals=[];let allEmpty=true;
+        for(let i=0;i<N;i++){const v=parseFloat(rows[i]?rows[i].value:NaN);if(!isNaN(v))allEmpty=false;vals.push(isNaN(v)?null:v);}
+        if(allEmpty){empty();return;}
+        const w=20/N,minW=w*0.4;
+        let okCount=0,tot=0;
+        vals.forEach((v,i)=>{
+          const inf=document.getElementById('nota-t'+tipo+'-inf'+i);
+          if(v===null){if(inf)inf.textContent='';return;}
+          tot+=v;const ok=v>=minW;if(ok)okCount++;
+          if(inf)inf.textContent=ok?'✓':'✗';
+        });
+        setResult(tot,okCount>=N-1&&tot>=9.5);
+      }else{
+        const vid=tipo==='2'?'nota-t2-disc':'nota-t3-prova';
+        const vp=parseFloat(document.getElementById(vid).value);if(isNaN(vp)){empty();return;}setResult(vp,vp>=10);
+      }
     }else if(tipo==='4'){
-      if(subModo==='normal'){const va=gv('nota-t4n-async');if(isNaN(va)){empty();return;}setResult(va,va>=10);}
+      if(subModo==='normal'){const maxA=20-maxS,minA=maxA/2,minS_=maxS/2;const va=gv('nota-t4n-async'),vs=gv('nota-t4n-sinc');if(isNaN(va)&&isNaN(vs)){empty();return;}const tot=(isNaN(va)?0:va)+(isNaN(vs)?0:vs);setResult(tot,!isNaN(va)&&va>=minA&&!isNaN(vs)&&vs>=minS_&&tot>=9.5);}
       else{const maxA=20-maxS,minA=maxA/2,minS_=maxS/2;
         const va=gv('nota-t4r-async'),vs=gv('nota-t4r-sinc');
         if(isNaN(va)&&isNaN(vs)){empty();return;}
@@ -3723,7 +3774,21 @@ async function carregarUCs() {
     }else empty();
   };
 
-  window.guardarNotaUC_novo = async function(){
+  window.notaSetNAtiv = function(tipo, delta){
+    const key='_notaNAtiv'+tipo;
+    const cur=window[key]||3;
+    const next=Math.max(2,Math.min(4,cur+delta));
+    window[key]=next;
+    for(let i=0;i<4;i++){
+      const row=document.getElementById('nota-t'+tipo+'-row'+i);
+      if(row)row.style.display=(i<next)?'':'none';
+    }
+    const lbl=document.getElementById('nota-t'+tipo+'-n-label');
+    if(lbl)lbl.textContent=next+' atividade'+(next>1?'s':'');
+    for(let i=0;i<4;i++){const inf=document.getElementById('nota-t'+tipo+'-inf'+i);if(inf&&i>=next)inf.textContent='';}
+    window.notaAtualizar();
+  };
+    window.guardarNotaUC_novo = async function(){
     const btn=document.getElementById('nota-btn-save');if(!btn)return;
     btn.disabled=true;
     const res=document.getElementById('nota-resultado');
