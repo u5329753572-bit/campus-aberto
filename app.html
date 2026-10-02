@@ -2400,6 +2400,9 @@
     localStorage.setItem(chaveLocal('banner-fechado'), new Date().toDateString());
   };
 
+  // Atualiza etiquetas "Hoje/Amanhã" ao voltar à aba
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) mostrarBannerDatas(); });
+
   async function carregarDatas() {
     const lista = document.getElementById('datas-lista');
     const contador = document.getElementById('datas-contador');
