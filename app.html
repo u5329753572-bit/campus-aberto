@@ -2974,7 +2974,9 @@
       return;
     }
     lista.innerHTML = resultado.map(item => {
-      const dias = Math.max(0, Math.ceil((item.data - agora) / 86400000));
+      const _hojeD = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+      const _evtD  = new Date(item.data.getFullYear(), item.data.getMonth(), item.data.getDate());
+      const dias = Math.max(0, Math.round((_evtD - _hojeD) / 86400000));
       const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
       const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`;
       const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
