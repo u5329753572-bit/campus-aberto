@@ -4724,7 +4724,7 @@ window.renderCronograma = function(ano) {
   var rS=new Date(minD.getFullYear(),minD.getMonth(),1);
   var rE=new Date(maxD.getFullYear(),maxD.getMonth()+1,0);
   var DW=16, C1=130, C2=115;
-  var COLORS={tema:'#5b8db8',efolio:'#d97706',avaliacao:'#dc2626',pausa:'#c8d0d8',revisao:'#4a8a5c',exame:'#c0392b'};
+  var COLORS={tema:'#5b8db8',efolio:'#c9a84c',avaliacao:'#c9a84c',pausa:'#c8d0d8',revisao:'#4a8a5c',exame:'#c0392b'};
   var LBLS={tema:'Temas',efolio:'E-fólio',avaliacao:'Avaliação',pausa:'Pausa Letiva',revisao:'Revisão',exame:'Exame'};
   var PROG_COL={nao_iniciado:'transparent',em_curso:'#f0a500',concluido:'#27ae60'};
   var MNS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -4763,7 +4763,7 @@ window.renderCronograma = function(ano) {
       var e=entry.e,eIdx=entry.idx;
       var l=lx(e.ini),w=wx(e.ini,e.fim);
       var col=COLORS[e.tipo]||'#999';
-      if(/avalia/i.test(e.label||'')) col=COLORS.avaliacao||'#dc2626';
+      if(/avalia|sumativa/i.test(e.label||'')) col=COLORS.avaliacao||'#dc2626';
       var lbl=e.label||e.tipo;
       var isLight=e.tipo==='pausa';
       var pstatus=isTema?(prog[window._cronKey?window._cronKey(entry.ucNome,lbl):'']||'nao_iniciado'):'nao_iniciado';
