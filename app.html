@@ -1358,6 +1358,10 @@
       <span id="online-count">—</span> online
     </div>
     <button type="button" id="btn-instalar" class="btn-sair" onclick="instalarApp()" style="display:none;background:var(--ouro);color:#071d34;font-weight:700" title="Instalar app no dispositivo">⬇ Instalar</button>
+    <button type="button" id="btn-mensagens" onclick="abrirMensagens()" style="display:none;position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;color:#374151;transition:background .18s" title="Mensagens" aria-label="Ver mensagens">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span id="msg-badge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:.5rem;font-weight:800;min-width:14px;height:14px;border-radius:7px;padding:0 3px;align-items:center;justify-content:center;border:1.5px solid #fff;font-family:'Inter',sans-serif;line-height:1">0</span>
+    </button>
     <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administração">⚙ Admin</a>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
@@ -2067,7 +2071,7 @@
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, collectionGroup,
-    getDocs, addDoc, serverTimestamp, query, orderBy, where, deleteField
+    getDocs, addDoc, serverTimestamp, query, orderBy, where, deleteField, onSnapshot
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -3068,6 +3072,7 @@
       document.getElementById('hdr-codigo').textContent = utilizadorAtual.codigo;
       document.getElementById('hdr-codigo').style.display = 'block';
       if (utilizadorAtual.admin) document.getElementById('btn-admin').style.display = '';
+      document.getElementById('btn-mensagens').style.display = '';
       document.getElementById('bv-nome').textContent   = partes[0];
       document.getElementById('loading-inicial').style.display = 'none';
       document.getElementById('ecra-ucs').style.display = 'block';
@@ -3081,6 +3086,7 @@
       iniciarPresenca(user, utilizadorAtual.nome || user.email);
       document.getElementById('rodape-app').style.display = 'block';
       mostrarFabSugestao();
+      iniciarListenerMensagens(user.uid);
       mostrarPensamentoDoDia();
       setTimeout(() => window.mostrarAviso(), 1200);
     } catch (err) {
@@ -3431,6 +3437,63 @@ async function carregarUCs() {
   function mostrarFabSugestao() {
     document.getElementById('sugestao-fab').style.display = 'flex';
   }
+
+  // ── MENSAGENS INTERNAS ────────────────────────────────────────
+  let _mensagensCache = [];
+  let _unsubMensagens = null;
+
+  function iniciarListenerMensagens(uid) {
+    if (_unsubMensagens) _unsubMensagens();
+    const q = query(
+      collection(db, 'mensagens'),
+      where('paraUID', '==', uid),
+      orderBy('criadoEm', 'desc')
+    );
+    _unsubMensagens = onSnapshot(q, snap => {
+      _mensagensCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const naoLidas = _mensagensCache.filter(m => !m.lida).length;
+      const badge = document.getElementById('msg-badge');
+      if (badge) badge.style.display = naoLidas > 0 ? 'flex' : 'none';
+      if (badge && naoLidas > 0) badge.textContent = naoLidas;
+    });
+  }
+
+  window.abrirMensagens = async function() {
+    const overlay = document.getElementById('mensagens-overlay');
+    overlay.style.display = 'flex';
+    const lista = document.getElementById('mensagens-lista');
+    if (!_mensagensCache.length) {
+      lista.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:32px 0;font-size:.85rem">Sem mensagens ainda.</div>';
+    } else {
+      lista.innerHTML = _mensagensCache.map(m => {
+        const dt = m.criadoEm ? new Date(m.criadoEm.seconds * 1000).toLocaleDateString('pt-PT', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
+        return `<div style="border:1px solid ${m.lida ? '#e5e7eb' : '#fde68a'};background:${m.lida ? '#fff' : '#fffbeb'};border-radius:10px;padding:14px 14px 10px;margin-bottom:10px">
+          ${m.sugestaoTexto ? `<div style="font-size:.7rem;color:#9ca3af;margin-bottom:8px;padding:6px 8px;background:#f3f4f6;border-radius:6px"><span style="font-weight:600">A tua sugestão:</span> ${m.sugestaoTexto}</div>` : ''}
+          <div style="font-size:.87rem;color:#111;line-height:1.55">${m.texto}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <span style="font-size:.68rem;color:#9ca3af">${dt}</span>
+            ${!m.lida ? `<button onclick="window.marcarMensagemLida('${m.id}')" style="font-size:.68rem;padding:3px 8px;border:1px solid #d1d5db;border-radius:5px;cursor:pointer;background:#f9fafb">✓ Marcar lida</button>` : '<span style="font-size:.68rem;color:#16a34a;font-weight:600">✓ Lida</span>'}
+          </div>
+        </div>`;
+      }).join('');
+    }
+    const naoLidas = _mensagensCache.filter(m => !m.lida);
+    if (naoLidas.length) {
+      await Promise.all(naoLidas.map(m => updateDoc(doc(db, 'mensagens', m.id), { lida: true })));
+    }
+  };
+
+  window.fecharMensagens = function() {
+    document.getElementById('mensagens-overlay').style.display = 'none';
+  };
+
+  window.fecharMensagensOverlay = function(e) {
+    if (e.target === document.getElementById('mensagens-overlay')) window.fecharMensagens();
+  };
+
+  window.marcarMensagemLida = async function(id) {
+    await updateDoc(doc(db, 'mensagens', m.id), { lida: true });
+  };
 
   // ── PENSAMENTO DO DIA ─────────────────────────────────────
   const PENSAMENTOS_FALLBACK = [
@@ -4454,6 +4517,17 @@ Ao prosseguir, declaro que li e compreendi este aviso.`;
 
 <!-- FAB Sugestão -->
 <button class="sugestao-fab" id="sugestao-fab" onclick="abrirSugestao()" title="Enviar sugestão" aria-label="Enviar sugestão">💡</button>
+
+<!-- Modal Mensagens -->
+<div id="mensagens-overlay" onclick="fecharMensagensOverlay(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;align-items:flex-start;justify-content:flex-end;padding:64px 16px 16px">
+  <div style="background:#fff;border-radius:14px;width:100%;max-width:400px;box-shadow:0 12px 40px rgba(0,0,0,.22);font-family:'Inter',sans-serif;max-height:80vh;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #f3f4f6">
+      <div style="font:700 .95rem/1 'Playfair Display',serif;color:#1a3a2a">📬 Mensagens da Administração</div>
+      <button onclick="fecharMensagens()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9ca3af;line-height:1;padding:2px 6px">×</button>
+    </div>
+    <div id="mensagens-lista" style="overflow-y:auto;padding:14px 14px 10px;flex:1"></div>
+  </div>
+</div>
 
 <!-- Modal Sugestão -->
 <div class="sugestao-overlay" id="sugestao-overlay" onclick="fecharSugestaoOverlay(event)">
