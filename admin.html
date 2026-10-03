@@ -1967,7 +1967,7 @@
           <td><span style="font-size:.7rem;font-weight:700;color:${lida ? '#166534' : '#b45309'}">${lida ? '✓ Lida' : '● Nova'}</span></td>
           <td style="white-space:nowrap">
             ${!lida ? `<button onclick="marcarLida('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:5px;cursor:pointer">Marcar lida</button>` : ''}
-            <button onclick="abrirRespostaSugestao('${s.id}','${(s.uid||'')}','${(s.nome||'').replace(/'/g,\"\'\").replace(/\n/g,' ')}','${(s.email||'')}','${(s.texto||'').replace(/'/g,\"\'\").replace(/\n/g,' ')}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #c9a84c;border-radius:5px;cursor:pointer;color:#92400e;margin-left:4px">✉ Responder</button>
+            <button onclick="abrirRespostaSugestao('${s.id}','${(s.uid||'')}','${(s.nome||'').replace(/'/g,"\\'").replace(/\n/g,' ')}','${(s.email||'')}','${(s.texto||'').replace(/'/g,"\\'").replace(/\n/g,' ')}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #c9a84c;border-radius:5px;cursor:pointer;color:#92400e;margin-left:4px">✉ Responder</button>
             <button onclick="apagarSugestao('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #fca5a5;border-radius:5px;cursor:pointer;color:#dc2626;margin-left:4px">Apagar</button>
           </td>
         </tr>`;
