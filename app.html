@@ -1420,7 +1420,62 @@
       html:not([data-theme="light"]) { --ouro-pale:#2a1e08;--creme:#162218;--branco:#1b2e20;--cinza:#9ab099;--cinza-leve:#1a2c1e;--texto:#e8ead8;color-scheme:dark; }
       html:not([data-theme="light"]) body { background:#0f1a14 !important;background-image:none !important;color:#e8ead8; }
     }
-  </style>
+  
+/* --- Correção: elementos em falta no dark mode --- */
+html[data-theme="dark"] .recurso-card { background: #1b2e20 !important; border-color: rgba(255,255,255,0.08) !important; }
+html[data-theme="dark"] .recurso-card:hover { background: #203825 !important; box-shadow: 0 8px 24px rgba(0,0,0,.4) !important; }
+html[data-theme="dark"] .recurso-card h3,
+html[data-theme="dark"] #ecosistema-titulo,
+html[data-theme="dark"] .secao-cabecalho-uniforme h2,
+html[data-theme="dark"] .datas-header h2,
+html[data-theme="dark"] .ferramentas-cabecalho h2,
+html[data-theme="dark"] .ferramenta-link h3,
+html[data-theme="dark"] .ferramenta-tab[aria-selected="true"],
+html[data-theme="dark"] .modal h3,
+html[data-theme="dark"] .modal-codigo,
+html[data-theme="dark"] .empty h4,
+html[data-theme="dark"] .datas-back,
+html[data-theme="dark"] .painel-item strong,
+html[data-theme="dark"] .painel-vazio strong,
+html[data-theme="dark"] .pesquisa-item strong,
+html[data-theme="dark"] .data-item-full-info strong,
+html[data-theme="dark"] .nota-modo-btn.ativo,
+html[data-theme="dark"] .citacoes-tipo-btn.ativo,
+html[data-theme="dark"] .citacoes-campo label,
+html[data-theme="dark"] .btn-cit-copiar,
+html[data-theme="dark"] .btn-cit-item-copiar,
+html[data-theme="dark"] .cta-citacoes-corpo h4,
+html[data-theme="dark"] .user-avatar,
+html[data-theme="dark"] .painel-card-icone { color: var(--texto) !important; }
+html[data-theme="dark"] .recurso-card p { color: rgba(232,234,216,0.65) !important; }
+html[data-theme="dark"] .datas-filtros select,
+html[data-theme="dark"] .datas-filtros input,
+html[data-theme="dark"] .nota-campo input[type="number"],
+html[data-theme="dark"] .nota-ativ-row input[type="number"],
+html[data-theme="dark"] .citacoes-campo input,
+html[data-theme="dark"] .citacoes-campo select { background: rgba(255,255,255,0.07) !important; color: #e8ead8 !important; border-color: rgba(255,255,255,0.15) !important; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .recurso-card { background: #1b2e20 !important; border-color: rgba(255,255,255,0.08) !important; }
+  html:not([data-theme="light"]) .recurso-card h3,
+  html:not([data-theme="light"]) #ecosistema-titulo,
+  html:not([data-theme="light"]) .secao-cabecalho-uniforme h2,
+  html:not([data-theme="light"]) .datas-header h2,
+  html:not([data-theme="light"]) .ferramentas-cabecalho h2,
+  html:not([data-theme="light"]) .ferramenta-link h3,
+  html:not([data-theme="light"]) .modal h3,
+  html:not([data-theme="light"]) .empty h4,
+  html:not([data-theme="light"]) .datas-back,
+  html:not([data-theme="light"]) .painel-item strong,
+  html:not([data-theme="light"]) .pesquisa-item strong,
+  html:not([data-theme="light"]) .nota-modo-btn.ativo,
+  html:not([data-theme="light"]) .citacoes-tipo-btn.ativo,
+  html:not([data-theme="light"]) .citacoes-campo label,
+  html:not([data-theme="light"]) .btn-cit-copiar,
+  html:not([data-theme="light"]) .cta-citacoes-corpo h4,
+  html:not([data-theme="light"]) .user-avatar { color: var(--texto) !important; }
+  html:not([data-theme="light"]) .recurso-card p { color: rgba(232,234,216,0.65) !important; }
+}
+</style>
 </head>
 <body>
 
