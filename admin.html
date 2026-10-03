@@ -783,6 +783,24 @@
   </div>
 </main>
 
+<!-- ── MODAL RESPOSTA SUGESTÃO ───────────────────────────────── -->
+<div id="resposta-overlay" onclick="fecharRespostaOverlay(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:14px;padding:26px 22px;width:100%;max-width:480px;box-shadow:0 12px 40px rgba(0,0,0,.22);font-family:'Inter',sans-serif">
+    <div style="font:700 1rem/1 'Playfair Display',serif;color:#1a3a2a;margin-bottom:4px">✉ Resposta privada</div>
+    <div style="font-size:.75rem;color:#6b7280;margin-bottom:14px">Apenas <strong id="resposta-destinatario"></strong> verá esta mensagem.</div>
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;font-size:.78rem;color:#92400e;margin-bottom:14px;max-height:80px;overflow-y:auto">
+      <span style="font-weight:600;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:#b45309">Sugestão original:</span><br>
+      <span id="resposta-sugestao-preview"></span>
+    </div>
+    <textarea id="resposta-texto" rows="4" placeholder="Escreve a tua resposta…" style="width:100%;border:1.5px solid #d1d5db;border-radius:9px;padding:10px 12px;font:.85rem/1.5 'Inter',sans-serif;color:#111;resize:vertical;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+    <div id="resposta-msg" style="font-size:.75rem;min-height:18px;margin-top:6px"></div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button id="btn-enviar-resposta" onclick="enviarResposta()" style="flex:1;padding:11px;background:#1a3a2a;color:#fff;border:0;border-radius:9px;font:700 .85rem/1 'Inter',sans-serif;cursor:pointer">Enviar</button>
+      <button onclick="fecharResposta()" style="padding:11px 16px;background:#f1f5f9;color:#6b7280;border:0;border-radius:9px;font:600 .85rem/1 'Inter',sans-serif;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail }
@@ -1949,6 +1967,7 @@
           <td><span style="font-size:.7rem;font-weight:700;color:${lida ? '#166534' : '#b45309'}">${lida ? '✓ Lida' : '● Nova'}</span></td>
           <td style="white-space:nowrap">
             ${!lida ? `<button onclick="marcarLida('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:5px;cursor:pointer">Marcar lida</button>` : ''}
+            <button onclick="abrirRespostaSugestao('${s.id}','${(s.uid||'')}','${(s.nome||'').replace(/'/g,\"\'\").replace(/\n/g,' ')}','${(s.email||'')}','${(s.texto||'').replace(/'/g,\"\'\").replace(/\n/g,' ')}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #c9a84c;border-radius:5px;cursor:pointer;color:#92400e;margin-left:4px">✉ Responder</button>
             <button onclick="apagarSugestao('${s.id}')" style="font-size:.7rem;padding:3px 8px;border:1px solid #fca5a5;border-radius:5px;cursor:pointer;color:#dc2626;margin-left:4px">Apagar</button>
           </td>
         </tr>`;
@@ -1973,6 +1992,56 @@
     if (!confirm('Apagar esta sugestão permanentemente?')) return;
     await deleteDoc(doc(db, 'sugestoes', id));
     carregarSugestoes();
+  };
+
+  // ── RESPOSTA A SUGESTÃO ──────────────────────────────────────
+  let _respostaCtx = null;
+
+  window.abrirRespostaSugestao = function(id, uid, nome, email, textoSugestao) {
+    _respostaCtx = { id, uid, nome, email, textoSugestao };
+    document.getElementById('resposta-destinatario').textContent = nome || email || uid;
+    document.getElementById('resposta-sugestao-preview').textContent = textoSugestao;
+    document.getElementById('resposta-texto').value = '';
+    document.getElementById('resposta-msg').textContent = '';
+    document.getElementById('resposta-overlay').style.display = 'flex';
+    setTimeout(() => document.getElementById('resposta-texto').focus(), 150);
+  };
+
+  window.fecharRespostaOverlay = function(e) {
+    if (e.target === document.getElementById('resposta-overlay')) window.fecharResposta();
+  };
+
+  window.fecharResposta = function() {
+    document.getElementById('resposta-overlay').style.display = 'none';
+    _respostaCtx = null;
+  };
+
+  window.enviarResposta = async function() {
+    if (!_respostaCtx) return;
+    const texto = document.getElementById('resposta-texto').value.trim();
+    if (!texto) { document.getElementById('resposta-msg').textContent = 'Escreve uma mensagem.'; return; }
+    const btn = document.getElementById('btn-enviar-resposta');
+    btn.disabled = true; btn.textContent = '…';
+    try {
+      await addDoc(collection(db, 'mensagens'), {
+        paraUID:        _respostaCtx.uid,
+        paraNome:       _respostaCtx.nome || '',
+        paraEmail:      _respostaCtx.email || '',
+        texto,
+        sugestaoId:     _respostaCtx.id,
+        sugestaoTexto:  _respostaCtx.textoSugestao,
+        criadoEm:       serverTimestamp(),
+        lida:           false
+      });
+      await updateDoc(doc(db, 'sugestoes', _respostaCtx.id), { lida: true });
+      document.getElementById('resposta-msg').style.color = '#16a34a';
+      document.getElementById('resposta-msg').textContent = '✓ Mensagem enviada!';
+      setTimeout(() => { window.fecharResposta(); carregarSugestoes(); }, 1400);
+    } catch(e) {
+      document.getElementById('resposta-msg').style.color = '#dc2626';
+      document.getElementById('resposta-msg').textContent = 'Erro: ' + e.message;
+      btn.disabled = false; btn.textContent = 'Enviar';
+    }
   };
 
   // ── LISTA DE TODOS OS PENSAMENTOS ────────────────────────────
