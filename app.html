@@ -1332,150 +1332,7 @@
       .bottom-nav-btn { font-size:.52rem; }
     }
   
-    /* ===== MODO ESCURO ===== */
-    html[data-theme="dark"] {
-      --ouro-pale:  #2a1e08;
-      --creme:      #162218;
-      --branco:     #1b2e20;
-      --cinza:      #9ab099;
-      --cinza-leve: #1a2c1e;
-      --texto:      #e8ead8;
-      color-scheme: dark;
-    }
-    html[data-theme="dark"] body {
-      background: #0f1a14 !important;
-      background-image: none !important;
-      color: #e8ead8;
-    }
-    html[data-theme="dark"] .painel-card,
-    html[data-theme="dark"] .painel-item,
-    html[data-theme="dark"] .pesquisa-resultados,
-    html[data-theme="dark"] .pesquisa-item,
-    html[data-theme="dark"] .datas-back,
-    html[data-theme="dark"] .aviso-card,
-    html[data-theme="dark"] .tab-nav,
-    html[data-theme="dark"] .modal-codigo,
-    html[data-theme="dark"] .perfil-section,
-    html[data-theme="dark"] .citacoes-resultado,
-    html[data-theme="dark"] [class*="-card"]:not([class*="painel-card-icone"]):not([class*="apa7"]),
-    html[data-theme="dark"] [class*="-sheet"],
-    html[data-theme="dark"] [class*="-painel"]:not(header):not([class*="ano-titulo"]),
-    html[data-theme="dark"] [class*="modal-"]:not([class*="modal-btn"]):not([class*="modal-close"]) {
-      background: #1b2e20 !important;
-      border-color: rgba(255,255,255,0.08) !important;
-    }
-    html[data-theme="dark"] .painel-card-icone { background: rgba(201,168,76,0.15) !important; }
-    html[data-theme="dark"] .uc-nome,
-    html[data-theme="dark"] .painel-card-titulo,
-    html[data-theme="dark"] .data-hora,
-    html[data-theme="dark"] .painel-ver-todas,
-    html[data-theme="dark"] .dias,
-    html[data-theme="dark"] .doc-favorito:not(.ativo),
-    html[data-theme="dark"] .ferramenta-favorito:not(.ativo),
-    html[data-theme="dark"] .recurso-icone,
-    html[data-theme="dark"] .recurso-link,
-    html[data-theme="dark"] .ferramentas-painel-titulo,
-    html[data-theme="dark"] .stat-val,
-    html[data-theme="dark"] .ano-titulo-label,
-    html[data-theme="dark"] .btn-voltar,
-    html[data-theme="dark"] .docs-titulo,
-    html[data-theme="dark"] .nota-final-val,
-    html[data-theme="dark"] .prog-stat-val,
-    html[data-theme="dark"] .aviso-titulo,
-    html[data-theme="dark"] .perfil-campo-valor,
-    html[data-theme="dark"] .perfil-section-title,
-    html[data-theme="dark"] .sugestao-modal-titulo,
-    html[data-theme="dark"] .sugestao-textarea,
-    html[data-theme="dark"] .citacoes-titulo,
-    html[data-theme="dark"] .citacoes-biblio-titulo,
-    html[data-theme="dark"] .welcome-saudacao,
-    html[data-theme="dark"] .pesquisa-tipo,
-    html[data-theme="dark"] .modal-pensamento-btn,
-    html[data-theme="dark"] .spinner { color: var(--texto) !important; }
-    html[data-theme="dark"] .ano-titulo-badge { color: var(--texto) !important; background: rgba(255,255,255,0.06) !important; }
-    html[data-theme="dark"] .aviso-corpo,
-    html[data-theme="dark"] .uc-desc,
-    html[data-theme="dark"] .doc-tipo { color: rgba(232,234,216,0.65) !important; }
-    html[data-theme="dark"] .aprovado,
-    html[data-theme="dark"] .ok,
-    html[data-theme="dark"] .lido { color: #5fbb7b !important; }
-    html[data-theme="dark"] .btn-cit-copiar,
-    html[data-theme="dark"] .btn-cit-item-copiar { color: var(--ouro-leve) !important; background: rgba(255,255,255,0.06) !important; }
-    html[data-theme="dark"] .pesquisa-global-campo,
-    html[data-theme="dark"] input:not([type="range"]),
-    html[data-theme="dark"] textarea,
-    html[data-theme="dark"] select { background: #162218 !important; color: #e8ead8 !important; border-color: rgba(255,255,255,0.15) !important; }
-    html[data-theme="dark"] input::placeholder,
-    html[data-theme="dark"] textarea::placeholder { color: #6a8a74 !important; }
-    html[data-theme="dark"] .urgente,
-    html[data-theme="dark"] .critico { background: #3d1515 !important; border-color: rgba(255,100,100,0.2) !important; }
-    html[data-theme="dark"] .aviso { background: #2d2010 !important; }
-    html[data-theme="dark"] .btn-sair { background: rgba(255,255,255,0.07) !important; color: rgba(255,255,255,0.8) !important; border-color: rgba(255,255,255,0.1) !important; }
-    html[data-theme="dark"] table th { background: #162218 !important; color: #e8ead8 !important; }
-    html[data-theme="dark"] table td { border-color: rgba(255,255,255,0.06) !important; color: #e8ead8; }
-    html[data-theme="dark"] hr { border-color: rgba(255,255,255,0.08) !important; }
-    html[data-theme="dark"] ::-webkit-scrollbar-track { background: #162218; }
-    html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #2d4a35; border-radius: 4px; }
-    @media (prefers-color-scheme: dark) {
-      html:not([data-theme="light"]) { --ouro-pale:#2a1e08;--creme:#162218;--branco:#1b2e20;--cinza:#9ab099;--cinza-leve:#1a2c1e;--texto:#e8ead8;color-scheme:dark; }
-      html:not([data-theme="light"]) body { background:#0f1a14 !important;background-image:none !important;color:#e8ead8; }
-    }
-  
-/* --- Correção: elementos em falta no dark mode --- */
-html[data-theme="dark"] .recurso-card { background: #1b2e20 !important; border-color: rgba(255,255,255,0.08) !important; }
-html[data-theme="dark"] .recurso-card:hover { background: #203825 !important; box-shadow: 0 8px 24px rgba(0,0,0,.4) !important; }
-html[data-theme="dark"] .recurso-card h3,
-html[data-theme="dark"] #ecosistema-titulo,
-html[data-theme="dark"] .secao-cabecalho-uniforme h2,
-html[data-theme="dark"] .datas-header h2,
-html[data-theme="dark"] .ferramentas-cabecalho h2,
-html[data-theme="dark"] .ferramenta-link h3,
-html[data-theme="dark"] .ferramenta-tab[aria-selected="true"],
-html[data-theme="dark"] .modal h3,
-html[data-theme="dark"] .modal-codigo,
-html[data-theme="dark"] .empty h4,
-html[data-theme="dark"] .datas-back,
-html[data-theme="dark"] .painel-item strong,
-html[data-theme="dark"] .painel-vazio strong,
-html[data-theme="dark"] .pesquisa-item strong,
-html[data-theme="dark"] .data-item-full-info strong,
-html[data-theme="dark"] .nota-modo-btn.ativo,
-html[data-theme="dark"] .citacoes-tipo-btn.ativo,
-html[data-theme="dark"] .citacoes-campo label,
-html[data-theme="dark"] .btn-cit-copiar,
-html[data-theme="dark"] .btn-cit-item-copiar,
-html[data-theme="dark"] .cta-citacoes-corpo h4,
-html[data-theme="dark"] .user-avatar,
-html[data-theme="dark"] .painel-card-icone { color: var(--texto) !important; }
-html[data-theme="dark"] .recurso-card p { color: rgba(232,234,216,0.65) !important; }
-html[data-theme="dark"] .datas-filtros select,
-html[data-theme="dark"] .datas-filtros input,
-html[data-theme="dark"] .nota-campo input[type="number"],
-html[data-theme="dark"] .nota-ativ-row input[type="number"],
-html[data-theme="dark"] .citacoes-campo input,
-html[data-theme="dark"] .citacoes-campo select { background: rgba(255,255,255,0.07) !important; color: #e8ead8 !important; border-color: rgba(255,255,255,0.15) !important; }
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) .recurso-card { background: #1b2e20 !important; border-color: rgba(255,255,255,0.08) !important; }
-  html:not([data-theme="light"]) .recurso-card h3,
-  html:not([data-theme="light"]) #ecosistema-titulo,
-  html:not([data-theme="light"]) .secao-cabecalho-uniforme h2,
-  html:not([data-theme="light"]) .datas-header h2,
-  html:not([data-theme="light"]) .ferramentas-cabecalho h2,
-  html:not([data-theme="light"]) .ferramenta-link h3,
-  html:not([data-theme="light"]) .modal h3,
-  html:not([data-theme="light"]) .empty h4,
-  html:not([data-theme="light"]) .datas-back,
-  html:not([data-theme="light"]) .painel-item strong,
-  html:not([data-theme="light"]) .pesquisa-item strong,
-  html:not([data-theme="light"]) .nota-modo-btn.ativo,
-  html:not([data-theme="light"]) .citacoes-tipo-btn.ativo,
-  html:not([data-theme="light"]) .citacoes-campo label,
-  html:not([data-theme="light"]) .btn-cit-copiar,
-  html:not([data-theme="light"]) .cta-citacoes-corpo h4,
-  html:not([data-theme="light"]) .user-avatar { color: var(--texto) !important; }
-  html:not([data-theme="light"]) .recurso-card p { color: rgba(232,234,216,0.65) !important; }
-}
-</style>
+  </style>
 </head>
 <body>
 
@@ -1507,7 +1364,6 @@ html[data-theme="dark"] .citacoes-campo select { background: rgba(255,255,255,0.
       <span id="msg-badge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:.5rem;font-weight:800;min-width:14px;height:14px;border-radius:7px;padding:0 3px;align-items:center;justify-content:center;border:1.5px solid #fff;font-family:'Inter',sans-serif;line-height:1">0</span>
     </button>
     <a href="admin.html" id="btn-admin" class="btn-sair" style="display:none;background:var(--verde);color:#fff;font-weight:700;text-decoration:none" title="Painel de administração">⚙ Admin</a>
-    <button type="button" id="tema-btn" onclick="toggleTema()" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:20px;padding:5px 14px;cursor:pointer;color:rgba(255,255,255,0.85);font-size:.78rem;font-weight:600;letter-spacing:.03em;transition:all .2s;white-space:nowrap" title="Alternar tema claro/escuro" aria-label="Alternar tema"></button>
     <button type="button" class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -4948,30 +4804,6 @@ window.renderCronograma = function(ano) {
   ct.innerHTML=leg+'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(11,42,74,.15);border-radius:4px;"><div style="display:inline-block;min-width:100%;">'+mH+dH+rows+'</div></div>';
 };
 
-  // === MODO ESCURO ===
-  (function() {
-    var PREF = 'campus-tema';
-    window.aplicarTema = function(dark) {
-      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-      var btn = document.getElementById('tema-btn');
-      if (btn) btn.textContent = dark ? '\u2600 Claro' : '\u263E Escuro';
-    };
-    window.toggleTema = function() {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      var novo = !isDark;
-      localStorage.setItem(PREF, novo ? 'dark' : 'light');
-      window.aplicarTema(novo);
-    };
-    var saved = localStorage.getItem(PREF);
-    if (saved) { window.aplicarTema(saved === 'dark'); }
-    else {
-      var prefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      window.aplicarTema(prefDark);
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-      if (!localStorage.getItem(PREF)) window.aplicarTema(e.matches);
-    });
-  })();
 </script>
 <style>#cron-desk-btn{display:block;}@media(max-width:640px){#cron-desk-btn{display:none;}}</style>
 </body>
