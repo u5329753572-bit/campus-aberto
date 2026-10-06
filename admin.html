@@ -569,8 +569,8 @@
         <label class="campo" style="display:block;margin-bottom:6px;font-size:.82rem;font-weight:600;color:#374151">Ficheiro PDF</label>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:#f1f5f9;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:.85rem;color:#374151">
-            📎 Selecionar PDF
-            <input type="file" id="doc-ficheiro" accept=".pdf" style="display:none" onchange="window.uploadPdfGithub(this)"/>
+            📎 Selecionar ficheiro (PDF / Excel)
+            <input type="file" id="doc-ficheiro" accept=".pdf,.xlsx,.xls" style="display:none" onchange="window.uploadPdfGithub(this)"/>
           </label>
           <span id="doc-upload-estado" style="font-size:.82rem;color:#6b7280"></span>
         </div>
@@ -1294,7 +1294,7 @@
         const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
         document.getElementById('doc-url').value = url;
         if (!document.getElementById('doc-nome').value) {
-          document.getElementById('doc-nome').value = filename.replace('.pdf','').replace(/_/g,' ');
+          document.getElementById('doc-nome').value = filename.replace(/\.(pdf|xlsx|xls)$/i,'').replace(/_/g,' ');
         }
         estado.textContent = '✅ Upload concluído';
         estado.style.color = '#15803d';
