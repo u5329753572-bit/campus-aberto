@@ -4021,11 +4021,17 @@ async function carregarUCs() {
         const estado = (utilizadorAtual.leituras || {})[lKey] || '';
         const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : 'Não lido';
         const isLink = doc_.tipo === 'link';
+        const docUrl = doc_.url || '';
+        const isXls  = /\.xlsx?$/i.test(docUrl);
+        const iconeLabel = isLink ? '↗' : isXls ? 'XLS' : 'PDF';
+        const iconeBg    = isLink ? 'background:linear-gradient(135deg,#1d4ed8,#2563eb)'
+                         : isXls  ? 'background:linear-gradient(135deg,#166534,#15803d)'
+                         : '';
         const el     = document.createElement('div');
         el.className = 'doc-item' + (estado ? ' ' + estado : '');
         el.innerHTML = `
-          <div class="doc-icone" style="${isLink?'background:linear-gradient(135deg,#1d4ed8,#2563eb)':''}">
-            <span class="doc-icone-txt">${isLink?'↗':'PDF'}</span>
+          <div class="doc-icone" style="${iconeBg}">
+            <span class="doc-icone-txt">${iconeLabel}</span>
           </div>
           <div class="doc-info">
             <div class="doc-nome">${esc(doc_.nome)}${isLink?'<span style="font-size:.65rem;color:#1d4ed8;font-weight:700;margin-left:6px;background:#dbeafe;padding:2px 6px;border-radius:6px">Link</span>':''}</div>
