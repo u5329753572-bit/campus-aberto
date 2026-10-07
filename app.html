@@ -4021,7 +4021,7 @@ async function carregarUCs() {
         const estado = (utilizadorAtual.leituras || {})[lKey] || '';
         const btnLabel = estado === 'lido' ? '✓ Lido' : estado === 'lendo' ? '📖 A ler' : 'Não lido';
         const isLink = doc_.tipo === 'link';
-        const docUrl = doc_.url || '';
+        const docUrl = doc_.driveUrl || '';
         const isXls  = /\.xlsx?$/i.test(docUrl);
         const iconeLabel = isLink ? '↗' : isXls ? 'XLS' : 'PDF';
         const iconeBg    = isLink ? 'background:linear-gradient(135deg,#1d4ed8,#2563eb)'
