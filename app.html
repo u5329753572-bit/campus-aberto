@@ -1135,6 +1135,17 @@
       font-size: 0.9rem; color: var(--verde); font-weight: 600;
       margin-bottom: 14px;
     }
+    .perfil-notas-tabela { width:100%; border-collapse:collapse; font-size:0.8rem; margin-bottom:4px; }
+    .perfil-notas-tabela th { text-align:left; font-size:0.68rem; font-weight:600; color:var(--cinza);
+      text-transform:uppercase; letter-spacing:.04em; padding:0 6px 6px; border-bottom:1px solid rgba(26,58,42,0.1); }
+    .perfil-notas-tabela td { padding:7px 6px; border-bottom:1px solid rgba(26,58,42,0.06); color:var(--texto); vertical-align:middle; }
+    .perfil-notas-tabela tr:last-child td { border-bottom:none; }
+    .perfil-nota-badge { display:inline-block; padding:2px 8px; border-radius:20px; font-weight:700; font-size:0.78rem; }
+    .perfil-nota-badge.aprov { background:#dcfce7; color:#166534; }
+    .perfil-nota-badge.reprov { background:#fee2e2; color:#991b1b; }
+    .perfil-nota-badge.curso { background:#f1f5f9; color:#64748b; }
+    .perfil-notas-resumo { display:flex; gap:16px; margin-top:10px; font-size:0.78rem; color:var(--cinza); }
+    .perfil-notas-resumo strong { color:var(--texto); }
     .perfil-input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
     .perfil-input {
       width: 100%; padding: 11px 14px;
@@ -2068,6 +2079,9 @@
         <span class="perfil-campo-valor mono" id="perfil-codigo">—</span>
       </div>
     </div>
+    <div class="perfil-separador"></div>
+    <div class="perfil-section-title">As minhas notas</div>
+    <div id="perfil-notas-tabela"></div>
     <div class="perfil-separador"></div>
     <div class="perfil-section-title">Alterar password</div>
     <div class="perfil-msg" id="perfil-msg"></div>
@@ -4294,11 +4308,43 @@ async function carregarUCs() {
   }
 
   // --- PERFIL ---
+  function renderNotasPerfil() {
+    const el = document.getElementById('perfil-notas-tabela');
+    if (!el) return;
+    const notas = utilizadorAtual?.notas || {};
+    const todasUcs = Object.entries(notas);
+    if (todasUcs.length === 0) {
+      el.innerHTML = '<p style="font-size:0.8rem;color:var(--cinza);margin:0 0 8px">Ainda não lançaste nenhuma nota.</p>';
+      return;
+    }
+    let ectsTotal = 0, ectsAprov = 0, somaNotas = 0, countAprov = 0;
+    const linhas = Object.entries(notas).map(([ucId, n]) => {
+      const uc = ucsMap[ucId];
+      const nome = uc?.nome || ucId;
+      const ects = n.ects || uc?.ects || 6;
+      ectsTotal += ects;
+      let badge, textoNota;
+      if (n.final != null) {
+        const aprov = n.aprovado;
+        textoNota = n.final.toFixed(1);
+        badge = aprov ? 'aprov' : 'reprov';
+        if (aprov) { ectsAprov += ects; somaNotas += n.final; countAprov++; }
+      } else {
+        textoNota = 'Em curso';
+        badge = 'curso';
+      }
+      return `<tr><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${nome}">${nome}</td><td><span class="perfil-nota-badge ${badge}">${textoNota}</span></td><td style="text-align:center">${ects}</td></tr>`;
+    }).join('');
+    const media = countAprov > 0 ? (somaNotas / countAprov).toFixed(1) : '—';
+    el.innerHTML = `<table class="perfil-notas-tabela"><thead><tr><th>UC</th><th>Nota</th><th style="text-align:center">ECTS</th></tr></thead><tbody>${linhas}</tbody></table><div class="perfil-notas-resumo"><span>ECTS concluídos: <strong>${ectsAprov} / ${ectsTotal}</strong></span><span>Média: <strong>${media}</strong></span></div>`;
+  }
+
   window.abrirPerfil = function() {
     if (!utilizadorAtual) return;
     document.getElementById('perfil-nome').textContent  = utilizadorAtual.nome  || '—';
     document.getElementById('perfil-email').textContent = utilizadorAtual.email || auth.currentUser?.email || '—';
     document.getElementById('perfil-codigo').textContent = utilizadorAtual.codigo || '—';
+    renderNotasPerfil();
     // limpar campos e mensagem
     document.getElementById('perfil-pw-atual').value = '';
     document.getElementById('perfil-pw-nova').value  = '';
