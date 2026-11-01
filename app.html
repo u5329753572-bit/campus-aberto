@@ -3679,9 +3679,12 @@ async function carregarUCs() {
 
   window.setupAtividadesUC = function(uc) {
     const isAtiv = uc?.modeloAvaliacao === 'atividades' && (uc?.atividades||[]).length > 0;
-    const sel = document.getElementById('nota-modos-mpv');
-    if (sel) sel.style.display = isAtiv ? 'none' : '';
+    const btnAc = document.getElementById('nota-modo-ac');
+    const btnEx = document.getElementById('nota-modo-ex');
     if (isAtiv) {
+      // Rename buttons: Atividades | Só Exame
+      if (btnAc) { btnAc.textContent = '📋 Atividades'; btnAc.onclick = () => window.notaModoSelecionar('atividades'); }
+      // Build dynamic fields
       const campos = document.getElementById('nota-atividades-campos');
       campos.innerHTML = (uc.atividades).map((a,i) =>
         `<div class="nota-campo" style="margin-bottom:12px">
@@ -3690,6 +3693,8 @@ async function carregarUCs() {
         </div>`).join('');
       window.notaModoSelecionar('atividades');
     } else {
+      // Restore original MPV labels
+      if (btnAc) { btnAc.textContent = '📚 Av. Contínua'; btnAc.onclick = () => window.notaModoSelecionar('continua'); }
       window.notaModoSelecionar('continua');
     }
   };
