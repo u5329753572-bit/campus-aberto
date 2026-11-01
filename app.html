@@ -4317,26 +4317,24 @@ async function carregarUCs() {
       el.innerHTML = '<p style="font-size:0.8rem;color:var(--cinza);margin:0 0 8px">Ainda não lançaste nenhuma nota.</p>';
       return;
     }
-    let ectsTotal = 0, ectsAprov = 0, somaNotas = 0, countAprov = 0;
+    let somaNotas = 0, countAprov = 0;
     const linhas = Object.entries(notas).map(([ucId, n]) => {
       const uc = ucsMap[ucId];
       const nome = uc?.nome || ucId;
-      const ects = n.ects || uc?.ects || 6;
-      ectsTotal += ects;
       let badge, textoNota;
       if (n.final != null) {
         const aprov = n.aprovado;
         textoNota = n.final.toFixed(1);
         badge = aprov ? 'aprov' : 'reprov';
-        if (aprov) { ectsAprov += ects; somaNotas += n.final; countAprov++; }
+        if (aprov) { somaNotas += n.final; countAprov++; }
       } else {
         textoNota = 'Em curso';
         badge = 'curso';
       }
-      return `<tr><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${nome}">${nome}</td><td><span class="perfil-nota-badge ${badge}">${textoNota}</span></td><td style="text-align:center">${ects}</td></tr>`;
+      return `<tr><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${nome}">${nome}</td><td><span class="perfil-nota-badge ${badge}">${textoNota}</span></td></tr>`;
     }).join('');
     const media = countAprov > 0 ? (somaNotas / countAprov).toFixed(1) : '—';
-    el.innerHTML = `<table class="perfil-notas-tabela"><thead><tr><th>UC</th><th>Nota</th><th style="text-align:center">ECTS</th></tr></thead><tbody>${linhas}</tbody></table><div class="perfil-notas-resumo"><span>ECTS concluídos: <strong>${ectsAprov} / ${ectsTotal}</strong></span><span>Média: <strong>${media}</strong></span></div>`;
+    el.innerHTML = `<table class="perfil-notas-tabela"><thead><tr><th>UC</th><th>Nota</th></tr></thead><tbody>${linhas}</tbody></table><div class="perfil-notas-resumo"><span>Média: <strong>${media}</strong></span></div>`;
   }
 
   window.abrirPerfil = function() {
