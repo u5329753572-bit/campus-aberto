@@ -1962,6 +1962,12 @@
           </div>
         </div>
       </div>
+      <!-- ── Painel: Atividades Sumativas ── -->
+      <div class="nota-painel" id="nota-painel-atividades">
+        <div id="nota-atividades-campos"></div>
+        <div class="nota-limiar vazio" id="nota-atividades-info" style="margin-top:8px"></div>
+      </div>
+
       <!-- Nota final (partilhada, aparece quando há valor) -->
       <div class="nota-resultado" id="nota-resultado" style="display:none">
         <span class="nota-resultado-label">Nota final</span>
@@ -3666,7 +3672,26 @@ async function carregarUCs() {
     document.getElementById('nota-modo-ex').classList.toggle('ativo', modo === 'exame');
     document.getElementById('nota-painel-continua').classList.toggle('ativo', modo === 'continua');
     document.getElementById('nota-painel-exame').classList.toggle('ativo', modo === 'exame');
+    const paAtv = document.getElementById('nota-painel-atividades');
+    if (paAtv) paAtv.classList.toggle('ativo', modo === 'atividades');
     notaAtualizar();
+  };
+
+  window.setupAtividadesUC = function(uc) {
+    const isAtiv = uc?.modeloAvaliacao === 'atividades' && (uc?.atividades||[]).length > 0;
+    const sel = document.getElementById('nota-modos-mpv');
+    if (sel) sel.style.display = isAtiv ? 'none' : '';
+    if (isAtiv) {
+      const campos = document.getElementById('nota-atividades-campos');
+      campos.innerHTML = (uc.atividades).map((a,i) =>
+        `<div class="nota-campo" style="margin-bottom:12px">
+          <label for="nota-atv-${i}">${a.nome} <span style="font-weight:400;color:var(--cinza)">(0 – ${a.max} val.)</span></label>
+          <input type="number" id="nota-atv-${i}" min="0" max="${a.max}" step="0.1" placeholder="0 – ${a.max}" oninput="notaAtualizar()" style="max-width:120px">
+        </div>`).join('');
+      window.notaModoSelecionar('atividades');
+    } else {
+      window.notaModoSelecionar('continua');
+    }
   };
 
   function _notaFmt(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
@@ -3689,6 +3714,35 @@ async function carregarUCs() {
     function esconderFinal() {
       finalEl.textContent = '—';
       resultEl.style.display = 'none';
+    }
+
+    // ── Atividades Sumativas ──
+    if (notaModoAtual === 'atividades') {
+      const uc = ucsMap[ucAtualId];
+      const atividades = uc?.atividades || [];
+      const vals = atividades.map((a,i) => parseFloat(document.getElementById('nota-atv-'+i)?.value));
+      const infoEl = document.getElementById('nota-atividades-info');
+      const preench = vals.filter(v => !isNaN(v));
+      if (preench.length === 0) { esconderFinal(); setBadge('curso'); if(infoEl){infoEl.className='nota-limiar vazio';infoEl.innerHTML='';} return; }
+      const total = vals.reduce((s,v) => s+(isNaN(v)?0:v), 0);
+      const n = atividades.length;
+      if (preench.length < n) {
+        mostrarFinal(total); setBadge('curso');
+        if(infoEl){infoEl.className='nota-limiar vazio';infoEl.innerHTML=`Soma parcial: <strong>${_notaFmt(total)} / ${atividades.reduce((s,a)=>s+a.max,0)}</strong>`;}
+        return;
+      }
+      const countOk = atividades.filter((a,i) => vals[i] >= a.max*0.4).length;
+      const aprov = total >= 10 && countOk >= n-1;
+      mostrarFinal(total);
+      if (aprov) {
+        if(infoEl){infoEl.className='nota-limiar ok';infoEl.innerHTML=`✓ ${countOk}/${n} atividades com ≥40% · Total: ${_notaFmt(total)} val.`;}
+        setBadge('aprovado');
+      } else {
+        const motivo = total < 10 ? `Total insuficiente (${_notaFmt(total)} < 10)` : `Apenas ${countOk}/${n} atividades com ≥40% (mínimo ${n-1})`;
+        if(infoEl){infoEl.className='nota-limiar nok';infoEl.innerHTML=`✗ ${motivo}`;}
+        setBadge('rep');
+      }
+      return;
     }
 
     // ── Só Exame ──
@@ -3786,7 +3840,16 @@ async function carregarUCs() {
     const ects = (ucsMap[ucAtualId]?.ects) || 6;
     let dadosNota = { modo, ects, final: null, aprovado: false };
 
-    if (modo === 'exame') {
+    if (modo === 'atividades') {
+      const atividades = ucsMap[ucAtualId]?.atividades || [];
+      const vals = atividades.map((a,i) => parseFloat(document.getElementById('nota-atv-'+i)?.value));
+      dadosNota.atividades = vals.map(v => isNaN(v) ? null : v);
+      if (vals.every(v => !isNaN(v))) {
+        const total = vals.reduce((s,v)=>s+v, 0);
+        const countOk = atividades.filter((a,i) => vals[i] >= a.max*0.4).length;
+        dadosNota.final = total; dadosNota.aprovado = total >= 10 && countOk >= atividades.length-1;
+      }
+    } else if (modo === 'exame') {
       const ex = parseFloat(document.getElementById('nota-so-exame').value);
       dadosNota.soExame = isNaN(ex) ? null : ex;
       if (!isNaN(ex)) {
@@ -3942,11 +4005,15 @@ async function carregarUCs() {
 
   function carregarNotasUC(ucId) {
     const nota = (utilizadorAtual.notas || {})[ucId] || {};
-    // Restaurar modo
-    const modo = nota.modo || 'continua';
-    window.notaModoSelecionar(modo);
+    const uc = ucsMap[ucId];
+    window.setupAtividadesUC(uc);
+    const isAtiv = uc?.modeloAvaliacao === 'atividades';
+    const modo = nota.modo || (isAtiv ? 'atividades' : 'continua');
+    if (!isAtiv) window.notaModoSelecionar(modo);
 
-    if (modo === 'exame') {
+    if (isAtiv) {
+      (nota.atividades || []).forEach((v,i) => { const el=document.getElementById('nota-atv-'+i); if(el) el.value=v??''; });
+    } else if (modo === 'exame') {
       document.getElementById('nota-so-exame').value = nota.soExame ?? '';
     } else {
       document.getElementById('nota-efolio-a').value  = nota.efolioA  ?? '';
