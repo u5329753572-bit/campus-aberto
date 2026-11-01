@@ -3863,7 +3863,7 @@ async function carregarUCs() {
 
   window.guardarNotaUC = async function() {
     if (!ucAtualId) return;
-    if((window._notaModelo||'mpv')!=='mpv'){await window.guardarNotaUC_novo();return;}
+    if((window._notaModelo||'mpv')!=='mpv' && notaModoAtual!=='atividades'){await window.guardarNotaUC_novo();return;}
     const modo = notaModoAtual;
     const ects = (ucsMap[ucAtualId]?.ects) || 6;
     let dadosNota = { modo, ects, final: null, aprovado: false };
