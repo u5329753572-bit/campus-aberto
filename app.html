@@ -4312,13 +4312,16 @@ async function carregarUCs() {
     const el = document.getElementById('perfil-notas-tabela');
     if (!el) return;
     const notas = utilizadorAtual?.notas || {};
-    const todasUcs = Object.entries(notas);
-    if (todasUcs.length === 0) {
+    // Só mostrar UCs com pelo menos um valor preenchido
+    const ucsComDados = Object.entries(notas).filter(([,n]) =>
+      n.final != null || n.efolioA != null || n.efolioB != null || n.soExame != null || n.exameRec != null
+    );
+    if (ucsComDados.length === 0) {
       el.innerHTML = '<p style="font-size:0.8rem;color:var(--cinza);margin:0 0 8px">Ainda não lançaste nenhuma nota.</p>';
       return;
     }
     let somaNotas = 0, countAprov = 0;
-    const linhas = Object.entries(notas).map(([ucId, n]) => {
+    const linhas = ucsComDados.map(([ucId, n]) => {
       const uc = ucsMap[ucId];
       const nome = uc?.nome || ucId;
       let badge, textoNota;
