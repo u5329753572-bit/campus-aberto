@@ -3682,18 +3682,29 @@ async function carregarUCs() {
     const btnAc = document.getElementById('nota-modo-ac');
     const btnEx = document.getElementById('nota-modo-ex');
     if (isAtiv) {
-      // Rename buttons: Atividades | Só Exame
       if (btnAc) { btnAc.textContent = '📋 Atividades'; btnAc.onclick = () => window.notaModoSelecionar('atividades'); }
-      // Build dynamic fields
+      const n = uc.atividades.length;
+      const totalMax = uc.atividades.reduce((s,a)=>s+a.max,0);
       const campos = document.getElementById('nota-atividades-campos');
-      campos.innerHTML = (uc.atividades).map((a,i) =>
-        `<div class="nota-campo" style="margin-bottom:12px">
-          <label for="nota-atv-${i}">${a.nome} <span style="font-weight:400;color:var(--cinza)">(0 – ${a.max} val.)</span></label>
-          <input type="number" id="nota-atv-${i}" min="0" max="${a.max}" step="0.1" placeholder="0 – ${a.max}" oninput="notaAtualizar()" style="max-width:120px">
-        </div>`).join('');
+      const regras = '<div style="background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.78rem;color:#713f12">'
+        + '<strong>Regras de aprovação:</strong><br>'
+        + '• Nota final ≥ 10 valores (máx. ' + totalMax + ' val.)<br>'
+        + '• Mínimo de 40% em pelo menos ' + (n-1) + ' das ' + n + ' atividades<br>'
+        + '• Se não atingir → Exame de Recurso obrigatório</div>';
+      const fields = uc.atividades.map((a,i) => {
+        const min40 = (a.max*0.4).toFixed(1).replace('.',',');
+        return '<div class="nota-campo" style="margin-bottom:10px">'
+          + '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">'
+          + '<label for="nota-atv-' + i + '" style="margin:0">' + a.nome + '</label>'
+          + '<span style="font-size:0.72rem;color:var(--cinza)">máx. ' + a.max + ' val. · mín. ' + min40 + ' val. (40%)</span>'
+          + '</div><div style="display:flex;align-items:center;gap:8px">'
+          + '<input type="number" id="nota-atv-' + i + '" min="0" max="' + a.max + '" step="0.1" placeholder="0–' + a.max + '" oninput="notaAtualizar()" style="max-width:110px">'
+          + '<span id="nota-atv-status-' + i + '" style="font-size:0.78rem"></span>'
+          + '</div></div>';
+      }).join('');
+      campos.innerHTML = regras + fields;
       window.notaModoSelecionar('atividades');
     } else {
-      // Restore original MPV labels
       if (btnAc) { btnAc.textContent = '📚 Av. Contínua'; btnAc.onclick = () => window.notaModoSelecionar('continua'); }
       window.notaModoSelecionar('continua');
     }
@@ -3725,32 +3736,44 @@ async function carregarUCs() {
     if (notaModoAtual === 'atividades') {
       const uc = ucsMap[ucAtualId];
       const atividades = uc?.atividades || [];
+      const n = atividades.length;
       const vals = atividades.map((a,i) => parseFloat(document.getElementById('nota-atv-'+i)?.value));
       const infoEl = document.getElementById('nota-atividades-info');
+      atividades.forEach((a,i) => {
+        const stEl = document.getElementById('nota-atv-status-'+i);
+        if (!stEl) return;
+        const v = vals[i]; if (isNaN(v)) { stEl.textContent=''; return; }
+        const min40 = a.max*0.4;
+        stEl.innerHTML = v >= min40
+          ? '<span style="color:#166534">✓ ≥40%</span>'
+          : '<span style="color:#991b1b">✗ <40% — faltam ' + _notaFmt(min40-v) + ' val.</span>';
+      });
       const preench = vals.filter(v => !isNaN(v));
       if (preench.length === 0) { esconderFinal(); setBadge('curso'); if(infoEl){infoEl.className='nota-limiar vazio';infoEl.innerHTML='';} return; }
-      const total = vals.reduce((s,v) => s+(isNaN(v)?0:v), 0);
-      const n = atividades.length;
+      const total = vals.reduce((s,v)=>s+(isNaN(v)?0:v),0);
+      const totalMax = atividades.reduce((s,a)=>s+a.max,0);
+      const countOk = atividades.filter((a,i)=>!isNaN(vals[i])&&vals[i]>=a.max*0.4).length;
       if (preench.length < n) {
         mostrarFinal(total); setBadge('curso');
-        if(infoEl){infoEl.className='nota-limiar vazio';infoEl.innerHTML=`Soma parcial: <strong>${_notaFmt(total)} / ${atividades.reduce((s,a)=>s+a.max,0)}</strong>`;}
+        if(infoEl){infoEl.className='nota-limiar vazio';infoEl.innerHTML='Soma parcial: <strong>'+_notaFmt(total)+' / '+totalMax+' val.</strong>';}
         return;
       }
-      const countOk = atividades.filter((a,i) => vals[i] >= a.max*0.4).length;
       const aprov = total >= 10 && countOk >= n-1;
       mostrarFinal(total);
       if (aprov) {
-        if(infoEl){infoEl.className='nota-limiar ok';infoEl.innerHTML=`✓ ${countOk}/${n} atividades com ≥40% · Total: ${_notaFmt(total)} val.`;}
+        if(infoEl){infoEl.className='nota-limiar ok';infoEl.innerHTML='✓ '+countOk+'/'+n+' atividades com ≥40% · Total: <strong>'+_notaFmt(total)+' val.</strong>';}
         setBadge('aprovado');
+      } else if (n - countOk >= 2) {
+        if(infoEl){infoEl.className='nota-limiar nok';infoEl.innerHTML='⚠️ '+(n-countOk)+' atividades abaixo de 40% → <strong>Exame de Recurso obrigatório</strong>';}
+        setBadge('rep');
       } else {
-        const motivo = total < 10 ? `Total insuficiente (${_notaFmt(total)} < 10)` : `Apenas ${countOk}/${n} atividades com ≥40% (mínimo ${n-1})`;
-        if(infoEl){infoEl.className='nota-limiar nok';infoEl.innerHTML=`✗ ${motivo}`;}
+        if(infoEl){infoEl.className='nota-limiar nok';infoEl.innerHTML='✗ Total insuficiente — faltam <strong>'+_notaFmt(10-total)+' val.</strong> para aprovação';}
         setBadge('rep');
       }
       return;
     }
 
-    // ── Só Exame ──
+        // ── Só Exame ──
     if (notaModoAtual === 'exame') {
       const ex = parseFloat(document.getElementById('nota-so-exame').value);
       if (isNaN(ex)) { esconderFinal(); setBadge('curso'); return; }
