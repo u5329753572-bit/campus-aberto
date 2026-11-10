@@ -1259,6 +1259,23 @@
     carregarUCs(); carregarDocs();
   };
 
+  // --- TOKEN GITHUB (guardado só neste browser, nunca no código) ---
+  const GH_TOKEN_KEY = 'campusaberto_gh_token';
+  function obterTokenGithub() {
+    let t = null;
+    try { t = localStorage.getItem(GH_TOKEN_KEY); } catch(e) {}
+    if (!t) {
+      t = (prompt('Cola o token do GitHub para fazer upload.\nFica guardado apenas neste browser.') || '').trim();
+      if (!t) return null;
+      try { localStorage.setItem(GH_TOKEN_KEY, t); } catch(e) {}
+    }
+    return t;
+  }
+  window.esquecerTokenGithub = function() {
+    try { localStorage.removeItem(GH_TOKEN_KEY); } catch(e) {}
+    alert('Token removido deste browser.');
+  };
+
   // --- UPLOAD PDF → GITHUB ---
   window.uploadPdfGithub = async function(input) {
     const file = input.files[0];
@@ -1275,7 +1292,8 @@
       });
       const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `docs/${filename}`;
-      const PAT  = ['ghp_5Dow7yyASPb','6cLXmxwx3JiKA0','9Fki91FBxlY'].join('');
+      const PAT  = obterTokenGithub();
+      if (!PAT) throw new Error('Upload cancelado: sem token.');
       const REPO = 'u5329753572-bit/campus-aberto';
       // Verificar se já existe (para obter SHA)
       let sha = null;
@@ -1289,6 +1307,10 @@
         headers: { 'Authorization': 'token ' + PAT, 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
+      if (res.status === 401 || res.status === 403) {
+        try { localStorage.removeItem(GH_TOKEN_KEY); } catch(e) {}
+        throw new Error('Token inválido ou sem permissão. Tenta de novo e cola um token válido.');
+      }
       const out = await res.json();
       if (out.content) {
         const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
