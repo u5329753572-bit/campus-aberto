@@ -2481,7 +2481,8 @@
       const emCurso = periodoEmCurso(d, agora);
       if (emCurso) {
         const fimStr = d.fim.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
-        return `<li><strong>${esc(d.titulo)}</strong> — termina ${fimStr} <em>(${rotuloPeriodo(d, agora).replace('Termina ', '')})</em></li>`;
+        const comecouHoje = d.data >= inicioHoje;
+        return `<li><strong>${esc(d.titulo)}</strong> — ${comecouHoje ? 'começou hoje, ' : ''}termina ${fimStr} <em>(${rotuloPeriodo(d, agora).replace('Termina ', '')})</em></li>`;
       }
       const eventoCalendario = new Date(d.data.getFullYear(), d.data.getMonth(), d.data.getDate());
       const dias = Math.round((eventoCalendario - hojeCalendario) / 86400000);
@@ -2529,7 +2530,8 @@
           const _hh=data.getHours(),_mm=data.getMinutes();
           const _tStr=(typeof item.dataIso==='string'&&item.dataIso.indexOf('T')>-1&&(_hh||_mm))?(String(_hh).padStart(2,'0')+':'+String(_mm).padStart(2,'0')):null;
           const horaComp=item.hora||_tStr;
-          const ordem = fim && data < agora ? fim : data;
+          // Períodos já em curso ficam no topo da lista
+          const ordem = data < inicioHoje ? inicioHoje : data;
           todasAsDatas.push({ ...item, data, fim, hora:horaComp, ordem });
         }
       });
