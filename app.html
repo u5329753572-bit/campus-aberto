@@ -2442,6 +2442,20 @@
 
   let todasAsDatas = [];
 
+  // Períodos (data de início + data de fim opcional)
+  function periodoEmCurso(item, agora) { return !!(item.fim && item.data <= agora); }
+  function dataReferencia(item, agora) { return periodoEmCurso(item, agora) ? item.fim : item.data; }
+  function rotuloPeriodo(item, agora) {
+    if (!periodoEmCurso(item, agora)) return null;
+    const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+    const f = new Date(item.fim.getFullYear(), item.fim.getMonth(), item.fim.getDate());
+    const n = Math.round((f - hoje) / 86400000);
+    return n <= 0 ? 'Termina hoje' : n === 1 ? 'Termina amanhã' : `Termina em ${n} dias`;
+  }
+  function textoAte(item) {
+    return item.fim ? 'até ' + item.fim.toLocaleDateString('pt-PT', { day:'numeric', month:'short' }).replace('.', '') : '';
+  }
+
   function mostrarBannerDatas() {
     const banner = document.getElementById('banner-datas');
     if (!banner) return;
@@ -2451,16 +2465,24 @@
 
     const agora = new Date();
     const em7dias = new Date(agora.getTime() + 7 * 86400000);
-    const proximas = todasAsDatas.filter(d => d.data >= agora && d.data <= em7dias);
+    const inicioHoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+    const proximas = todasAsDatas.filter(d =>
+      (d.data >= inicioHoje && d.data <= em7dias) ||
+      (periodoEmCurso(d, agora) && d.fim <= em7dias));
     if (!proximas.length) { banner.style.display = 'none'; return; }
 
-    const temUrgente = proximas.some(d => Math.round((new Date(d.data.getFullYear(),d.data.getMonth(),d.data.getDate()) - new Date(agora.getFullYear(),agora.getMonth(),agora.getDate())) / 86400000) <= 2);
+    const temUrgente = proximas.some(d => { const r = dataReferencia(d, agora); return Math.round((new Date(r.getFullYear(),r.getMonth(),r.getDate()) - inicioHoje) / 86400000) <= 2; });
     const cls = temUrgente ? 'urgente' : 'aviso';
     const icone = temUrgente ? '🚨' : '📅';
     const titulo = temUrgente ? 'Atenção — datas muito próximas!' : 'Datas nos próximos 7 dias';
 
     const hojeCalendario = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
     const itens = proximas.map(d => {
+      const emCurso = periodoEmCurso(d, agora);
+      if (emCurso) {
+        const fimStr = d.fim.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
+        return `<li><strong>${esc(d.titulo)}</strong> — termina ${fimStr} <em>(${rotuloPeriodo(d, agora).replace('Termina ', '')})</em></li>`;
+      }
       const eventoCalendario = new Date(d.data.getFullYear(), d.data.getMonth(), d.data.getDate());
       const dias = Math.round((eventoCalendario - hojeCalendario) / 86400000);
       const dataStr = d.data.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
@@ -2494,18 +2516,24 @@
     try {
       const snap = await getDocs(collection(db, 'datas'));
       const agora = new Date();
+      // Datas de hoje continuam visíveis o dia todo, mesmo depois da hora marcada
+      const inicioHoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
       todasAsDatas = [];
       snap.forEach(d => {
         const item = { id:d.id, ...d.data() };
         const data = new Date(item.dataIso);
-        if (!Number.isNaN(data.getTime()) && data >= agora) {
+        const fimLido = item.dataFimIso ? new Date(item.dataFimIso) : null;
+        const fim = fimLido && !Number.isNaN(fimLido.getTime()) && fimLido > data ? fimLido : null;
+        const visivel = fim ? fim >= inicioHoje : data >= inicioHoje;
+        if (!Number.isNaN(data.getTime()) && visivel) {
           const _hh=data.getHours(),_mm=data.getMinutes();
           const _tStr=(typeof item.dataIso==='string'&&item.dataIso.indexOf('T')>-1&&(_hh||_mm))?(String(_hh).padStart(2,'0')+':'+String(_mm).padStart(2,'0')):null;
           const horaComp=item.hora||_tStr;
-          todasAsDatas.push({ ...item, data, hora:horaComp });
+          const ordem = fim && data < agora ? fim : data;
+          todasAsDatas.push({ ...item, data, fim, hora:horaComp, ordem });
         }
       });
-      todasAsDatas.sort((a,b) => a.data - b.data);
+      todasAsDatas.sort((a,b) => a.ordem - b.ordem);
       mostrarBannerDatas();
       const total = todasAsDatas.length;
       contador.textContent = total === 1 ? '1 data' : `${total} datas`;
@@ -2515,9 +2543,10 @@
       }
       const renderItem = (item, isFirst) => {
         const agora2 = new Date();
-        const diffMs = item.data - agora2;
+        const ref = dataReferencia(item, agora2);
+        const diffMs = ref - agora2;
         const hojeD=new Date(agora2.getFullYear(),agora2.getMonth(),agora2.getDate());
-        const evtD=new Date(item.data.getFullYear(),item.data.getMonth(),item.data.getDate());
+        const evtD=new Date(ref.getFullYear(),ref.getMonth(),ref.getDate());
         const dias=Math.max(0,Math.round((evtD-hojeD)/86400000));
         const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
         const tag = item.link ? 'button' : 'div';
@@ -2528,12 +2557,13 @@
           if (dias <= 1)      cls += ' critico';
           else if (dias <= 7) cls += ' urgente';
         }
-        const diasLabel = dias === 0
-          ? `Hoje · ${Math.max(0,Math.ceil(diffMs/3600000))}h`
-          : dias === 1 ? 'Amanhã' : `${dias} dias`;
+        const diasLabel = rotuloPeriodo(item, agora2) || (dias === 0
+          ? (diffMs > 0 ? `Hoje · ${Math.ceil(diffMs/3600000)}h` : 'Hoje')
+          : dias === 1 ? 'Amanhã' : `${dias} dias`);
+        const subPainel = [item.ucNome || item.tipo || 'CampusAberto', textoAte(item)].filter(Boolean).join(' · ');
         return `<${tag} class="${cls}" ${attrs}>
           <span class="painel-data-dia">${item.data.getDate()}<small>${mes}</small>${item.hora ? '<span class="data-hora">'+item.hora+'</span>' : ''}</span>
-          <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(item.ucNome || item.tipo || 'CampusAberto')}</small></span>
+          <span><strong>${esc(item.titulo || 'Data académica')}</strong><small>${esc(subPainel)}</small></span>
           <span class="painel-item-dias">${diasLabel}</span>
         </${tag}>`;
       };
@@ -3012,11 +3042,11 @@
 
   window._addGcal = function(btn) {
     var t=btn.dataset.gcalTitle||"";var d=btn.dataset.gcalDate||"";var det=btn.dataset.gcalDetails||"";
-    var iso=btn.dataset.gcalIso||"";
+    var iso=btn.dataset.gcalIso||"";var fimIso=btn.dataset.gcalFimIso||"";var fimDt=fimIso?new Date(fimIso):null;
     var url;var p=function(n){return('0'+n).slice(-2);};
     if(iso){var dt=new Date(iso);var h=dt.getHours(),mi=dt.getMinutes();
-      if(h!==0||mi!==0){var ts=function(x){return x.getUTCFullYear()+""+p(x.getUTCMonth()+1)+""+p(x.getUTCDate())+"T"+p(x.getUTCHours())+p(x.getUTCMinutes())+"00Z";};var endDt=new Date(dt.getTime()+3600000);url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+ts(dt)+'/'+ts(endDt)+'&details='+encodeURIComponent(det);}
-      else{var y2=parseInt(d.slice(0,4)),m2=parseInt(d.slice(4,6))-1,dy2=parseInt(d.slice(6,8));var end2=new Date(y2,m2,dy2+1);var endS2=end2.getFullYear()+p(end2.getMonth()+1)+p(end2.getDate());url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+d+'/'+endS2+'&details='+encodeURIComponent(det);}}
+      if(h!==0||mi!==0){var ts=function(x){return x.getUTCFullYear()+""+p(x.getUTCMonth()+1)+""+p(x.getUTCDate())+"T"+p(x.getUTCHours())+p(x.getUTCMinutes())+"00Z";};var endDt=fimDt?fimDt:new Date(dt.getTime()+3600000);url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+ts(dt)+'/'+ts(endDt)+'&details='+encodeURIComponent(det);}
+      else{var y2=parseInt(d.slice(0,4)),m2=parseInt(d.slice(4,6))-1,dy2=parseInt(d.slice(6,8));var end2=fimDt?new Date(fimDt.getFullYear(),fimDt.getMonth(),fimDt.getDate()+1):new Date(y2,m2,dy2+1);var endS2=end2.getFullYear()+p(end2.getMonth()+1)+p(end2.getDate());url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+d+'/'+endS2+'&details='+encodeURIComponent(det);}}
     else{var y=parseInt(d.slice(0,4)),m=parseInt(d.slice(4,6))-1,dy=parseInt(d.slice(6,8));var end=new Date(y,m,dy+1);var endS=end.getFullYear()+p(end.getMonth()+1)+p(end.getDate());url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+d+'/'+endS+'&details='+encodeURIComponent(det);}
     window.open(url,'_blank','noopener');
   };  window.filtrarDatas = function() {
@@ -3060,11 +3090,12 @@
     }
     lista.innerHTML = resultado.map(item => {
       const _hojeD = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
-      const _evtD  = new Date(item.data.getFullYear(), item.data.getMonth(), item.data.getDate());
+      const _ref   = dataReferencia(item, agora);
+      const _evtD  = new Date(_ref.getFullYear(), _ref.getMonth(), _ref.getDate());
       const dias = Math.max(0, Math.round((_evtD - _hojeD) / 86400000));
       const mes = item.data.toLocaleDateString('pt-PT',{month:'short'}).replace('.','');
-      const diasTexto = dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`;
-      const subtag = [item.ucNome, item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
+      const diasTexto = rotuloPeriodo(item, agora) || (dias === 0 ? 'Hoje' : dias === 1 ? 'Amanhã' : `${dias} dias`);
+      const subtag = [item.ucNome, textoAte(item), item.minor, item.ano ? `${item.ano}º Ano` : null, item.semestre ? `${item.semestre}º Sem.` : null].filter(Boolean).join(' · ');
       const cls = item.link ? 'data-item-full clickable' : 'data-item-full';
       const onclick = item.link ? `onclick="window.open('${esc(item.link)}','_blank','noopener')"` : '';
       const tipoAttr = item.tipo ? ` data-tipo="${esc(item.tipo)}"` : '';
@@ -3076,7 +3107,7 @@
           <span class="data-tag dias">${diasTexto}</span>
           <span class="data-tag tipo"${tipoAttr}>${esc(item.tipo || '—')}</span>
         </div>
-        <button class="data-gcal-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();window._addGcal(this)" data-gcal-title="${esc(item.titulo||'')}" data-gcal-date="${item.data.getFullYear()}${('0'+(item.data.getMonth()+1)).slice(-2)}${('0'+item.data.getDate()).slice(-2)}" data-gcal-details="${esc(subtag||item.tipo||'')}" data-gcal-iso="${item.dataIso||''}">&#x1F5D3;</button>
+        <button class="data-gcal-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();window._addGcal(this)" data-gcal-title="${esc(item.titulo||'')}" data-gcal-date="${item.data.getFullYear()}${('0'+(item.data.getMonth()+1)).slice(-2)}${('0'+item.data.getDate()).slice(-2)}" data-gcal-details="${esc(subtag||item.tipo||'')}" data-gcal-iso="${item.dataIso||''}" data-gcal-fim-iso="${item.fim ? item.fim.toISOString() : ''}">&#x1F5D3;</button>
       </div>`;
     }).join('');
   };

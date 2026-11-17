@@ -625,6 +625,10 @@
           <label for="data-quando">Data e hora</label>
           <input type="datetime-local" id="data-quando"/>
         </div>
+        <div class="campo" style="max-width:230px">
+          <label for="data-fim">Termina em (opcional)</label>
+          <input type="datetime-local" id="data-fim" title="Para prazos com período (ex.: inscrições). A data fica visível até esta data."/>
+        </div>
       </div>
       <div class="form-row">
         <div class="campo" style="max-width:150px">
@@ -1495,7 +1499,9 @@
       datas.sort((a,b) => new Date(a.dataIso) - new Date(b.dataIso));
       tb.innerHTML = datas.length ? datas.map(item => {
         const data = new Date(item.dataIso);
-        const textoData = Number.isNaN(data.getTime()) ? '—' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
+        const fimD = item.dataFimIso ? new Date(item.dataFimIso) : null;
+        let textoData = Number.isNaN(data.getTime()) ? '—' : data.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
+        if (fimD && !Number.isNaN(fimD.getTime())) textoData += ' → ' + fimD.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});
         const anoSem = item.ano ? `${item.ano}º / ${item.semestre ? item.semestre + 'º' : '—'}` : '—';
         return `<tr>
           <td>${esc(textoData)}</td><td>${esc(item.tipo || '—')}</td>
@@ -1530,6 +1536,7 @@
     const titulo = document.getElementById('data-titulo').value.trim();
     const tipo = document.getElementById('data-tipo').value;
     const quando = document.getElementById('data-quando').value;
+    const quandoFim = document.getElementById('data-fim').value;
     const ucId = document.getElementById('data-uc').value;
     const link = document.getElementById('data-link').value.trim();
     const descricao = document.getElementById('data-desc').value.trim();
@@ -1545,6 +1552,13 @@
     if (Number.isNaN(data.getTime())) {
       msg.textContent = 'A data introduzida não é válida.'; msg.className = 'msg-form err'; return;
     }
+    let dataFim = null;
+    if (quandoFim) {
+      dataFim = new Date(quandoFim);
+      if (Number.isNaN(dataFim.getTime()) || dataFim <= data) {
+        msg.textContent = 'A data de fim tem de ser posterior à data de início.'; msg.className = 'msg-form err'; return;
+      }
+    }
     const uc = ucsList.find(item => item.id === ucId);
     const editId = window._editandoDataId || null;
     btn.disabled = true; btn.textContent = editId ? 'A guardar...' : 'A publicar...';
@@ -1556,6 +1570,7 @@
       if (anoVal) payload.ano = parseInt(anoVal);
       if (semestreVal) payload.semestre = parseInt(semestreVal);
       if (minorVal) payload.minor = minorVal;
+      if (dataFim) payload.dataFimIso = dataFim.toISOString();
       if (editId) {
         const old = (window._datasCache || {})[editId] || {};
         if (old.criadoEm) payload.criadoEm = old.criadoEm;
@@ -1567,7 +1582,7 @@
         await addDoc(collection(db, 'datas'), payload);
         msg.textContent = 'Data publicada no painel dos estudantes.';
       }
-      ['data-titulo','data-quando','data-uc','data-link','data-desc','data-ano','data-semestre','data-minor'].forEach(id => {
+      ['data-titulo','data-quando','data-fim','data-uc','data-link','data-desc','data-ano','data-semestre','data-minor'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -1599,6 +1614,10 @@
       document.getElementById('data-quando').value =
         `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
     }
+    const dtFim = item.dataFimIso ? new Date(item.dataFimIso) : null;
+    document.getElementById('data-fim').value = (dtFim && !isNaN(dtFim))
+      ? `${dtFim.getFullYear()}-${pad(dtFim.getMonth()+1)}-${pad(dtFim.getDate())}T${pad(dtFim.getHours())}:${pad(dtFim.getMinutes())}`
+      : '';
     document.getElementById('data-uc').value = item.ucId || '';
     document.getElementById('data-link').value = item.link || '';
     document.getElementById('data-desc').value = item.descricao || '';
